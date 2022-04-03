@@ -17,6 +17,7 @@
     "@nrwl/nx-cloud": "latest",
     "@nrwl/tao": "^13.9.6",
     "@nrwl/workspace": "13.9.6",
+    "@nx-go/nx-go": "^2.4.0",
     "@types/node": "16.11.7",
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
