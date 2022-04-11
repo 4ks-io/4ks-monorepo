@@ -1,0 +1,21 @@
+FROM node:gallium-alpine3.15
+RUN apk --no-cache add git
+RUN npm install -g pnpm
+
+WORKDIR /app
+
+# Copy all dependency related files and install dependencies
+COPY package.json ./
+COPY pnpm* ./
+COPY apps/frontend/package.json /app/frontend/
+
+RUN pnpm install
+
+COPY workspace.json ./
+COPY nx.json ./
+
+COPY ./ .
+
+CMD [ "pnpm", "start", "frontend" ]
+
+

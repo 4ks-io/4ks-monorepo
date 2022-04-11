@@ -8,12 +8,12 @@ func main() {
 	r := gin.Default()
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "Yolo What the Fuck2",
+			"message": "Yolo",
 		})
 	})
 	r.GET("/ready", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "pong2",
+			"message": "pong222",
 		})
 	})
 
