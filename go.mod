@@ -8,6 +8,7 @@ require (
 	go.opentelemetry.io/otel v1.6.3
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.4.1
 	go.opentelemetry.io/otel/sdk v1.4.1
+	go.opentelemetry.io/otel/trace v1.6.3
 )
 
 require (
@@ -24,7 +25,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
-	go.opentelemetry.io/otel/trace v1.6.3 // indirect
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
 	golang.org/x/sys v0.0.0-20220412211240-33da011f77ad // indirect
 	golang.org/x/text v0.3.7 // indirect

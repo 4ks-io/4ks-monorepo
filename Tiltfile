@@ -13,7 +13,7 @@ docker_build(
     '4ks-api',
     context='./',
     dockerfile='./apps/api/Dockerfile.dev',
-    only=['./apps/api', './go.mod', './go.sum'],
+    only=['./apps/api', './go.mod', './go.sum', './libs/go'],
     live_update=[
         sync('./apps/api/', '/app'),
         run(
