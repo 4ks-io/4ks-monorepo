@@ -1,11 +1,36 @@
 package main
 
 import (
+	"context"
+	"log"
+
 	"github.com/gin-gonic/gin"
+
+	// texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
+	"go.opentelemetry.io/otel"
+
+	// "go.opentelemetry.io/otel/attribute"
+	stdout "go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
+	"go.opentelemetry.io/otel/propagation"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
 
+var tracer = otel.Tracer("gin-server")
+
 func main() {
+	tp := initTracer()
+	defer func() {
+		if err := tp.Shutdown(context.Background()); err != nil {
+			log.Printf("Error shutting down tracer provider: %v", err)
+		}
+	}()
+
 	r := gin.Default()
+
+	// Configure Open Telemetry Middleware for Gin
+	r.Use(otelgin.Middleware("4ks-api"))
+
 	r.GET("/recipes", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "Yolo",
@@ -43,9 +68,28 @@ func main() {
 	})
 
 	r.GET("/ready", func(c *gin.Context) {
+		_, span := tracer.Start(c.Request.Context(), "DoSomething")
+		log.Println("Yolo")
+		span.End()
 		c.JSON(200, gin.H{
 			"message": "pong222",
 		})
 	})
 	r.Run("0.0.0.0:5000") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+}
+
+func initTracer() *sdktrace.TracerProvider {
+	// projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
+	// googleExporter, err := texporter.New(texporter.WithProjectID(projectID))
+	exporter, err := stdout.New(stdout.WithPrettyPrint())
+	if err != nil {
+		log.Fatal(err)
+	}
+	tp := sdktrace.NewTracerProvider(
+		sdktrace.WithSampler(sdktrace.AlwaysSample()),
+		sdktrace.WithBatcher(exporter),
+	)
+	otel.SetTracerProvider(tp)
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+	return tp
 }
