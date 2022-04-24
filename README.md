@@ -31,3 +31,11 @@ Get a recipe revision by id
 ## POST /recipes/:recipeId/fork
 
 Fork a recipe
+
+# 4ks Data Model
+
+Live Data Model Diagram
+
+https://app.diagrams.net/?src=about#G1FwQB7uxcTfF5QOdGvn2zeyCqIfE6vPUK
+
+![Data Model](/docs/4ksDataModel.png)
