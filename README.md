@@ -12,6 +12,10 @@ Create a new recipe
 
 Get a recipe by id
 
+## PUT /recipes/:recipeId
+
+Update a recipe
+
 ## POST /recipes/:recipeId/star
 
 Star a recipe
