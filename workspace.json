@@ -3,6 +3,7 @@
   "projects": {
     "api": "apps/api",
     "frontend": "apps/frontend",
+    "go-models": "libs/go/models",
     "go-tracer": "libs/go/tracer"
   }
 }

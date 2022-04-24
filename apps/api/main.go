@@ -37,14 +37,14 @@ func main() {
 			"message": "pong222",
 		})
 	})
-	r.PUT("/recipes", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong222",
-		})
-	})
 	r.GET("/recipes/:recipeId", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "yolo22",
+		})
+	})
+	r.PUT("/recipes/:recipeId", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong222",
 		})
 	})
 	r.POST("/recipes/:recipeId/star", func(c *gin.Context) {
