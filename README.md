@@ -32,6 +32,14 @@ Get a recipe revision by id
 
 Fork a recipe
 
+## GET /user/:userId
+
+Get a user
+
+## POST /user
+
+Create a user
+
 # 4ks Data Model
 
 Live Data Model Diagram
