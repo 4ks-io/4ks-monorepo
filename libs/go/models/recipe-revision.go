@@ -5,7 +5,8 @@ type RecipeRevision struct {
 	title  string
 	author Author
 	images []struct {
-		id string
+		id  string
+		url string
 	}
 	createdDate string
 	updatedDate string
