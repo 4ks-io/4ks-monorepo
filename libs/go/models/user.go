@@ -1,18 +1,20 @@
 package models
 
+import "time"
+
 type User struct {
-	_id          string
-	username     string
-	displayName  string
-	emailAddress string
-	createdDate  string
-	updatedDate  string
+	Id           string    `firestore:"id,omitempty"`
+	Username     string    `firestore:"username,omitempty"`
+	DisplayName  string    `firestore:"displayName,omitempty"`
+	EmailAddress string    `firestore:"emailAddress,omitempty"`
+	CreatedDate  time.Time `firestore:"createdDate,omitempty"`
+	UpdatedDate  time.Time `firestore:"updatedDate,omitempty"`
 }
 
 // Subset of a user that will be nested in a RecipeRevision or Recipe object
 
 type Author struct {
-	_id         string
-	username    string
-	createdDate string
+	Id          string    `firestore:"id,omitempty"`
+	Username    string    `firestore:"username,omitempty"`
+	CreatedDate time.Time `firestore:"createdDate,omitempty"`
 }

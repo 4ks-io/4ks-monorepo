@@ -1,13 +1,13 @@
 package models
 
 type RecipeRevision struct {
-	_id    string
-	title  string
-	author Author
-	images []struct {
-		id  string
-		url string
+	Id     string
+	Title  string
+	Author Author
+	Images []struct {
+		Id  string
+		Url string
 	}
-	createdDate string
-	updatedDate string
+	CreatedDate string
+	UpdatedDate string
 }
