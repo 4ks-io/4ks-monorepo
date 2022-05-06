@@ -26,7 +26,7 @@ docker_build(
 # k8s_yaml automatically creates resources in Tilt for the entities
 # and will inject any images referenced in the Tiltfile when deploying
 # https://docs.tilt.dev/api.html#api.k8s_yaml
-k8s_yaml(['./deploy/api.yaml', './deploy/frontend.yaml', './deploy/firestore.yaml'])
+k8s_yaml(['./deploy/api.yaml', './deploy/web.yaml', './deploy/firestore.yaml'])
 
 # k8s_resource allows customization where necessary such as adding port forwards and labels
 # https://docs.tilt.dev/api.html#api.k8s_resource
@@ -37,7 +37,7 @@ k8s_resource(
 )
 
 
-# tilt-avatar-web is the frontend (ReactJS/vite app)
+# tilt-avatar-web is the web (ReactJS/vite app)
 # live_update syncs changed source files to the correct place for vite to pick up
 # and runs yarn (JS dependency manager) to update dependencies when changed
 # if vite.config.js changes, a full rebuild is performed because it cannot be
@@ -45,17 +45,17 @@ k8s_resource(
 # https://docs.tilt.dev/api.html#api.docker_build
 # https://docs.tilt.dev/live_update_reference.html
 docker_build(
-    '4ks-frontend',
+    '4ks-web',
     context='.',
-    dockerfile='./apps/frontend/Dockerfile.dev',
+    dockerfile='./apps/web/Dockerfile.dev',
     only=[],
     ignore=['./dist/', './node_modules'],
     live_update=[
-        fall_back_on('./apps/frontend/vite.config.ts'),
+        fall_back_on('./apps/web/vite.config.ts'),
         sync('./', '/app/'),
         run(
             'pnpm install',
-            trigger=['./package.json', './apps/frontend/package.json']
+            trigger=['./package.json', './apps/web/package.json']
         )
     ]
 )
@@ -68,9 +68,9 @@ docker_build(
 # k8s_resource allows customization where necessary such as adding port forwards and labels
 # https://docs.tilt.dev/api.html#api.k8s_resource
 k8s_resource(
-    'frontend',
+    'web',
     port_forwards='5735:3000',
-    labels=['frontend']
+    labels=['web']
 )
 
 # k8s_yaml automatically creates resources in Tilt for the entities

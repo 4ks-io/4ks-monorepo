@@ -1,4 +1,4 @@
-FROM node:gallium-alpine3.15
+FROM node:18-alpine
 RUN apk --no-cache add git
 RUN npm install -g pnpm
 
@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy all dependency related files and install dependencies
 COPY package.json ./
 COPY pnpm* ./
-COPY apps/frontend/package.json /app/frontend/
+COPY apps/web/package.json /app/web/
 
 RUN pnpm install
 
@@ -16,6 +16,6 @@ COPY nx.json ./
 
 COPY ./ .
 
-CMD [ "pnpm", "start", "frontend" ]
+CMD [ "pnpm", "start", "web" ]
 
 

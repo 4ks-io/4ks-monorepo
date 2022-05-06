@@ -2,7 +2,7 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
-    "frontend": "apps/frontend",
+    "web": "apps/web",
     "go-models": "libs/go/models",
     "go-tracer": "libs/go/tracer"
   }
