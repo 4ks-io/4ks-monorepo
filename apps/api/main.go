@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/zsais/go-gin-prometheus"
 
 	// texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
@@ -23,10 +24,17 @@ func main() {
 	}()
 
 	r := gin.Default()
+	p := ginprometheus.NewPrometheus("gin")
+	p.Use(r)
 
 	// Configure Open Telemetry Middleware for Gin
 	r.Use(otelgin.Middleware("4ks-api"))
 
+	r.GET("/version", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"version": "0.0.1",
+		})
+	})
 	r.GET("/recipes", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "Yolo2",
