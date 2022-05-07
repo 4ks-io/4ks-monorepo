@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
-import AppLayout from './components/Layout/AppLayout';
+import AppLayout from './components/layout/AppLayout';
 import {
   MantineProvider,
   ColorSchemeProvider,

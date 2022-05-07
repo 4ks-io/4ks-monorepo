@@ -24,7 +24,7 @@ export function AppNavBar(props: IAppShellHaederProps) {
         <Grid.Col style={highlight} span={4}>
           <Grid>
             <Grid.Col style={highlight} span={1}>
-              <div style={{ width: 36 }}>
+              <div style={{ width: 28 }}>
                 <Image src={logo} alt="logo" />
               </div>
             </Grid.Col>
@@ -32,7 +32,7 @@ export function AppNavBar(props: IAppShellHaederProps) {
               <TextInput
                 placeholder="Search"
                 radius="xl"
-                style={{ width: `${searchWidth}px` }}
+                style={{ height: '24px', width: `${searchWidth}px` }}
                 onFocus={() => setSearchWidth(512)}
                 onBlur={() => setSearchWidth(256)}
               />
@@ -44,35 +44,18 @@ export function AppNavBar(props: IAppShellHaederProps) {
             <Grid.Col style={highlight} span={1}>
               <ActionIcon
                 variant="light"
+                size={24}
                 onClick={() => props.toggleColorScheme()}
               >
-                <Settings size={24} />
+                <Settings size={28} />
               </ActionIcon>
             </Grid.Col>
             <Grid.Col style={highlight} span={1}>
-              <Avatar radius="xl" />
+              <Avatar radius="xl" size={28} />
             </Grid.Col>
           </Grid>
         </Grid.Col>
       </Grid>
-      {/* <Grid justify="space-between" columns={24}>
-        <Grid.Col span={1}>
-          <div style={{ width: 36 }}>
-            <Image src={logo} alt="logo" />
-          </div>
-        </Grid.Col>
-        <Grid.Col span={1}>
-          <TextInput
-            placeholder="Search"
-            label="Search"
-            radius="xl"
-            style={{ width: '256px' }}
-          />
-        </Grid.Col>
-        <Grid.Col span={1} offset={22} style={{ backgroundColor: 'pink' }}>
-          
-        </Grid.Col>
-      </Grid> */}
     </Header>
   );
 }
