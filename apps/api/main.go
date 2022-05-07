@@ -5,12 +5,14 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/zsais/go-gin-prometheus"
+	ginprometheus "github.com/zsais/go-gin-prometheus"
 
 	// texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 
 	tracing "4ks/libs/go/tracer"
+
+	controllers "4ks/apps/api/controllers"
 )
 
 var tracer = tracing.NewTracer("gin-server")
@@ -22,6 +24,9 @@ func main() {
 			log.Printf("Error shutting down tracer provider: %v", err)
 		}
 	}()
+
+	uc := controllers.NewUserController()
+	rc := controllers.NewRecipeController()
 
 	r := gin.Default()
 	p := ginprometheus.NewPrometheus("gin")
@@ -35,46 +40,27 @@ func main() {
 			"version": "0.0.1",
 		})
 	})
-	r.GET("/recipes", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Yolo2",
-		})
-	})
-	r.POST("/recipes", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong222",
-		})
-	})
-	r.GET("/recipes/:recipeId", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "yolo22",
-		})
-	})
-	r.PUT("/recipes/:recipeId", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong222",
-		})
-	})
-	r.POST("/recipes/:recipeId/star", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong2222",
-		})
-	})
-	r.POST("/recipes/:recipeId/fork", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong222",
-		})
-	})
-	r.GET("/recipes/:recipeId/revisions", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong222",
-		})
-	})
-	r.GET("/recipes/:recipeId/revisions/:revisionId", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong222",
-		})
-	})
+
+	v1 := r.Group("/api/v1")
+	{
+		users := v1.Group("/users")
+		{
+			users.POST("", uc.CreateUser)
+			users.GET(":id", uc.GetUser)
+			users.PATCH(":id", uc.UpdateUser)
+		}
+
+		recipes := v1.Group("/recipes")
+		{
+			recipes.POST("", rc.CreateRecipe)
+			recipes.GET(":id", rc.GetRecipe)
+			recipes.PATCH(":id", rc.UpdateRecipe)
+			recipes.POST(":id/star", rc.StarRecipe)
+			recipes.POST(":id/fork", rc.ForkRecipe)
+			recipes.GET(":id/revisions", rc.GetRecipeRevisions)
+			recipes.GET(":id/revisions/:revisionId", rc.GetRecipeRevision)
+		}
+	}
 
 	r.GET("/ready", func(c *gin.Context) {
 		_, span := tracer.Start(c.Request.Context(), "DoSomething")

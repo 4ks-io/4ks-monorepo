@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"os"
+	"time"
 
 	firestore "cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
@@ -67,6 +68,8 @@ func (us userService) GetUserByEmail(emailAddress *string) (*models.User, error)
 }
 
 func (us userService) CreateUser(user *models.User) (*models.User, error) {
+	user.CreatedDate = time.Now().UTC()
+	user.UpdatedDate = time.Now().UTC()
 	doc, _, err := userCollection.Add(ctx, user)
 
 	if err != nil {

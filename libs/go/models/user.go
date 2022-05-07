@@ -14,7 +14,6 @@ type User struct {
 // Subset of a user that will be nested in a RecipeRevision or Recipe object
 
 type Author struct {
-	Id          string    `firestore:"id,omitempty"`
-	Username    string    `firestore:"username,omitempty"`
-	CreatedDate time.Time `firestore:"createdDate,omitempty"`
+	Id       string `firestore:"id,omitempty"`
+	Username string `firestore:"username,omitempty"`
 }

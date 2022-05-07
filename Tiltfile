@@ -15,7 +15,7 @@ docker_build(
     dockerfile='./apps/api/Dockerfile.dev',
     only=['./apps/api', './go.mod', './go.sum', './libs/go'],
     live_update=[
-        sync('./apps/api/', '/app'),
+        sync('./apps/api/', '/app/apps/api'),
         run(
             'go mod tidy',
             trigger=['./apps/api/']
