@@ -7,10 +7,11 @@ import {
   ColorScheme,
 } from '@mantine/core';
 
+export const themeHotKey = 'mod+J';
+
 function App() {
   const DARK = 'dark';
   const LIGHT = 'light';
-  const themeHotKey = 'mod+J';
 
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: 'mantine-color-scheme',
