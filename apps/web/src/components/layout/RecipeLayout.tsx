@@ -3,7 +3,7 @@ import { Grid } from '@mantine/core';
 import {
   RecipeDetails,
   RecipeEquipments,
-  RecipeIngrediants,
+  RecipeIngredients,
   RecipeSummary,
   RecipeInstructions,
   RecipeHeader,
@@ -26,7 +26,7 @@ export function RecipeLayout(props: IRecipeLayoutProps) {
           <RecipeEquipments />
         </Grid.Col>
         <Grid.Col span={4}>
-          <RecipeIngrediants />
+          <RecipeIngredients />
         </Grid.Col>
         <Grid.Col span={8}>
           <RecipeInstructions />

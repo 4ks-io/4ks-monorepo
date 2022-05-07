@@ -7,10 +7,6 @@ interface IRecipeDetailsProps {}
 export function RecipeDetails(props: IRecipeDetailsProps) {
   return (
     <Card shadow="sm" p="lg">
-      <Group position="apart">
-        <Text weight={500}>Summary</Text>
-      </Group>
-
       <Grid grow gutter="xs">
         <Grid.Col span={4}>
           PREP TIME

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Grid } from '@mantine/core';
 
-interface IRecipeIngrediantsProps {}
+interface IRecipeIngredientsProps {}
 
-export function RecipeIngrediants(props: IRecipeIngrediantsProps) {
+export function RecipeIngredients(props: IRecipeIngredientsProps) {
   return (
     <div style={{ borderStyle: 'solid' }}>
-      Ingrediants
+      Ingredients
       <ul>
         <li>
           2 sticks (8 ounces; 226 grams) unsalted butter, cut into chunks, at
@@ -29,4 +29,4 @@ export function RecipeIngrediants(props: IRecipeIngrediantsProps) {
   );
 }
 
-export default RecipeIngrediants;
+export default RecipeIngredients;
