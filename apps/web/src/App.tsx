@@ -1,42 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
-// import './App.css';
-// import Test from './components/Test';
-import { Settings } from 'tabler-icons-react';
+import React from 'react';
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
-
+import AppLayout from './components/Layout/AppLayout';
 import {
-  AppShell,
-  Avatar,
-  ActionIcon,
-  Navbar,
-  Header,
-  Image,
-  Space,
-  Grid,
-  TextInput,
-  Footer,
-  Aside,
-  Text,
-  MediaQuery,
-  Burger,
-  useMantineTheme,
   MantineProvider,
   ColorSchemeProvider,
   ColorScheme,
 } from '@mantine/core';
 
 function App() {
+  const DARK = 'dark';
+  const LIGHT = 'light';
+  const themeHotKey = 'mod+J';
+
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: 'mantine-color-scheme',
-    defaultValue: 'light',
+    defaultValue: LIGHT,
     getInitialValueInEffect: true,
   });
 
   const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
+    setColorScheme(value || (colorScheme === DARK ? LIGHT : DARK));
 
-  useHotkeys([['mod+J', () => toggleColorScheme()]]);
+  useHotkeys([[themeHotKey, () => toggleColorScheme()]]);
 
   return (
     <ColorSchemeProvider
@@ -48,39 +33,7 @@ function App() {
         withGlobalStyles
         withNormalizeCSS
       >
-        <AppShell
-          navbarOffsetBreakpoint="sm"
-          asideOffsetBreakpoint="sm"
-          fixed
-          header={
-            <Header height={64} p="md">
-              <Grid justify="space-between" columns={24}>
-                <Grid.Col span={1}>
-                  <div style={{ width: 36 }}>
-                    <Image src={logo} alt="logo" />
-                  </div>
-                  {/* <TextInput
-                    placeholder="Your name"
-                    label="Full name"
-                    required
-                  /> */}
-                </Grid.Col>
-                <Grid.Col span={1} offset={22}>
-                  <ActionIcon
-                    variant="light"
-                    onClick={() => toggleColorScheme()}
-                  >
-                    <Settings size={16} />
-                  </ActionIcon>
-
-                  <Avatar radius="xl" />
-                </Grid.Col>
-              </Grid>
-            </Header>
-          }
-        >
-          <Text>Resize app to see responsive navbar in action</Text>
-        </AppShell>
+        <AppLayout toggleColorScheme={toggleColorScheme} />
       </MantineProvider>
     </ColorSchemeProvider>
   );
