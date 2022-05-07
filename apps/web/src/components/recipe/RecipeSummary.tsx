@@ -5,7 +5,7 @@ interface IRecipeSummaryProps {}
 
 export function RecipeSummary(props: IRecipeSummaryProps) {
   return (
-    <Grid.Col md={6} lg={6}>
+    <Grid.Col md={4} lg={4}>
       <Card shadow="sm" p="lg">
         <Grid grow gutter="xs">
           <Grid.Col span={4}>
