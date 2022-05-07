@@ -4,7 +4,10 @@ import RecipeIngredients from './RecipeIngredients';
 import RecipeSummary from './RecipeSummary';
 import RecipeInstructions from './RecipeInstructions';
 import RecipeHeader from './RecipeHeader';
+import RecipeLayout from './RecipeLayout';
+
 export {
+  RecipeLayout,
   RecipeDetails,
   RecipeEquipments,
   RecipeIngredients,

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { AppShell } from '@mantine/core';
 import AppNavBar from './AppNavBar';
-import RecipeLayout from './RecipeLayout';
+import { RecipeLayout } from '../recipe';
 
 interface IAppShellProps {
   toggleColorScheme: () => void;

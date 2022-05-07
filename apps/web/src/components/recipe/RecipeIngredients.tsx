@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox } from '@mantine/core';
+import { Checkbox, Grid } from '@mantine/core';
 
 interface IRecipeIngredientsProps {}
 
@@ -15,18 +15,20 @@ export function RecipeIngredients(props: IRecipeIngredientsProps) {
     'about ½ cups (60 grams) coarsely chopped walnuts, toasted or not (or more chocolate chunks)',
   ];
   return (
-    <div style={{ borderStyle: 'solid' }}>
-      Ingredients
-      <ul style={{ listStyleType: 'none', paddingLeft: '8px' }}>
-        {mockIngredients.map((i) => {
-          return (
-            <li style={{ marginBottom: '8px' }}>
-              <Checkbox label={i} />
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <Grid.Col md={4} lg={4}>
+      <div style={{ borderStyle: 'solid' }}>
+        Ingredients
+        <ul style={{ listStyleType: 'none', paddingLeft: '8px' }}>
+          {mockIngredients.map((i) => {
+            return (
+              <li style={{ marginBottom: '8px' }}>
+                <Checkbox label={i} />
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </Grid.Col>
   );
 }
 

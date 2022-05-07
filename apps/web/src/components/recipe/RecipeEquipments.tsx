@@ -1,33 +1,25 @@
 import React from 'react';
-import { Grid } from '@mantine/core';
-import { Card, Text, Group } from '@mantine/core';
+import { Checkbox, Grid } from '@mantine/core';
 
 interface IRecipeEquipmentsProps {}
 
 export function RecipeEquipments(props: IRecipeEquipmentsProps) {
+  const mockEquipment = ['1 bowl', '1 spoon', '1 oven'];
   return (
-    <Card shadow="sm" p="lg">
-      <Group position="apart">
-        <Text weight={500}>Equipment</Text>
-      </Group>
-
-      <Grid grow gutter="xs">
-        <Grid.Col span={4}>
-          PREP TIME
-          <br />2 hours 15 minutes
-        </Grid.Col>
-        <Grid.Col span={4}>
-          COOK TIME
-          <br />
-          22 minutes
-        </Grid.Col>
-        <Grid.Col span={4}>
-          MAKES
-          <br />
-          24
-        </Grid.Col>
-      </Grid>
-    </Card>
+    <Grid.Col md={4} lg={4}>
+      <div style={{ borderStyle: 'solid' }}>
+        Equipment
+        <ul style={{ listStyleType: 'none', paddingLeft: '8px' }}>
+          {mockEquipment.map((e) => {
+            return (
+              <li style={{ marginBottom: '8px' }}>
+                <Checkbox label={e} />
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </Grid.Col>
   );
 }
 

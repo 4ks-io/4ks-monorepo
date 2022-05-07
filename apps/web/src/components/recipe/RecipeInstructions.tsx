@@ -17,20 +17,22 @@ export function RecipeInstructions(props: IRecipeInstructionsProps) {
   ];
 
   return (
-    <Grid grow gutter="xs" columns={1}>
-      <Grid.Col span={1}>
-        <Group position="apart">
-          <Text weight={500}>Instructions</Text>
-        </Group>
-      </Grid.Col>
-      {mockedInstructions.map((i) => (
+    <Grid.Col md={6} lg={6}>
+      <Grid grow gutter="xs" columns={1}>
         <Grid.Col span={1}>
-          <Card shadow="sm" p="lg">
-            {i}
-          </Card>
+          <Group position="apart">
+            <Text weight={500}>Instructions</Text>
+          </Group>
         </Grid.Col>
-      ))}
-    </Grid>
+        {mockedInstructions.map((i) => (
+          <Grid.Col span={1}>
+            <Card shadow="sm" p="lg">
+              {i}
+            </Card>
+          </Grid.Col>
+        ))}
+      </Grid>
+    </Grid.Col>
   );
 }
 
