@@ -1,4 +1,4 @@
-package user
+package recipe
 
 import (
 	"context"
@@ -44,8 +44,6 @@ func (rs recipeService) GetRecipeById(id *string) (*models.Recipe, error) {
 
 	return recipe, nil
 }
-
-func (rs recipeService) UpdateRecipe(recipeUpdate)
 
 func (rs recipeService) CreateRecipe(recipe *models.Recipe) (*models.Recipe, error) {
 	recipe.CreatedDate = time.Now().UTC()

@@ -64,7 +64,6 @@ func main() {
 
 	r.GET("/ready", func(c *gin.Context) {
 		_, span := tracer.Start(c.Request.Context(), "DoSomething")
-		log.Println("Yolo")
 		span.End()
 		c.JSON(200, gin.H{
 			"message": "pong222",
