@@ -8,7 +8,7 @@ type Image struct {
 }
 
 type RecipeRevision struct {
-	Id          string    `firestore:"-" json:"id"`
+	Id          string    `firestore:"id" json:"id"`
 	RecipeId    string    `firestore:"recipeId" json:"recipeId"`
 	Author      Author    `firestore:"author" json:"author"`
 	Images      []Image   `firestore:"images" json:"images"`

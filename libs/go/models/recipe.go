@@ -8,7 +8,7 @@ type RecipeMetada struct {
 }
 
 type Recipe struct {
-	Id              string         `firestore:"-" json:"id"`
+	Id              string         `firestore:"id" json:"id"`
 	Title           string         `firestore:"title" json:"title"`
 	CurrentRevision RecipeRevision `firestore:"currentRevision" json:"currentRevision"`
 	Metadata        RecipeMetada   `firestore:"metadata" json:"metadata"`
