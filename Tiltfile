@@ -15,7 +15,8 @@ docker_build(
     dockerfile='./apps/api/Dockerfile.dev',
     only=['./apps/api', './go.mod', './go.sum', './libs/go'],
     live_update=[
-        sync('./apps/api/', '/app'),
+        sync('./apps/api/', '/app/apps/api'),
+        sync('./libs/go/', '/app/libs/go'),
         run(
             'go mod tidy',
             trigger=['./apps/api/']
@@ -82,7 +83,7 @@ k8s_resource(
 # https://docs.tilt.dev/api.html#api.k8s_resource
 k8s_resource(
     'firestore',
-    port_forwards='5736:8200',
+    port_forwards='8200:8200',
     labels=['firestore','database']
 )
 

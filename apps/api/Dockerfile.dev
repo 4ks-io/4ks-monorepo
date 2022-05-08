@@ -6,9 +6,9 @@ WORKDIR /app
 
 COPY ./go.mod ./
 COPY ./go.sum ./
-COPY ./apps/api .
+COPY ./apps/api ./apps/api
 COPY ./libs/go ./libs/go
 
 RUN go mod tidy
 
-CMD ["gow", "run", "."]
+CMD ["gow", "run", "./apps/api"]

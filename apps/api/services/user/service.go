@@ -3,29 +3,39 @@ package user
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
+	"time"
 
 	firestore "cloud.google.com/go/firestore"
-	"google.golang.org/api/iterator"
 
+	"4ks/apps/api/dtos"
 	models "4ks/libs/go/models"
 )
 
+var firstoreProjectId = os.Getenv("FIRESTORE_PROJECT_ID")
+var firestoreEmulatorHost = os.Getenv("FIRESTORE_EMULATOR_HOST")
+
+var ctx = context.Background()
+var storage, _ = firestore.NewClient(ctx, firstoreProjectId)
+var userCollection = storage.Collection("users")
+
+var (
+	ErrEmailInUse   = errors.New("a user with that email already exists")
+	ErrUserNotFound = errors.New("a user with that email was not found")
+)
+
 type UserService interface {
-	GetUserByEmail(emailAddress *string) (*models.User, error)
 	GetUserById(id *string) (*models.User, error)
-	CreateUser(user *models.User) (*models.User, error)
+	CreateUser(user *dtos.CreateUser) (*models.User, error)
 }
 
 type userService struct {
 }
 
-var firstoreProjectId = os.Getenv("FIRESTORE_PROJECT_ID")
-var ctx = context.Background()
-var storage, _ = firestore.NewClient(ctx, firstoreProjectId)
-var userCollection = storage.Collection("users")
-
 func New() UserService {
+	fmt.Println(firestoreEmulatorHost)
+
 	return &userService{}
 }
 
@@ -33,7 +43,7 @@ func (us userService) GetUserById(id *string) (*models.User, error) {
 	result, err := userCollection.Doc(*id).Get(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, ErrUserNotFound
 	}
 
 	user := new(models.User)
@@ -43,47 +53,23 @@ func (us userService) GetUserById(id *string) (*models.User, error) {
 		return nil, err
 	}
 
+	user.Id = result.Ref.ID
 	return user, nil
 }
 
-func (us userService) GetUserByEmail(emailAddress *string) (*models.User, error) {
-	iter := userCollection.Where("emailAddress", "==", emailAddress).Limit(1).Documents(ctx)
-	defer iter.Stop()
-
-	result, err := iter.Next()
-
-	if err == iterator.Done {
-		return nil, errors.New("unable to find user with email")
+func (us userService) CreateUser(user *dtos.CreateUser) (*models.User, error) {
+	newUser := &models.User{
+		Id:           user.EmailAddress,
+		Username:     user.Username,
+		DisplayName:  user.DisplayName,
+		EmailAddress: user.EmailAddress,
+		CreatedDate:  time.Now().UTC(),
+		UpdatedDate:  time.Now().UTC(),
 	}
-
-	user := new(models.User)
-	err = result.DataTo(user)
+	_, err := userCollection.Doc(user.EmailAddress).Create(ctx, newUser)
 
 	if err != nil {
-		return nil, err
-	}
-
-	return user, nil
-}
-
-func (us userService) CreateUser(user *models.User) (*models.User, error) {
-	doc, _, err := userCollection.Add(ctx, user)
-
-	if err != nil {
-		return nil, errors.New("unable to insert user into collection")
-	}
-
-	result, err := doc.Get(ctx)
-
-	if err != nil {
-		return nil, errors.New("unable to fetch user after insert")
-	}
-
-	newUser := new(models.User)
-	err = result.DataTo(newUser)
-
-	if err != nil {
-		return nil, errors.New("unable to convert User object")
+		return nil, ErrEmailInUse
 	}
 
 	return newUser, nil

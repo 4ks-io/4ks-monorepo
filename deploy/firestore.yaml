@@ -38,5 +38,5 @@ spec:
     app: firestore
   ports:
     - protocol: TCP
-      port: 80
+      port: 8200
       targetPort: 8200
