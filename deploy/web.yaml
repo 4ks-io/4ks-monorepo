@@ -1,3 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  selector:
+    app: 4ks-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,15 +38,3 @@ spec:
           #   httpGet:
           #     port: 3000
           #     path: '/'
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: web
-spec:
-  selector:
-    app: 4ks-web
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 3000
