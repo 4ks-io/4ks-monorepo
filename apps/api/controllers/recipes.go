@@ -1,6 +1,12 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"4ks/apps/api/dtos"
+	recipeService "4ks/apps/api/services/recipe"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 type RecipeController interface {
 	CreateRecipe(c *gin.Context)
@@ -13,29 +19,58 @@ type RecipeController interface {
 }
 
 type recipeController struct {
+	recipeService recipeService.RecipeService
 }
 
 func NewRecipeController() RecipeController {
-	return &recipeController{}
+	return &recipeController{
+		recipeService: recipeService.New(),
+	}
 }
 
-func (uc *recipeController) CreateRecipe(c *gin.Context) {
+func (rc *recipeController) CreateRecipe(c *gin.Context) {
+	payload := dtos.CreateRecipe{}
+	if err := c.BindJSON(&payload); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	createdRecipe, err := rc.recipeService.CreateRecipe(&payload)
+	if err == recipeService.ErrUnableToCreateRecipe {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, createdRecipe)
+}
+
+func (rc *recipeController) GetRecipe(c *gin.Context) {
+	recipeId := c.Param("id")
+	recipe, err := rc.recipeService.GetRecipeById(&recipeId)
+
+	if err == recipeService.ErrRecipeNotFound {
+		c.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, recipe)
+}
+
+func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 
 }
 
-func (uc *recipeController) GetRecipe(c *gin.Context) {
+func (rc *recipeController) ForkRecipe(c *gin.Context) {
 
 }
 
-func (uc *recipeController) UpdateRecipe(c *gin.Context) {
-
-}
-
-func (uc *recipeController) ForkRecipe(c *gin.Context) {
-
-}
-
-func (uc *recipeController) StarRecipe(c *gin.Context) {
+func (rc *recipeController) StarRecipe(c *gin.Context) {
 
 }
 

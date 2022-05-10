@@ -3,7 +3,7 @@ package models
 import "time"
 
 type User struct {
-	Id           string    `firestore:"-" json:"id"`
+	Id           string    `firestore:"id" json:"id"`
 	Username     string    `firestore:"username,omitempty" json:"username"`
 	DisplayName  string    `firestore:"displayName,omitempty" json:"displayName"`
 	EmailAddress string    `firestore:"emailAddress,omitempty" json:"emailAddress"`
