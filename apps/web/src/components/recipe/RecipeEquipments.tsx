@@ -10,9 +10,9 @@ export function RecipeEquipments(props: IRecipeEquipmentsProps) {
       <div style={{ borderStyle: 'solid' }}>
         Equipment
         <ul style={{ listStyleType: 'none', paddingLeft: '8px' }}>
-          {mockEquipment.map((e) => {
+          {mockEquipment.map((e, i) => {
             return (
-              <li style={{ marginBottom: '8px' }}>
+              <li key={i} style={{ marginBottom: '8px' }}>
                 <Checkbox label={e} />
               </li>
             );

@@ -1,56 +1,15 @@
-# 4ks Api
+Getting starter
 
-## GET /recipes
+```
+minikube start
 
-Search recipes and filter using query params. (i.e current user id, text search, time, etc)
+tilt up
 
-## POST /recipes
+minikube dashboard
 
-Create a new recipe
+docker-compose up
+```
 
-## GET /recipes/:recipeId
+<!-- https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/ -->
 
-Get a recipe by id
-
-## PUT /recipes/:recipeId
-
-Update a recipe
-
-## POST /recipes/:recipeId/star
-
-Star a recipe
-
-## GET /recipes/:recipeId/revisions
-
-Get basic info for recipe revisions. Filterable using query params i.e date, etc
-
-## GET /recipes/:recipeId/revisions/:revisionId
-
-Get a recipe revision by id
-
-## POST /recipes/:recipeId/fork
-
-Fork a recipe
-
-## GET /user/:userId
-
-Get a user
-
-## POST /user
-
-Create a user
-
-# 4ks Data Model
-
-Live Data Model Diagram
-
-https://app.diagrams.net/?src=about#G1FwQB7uxcTfF5QOdGvn2zeyCqIfE6vPUK
-
-![Data Model](/docs/4ksDataModel.png)
-
-
-# 4ks Architecture Diagram
-
-There are two proposals for an architecture in the diagram below
-
-![Arch Diagram](/docs/arch-diagram.svg)
+The resources will be created in the order they appear in the file. Therefore, it's best to specify the service first, since that will ensure the scheduler can spread the pods associated with the service as they are created by the controller(s), such as Deployment.

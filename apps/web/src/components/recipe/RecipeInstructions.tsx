@@ -24,8 +24,8 @@ export function RecipeInstructions(props: IRecipeInstructionsProps) {
             <Text weight={500}>Instructions</Text>
           </Group>
         </Grid.Col>
-        {mockedInstructions.map((i) => (
-          <Grid.Col span={1}>
+        {mockedInstructions.map((i, n) => (
+          <Grid.Col key={n} span={1}>
             <Card shadow="sm" p="lg">
               {i}
             </Card>

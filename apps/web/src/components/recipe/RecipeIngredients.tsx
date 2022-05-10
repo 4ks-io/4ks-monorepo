@@ -19,9 +19,9 @@ export function RecipeIngredients(props: IRecipeIngredientsProps) {
       <div style={{ borderStyle: 'solid' }}>
         Ingredients
         <ul style={{ listStyleType: 'none', paddingLeft: '8px' }}>
-          {mockIngredients.map((i) => {
+          {mockIngredients.map((i, n) => {
             return (
-              <li style={{ marginBottom: '8px' }}>
+              <li key={n} style={{ marginBottom: '8px' }}>
                 <Checkbox label={i} />
               </li>
             );

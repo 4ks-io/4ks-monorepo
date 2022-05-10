@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  nginx:
+    container_name: 4ks-alb
+    build: ./apps-dev/nginx
+    image: 4ks/alb
+    ports:
+      - '443:4433'
+      - '80:8080'
+    restart: always
+    # logging:
+    #   driver: none
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'

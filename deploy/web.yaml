@@ -19,7 +19,7 @@ spec:
           image: 4ks-web
           env:
             - name: VITE_CLIENT_PORT
-              value: '5735'
+              value: '443'
           ports:
             - containerPort: 3000
           # readinessProbe:

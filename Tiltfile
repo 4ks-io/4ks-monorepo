@@ -33,7 +33,7 @@ k8s_yaml(['./deploy/api.yaml', './deploy/web.yaml', './deploy/firestore.yaml'])
 # https://docs.tilt.dev/api.html#api.k8s_resource
 k8s_resource(
     'api',
-    port_forwards='5734:5000',
+    port_forwards='0.0.0.0:5734:5000',
     labels=['backend']
 )
 
@@ -70,7 +70,7 @@ docker_build(
 # https://docs.tilt.dev/api.html#api.k8s_resource
 k8s_resource(
     'web',
-    port_forwards='5735:3000',
+    port_forwards='0.0.0.0:5735:3000',
     labels=['web']
 )
 

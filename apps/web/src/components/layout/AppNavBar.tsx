@@ -11,7 +11,6 @@ import {
   useMantineTheme,
   Tooltip,
 } from '@mantine/core';
-import { MantineProvider } from '@mantine/core';
 
 import { themeHotKey } from '../../App';
 
@@ -24,6 +23,12 @@ export function AppNavBar(props: IAppShellHaederProps) {
 
   const highlight = {}; //{ backgroundColor: 'grey' };
   const [searchWidth, setSearchWidth] = useState(256);
+
+  function handleAvatarOnClick() {
+    fetch('https://local.4ks.io/api/version')
+      .then((response) => response.json())
+      .then((data) => console.log(data));
+  }
 
   return (
     <Header
@@ -69,7 +74,7 @@ export function AppNavBar(props: IAppShellHaederProps) {
               </ActionIcon>
             </Grid.Col>
             <Grid.Col style={highlight} span={1}>
-              <Avatar radius="xl" size={28} />
+              <Avatar radius="xl" size={28} onClick={handleAvatarOnClick} />
             </Grid.Col>
           </Grid>
         </Grid.Col>
