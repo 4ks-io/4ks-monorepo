@@ -7,6 +7,7 @@ import (
 	"time"
 
 	firestore "cloud.google.com/go/firestore"
+	"github.com/ulule/deepcopier"
 
 	"4ks/apps/api/dtos"
 	models "4ks/libs/go/models"
@@ -19,6 +20,7 @@ var recipeCollection = storage.Collection("recipes")
 var recipeRevisionsCollection = storage.Collection("recipe-revisions")
 
 var (
+	ErrUnableToUpdateRecipe = errors.New("there was an error updating the recipe")
 	ErrUnableToCreateRecipe = errors.New("there was an error creating the recipe")
 	ErrRecipeNotFound       = errors.New("recipe was not found")
 )
@@ -26,6 +28,7 @@ var (
 type RecipeService interface {
 	GetRecipeById(id *string) (*models.Recipe, error)
 	CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe, error)
+	UpdateRecipeById(id *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error)
 }
 
 type recipeService struct {
@@ -60,16 +63,17 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 	recipeCreatedDate := time.Now().UTC()
 
 	recipeRevision := &models.RecipeRevision{
-		Id:          newRevisionDoc.ID,
-		RecipeId:    newRecipeDoc.ID,
-		Author:      recipe.Author,
-		Images:      recipe.Images,
-		CreatedDate: recipeCreatedDate,
-		UpdatedDate: recipeCreatedDate,
+		Id:           newRevisionDoc.ID,
+		Name:         recipe.Name,
+		RecipeId:     newRecipeDoc.ID,
+		Author:       recipe.Author,
+		Images:       recipe.Images,
+		Instructions: recipe.Instructions,
+		CreatedDate:  recipeCreatedDate,
+		UpdatedDate:  recipeCreatedDate,
 	}
 	newRecipe := &models.Recipe{
-		Id:    newRecipeDoc.ID,
-		Title: recipe.Title,
+		Id: newRecipeDoc.ID,
 		Metadata: models.RecipeMetada{
 			Stars: 0,
 			Forks: 0,
@@ -82,8 +86,42 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 	_, err := storage.Batch().Create(newRevisionDoc, recipeRevision).Create(newRecipeDoc, newRecipe).Commit(ctx)
 
 	if err != nil {
-		return nil, errors.New("unable to create new recipe with revision")
+		return nil, ErrUnableToCreateRecipe
 	}
 
 	return newRecipe, nil
+}
+
+func (rs recipeService) UpdateRecipeById(recipeId *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error) {
+	recipeDoc, err := recipeCollection.Doc(*recipeId).Get(ctx)
+	recipe := new(models.Recipe)
+	recipeDoc.DataTo(recipe)
+
+	if err != nil {
+		return nil, ErrRecipeNotFound
+	}
+
+	recipeUpdatedDate := time.Now().UTC()
+
+	newRevisionDocRef := recipeRevisionsCollection.NewDoc()
+	newRevision := &models.RecipeRevision{
+		Id: newRevisionDocRef.ID,
+	}
+
+	deepcopier.Copy(recipe.CurrentRevision).To(newRevision)
+	deepcopier.Copy(recipeUpdate).To(newRevision)
+
+	newRevision.CreatedDate = recipeUpdatedDate
+	newRevision.UpdatedDate = recipeUpdatedDate
+
+	recipe.CurrentRevision = *newRevision
+	recipe.UpdatedDate = recipeUpdatedDate
+
+	_, err = storage.Batch().Create(newRevisionDocRef, newRevision).Set(recipeDoc.Ref, recipe).Commit(ctx)
+
+	if err != nil {
+		return nil, ErrUnableToUpdateRecipe
+	}
+
+	return recipe, nil
 }

@@ -7,11 +7,19 @@ type Image struct {
 	Url string `firestore:"url" json:"url"`
 }
 
+type Instruction struct {
+	Type string `firestore:"type" json:"type"`
+	Name string `firestore:"name" json:"name"`
+	Text string `firestore:"text" json:"text"`
+}
+
 type RecipeRevision struct {
-	Id          string    `firestore:"id" json:"id"`
-	RecipeId    string    `firestore:"recipeId" json:"recipeId"`
-	Author      Author    `firestore:"author" json:"author"`
-	Images      []Image   `firestore:"images" json:"images"`
-	CreatedDate time.Time `firestore:"createdDate" json:"createdDate"`
-	UpdatedDate time.Time `firestore:"updatedDate" json:"updatedDate"`
+	Id           string        `firestore:"id" json:"id" deepcopier:"skip"`
+	Name         string        `firestore:"name" json:"name"`
+	RecipeId     string        `firestore:"recipeId" json:"recipeId"`
+	Instructions []Instruction `firestore:"instructions" json:"instructions"`
+	Author       Author        `firestore:"author" json:"author"`
+	Images       []Image       `firestore:"images" json:"images"`
+	CreatedDate  time.Time     `firestore:"createdDate" json:"createdDate"`
+	UpdatedDate  time.Time     `firestore:"updatedDate" json:"updatedDate"`
 }

@@ -3,7 +3,8 @@ package dtos
 import "4ks/libs/go/models"
 
 type CreateRecipe struct {
-	Title  string         `json:"title"`
-	Author models.Author  `json:"author"`
-	Images []models.Image `json:"images"`
+	Name         string               `json:"name"`
+	Author       models.Author        `json:"author"`
+	Images       []models.Image       `json:"images"`
+	Instructions []models.Instruction `json:"instructions"`
 }
