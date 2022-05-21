@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	cloud.google.com/go/firestore v1.6.1
+	github.com/geraldo-labs/merge-struct v1.0.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/zsais/go-gin-prometheus v0.1.0
 	go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin v0.31.0
@@ -18,6 +19,7 @@ require (
 	cloud.google.com/go/compute v1.6.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -41,7 +43,6 @@ require (
 	github.com/prometheus/procfs v0.7.3 // indirect
 	github.com/sirupsen/logrus v1.6.0 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
-	github.com/ulule/deepcopier v0.0.0-20200430083143-45decc6639b6 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/crypto v0.0.0-20220507011949-2cf3adece122 // indirect
 	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4 // indirect

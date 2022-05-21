@@ -7,7 +7,7 @@ import (
 	"time"
 
 	firestore "cloud.google.com/go/firestore"
-	"github.com/ulule/deepcopier"
+	mp "github.com/geraldo-labs/merge-struct"
 
 	"4ks/apps/api/dtos"
 	models "4ks/libs/go/models"
@@ -94,22 +94,26 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 
 func (rs recipeService) UpdateRecipeById(recipeId *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error) {
 	recipeDoc, err := recipeCollection.Doc(*recipeId).Get(ctx)
-	recipe := new(models.Recipe)
-	recipeDoc.DataTo(recipe)
 
 	if err != nil {
 		return nil, ErrRecipeNotFound
 	}
 
+	recipe := new(models.Recipe)
+	recipeDoc.DataTo(recipe)
+
 	recipeUpdatedDate := time.Now().UTC()
 
 	newRevisionDocRef := recipeRevisionsCollection.NewDoc()
-	newRevision := &models.RecipeRevision{
-		Id: newRevisionDocRef.ID,
-	}
+	newRevision := &models.RecipeRevision{}
 
-	deepcopier.Copy(recipe.CurrentRevision).To(newRevision)
-	deepcopier.Copy(recipeUpdate).To(newRevision)
+	// Copy the existing revision data into the new revision
+	// Set the id of the new revision
+	mp.Struct(newRevision, recipe.CurrentRevision)
+	newRevision.Id = newRevisionDocRef.ID
+
+	// Apply the new revision updates
+	mp.Struct(newRevision, recipeUpdate)
 
 	newRevision.CreatedDate = recipeUpdatedDate
 	newRevision.UpdatedDate = recipeUpdatedDate
