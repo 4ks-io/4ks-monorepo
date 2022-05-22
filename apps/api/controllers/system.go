@@ -18,8 +18,8 @@ func NewSystemController() SystemController {
 	return &systemController{}
 }
 
-func (systemCtlr *systemController) CheckReadiness(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
+func (systemCtlr *systemController) CheckReadiness(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{
 		"data": "ok",
 	})
 }

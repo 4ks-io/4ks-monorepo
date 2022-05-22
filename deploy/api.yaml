@@ -33,9 +33,17 @@ spec:
             - name: PORT
               value: '5000'
             - name: FIRESTORE_EMULATOR_HOST
-              value: 'firestore:8200'
+              value: firestore:8200
             - name: FIRESTORE_PROJECT_ID
-              value: '4ks-dev'
+              value: 4ks-dev
+            - name: AUTH0_DOMAIN
+              value: 4ks-dev.us.auth0.com
+            - name: AUTH0_CLIENT_ID
+              value: eM5Zyyfp6coLg3zORMFsZEnQmpqxBjHd
+            - name: AUTH0_CLIENT_SECRET
+              value: AxT9wCGFYRTz38XhhZuVuAKZvoXiNMmPb1WYLeb-SkU90IC6vqJKdgeScbHccGHn
+            - name: AUTH0_CALLBACK_URL
+              value: https://local.4ks.io/api/authback
           ports:
             - containerPort: 5000
           readinessProbe:

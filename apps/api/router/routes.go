@@ -1,15 +1,13 @@
-package main
+package router
 
 import (
 	"github.com/gin-gonic/gin"
-
-	// texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
 
 	controllers "4ks/apps/api/controllers"
 )
 
 
-func systemRouter(router *gin.Engine) {
+func SystemRouter(router *gin.Engine) {
 	systemCtlr := controllers.NewSystemController()
 	router.GET("/version", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -19,7 +17,7 @@ func systemRouter(router *gin.Engine) {
 	router.GET("/ready", systemCtlr.CheckReadiness)
 }
 
-func usersRouter(router *gin.Engine) {
+func UsersRouter(router *gin.Engine) {
 	uc := controllers.NewUserController()
 
 	users := router.Group("/users")
@@ -30,7 +28,7 @@ func usersRouter(router *gin.Engine) {
 	}
 }
 
-func recipesRouter(router *gin.Engine) {
+func RecipesRouter(router *gin.Engine) {
 	rc := controllers.NewRecipeController()
 
 	recipes := router.Group("/recipes")

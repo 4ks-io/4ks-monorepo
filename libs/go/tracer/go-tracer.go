@@ -13,6 +13,12 @@ import (
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
 
+// const (
+// 	service     = "api"
+// 	environment = "local"
+// 	port
+// )
+
 func InitTracerProvider() *sdktrace.TracerProvider {
 	// projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
 	// googleExporter, err := texporter.New(texporter.WithProjectID(projectID))
@@ -20,10 +26,25 @@ func InitTracerProvider() *sdktrace.TracerProvider {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// r, err := resource.Merge(
+	// 	resource.Default(),
+	// 	resource.NewWithAttributes(semconv.SchemaURL, semconv.ServiceNameKey.String("ExampleService")),
+	// )
+	// if err != nil {
+	// 	panic(err)
+	// }
+
 	tp := sdktrace.NewTracerProvider(
 		sdktrace.WithSampler(sdktrace.AlwaysSample()),
 		sdktrace.WithBatcher(exporter),
+		// sdktrace.WithResource(resource.NewWithAttributes(
+		// 	semconv.SchemaURL,
+		// 	semconv.ServiceNameKey.String(service),
+		// 	attribute.String("environment", environment),
+		// )),
 	)
+
 	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 	return tp

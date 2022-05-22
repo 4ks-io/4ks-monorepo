@@ -1,39 +1,48 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"context"
+	"log"
+
 	ginprometheus "github.com/zsais/go-gin-prometheus"
 
 	// texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
-	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 
-	tracing "4ks/libs/go/tracer"
-
+	"4ks/apps/api/authenticator"
+	router "4ks/apps/api/router"
 	utils "4ks/apps/api/utils"
+	tracing "4ks/libs/go/tracer"
 )
 
-var tracer = tracing.NewTracer("gin-server")
+// var tracer = tracing.NewTracer("gin-server")
 
 func main() {
-	// tp := tracing.InitTracerProvider()
-	// defer func() {
-	// 	if err := tp.Shutdown(context.Background()); err != nil {
-	// 		log.Printf("Error shutting down tracer provider: %v", err)
-	// 	}
-	// }()
+	tp := tracing.InitTracerProvider()
+	defer func() {
+		if err := tp.Shutdown(context.Background()); err != nil {
+			log.Printf("Error shutting down tracer provider: %v", err)
+		}
+	}()
 
-	router := gin.Default()
+	auth, err := authenticator.New()
+	if err != nil {
+		log.Fatalf("Failed to initialize the authenticator: %v", err)
+	}
+
+	router := router.New(auth)
+
 	prom := ginprometheus.NewPrometheus("gin")
 	prom.Use(router)
 
 	// Configure Open Telemetry Middleware for Gin
-	router.Use(otelgin.Middleware("4ks-api"))
+	// moved into groups to avoid logging system routes (eg. /ready)
+	// router.Use(otelgin.Middleware("4ks-api"))
 
-	systemRouter(router)
-	usersRouter(router)
-	recipesRouter(router)
 
-	router.Run("0.0.0.0:" + utils.GetEnvVar("PORT", "5000"))
+	addr := "0.0.0.0:" + utils.GetEnvVar("PORT", "5000")
+	if err := router.Run(addr); err != nil {
+		log.Fatalf("http server error: %v", err)
+	}
 }
 
 
