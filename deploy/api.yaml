@@ -30,6 +30,8 @@ spec:
         - name: 4ks-api
           image: 4ks-api
           env:
+            - name: PORT
+              value: '5000'
             - name: FIRESTORE_EMULATOR_HOST
               value: 'firestore:8200'
             - name: FIRESTORE_PROJECT_ID

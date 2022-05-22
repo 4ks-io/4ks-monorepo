@@ -1,9 +1,6 @@
 package main
 
 import (
-	"context"
-	"log"
-
 	"github.com/gin-gonic/gin"
 	ginprometheus "github.com/zsais/go-gin-prometheus"
 
@@ -12,63 +9,33 @@ import (
 
 	tracing "4ks/libs/go/tracer"
 
-	controllers "4ks/apps/api/controllers"
+	utils "4ks/apps/api/utils"
 )
 
 var tracer = tracing.NewTracer("gin-server")
 
 func main() {
-	tp := tracing.InitTracerProvider()
-	defer func() {
-		if err := tp.Shutdown(context.Background()); err != nil {
-			log.Printf("Error shutting down tracer provider: %v", err)
-		}
-	}()
+	// tp := tracing.InitTracerProvider()
+	// defer func() {
+	// 	if err := tp.Shutdown(context.Background()); err != nil {
+	// 		log.Printf("Error shutting down tracer provider: %v", err)
+	// 	}
+	// }()
 
-	uc := controllers.NewUserController()
-	rc := controllers.NewRecipeController()
-
-	r := gin.Default()
-	p := ginprometheus.NewPrometheus("gin")
-	p.Use(r)
+	router := gin.Default()
+	prom := ginprometheus.NewPrometheus("gin")
+	prom.Use(router)
 
 	// Configure Open Telemetry Middleware for Gin
-	r.Use(otelgin.Middleware("4ks-api"))
+	router.Use(otelgin.Middleware("4ks-api"))
 
-	r.GET("/version", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"version": "0.0.1",
-		})
-	})
+	systemRouter(router)
+	usersRouter(router)
+	recipesRouter(router)
 
-	v1 := r.Group("/api/v1")
-	{
-		users := v1.Group("/users")
-		{
-			users.POST("", uc.CreateUser)
-			users.GET(":id", uc.GetUser)
-			users.PATCH(":id", uc.UpdateUser)
-		}
-
-		recipes := v1.Group("/recipes")
-		{
-			recipes.POST("", rc.CreateRecipe)
-			recipes.GET(":id", rc.GetRecipe)
-			recipes.PATCH(":id", rc.UpdateRecipe)
-			recipes.POST(":id/star", rc.StarRecipe)
-			recipes.POST(":id/fork", rc.ForkRecipe)
-			recipes.GET(":id/revisions", rc.GetRecipeRevisions)
-			recipes.GET(":id/revisions/:revisionId", rc.GetRecipeRevision)
-		}
-	}
-
-	r.GET("/ready", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong222",
-		})
-	})
-	r.Run("0.0.0.0:5000") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	router.Run("0.0.0.0:" + utils.GetEnvVar("PORT", "5000"))
 }
+
 
 // func initTracer() *sdktrace.TracerProvider {
 // 	// projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
