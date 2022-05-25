@@ -83,7 +83,15 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 }
 
 func (rc *recipeController) ForkRecipe(c *gin.Context) {
+	recipeId := c.Param("id")
 
+	createdRecipe, err := rc.recipeService.ForkRecipeById(&recipeId)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, createdRecipe)
 }
 
 func (rc *recipeController) StarRecipe(c *gin.Context) {
