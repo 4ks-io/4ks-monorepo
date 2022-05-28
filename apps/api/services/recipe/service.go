@@ -188,7 +188,7 @@ func (rs recipeService) StarRecipeById(recipeId *string, author models.UserSumma
 	recipe := new(models.Recipe)
 	recipeDoc.DataTo(recipe)
 
-	starredDate := time.Now()
+	starredDate := time.Now().UTC()
 	recipeStarDoc := models.RecipeStar{
 		User: author,
 		Recipe: models.RecipeSummary{
