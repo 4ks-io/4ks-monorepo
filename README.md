@@ -12,7 +12,7 @@ There are two proposals for an architecture in the diagram below
 
 ![Arch Diagram](/docs/arch-diagram.svg)
 
-# Getting started
+# Getting started (minikube)
 
 ```
 minikube start
@@ -20,6 +20,18 @@ minikube start
 tilt up
 
 minikube dashboard
+
+docker-compose up
+
+https://local.4ks.io/ (must be added to host file)
+```
+
+# Getting started (k3d)
+
+```
+k3d cluster create 4ks --registry-create 4ks-registry
+
+tilt up
 
 docker-compose up
 
