@@ -6,7 +6,6 @@ import (
 	controllers "4ks/apps/api/controllers"
 )
 
-
 func SystemRouter(router *gin.Engine) {
 	systemCtlr := controllers.NewSystemController()
 	router.GET("/version", func(c *gin.Context) {

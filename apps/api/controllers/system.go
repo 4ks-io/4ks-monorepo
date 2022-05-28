@@ -6,13 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 type SystemController interface {
 	CheckReadiness(c *gin.Context)
 }
 
-type systemController struct {}
-
+type systemController struct{}
 
 func NewSystemController() SystemController {
 	return &systemController{}

@@ -10,7 +10,7 @@ import (
 )
 
 type AuthbackParams struct {
-	Code string `form:"code`
+	Code  string `form:"code`
 	State string `form:"state`
 }
 
@@ -37,8 +37,6 @@ func AuthbackHandler(auth *authenticator.Authenticator) gin.HandlerFunc {
 		// sesState := session.Get("state")
 		// fmt.Println(ctxState)
 		// fmt.Println(sesState)
-
-
 
 		if ctx.Query("state") != session.Get("state") {
 			ctx.String(http.StatusBadRequest, "Invalid state parameter.")

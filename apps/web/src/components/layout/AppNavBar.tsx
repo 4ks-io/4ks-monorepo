@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import logo from '../../logo.svg';
-import { Settings } from 'tabler-icons-react';
+import { Settings, Login, Logout } from 'tabler-icons-react';
 import {
   Avatar,
   ActionIcon,
@@ -11,6 +11,7 @@ import {
   useMantineTheme,
   Tooltip,
 } from '@mantine/core';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import { themeHotKey } from '../../App';
 
@@ -20,6 +21,8 @@ interface IAppShellHaederProps {
 
 export function AppNavBar(props: IAppShellHaederProps) {
   const theme = useMantineTheme();
+  const { loginWithRedirect, logout } = useAuth0();
+  const { user, isAuthenticated, isLoading } = useAuth0();
 
   const highlight = {}; //{ backgroundColor: 'grey' };
   const [searchWidth, setSearchWidth] = useState(256);
@@ -28,6 +31,18 @@ export function AppNavBar(props: IAppShellHaederProps) {
     fetch('https://local.4ks.io/api/version')
       .then((response) => response.json())
       .then((data) => console.log(data));
+
+    // if (isLoading) {
+    //   return <div>Loading ...</div>;
+    // }
+
+    isAuthenticated && user && !isLoading && console.log(user);
+  }
+  function handleLoginOnClick() {
+    loginWithRedirect();
+  }
+  function handleLogoutOnClick() {
+    logout({ returnTo: window.location.origin });
   }
 
   return (
@@ -75,6 +90,12 @@ export function AppNavBar(props: IAppShellHaederProps) {
             </Grid.Col>
             <Grid.Col style={highlight} span={1}>
               <Avatar radius="xl" size={28} onClick={handleAvatarOnClick} />
+            </Grid.Col>
+            <Grid.Col style={highlight} span={1}>
+              <Login radius="xl" size={28} onClick={handleLoginOnClick} />
+            </Grid.Col>
+            <Grid.Col style={highlight} span={1}>
+              <Logout radius="xl" size={28} onClick={handleLogoutOnClick} />
             </Grid.Col>
           </Grid>
         </Grid.Col>

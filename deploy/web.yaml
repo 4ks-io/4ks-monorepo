@@ -32,6 +32,10 @@ spec:
           env:
             - name: VITE_CLIENT_PORT
               value: '443'
+            - name: VITE_AUTH0_DOMAIN
+              value: 4ks-dev.us.auth0.com
+            - name: VITE_AUTH0_CLIENT_ID
+              value: eM5Zyyfp6coLg3zORMFsZEnQmpqxBjHd
           ports:
             - containerPort: 3000
           # readinessProbe:

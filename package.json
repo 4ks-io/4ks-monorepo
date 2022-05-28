@@ -9,6 +9,10 @@
   },
   "private": true,
   "devDependencies": {
+    "@auth0/auth0-react": "^1.10.1",
+    "@mantine/core": "^4.2.2",
+    "@mantine/hooks": "^4.2.2",
+    "@mantine/styles": "^4.2.2",
     "@nrwl/cli": "13.9.6",
     "@nrwl/devkit": "^13.9.6",
     "@nrwl/jest": ">=13.4.4 <14.0.0",
@@ -27,13 +31,10 @@
     "nx": "13.9.6",
     "nx-plugin-vite": "^1.6.2",
     "prettier": "^2.5.1",
+    "tabler-icons-react": "^1.47.0",
     "typescript": "~4.5.2",
     "vite": "^2.9.1",
-    "vite-tsconfig-paths": "^3.4.1",
-    "@mantine/core": "^4.2.2",
-    "@mantine/hooks": "^4.2.2",
-    "@mantine/styles": "^4.2.2",
-    "tabler-icons-react": "^1.47.0"
+    "vite-tsconfig-paths": "^3.4.1"
   },
   "dependencies": {
     "react": "^17.0.2",

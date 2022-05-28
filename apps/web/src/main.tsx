@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import AppAuth from './AppAuth';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <AppAuth />
   </React.StrictMode>,
   document.getElementById('root')
 );
