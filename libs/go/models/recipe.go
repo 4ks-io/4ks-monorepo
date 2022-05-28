@@ -8,10 +8,15 @@ type RecipeMetada struct {
 }
 
 type Recipe struct {
-	Id              string         `firestore:"id" json:"id" deepcopier:"skip"`
+	Id              string         `firestore:"id" json:"id"`
 	CurrentRevision RecipeRevision `firestore:"currentRevision" json:"currentRevision"`
 	Metadata        RecipeMetada   `firestore:"metadata" json:"metadata"`
 	Source          string         `firestore:"source" json:"source"`
 	CreatedDate     time.Time      `firestore:"createdDate" json:"createdDate"`
 	UpdatedDate     time.Time      `firestore:"updatedDate" json:"updatedDate"`
+}
+
+type RecipeSummary struct {
+	Id   string `firestore:"id" json:"id"`
+	Name string `firestore:"name" json:"name"`
 }

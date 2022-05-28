@@ -85,17 +85,40 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 func (rc *recipeController) ForkRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
 
-	createdRecipe, err := rc.recipeService.ForkRecipeById(&recipeId)
+	newRecipe, err := rc.recipeService.ForkRecipeById(&recipeId)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, createdRecipe)
+	c.JSON(http.StatusOK, newRecipe)
 }
 
 func (rc *recipeController) StarRecipe(c *gin.Context) {
+	recipeId := c.Param("id")
 
+	payload := dtos.StarRecipe{}
+	if err := c.BindJSON(&payload); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	_, err := rc.recipeService.StarRecipeById(&recipeId, payload.User)
+
+	if err == recipeService.ErrRecipeNotFound {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	} else if err == recipeService.ErrRecipeAlreadyStarred {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": "Recipe is already starred",
+		})
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func (rc *recipeController) GetRecipeRevisions(c *gin.Context) {

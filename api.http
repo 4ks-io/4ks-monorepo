@@ -1,0 +1,23 @@
+GET https://local.4ks.io/api/recipes/BNYpWruxPACWT5byWD6f HTTP/2.0
+content-type: application/json
+
+
+POST https://local.4ks.io/api/recipes HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Hammad's Recipe"
+}
+
+###
+
+POST https://local.4ks.io/api/recipes/BNYpWruxPACWT5byWD6f/star HTTP/2.0
+Content-Type: application/json
+
+{
+    "user": {
+        "id": "someId2",
+        "username": "someusername",
+        "displayName": "somedisplayname"
+    }
+}

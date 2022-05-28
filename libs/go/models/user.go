@@ -13,7 +13,7 @@ type User struct {
 
 // Subset of a user that will be nested in a RecipeRevision or Recipe object
 
-type Author struct {
+type UserSummary struct {
 	Id          string `firestore:"id,omitempty" json:"id"`
 	Username    string `firestore:"username,omitempty" json:"username"`
 	DisplayName string `firestore:"displayName,omitempty" json:"displayName"`

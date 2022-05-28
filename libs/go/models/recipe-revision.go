@@ -14,11 +14,11 @@ type Instruction struct {
 }
 
 type RecipeRevision struct {
-	Id           string        `firestore:"id" json:"id" deepcopier:"skip"`
+	Id           string        `firestore:"id" json:"id"`
 	Name         string        `firestore:"name" json:"name"`
 	RecipeId     string        `firestore:"recipeId" json:"recipeId"`
 	Instructions []Instruction `firestore:"instructions" json:"instructions"`
-	Author       Author        `firestore:"author" json:"author"`
+	Author       UserSummary   `firestore:"author" json:"author"`
 	Images       []Image       `firestore:"images" json:"images"`
 	CreatedDate  time.Time     `firestore:"createdDate" json:"createdDate"`
 	UpdatedDate  time.Time     `firestore:"updatedDate" json:"updatedDate"`

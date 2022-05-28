@@ -40,19 +40,3 @@ func main() {
 		log.Fatalf("http server error: %v", err)
 	}
 }
-
-// func initTracer() *sdktrace.TracerProvider {
-// 	// projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
-// 	// googleExporter, err := texporter.New(texporter.WithProjectID(projectID))
-// 	exporter, err := stdout.New(stdout.WithPrettyPrint())
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	tp := sdktrace.NewTracerProvider(
-// 		sdktrace.WithSampler(sdktrace.AlwaysSample()),
-// 		sdktrace.WithBatcher(exporter),
-// 	)
-// 	otel.SetTracerProvider(tp)
-// 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
-// 	return tp
-// }

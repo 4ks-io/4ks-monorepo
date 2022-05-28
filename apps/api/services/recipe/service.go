@@ -18,12 +18,14 @@ var ctx = context.Background()
 var storage, _ = firestore.NewClient(ctx, firstoreProjectId)
 var recipeCollection = storage.Collection("recipes")
 var recipeRevisionsCollection = storage.Collection("recipe-revisions")
+var recipeStarsCollection = storage.Collection("recipe-stars")
 
 var (
 	ErrUnableToUpdateRecipe = errors.New("there was an error updating the recipe")
 	ErrUnableToForkRecipe   = errors.New("there was an error forking the recipe")
 	ErrUnableToCreateRecipe = errors.New("there was an error creating the recipe")
 	ErrRecipeNotFound       = errors.New("recipe was not found")
+	ErrRecipeAlreadyStarred = errors.New("recipe is already starred")
 )
 
 type RecipeService interface {
@@ -31,6 +33,7 @@ type RecipeService interface {
 	CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe, error)
 	UpdateRecipeById(id *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error)
 	ForkRecipeById(id *string) (*models.Recipe, error)
+	StarRecipeById(id *string, user models.UserSummary) (bool, error)
 }
 
 type recipeService struct {
@@ -151,11 +154,55 @@ func (rs recipeService) ForkRecipeById(recipeId *string) (*models.Recipe, error)
 	recipe.CurrentRevision.Id = newRevisionDocRef.ID
 	recipe.CurrentRevision.RecipeId = newRecipeDocRef.ID
 
-	_, err = storage.Batch().Create(newRevisionDocRef, recipe.CurrentRevision).Create(newRecipeDocRef, recipe).Commit(ctx)
+	_, err = storage.Batch().Create(newRevisionDocRef, recipe.CurrentRevision).Create(newRecipeDocRef, recipe).Update(recipeDoc.Ref, []firestore.Update{
+		{Path: "metadata.forks", Value: firestore.Increment(1)},
+	}).Commit(ctx)
 
 	if err != nil {
 		return nil, ErrUnableToForkRecipe
 	}
 
 	return recipe, nil
+}
+
+func (rs recipeService) StarRecipeById(recipeId *string, author models.UserSummary) (bool, error) {
+	recipeStarDocs, err := recipeStarsCollection.Where("user.id", "==", author.Id).Where("recipe.id", "==", *recipeId).Documents(ctx).GetAll()
+
+	if err != nil {
+		return false, err
+	}
+
+	if len(recipeStarDocs) > 0 {
+		return false, ErrRecipeAlreadyStarred
+	}
+
+	recipeDoc, err := recipeCollection.Doc(*recipeId).Get(ctx)
+
+	if err != nil {
+		return false, ErrRecipeNotFound
+	}
+
+	recipe := new(models.Recipe)
+	recipeDoc.DataTo(recipe)
+
+	starredDate := time.Now()
+	recipeStarDoc := models.RecipeStar{
+		User: author,
+		Recipe: models.RecipeSummary{
+			Id:   recipe.Id,
+			Name: recipe.CurrentRevision.Name,
+		},
+		CreatedDate: starredDate,
+		UpdatedDate: starredDate,
+	}
+
+	_, err = storage.Batch().Create(recipeStarsCollection.NewDoc(), recipeStarDoc).Update(recipeDoc.Ref, []firestore.Update{
+		{Path: "metadata.stars", Value: firestore.Increment(1)},
+	}).Commit(ctx)
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
