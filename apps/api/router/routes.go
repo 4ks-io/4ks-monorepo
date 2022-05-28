@@ -38,6 +38,6 @@ func RecipesRouter(router *gin.Engine) {
 		recipes.POST(":id/star", rc.StarRecipe)
 		recipes.POST(":id/fork", rc.ForkRecipe)
 		recipes.GET(":id/revisions", rc.GetRecipeRevisions)
-		recipes.GET(":id/revisions/:revisionId", rc.GetRecipeRevision)
+		recipes.GET("/revisions/:revisionId", rc.GetRecipeRevision)
 	}
 }

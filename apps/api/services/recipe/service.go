@@ -21,11 +21,12 @@ var recipeRevisionsCollection = storage.Collection("recipe-revisions")
 var recipeStarsCollection = storage.Collection("recipe-stars")
 
 var (
-	ErrUnableToUpdateRecipe = errors.New("there was an error updating the recipe")
-	ErrUnableToForkRecipe   = errors.New("there was an error forking the recipe")
-	ErrUnableToCreateRecipe = errors.New("there was an error creating the recipe")
-	ErrRecipeNotFound       = errors.New("recipe was not found")
-	ErrRecipeAlreadyStarred = errors.New("recipe is already starred")
+	ErrUnableToUpdateRecipe   = errors.New("there was an error updating the recipe")
+	ErrUnableToForkRecipe     = errors.New("there was an error forking the recipe")
+	ErrUnableToCreateRecipe   = errors.New("there was an error creating the recipe")
+	ErrRecipeNotFound         = errors.New("recipe was not found")
+	ErrRecipeAlreadyStarred   = errors.New("recipe is already starred")
+	ErrRecipeRevisionNotFound = errors.New("recipe revision not found")
 )
 
 type RecipeService interface {
@@ -35,6 +36,7 @@ type RecipeService interface {
 	ForkRecipeById(id *string) (*models.Recipe, error)
 	StarRecipeById(id *string, user models.UserSummary) (bool, error)
 	GetRecipeRevisions(recipeId *string) ([]*models.RecipeRevision, error)
+	GetRecipeRevisionById(revisionId *string) (*models.RecipeRevision, error)
 }
 
 type recipeService struct {
@@ -228,4 +230,17 @@ func (rs recipeService) GetRecipeRevisions(recipeId *string) ([]*models.RecipeRe
 	}
 
 	return recipeRevisions, nil
+}
+
+func (rs recipeService) GetRecipeRevisionById(revisionId *string) (*models.RecipeRevision, error) {
+	recipeRevisionDoc, err := recipeRevisionsCollection.Doc(*revisionId).Get(ctx)
+
+	if err != nil {
+		return nil, ErrRecipeRevisionNotFound
+	}
+
+	recipeRevision := new(models.RecipeRevision)
+	recipeRevisionDoc.DataTo(recipeRevision)
+
+	return recipeRevision, nil
 }

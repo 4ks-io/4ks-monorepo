@@ -137,5 +137,16 @@ func (rc *recipeController) GetRecipeRevisions(c *gin.Context) {
 }
 
 func (rc *recipeController) GetRecipeRevision(c *gin.Context) {
+	revisionId := c.Param("revisionId")
+	recipeRevision, err := rc.recipeService.GetRecipeRevisionById(&revisionId)
 
+	if err == recipeService.ErrRecipeRevisionNotFound {
+		c.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, recipeRevision)
 }

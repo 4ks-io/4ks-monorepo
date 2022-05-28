@@ -10,6 +10,13 @@ content-type: application/json
 
 ###
 
+# @name Get Recipe Revision By Id
+
+GET https://local.4ks.io/api/recipes/revisions/M8TOnSAlFiD1woEa4mia HTTP/1.1
+Content-Type: application/json 
+
+###
+
 # @name Create Recipe
 POST https://local.4ks.io/api/recipes HTTP/1.1
 content-type: application/json
