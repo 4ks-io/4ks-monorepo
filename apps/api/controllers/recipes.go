@@ -122,7 +122,18 @@ func (rc *recipeController) StarRecipe(c *gin.Context) {
 }
 
 func (rc *recipeController) GetRecipeRevisions(c *gin.Context) {
+	recipeId := c.Param("id")
+	recipeRevisions, err := rc.recipeService.GetRecipeRevisions(&recipeId)
 
+	if err == recipeService.ErrRecipeNotFound {
+		c.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, recipeRevisions)
 }
 
 func (rc *recipeController) GetRecipeRevision(c *gin.Context) {

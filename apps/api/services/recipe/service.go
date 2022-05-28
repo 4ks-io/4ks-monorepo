@@ -34,6 +34,7 @@ type RecipeService interface {
 	UpdateRecipeById(id *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error)
 	ForkRecipeById(id *string) (*models.Recipe, error)
 	StarRecipeById(id *string, user models.UserSummary) (bool, error)
+	GetRecipeRevisions(recipeId *string) ([]*models.RecipeRevision, error)
 }
 
 type recipeService struct {
@@ -205,4 +206,26 @@ func (rs recipeService) StarRecipeById(recipeId *string, author models.UserSumma
 	}
 
 	return true, nil
+}
+
+func (rs recipeService) GetRecipeRevisions(recipeId *string) ([]*models.RecipeRevision, error) {
+	recipeRevisionsDocs, err := recipeRevisionsCollection.Where("recipeId", "==", recipeId).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
+
+	if err != nil {
+		return nil, err
+	}
+
+	numberOfRevisions := len(recipeRevisionsDocs)
+	if numberOfRevisions == 0 {
+		return nil, ErrRecipeNotFound
+	}
+
+	recipeRevisions := make([]*models.RecipeRevision, numberOfRevisions)
+	for i, ds := range recipeRevisionsDocs {
+		recipeRevision := new(models.RecipeRevision)
+		ds.DataTo(recipeRevision)
+		recipeRevisions[i] = recipeRevision
+	}
+
+	return recipeRevisions, nil
 }

@@ -1,8 +1,16 @@
+# @name Get Recipe
 GET https://local.4ks.io/api/recipes/BNYpWruxPACWT5byWD6f HTTP/1.1
 content-type: application/json
 
 ###
 
+# @name Get Recipe Revisions
+GET https://local.4ks.io/api/recipes/BNYpWruxPACWT5byWD6f/revisions HTTP/1.1
+content-type: application/json
+
+###
+
+# @name Create Recipe
 POST https://local.4ks.io/api/recipes HTTP/1.1
 content-type: application/json
 
@@ -12,6 +20,7 @@ content-type: application/json
 
 ###
 
+# @name Star Recipe
 POST https://local.4ks.io/api/recipes/BNYpWruxPACWT5byWD6f/star HTTP/2.0
 Content-Type: application/json
 
