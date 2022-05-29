@@ -7,15 +7,20 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	adapter "github.com/gwatts/gin-adapter"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 
+	_ "4ks/apps/api/docs"
 	"4ks/apps/api/middleware"
 )
 
-// New registers the routes and returns the router.
 func New() *gin.Engine {
 	router := gin.Default()
 	router.Use(middleware.CorsMiddleware())
+
+	swaggerUrl := ginSwagger.URL("https://local.4ks.io/api/swagger/doc.json") // The url pointing to API definition
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, swaggerUrl))
 
 	// To store custom types in our cookies,
 	// we must first register them using gob.Register

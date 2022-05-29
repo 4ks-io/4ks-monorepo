@@ -13,6 +13,12 @@ import (
 
 // var tracer = tracing.NewTracer("gin-server")
 
+// @title 4ks API
+// @version 1.0
+// @description This is the 4ks api
+
+// @host local.4ks.io
+// @BasePath /api
 func main() {
 	// tp := tracing.InitTracerProvider()
 	// defer func() {

@@ -93,3 +93,13 @@ content-type: application/json
     "name": "Hammad's Recipe"
 }
 ```
+
+# Swagger Gen
+
+1. Make sure you have `swag` installed
+```
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+2. Run `pnpm swagger:gen` when you update any doc comments
+3. Tilt will sync the files
+4. Access Swagger at: https://local.4ks.io/swagger/index.html

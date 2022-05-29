@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"4ks/apps/api/dtos"
+	_ "4ks/libs/go/models"
+
 	recipeService "4ks/apps/api/services/recipe"
 	"net/http"
 
@@ -121,6 +123,15 @@ func (rc *recipeController) StarRecipe(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
+// GetRecipeRevisions godoc
+// @Summary 	Get all revisions for a recipe
+// @Description Get all revisions for a recipe
+// @Tags 		Recipes
+// @Accept 		json
+// @Produce 	json
+// @Param       recipeId 	path      	string  true  "Recipe Id"
+// @Success 	200 		{array} 	models.RecipeRevision
+// @Router /recipes/{recipeId}/revisions [get]
 func (rc *recipeController) GetRecipeRevisions(c *gin.Context) {
 	recipeId := c.Param("id")
 	recipeRevisions, err := rc.recipeService.GetRecipeRevisions(&recipeId)
@@ -136,6 +147,15 @@ func (rc *recipeController) GetRecipeRevisions(c *gin.Context) {
 	c.JSON(http.StatusOK, recipeRevisions)
 }
 
+// GetRecipeRevision godoc
+// @Summary 	Get a Recipe Revision
+// @Description Get a Revision By Id
+// @Tags 		Recipes
+// @Accept 		json
+// @Produce 	json
+// @Param       revisionId 	path      	string  true  "Revision Id"
+// @Success 	200 		{object} 	models.RecipeRevision
+// @Router /recipes/revisions/{revisionId} [get]
 func (rc *recipeController) GetRecipeRevision(c *gin.Context) {
 	revisionId := c.Param("revisionId")
 	recipeRevision, err := rc.recipeService.GetRecipeRevisionById(&revisionId)
