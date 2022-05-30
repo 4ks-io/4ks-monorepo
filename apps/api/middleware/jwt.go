@@ -16,6 +16,7 @@ import (
 // CustomClaims contains custom data we want from the token.
 type CustomClaims struct {
 	Scope string `json:"scope"`
+	Email string `json:"https://4ks.io/email"`
 }
 
 // Validate does nothing for this example, but we need
@@ -26,8 +27,8 @@ func (c CustomClaims) Validate(ctx context.Context) error {
 
 // EnsureValidToken is a middleware that will check the validity of our JWT.
 func EnsureValidToken() func(next http.Handler) http.Handler {
-	// audience := os.Getenv("AUTH0_AUDIENCE")
-	audience := os.Getenv("AUTH0_CLIENT_ID")
+	audience := os.Getenv("AUTH0_AUDIENCE")
+	// clientId := os.Getenv("AUTH0_CLIENT_ID")
 	domain := os.Getenv("AUTH0_DOMAIN")
 
 	// log.Printf("audience: " + audience)

@@ -7,6 +7,7 @@ function AppAuth() {
   console.log(import.meta);
   return (
     <Auth0Provider
+      audience={import.meta.env.VITE_AUTH0_AUDIENCE as string}
       domain={import.meta.env.VITE_AUTH0_DOMAIN as string}
       clientId={import.meta.env.VITE_AUTH0_CLIENT_ID as string}
       redirectUri={window.location.origin}
