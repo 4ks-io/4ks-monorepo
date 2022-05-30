@@ -43,12 +43,8 @@ func New() *gin.Engine {
 		claims := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
 		customClaims := claims.CustomClaims.(*middleware.CustomClaims)
 
-		fmt.Println(customClaims)
+		fmt.Println(customClaims.Email)
 
-		// payload, err := json.Marshal(claims)
-		// if err != nil {
-		// 	c.AbortWithStatus(400)
-		// }
 		c.JSON(200, claims)
 	})
 
