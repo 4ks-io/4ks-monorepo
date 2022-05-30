@@ -2,6 +2,7 @@ package router
 
 import (
 	"encoding/gob"
+	"fmt"
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
 	"github.com/auth0/go-jwt-middleware/v2/validator"
@@ -40,6 +41,9 @@ func New() *gin.Engine {
 
 	router.GET("/auth-test", func(c *gin.Context) {
 		claims := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
+		customClaims := claims.CustomClaims.(*middleware.CustomClaims)
+
+		fmt.Println(customClaims)
 
 		// payload, err := json.Marshal(claims)
 		// if err != nil {
