@@ -3,6 +3,8 @@ package router
 import (
 	"encoding/gob"
 
+	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
+	"github.com/auth0/go-jwt-middleware/v2/validator"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
@@ -37,9 +39,13 @@ func New() *gin.Engine {
 	router.Use(adapter.Wrap(middleware.EnsureValidToken()))
 
 	router.GET("/auth-test", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"data": "0.1.0",
-		})
+		claims := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
+
+		// payload, err := json.Marshal(claims)
+		// if err != nil {
+		// 	c.AbortWithStatus(400)
+		// }
+		c.JSON(200, claims)
 	})
 
 	// router.GET("/login", authService.LoginHandler(auth))
