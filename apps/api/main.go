@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 
 	ginprometheus "github.com/zsais/go-gin-prometheus"
@@ -9,9 +10,8 @@ import (
 
 	router "4ks/apps/api/router"
 	utils "4ks/apps/api/utils"
+	tracing "4ks/libs/go/tracer"
 )
-
-// var tracer = tracing.NewTracer("gin-server")
 
 // @title 4ks API
 // @version 1.0
@@ -20,12 +20,12 @@ import (
 // @host local.4ks.io
 // @BasePath /api
 func main() {
-	// tp := tracing.InitTracerProvider()
-	// defer func() {
-	// 	if err := tp.Shutdown(context.Background()); err != nil {
-	// 		log.Printf("Error shutting down tracer provider: %v", err)
-	// 	}
-	// }()
+	tp := tracing.InitTracerProvider()
+	defer func() {
+		if err := tp.Shutdown(context.Background()); err != nil {
+			log.Printf("Error shutting down tracer provider: %v", err)
+		}
+	}()
 
 	// auth, err := authenticator.New()
 	// if err != nil {

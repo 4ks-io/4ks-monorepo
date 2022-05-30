@@ -44,6 +44,8 @@ spec:
               value: AxT9wCGFYRTz38XhhZuVuAKZvoXiNMmPb1WYLeb-SkU90IC6vqJKdgeScbHccGHn
             - name: AUTH0_CALLBACK_URL
               value: https://local.4ks.io/api/authback
+            - name: EXPORTER_TYPE
+              value: JAEGER
           ports:
             - containerPort: 5000
           readinessProbe:
