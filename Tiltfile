@@ -27,7 +27,7 @@ docker_build(
 # k8s_yaml automatically creates resources in Tilt for the entities
 # and will inject any images referenced in the Tiltfile when deploying
 # https://docs.tilt.dev/api.html#api.k8s_yaml
-k8s_yaml(['./deploy/api.yaml', './deploy/web.yaml', './deploy/firestore.yaml'])
+k8s_yaml(['./deploy/api.yaml', './deploy/web.yaml', './deploy/firestore.yaml', './deploy/jaeger.yaml'])
 
 # k8s_resource allows customization where necessary such as adding port forwards and labels
 # https://docs.tilt.dev/api.html#api.k8s_resource
@@ -87,6 +87,11 @@ k8s_resource(
     labels=['firestore','database']
 )
 
+k8s_resource(
+    'jaeger',
+    port_forwards=['9411:9411','5775:5775','6831:6831','6832:6832','5778:5778','16686:16686','14250:14250','14268:14268','14269:14269'],
+    labels=['firestore','database']
+)
 
 # config.main_path is the absolute path to the Tiltfile being run
 # there are many Tilt-specific built-ins for manipulating paths, environment variables, parsing JSON/YAML, and more!
