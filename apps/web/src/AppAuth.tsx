@@ -3,8 +3,6 @@ import App from './App';
 import { Auth0Provider } from '@auth0/auth0-react';
 
 function AppAuth() {
-  console.log(import.meta.env.MODE);
-  console.log(import.meta);
   return (
     <Auth0Provider
       audience={import.meta.env.VITE_AUTH0_AUDIENCE as string}

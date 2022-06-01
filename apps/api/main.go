@@ -27,11 +27,6 @@ func main() {
 		}
 	}()
 
-	// auth, err := authenticator.New()
-	// if err != nil {
-	// 	log.Fatalf("Failed to initialize the authenticator: %v", err)
-	// }
-
 	router := router.New()
 
 	prom := ginprometheus.NewPrometheus("gin")
