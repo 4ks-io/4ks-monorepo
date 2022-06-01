@@ -4,6 +4,7 @@
     "api": "apps/api",
     "web": "apps/web",
     "go-models": "libs/go/models",
-    "go-tracer": "libs/go/tracer"
+    "go-tracer": "libs/go/tracer",
+    "ts-api-fetch": "libs/ts/api-fetch"
   }
 }
