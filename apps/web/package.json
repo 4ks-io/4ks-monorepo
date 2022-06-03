@@ -6,8 +6,6 @@
     "build": "tsc && vite build",
     "serve": "vite preview"
   },
-  "dependencies": {
-  },
-  "devDependencies": {
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }
