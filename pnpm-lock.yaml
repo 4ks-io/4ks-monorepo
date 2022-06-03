@@ -70,7 +70,10 @@ importers:
       vite-tsconfig-paths: 3.5.0_vite@2.9.1
 
   apps/web:
-    specifiers: {}
+    specifiers:
+      '@4ks/api-fetch': workspace:*
+    dependencies:
+      '@4ks/api-fetch': link:../../libs/ts/api-fetch
 
   libs/ts/api-fetch:
     specifiers: {}
