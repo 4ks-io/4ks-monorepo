@@ -77,11 +77,28 @@ info:
   title: 4ks API
   version: "1.0"
 paths:
+  /auth-test:
+    get:
+      consumes:
+      - application/json
+      description: Test JWT Auth
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Test JWT Auth
+      tags:
+      - API
   /recipes:
     post:
       consumes:
       - application/json
-      description: Get a recipe by ID
+      description: Create a new recipe
       produces:
       - application/json
       responses:
@@ -91,14 +108,14 @@ paths:
             items:
               $ref: '#/definitions/models.Recipe'
             type: array
-      summary: Get a recipe by ID
+      summary: Create a new recipe
       tags:
       - Recipes
   /recipes/{recipeId}:
     get:
       consumes:
       - application/json
-      description: Create a new recipe
+      description: Get a recipe by ID
       parameters:
       - description: Recipe Id
         in: path
@@ -114,7 +131,7 @@ paths:
             items:
               $ref: '#/definitions/models.Recipe'
             type: array
-      summary: Create a new recipe
+      summary: Get a recipe by ID
       tags:
       - Recipes
   /recipes/{recipeId}/revisions:
@@ -161,4 +178,24 @@ paths:
       summary: Get a Recipe Revision
       tags:
       - Recipes
+  /version:
+    get:
+      consumes:
+      - application/json
+      description: Get API Version
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get API Version
+      tags:
+      - API
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

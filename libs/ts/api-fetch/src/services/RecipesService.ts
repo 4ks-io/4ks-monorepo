@@ -11,8 +11,8 @@ import { request as __request } from '../core/request';
 export class RecipesService {
 
     /**
-     * Get a recipe by ID
-     * Get a recipe by ID
+     * Create a new recipe
+     * Create a new recipe
      * @returns models_Recipe OK
      * @throws ApiError
      */
@@ -43,8 +43,8 @@ export class RecipesService {
     }
 
     /**
-     * Create a new recipe
-     * Create a new recipe
+     * Get a recipe by ID
+     * Get a recipe by ID
      * @param recipeId Recipe Id
      * @returns models_Recipe OK
      * @throws ApiError

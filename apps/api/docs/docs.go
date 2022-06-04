@@ -16,9 +16,37 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth-test": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Test JWT Auth",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API"
+                ],
+                "summary": "Test JWT Auth",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/recipes": {
             "post": {
-                "description": "Get a recipe by ID",
+                "description": "Create a new recipe",
                 "consumes": [
                     "application/json"
                 ],
@@ -28,7 +56,7 @@ const docTemplate = `{
                 "tags": [
                     "Recipes"
                 ],
-                "summary": "Get a recipe by ID",
+                "summary": "Create a new recipe",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -76,7 +104,7 @@ const docTemplate = `{
         },
         "/recipes/{recipeId}": {
             "get": {
-                "description": "Create a new recipe",
+                "description": "Get a recipe by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -86,7 +114,7 @@ const docTemplate = `{
                 "tags": [
                     "Recipes"
                 ],
-                "summary": "Create a new recipe",
+                "summary": "Get a recipe by ID",
                 "parameters": [
                     {
                         "type": "string",
@@ -139,6 +167,29 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/models.RecipeRevision"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "/version": {
+            "get": {
+                "description": "Get API Version",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API"
+                ],
+                "summary": "Get API Version",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -253,6 +304,13 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

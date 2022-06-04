@@ -1,60 +1,36 @@
 package router
 
 import (
-	"encoding/gob"
+	"4ks/apps/api/middleware"
 	"fmt"
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
 	"github.com/auth0/go-jwt-middleware/v2/validator"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	adapter "github.com/gwatts/gin-adapter"
-	swaggerfiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
-
-	_ "4ks/apps/api/docs"
-	"4ks/apps/api/middleware"
 )
 
-func New() *gin.Engine {
-	router := gin.Default()
-	router.Use(middleware.CorsMiddleware())
+// TestAuth godoc
+// @Summary 		Test JWT Auth
+// @Description Test JWT Auth
+// @Tags 				API
+// @Accept 			json
+// @Produce 		json
+// @Success 		200 		{string} value
+// @Router 			/auth-test [get]
+// @Security 		ApiKeyAuth
+func TestJWTAuth(c *gin.Context) {
+	fmt.Println(c.Request.Header)
+	
+	claims := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
+	customClaims := claims.CustomClaims.(*middleware.CustomClaims)
 
-	swaggerUrl := ginSwagger.URL("https://local.4ks.io/api/swagger/doc.json") // The url pointing to API definition
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, swaggerUrl))
+	fmt.Println(customClaims.Email)
 
-	// To store custom types in our cookies,
-	// we must first register them using gob.Register
-	gob.Register(map[string]interface{}{})
+	c.JSON(200, claims)
+}
 
-	store := cookie.NewStore([]byte("secret"))
-	router.Use(sessions.Sessions("auth-session", store))
-
-	// router.Static("/public", "web/static")
-	// router.LoadHTMLGlob("web/template/*")
-	SystemRouter(router)
-	router.Use(otelgin.Middleware("4ks-api"))
-
+func AuthRouter(router *gin.Engine) {
 	router.Use(adapter.Wrap(middleware.EnsureValidToken()))
-
-	router.GET("/auth-test", func(c *gin.Context) {
-		claims := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
-		customClaims := claims.CustomClaims.(*middleware.CustomClaims)
-
-		fmt.Println(customClaims.Email)
-
-		c.JSON(200, claims)
-	})
-
-	// router.GET("/login", authService.LoginHandler(auth))
-	// router.GET("/authback", authService.AuthbackHandler(auth))
-	// router.GET("/profile", middleware.IsAuthenticated, authService.ProfileHandler)
-	// router.GET("/logout", authService.LogoutHandler)
-
-	UsersRouter(router)
-	RecipesRouter(router)
-
-	return router
+	router.GET("/auth-test", TestJWTAuth)
 }

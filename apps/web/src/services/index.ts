@@ -2,6 +2,7 @@ import {
   OpenAPI,
   // ProjectsService,
   RecipesService,
+  models_Recipe,
 } from '@4ks/api-fetch';
 
 export interface API {

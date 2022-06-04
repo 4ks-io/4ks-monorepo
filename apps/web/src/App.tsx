@@ -8,6 +8,7 @@ import {
   ColorScheme,
 } from '@mantine/core';
 import ApiServiceFactory from './services';
+import { models_Recipe } from '@4ks/api-fetch';
 
 export const themeHotKey = 'mod+J';
 
@@ -33,6 +34,42 @@ function App() {
     if (user) {
       getAccessTokenSilently().then(async (t) => {
         const api = ApiServiceFactory(t);
+        // const r: models_Recipe = {
+        //   createdDate: 'string',
+        //   currentRevision: {
+        //     author: {
+        //       displayName: 'string',
+        //       id: 'string',
+        //       username: 'string',
+        //     },
+        //     createdDate: 'string',
+        //     id: 'string',
+        //     images: [
+        //       {
+        //         id: 'string',
+        //         url: 'string',
+        //       },
+        //     ],
+        //     instructions: [
+        //       {
+        //         name: 'string',
+        //         text: 'string',
+        //         type: 'string',
+        //       },
+        //     ],
+        //     name: 'string',
+        //     recipeId: 'string',
+        //     updatedDate: 'string',
+        //   },
+        //   id: 'string',
+        //   metadata: {
+        //     forks: 0,
+        //     stars: 0,
+        //   },
+        //   source: 'string',
+        //   updatedDate: 'string',
+        // };
+        // api.recipes.postRecipes([r]);
         try {
           // const existingUser = await api.profile.profileControllerGet();
           // setUserContext({ api, user: existingUser });

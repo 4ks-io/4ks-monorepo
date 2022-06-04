@@ -52,8 +52,9 @@ func New() RecipeService {
 // @Tags 		    Recipes
 // @Accept 	   	json
 // @Produce   	json
+// @Param       recipeId 	path      	string  true  "Recipe Id"
 // @Success 		200 		{array} 	models.Recipe
-// @Router 			/recipes [post]
+// @Router 			/recipes/{recipeId} [get]
 func (rs recipeService) GetRecipeById(id *string) (*models.Recipe, error) {
 	result, err := recipeCollection.Doc(*id).Get(ctx)
 
@@ -78,9 +79,8 @@ func (rs recipeService) GetRecipeById(id *string) (*models.Recipe, error) {
 // @Tags 		Recipes
 // @Accept 		json
 // @Produce 	json
-// @Param     recipeId 	path      	string  true  "Recipe Id"
 // @Success 	200 		{array} 	models.Recipe
-// @Router /recipes/{recipeId} [get]
+// @Router /recipes [post]
 func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe, error) {
 	newRecipeDoc := recipeCollection.NewDoc()
 	newRevisionDoc := recipeRevisionsCollection.NewDoc()

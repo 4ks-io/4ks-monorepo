@@ -18,7 +18,7 @@ const docTemplate = `{
     "paths": {
         "/recipes": {
             "post": {
-                "description": "Get a recipe by ID",
+                "description": "Create a new recipe",
                 "consumes": [
                     "application/json"
                 ],
@@ -28,7 +28,7 @@ const docTemplate = `{
                 "tags": [
                     "Recipes"
                 ],
-                "summary": "Get a recipe by ID",
+                "summary": "Create a new recipe",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -76,7 +76,7 @@ const docTemplate = `{
         },
         "/recipes/{recipeId}": {
             "get": {
-                "description": "Create a new recipe",
+                "description": "Get a recipe by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -86,7 +86,7 @@ const docTemplate = `{
                 "tags": [
                     "Recipes"
                 ],
-                "summary": "Create a new recipe",
+                "summary": "Get a recipe by ID",
                 "parameters": [
                     {
                         "type": "string",
@@ -253,6 +253,16 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        },
+        "BasicAuth": {
+            "type": "basic"
         }
     }
 }`
