@@ -98,7 +98,14 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create a new recipe
+      description: Create a new Recipe
+      parameters:
+      - description: Recipe Data
+        in: body
+        name: recipe
+        required: true
+        schema:
+          $ref: '#/definitions/models.Recipe'
       produces:
       - application/json
       responses:
@@ -108,14 +115,16 @@ paths:
             items:
               $ref: '#/definitions/models.Recipe'
             type: array
-      summary: Create a new recipe
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new Recipe
       tags:
       - Recipes
   /recipes/{recipeId}:
     get:
       consumes:
       - application/json
-      description: Get a recipe by ID
+      description: Get a Recipe (by ID)
       parameters:
       - description: Recipe Id
         in: path
@@ -131,14 +140,15 @@ paths:
             items:
               $ref: '#/definitions/models.Recipe'
             type: array
-      summary: Get a recipe by ID
+      security:
+      - ApiKeyAuth: []
+      summary: Get a Recipe (by ID)
       tags:
       - Recipes
-  /recipes/{recipeId}/revisions:
-    get:
+    patch:
       consumes:
       - application/json
-      description: Get all revisions for a recipe
+      description: Update Recipe
       parameters:
       - description: Recipe Id
         in: path
@@ -154,7 +164,84 @@ paths:
             items:
               $ref: '#/definitions/models.RecipeRevision'
             type: array
-      summary: Get all revisions for a recipe
+      security:
+      - ApiKeyAuth: []
+      summary: Update Recipe
+      tags:
+      - Recipes
+  /recipes/{recipeId}/fork:
+    post:
+      consumes:
+      - application/json
+      description: Fork Recipe
+      parameters:
+      - description: Recipe Id
+        in: path
+        name: recipeId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.RecipeRevision'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Fork Recipe
+      tags:
+      - Recipes
+  /recipes/{recipeId}/revisions:
+    get:
+      consumes:
+      - application/json
+      description: Get all revisions for a Recipe
+      parameters:
+      - description: Recipe Id
+        in: path
+        name: recipeId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.RecipeRevision'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get all revisions for a Recipe
+      tags:
+      - Recipes
+  /recipes/{recipeId}/star:
+    post:
+      consumes:
+      - application/json
+      description: Star Recipe
+      parameters:
+      - description: Recipe Id
+        in: path
+        name: recipeId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.RecipeRevision'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Star Recipe
       tags:
       - Recipes
   /recipes/revisions/{revisionId}:
@@ -175,6 +262,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.RecipeRevision'
+      security:
+      - ApiKeyAuth: []
       summary: Get a Recipe Revision
       tags:
       - Recipes

@@ -46,7 +46,12 @@ const docTemplate = `{
         },
         "/recipes": {
             "post": {
-                "description": "Create a new recipe",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create a new Recipe",
                 "consumes": [
                     "application/json"
                 ],
@@ -56,7 +61,18 @@ const docTemplate = `{
                 "tags": [
                     "Recipes"
                 ],
-                "summary": "Create a new recipe",
+                "summary": "Create a new Recipe",
+                "parameters": [
+                    {
+                        "description": "Recipe Data",
+                        "name": "recipe",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Recipe"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -72,6 +88,11 @@ const docTemplate = `{
         },
         "/recipes/revisions/{revisionId}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get a Revision By Id",
                 "consumes": [
                     "application/json"
@@ -104,7 +125,12 @@ const docTemplate = `{
         },
         "/recipes/{recipeId}": {
             "get": {
-                "description": "Get a recipe by ID",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get a Recipe (by ID)",
                 "consumes": [
                     "application/json"
                 ],
@@ -114,7 +140,7 @@ const docTemplate = `{
                 "tags": [
                     "Recipes"
                 ],
-                "summary": "Get a recipe by ID",
+                "summary": "Get a Recipe (by ID)",
                 "parameters": [
                     {
                         "type": "string",
@@ -135,11 +161,14 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/recipes/{recipeId}/revisions": {
-            "get": {
-                "description": "Get all revisions for a recipe",
+            },
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Update Recipe",
                 "consumes": [
                     "application/json"
                 ],
@@ -149,7 +178,127 @@ const docTemplate = `{
                 "tags": [
                     "Recipes"
                 ],
-                "summary": "Get all revisions for a recipe",
+                "summary": "Update Recipe",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Recipe Id",
+                        "name": "recipeId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.RecipeRevision"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/recipes/{recipeId}/fork": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Fork Recipe",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "Fork Recipe",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Recipe Id",
+                        "name": "recipeId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.RecipeRevision"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/recipes/{recipeId}/revisions": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get all revisions for a Recipe",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "Get all revisions for a Recipe",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Recipe Id",
+                        "name": "recipeId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.RecipeRevision"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/recipes/{recipeId}/star": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Star Recipe",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "Star Recipe",
                 "parameters": [
                     {
                         "type": "string",

@@ -12,7 +12,7 @@ import (
 // @Tags 				API
 // @Accept 			json
 // @Produce 		json
-// @Success 		200 		{string} value
+// @Success 		200 		 {string} data
 // @Router 			/version [get]
 func GetAPIVersion(c *gin.Context) {
 	c.JSON(200, gin.H{

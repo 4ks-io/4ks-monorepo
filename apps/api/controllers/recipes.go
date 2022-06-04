@@ -5,6 +5,7 @@ import (
 	_ "4ks/libs/go/models"
 
 	recipeService "4ks/apps/api/services/recipe"
+
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,6 +31,20 @@ func NewRecipeController() RecipeController {
 	}
 }
 
+// swagger examples
+// https://github.com/swaggo/swag/blob/master/example/celler/controller/accounts.go
+
+// CreateRecipe godoc
+// @Schemes
+// @Summary 		Create a new Recipe
+// @Description Create a new Recipe
+// @Tags 				Recipes
+// @Accept 			json
+// @Produce 		json
+// @Param       recipe   body  	   models.Recipe  true  "Recipe Data"
+// @Success 		200 		 {array} 	 models.Recipe
+// @Router		 	/recipes [post]
+// @Security 		ApiKeyAuth
 func (rc *recipeController) CreateRecipe(c *gin.Context) {
 	payload := dtos.CreateRecipe{}
 	if err := c.BindJSON(&payload); err != nil {
@@ -49,6 +64,18 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 	c.JSON(http.StatusOK, createdRecipe)
 }
 
+
+// GetRecipe		godoc
+// @Schemes
+// @Summary 	  Get a Recipe (by ID)
+// @Description Get a Recipe (by ID)
+// @Tags 		    Recipes
+// @Accept 	   	json
+// @Produce   	json
+// @Param       recipeId 	path      	string  true  "Recipe Id"
+// @Success 		200 		{array} 	models.Recipe
+// @Router 			/recipes/{recipeId} [get]
+// @Security 		ApiKeyAuth
 func (rc *recipeController) GetRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
 	recipe, err := rc.recipeService.GetRecipeById(&recipeId)
@@ -64,6 +91,16 @@ func (rc *recipeController) GetRecipe(c *gin.Context) {
 	c.JSON(http.StatusOK, recipe)
 }
 
+// UpdateRecipe	godoc
+// @Summary 		Update Recipe
+// @Description Update Recipe
+// @Tags 				Recipes
+// @Accept 			json
+// @Produce 		json
+// @Param       recipeId 	path      	string  true  "Recipe Id"
+// @Success 		200 		{array} 	models.RecipeRevision
+// @Router 			/recipes/{recipeId} [patch]
+// @Security 		ApiKeyAuth
 func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
 	payload := dtos.UpdateRecipe{}
@@ -84,6 +121,16 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 	c.JSON(http.StatusOK, createdRecipe)
 }
 
+// ForkRecipe 	godoc
+// @Summary 		Fork Recipe
+// @Description Fork Recipe
+// @Tags 				Recipes
+// @Accept 			json
+// @Produce 		json
+// @Param       recipeId 	path      	string  true  "Recipe Id"
+// @Success 		200 		{array} 	models.RecipeRevision
+// @Router 			/recipes/{recipeId}/fork [post]
+// @Security 		ApiKeyAuth
 func (rc *recipeController) ForkRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
 
@@ -96,6 +143,16 @@ func (rc *recipeController) ForkRecipe(c *gin.Context) {
 	c.JSON(http.StatusOK, newRecipe)
 }
 
+// StarRecipe		godoc
+// @Summary 		Star Recipe
+// @Description Star Recipe
+// @Tags 				Recipes
+// @Accept 			json
+// @Produce 		json
+// @Param       recipeId 	path      	string  true  "Recipe Id"
+// @Success 		200 		{array} 	models.RecipeRevision
+// @Router 			/recipes/{recipeId}/star [post]
+// @Security 		ApiKeyAuth
 func (rc *recipeController) StarRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
 
@@ -124,14 +181,15 @@ func (rc *recipeController) StarRecipe(c *gin.Context) {
 }
 
 // GetRecipeRevisions godoc
-// @Summary 	Get all revisions for a recipe
-// @Description Get all revisions for a recipe
-// @Tags 		Recipes
-// @Accept 		json
-// @Produce 	json
+// @Summary 		Get all revisions for a Recipe
+// @Description Get all revisions for a Recipe
+// @Tags 				Recipes
+// @Accept 			json
+// @Produce 		json
 // @Param       recipeId 	path      	string  true  "Recipe Id"
-// @Success 	200 		{array} 	models.RecipeRevision
-// @Router /recipes/{recipeId}/revisions [get]
+// @Success 		200 		{array} 	models.RecipeRevision
+// @Router 			/recipes/{recipeId}/revisions [get]
+// @Security 		ApiKeyAuth
 func (rc *recipeController) GetRecipeRevisions(c *gin.Context) {
 	recipeId := c.Param("id")
 	recipeRevisions, err := rc.recipeService.GetRecipeRevisions(&recipeId)
@@ -148,14 +206,15 @@ func (rc *recipeController) GetRecipeRevisions(c *gin.Context) {
 }
 
 // GetRecipeRevision godoc
-// @Summary 	Get a Recipe Revision
+// @Summary 		Get a Recipe Revision
 // @Description Get a Revision By Id
-// @Tags 		Recipes
-// @Accept 		json
-// @Produce 	json
+// @Tags 				Recipes
+// @Accept 			json
+// @Produce 		json
 // @Param       revisionId 	path      	string  true  "Revision Id"
-// @Success 	200 		{object} 	models.RecipeRevision
-// @Router /recipes/revisions/{revisionId} [get]
+// @Success 		200 		{object} 	models.RecipeRevision
+// @Router 			/recipes/revisions/{revisionId} [get]
+// @Security 		ApiKeyAuth
 func (rc *recipeController) GetRecipeRevision(c *gin.Context) {
 	revisionId := c.Param("revisionId")
 	recipeRevision, err := rc.recipeService.GetRecipeRevisionById(&revisionId)
