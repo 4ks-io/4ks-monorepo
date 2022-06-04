@@ -12,28 +12,18 @@ There are two proposals for an architecture in the diagram below
 
 ![Arch Diagram](/docs/arch-diagram.svg)
 
-# Getting started (minikube)
+# Getting started
 
 ```
-minikube start
+docker-compose up -d
+
+minikube start || k3d cluster create 4ks --registry-create 4ks-registry
+
+pnpm install
+
+pnpm run swag
 
 tilt up
-
-minikube dashboard
-
-docker-compose up
-
-https://local.4ks.io/ (must be added to host file)
-```
-
-# Getting started (k3d)
-
-```
-k3d cluster create 4ks --registry-create 4ks-registry
-
-tilt up
-
-docker-compose up
 
 https://local.4ks.io/ (must be added to host file)
 ```
@@ -97,9 +87,13 @@ content-type: application/json
 # Swagger Gen
 
 1. Make sure you have `swag` installed
+
 ```
 go install github.com/swaggo/swag/cmd/swag@latest
 ```
+
 2. Run `pnpm swagger:gen` when you update any doc comments
 3. Tilt will sync the files
 4. Access Swagger at: https://local.4ks.io/swagger/index.html
+
+5. Run `pnpm swag` to refresh the swagger specs, build @4ks/swag, and update the web app using tilt.

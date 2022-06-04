@@ -16,6 +16,28 @@ definitions:
       type:
         type: string
     type: object
+  models.Recipe:
+    properties:
+      createdDate:
+        type: string
+      currentRevision:
+        $ref: '#/definitions/models.RecipeRevision'
+      id:
+        type: string
+      metadata:
+        $ref: '#/definitions/models.RecipeMetada'
+      source:
+        type: string
+      updatedDate:
+        type: string
+    type: object
+  models.RecipeMetada:
+    properties:
+      forks:
+        type: integer
+      stars:
+        type: integer
+    type: object
   models.RecipeRevision:
     properties:
       author:
@@ -55,6 +77,46 @@ info:
   title: 4ks API
   version: "1.0"
 paths:
+  /recipes:
+    post:
+      consumes:
+      - application/json
+      description: Get a recipe by ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Recipe'
+            type: array
+      summary: Get a recipe by ID
+      tags:
+      - Recipes
+  /recipes/{recipeId}:
+    get:
+      consumes:
+      - application/json
+      description: Create a new recipe
+      parameters:
+      - description: Recipe Id
+        in: path
+        name: recipeId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Recipe'
+            type: array
+      summary: Create a new recipe
+      tags:
+      - Recipes
   /recipes/{recipeId}/revisions:
     get:
       consumes:

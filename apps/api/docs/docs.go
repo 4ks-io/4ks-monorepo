@@ -16,6 +16,32 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/recipes": {
+            "post": {
+                "description": "Get a recipe by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "Get a recipe by ID",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Recipe"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/recipes/revisions/{revisionId}": {
             "get": {
                 "description": "Get a Revision By Id",
@@ -43,6 +69,41 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.RecipeRevision"
+                        }
+                    }
+                }
+            }
+        },
+        "/recipes/{recipeId}": {
+            "get": {
+                "description": "Create a new recipe",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "Create a new recipe",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Recipe Id",
+                        "name": "recipeId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Recipe"
+                            }
                         }
                     }
                 }
@@ -107,6 +168,40 @@ const docTemplate = `{
                 },
                 "type": {
                     "type": "string"
+                }
+            }
+        },
+        "models.Recipe": {
+            "type": "object",
+            "properties": {
+                "createdDate": {
+                    "type": "string"
+                },
+                "currentRevision": {
+                    "$ref": "#/definitions/models.RecipeRevision"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "metadata": {
+                    "$ref": "#/definitions/models.RecipeMetada"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "updatedDate": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.RecipeMetada": {
+            "type": "object",
+            "properties": {
+                "forks": {
+                    "type": "integer"
+                },
+                "stars": {
+                    "type": "integer"
                 }
             }
         },
