@@ -1,10 +1,11 @@
 import {
   OpenAPI,
   // ProjectsService,
+  RecipesService,
 } from '@4ks/api-fetch';
 
 export interface API {
-  // subscription: typeof SubscriptionService;
+  recipes: typeof RecipesService;
 }
 
 export default function ApiServiceFactory(token: string): API {
@@ -12,6 +13,6 @@ export default function ApiServiceFactory(token: string): API {
   OpenAPI.BASE = `/api`;
 
   return {
-    // subscription: SubscriptionService,
+    recipes: RecipesService,
   };
 }

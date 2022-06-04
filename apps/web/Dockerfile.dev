@@ -1,29 +1,19 @@
 FROM node:18-alpine
-RUN apk --no-cache add git
-RUN npm install -g pnpm
+RUN apk --no-cache add git bash
 
-# install golang + swag
-# COPY --from=golang:1.18-alpine /usr/local/go/ /usr/local/go/
-# ENV PATH="/usr/local/go/bin:${PATH}"
-# RUN go install github.com/swaggo/swag/cmd/swag@latest
+RUN npm install -g pnpm
 
 WORKDIR /app
 
 # Copy all dependency related files and install dependencies
 COPY package.json ./
 COPY pnpm* ./
-COPY apps/web/package.json ./apps/web/
-# COPY libs/ts/api-fetch/package.json ./app/libs/ts/api-fetch/
+COPY apps/web/package.json /apps/web/
+COPY libs/ts/api-fetch/package.json /libs/ts/api-fetch/
 
 RUN pnpm install
 
-COPY workspace.json ./
-COPY nx.json ./
-
 COPY ./ .
-# RUN npx nx build ts-api-fetch
-
-RUN cat /app/libs/ts/api-fetch/dist/index.js
 
 CMD [ "pnpm", "start", "web" ]
 
