@@ -21,7 +21,7 @@ import (
 // @Security 		ApiKeyAuth
 func TestJWTAuth(c *gin.Context) {
 	fmt.Println(c.Request.Header)
-	
+
 	claims := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
 	customClaims := claims.CustomClaims.(*middleware.CustomClaims)
 

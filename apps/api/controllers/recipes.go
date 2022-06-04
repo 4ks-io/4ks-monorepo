@@ -31,9 +31,6 @@ func NewRecipeController() RecipeController {
 	}
 }
 
-// swagger examples
-// https://github.com/swaggo/swag/blob/master/example/celler/controller/accounts.go
-
 // CreateRecipe godoc
 // @Schemes
 // @Summary 		Create a new Recipe
@@ -63,7 +60,6 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 
 	c.JSON(http.StatusOK, createdRecipe)
 }
-
 
 // GetRecipe		godoc
 // @Schemes
