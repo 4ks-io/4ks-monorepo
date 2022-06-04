@@ -7,7 +7,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@4ks/api-fetch": "workspace:*"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

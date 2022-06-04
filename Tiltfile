@@ -24,10 +24,11 @@ docker_build(
     context='.',
     dockerfile='./apps/web/Dockerfile.dev',
     only=[],
-    ignore=['./dist/', './node_modules'],
+    ignore=['./dist', './node_modules'],
     live_update=[
         fall_back_on('./apps/web/vite.config.ts'),
         sync('./', '/app/'),
+        sync('./libs/ts/api-fetch/dist', '/app/libs/ts/api-fetch/dist'),
         run(
             'pnpm install',
             trigger=['./package.json', './apps/web/package.json']
