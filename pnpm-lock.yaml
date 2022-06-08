@@ -27,7 +27,7 @@ importers:
       '@nrwl/jest': 13.9.6
       '@nrwl/linter': 13.9.6_typescript@4.5.5
       '@nrwl/node': 13.9.6_vj7w7wkxonwnj56jaekeugmhge
-      '@nrwl/nx-cloud': 14.0.5
+      '@nrwl/nx-cloud': 14.0.8
       '@nrwl/tao': 13.9.6
       '@nrwl/workspace': 13.9.6_lhfa4frhxntzelwrq6f5uxswve
       '@nx-go/nx-go': 2.4.0
@@ -1060,8 +1060,8 @@ packages:
       - webpack-cli
     dev: true
 
-  /@nrwl/nx-cloud/14.0.5:
-    resolution: {integrity: sha512-ADLGWiorW7sHT9hJw1OrxCG9JE9ALYfzNtXWJbvn4ulERul3hSsj+7P+uyUBtflpCrG1bmw5SxkQ77EH/DkY5A==}
+  /@nrwl/nx-cloud/14.0.8:
+    resolution: {integrity: sha512-OOqJrDSo6kyGALdo3fWoZtn8VmHKmVi23ODkJYPQDR+41v15wHiKq7cMFqc9fCaJGYhilBUPFeNOXIhlvQMCDw==}
     hasBin: true
     dependencies:
       axios: 0.21.4
@@ -2213,7 +2213,7 @@ packages:
     dev: true
 
   /clone/1.0.4:
-    resolution: {integrity: sha1-2jCcwmPfFZlMaIypAheco8fNfH4=}
+    resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
     engines: {node: '>=0.8'}
     dev: true
 
@@ -2403,7 +2403,7 @@ packages:
     dev: true
 
   /defaults/1.0.3:
-    resolution: {integrity: sha1-xlYFHpgX2f8I7YgUd/P+QBnz730=}
+    resolution: {integrity: sha512-s82itHOnYrN0Ib8r+z7laQz3sdE+4FP3d9Q7VLO7U+KRT+CR0GsWuyHxzdAY82I7cXv0G/twrqomTJLOssO5HA==}
     dependencies:
       clone: 1.0.4
     dev: true

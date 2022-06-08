@@ -61,6 +61,21 @@ definitions:
       updatedDate:
         type: string
     type: object
+  models.User:
+    properties:
+      createdDate:
+        type: string
+      displayName:
+        type: string
+      emailAddress:
+        type: string
+      id:
+        type: string
+      updatedDate:
+        type: string
+      username:
+        type: string
+    type: object
   models.UserSummary:
     properties:
       displayName:
@@ -267,6 +282,81 @@ paths:
       summary: Get a Recipe Revision
       tags:
       - Recipes
+  /users:
+    post:
+      consumes:
+      - application/json
+      description: Create a new User
+      parameters:
+      - description: User Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new User
+      tags:
+      - Users
+  /users/{userId}:
+    get:
+      consumes:
+      - application/json
+      description: Get a User (by ID)
+      parameters:
+      - description: User Id
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get a User (by ID)
+      tags:
+      - Users
+    patch:
+      consumes:
+      - application/json
+      description: Update User
+      parameters:
+      - description: User Id
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.RecipeRevision'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Update User
+      tags:
+      - Users
   /version:
     get:
       consumes:

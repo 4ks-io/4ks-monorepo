@@ -1,12 +1,8 @@
-import {
-  OpenAPI,
-  // ProjectsService,
-  RecipesService,
-  models_Recipe,
-} from '@4ks/api-fetch';
+import { OpenAPI, RecipesService, UsersService } from '@4ks/api-fetch';
 
 export interface API {
-  recipes: typeof RecipesService;
+  recipes: RecipesService;
+  users: UsersService;
 }
 
 export default function ApiServiceFactory(token: string): API {
@@ -15,5 +11,6 @@ export default function ApiServiceFactory(token: string): API {
 
   return {
     recipes: RecipesService,
+    users: UsersService,
   };
 }

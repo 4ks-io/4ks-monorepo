@@ -1,5 +1,6 @@
 {
   "root": "libs/ts/api-fetch",
   "projectType": "library",
-  "sourceRoot": "libs/ts/api-fetch"
+  "sourceRoot": "libs/ts/api-fetch",
+  "implicitDependencies": ["api"]
 }

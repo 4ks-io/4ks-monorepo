@@ -25,6 +25,17 @@ func NewUserController() UserController {
 	}
 }
 
+// CreateUser   godoc
+// @Schemes
+// @Summary 		Create a new User
+// @Description Create a new User
+// @Tags 				Users
+// @Accept 			json
+// @Produce 		json
+// @Param       user     body  	   models.User  true  "User Data"
+// @Success 		200 		 {array} 	 models.User
+// @Router		 	/users   [post]
+// @Security 		ApiKeyAuth
 func (uc *userController) CreateUser(c *gin.Context) {
 	payload := dtos.CreateUser{}
 	if err := c.BindJSON(&payload); err != nil {
@@ -44,6 +55,17 @@ func (uc *userController) CreateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, createdUser)
 }
 
+// GetUser  		godoc
+// @Schemes
+// @Summary 	  Get a User (by ID)
+// @Description Get a User (by ID)
+// @Tags 		    Users
+// @Accept 	   	json
+// @Produce   	json
+// @Param       userId 	path      	string  true  "User Id"
+// @Success 		200 		{array} 	models.User
+// @Router 			/users/{userId} [get]
+// @Security 		ApiKeyAuth
 func (uc *userController) GetUser(c *gin.Context) {
 	userId := c.Param("id")
 	user, err := uc.userService.GetUserById(&userId)
@@ -59,6 +81,16 @@ func (uc *userController) GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// UpdateUser	godoc
+// @Summary 		Update User
+// @Description Update User
+// @Tags 				Users
+// @Accept 			json
+// @Produce 		json
+// @Param       userId 	path      string  true  "User Id"
+// @Success 		200 		{array} 	models.RecipeRevision
+// @Router 			/users/{userId}   [patch]
+// @Security 		ApiKeyAuth
 func (uc *userController) UpdateUser(c *gin.Context) {
 
 }

@@ -8,7 +8,8 @@ import {
   ColorScheme,
 } from '@mantine/core';
 import ApiServiceFactory from './services';
-import { models_Recipe } from '@4ks/api-fetch';
+import { models_Recipe, models_User } from '@4ks/api-fetch';
+import { OpenAPI, RecipesService, UsersService } from '@4ks/api-fetch';
 
 export const themeHotKey = 'mod+J';
 
@@ -34,42 +35,42 @@ function App() {
     if (user) {
       getAccessTokenSilently().then(async (t) => {
         const api = ApiServiceFactory(t);
-        // const r: models_Recipe = {
-        //   createdDate: 'string',
-        //   currentRevision: {
-        //     author: {
-        //       displayName: 'string',
-        //       id: 'string',
-        //       username: 'string',
-        //     },
-        //     createdDate: 'string',
-        //     id: 'string',
-        //     images: [
-        //       {
-        //         id: 'string',
-        //         url: 'string',
-        //       },
-        //     ],
-        //     instructions: [
-        //       {
-        //         name: 'string',
-        //         text: 'string',
-        //         type: 'string',
-        //       },
-        //     ],
-        //     name: 'string',
-        //     recipeId: 'string',
-        //     updatedDate: 'string',
-        //   },
-        //   id: 'string',
-        //   metadata: {
-        //     forks: 0,
-        //     stars: 0,
-        //   },
-        //   source: 'string',
-        //   updatedDate: 'string',
+        // api.foo;
+        // const u: models_User = {
+        //   username: 'nic',
         // };
-        // api.recipes.postRecipes([r]);
+        // console.log(api);
+        // console.log(Object.keys(api));
+        // console.log(u);
+        // api.users.postUsers(u);
+        const r: models_Recipe = {
+          currentRevision: {
+            author: {
+              username: 'ndelorme',
+              displayName: 'Nic',
+            },
+            images: [
+              {
+                id: 'string',
+                url: 'string',
+              },
+            ],
+            instructions: [
+              {
+                name: 'string',
+                text: 'string',
+                type: 'string',
+              },
+            ],
+            name: 'Nics famous cookies',
+          },
+        };
+        // console.log('start');
+        // await RecipesService.postRecipes(r);
+        // console.log('done');
+
+        // api.recipes.RecipesServicepostRecipes(r);
+
         try {
           // const existingUser = await api.profile.profileControllerGet();
           // setUserContext({ api, user: existingUser });
