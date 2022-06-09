@@ -5,5 +5,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview"
+  },
+  "dependencies": {
+    "@4ks/api-fetch": "workspace:*"
   }
 }
