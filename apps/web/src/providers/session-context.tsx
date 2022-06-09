@@ -7,11 +7,11 @@ export interface ISessionContext {
   api: API;
 }
 
-type SessionContextProviderProps = { children: React.ReactNode };
-
 const SessionContext = React.createContext<ISessionContext | undefined>(
   undefined
 );
+
+type SessionContextProviderProps = { children: React.ReactNode };
 
 export function SessionContextProvider({
   children,
@@ -39,7 +39,7 @@ export function SessionContextProvider({
 export function useSessionContext() {
   const context = useContext(SessionContext);
   if (context === undefined) {
-    throw new Error('login required');
+    console.log('login required');
   }
   return context;
 }
