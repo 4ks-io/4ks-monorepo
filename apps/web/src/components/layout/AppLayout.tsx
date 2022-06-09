@@ -10,17 +10,9 @@ interface IAppShellProps {
 }
 
 export function AppLayout(props: IAppShellProps) {
-  const sessionContext = useSessionContext();
+  const ctx = useSessionContext();
 
-  const handleTestAPI = async () => {
-    // api.foo;
-    // const u: models_User = {
-    //   username: 'nic',
-    // };
-    // console.log(api);
-    // console.log(Object.keys(api));
-    // console.log(u);
-    // api.users.postUsers(u);
+  const handleTestAPIRecipe = async () => {
     const r: any = {
       currentRevision: {
         author: {
@@ -43,35 +35,38 @@ export function AppLayout(props: IAppShellProps) {
         name: 'Nics famous cookies',
       },
     };
-    // console.log('start');
-    // await RecipesService.postRecipes(r);
-    // console.log('done');
 
-    // api.recipes.RecipesServicepostRecipes(r);
-    if (sessionContext?.api) {
-      // console.log(api);
-      // console.log(api.users);
-      // // const u = new api.users();
-      // // console.log(u);
-      // api.users.postUsers({
-      //   createdDate: 'string',
-      //   displayName: 'string',
-      //   emailAddress: 'string@email.com',
-      //   id: 'string',
-      //   updatedDate: 'string',
-      //   username: 'string',
-      // });
-      let data = await sessionContext.api.recipes.postRecipes(r);
+    if (ctx?.api) {
+      let data = await ctx.api.recipes.postRecipes(r);
       console.log('set', data);
-      data = await sessionContext.api.recipes.getRecipes(data.id);
+      data = await ctx.api.recipes.getRecipes(data.id);
       console.log('get', data);
     }
+  };
 
-    try {
-      // const existingUser = await api.profile.profileControllerGet();
-      // setUserContext({ api, user: existingUser });
-    } catch (error) {
-      console.error(error);
+  const handleTestAPIUser = async () => {
+    if (ctx?.api && ctx?.user) {
+      console.log(ctx.user);
+      // // const u = new api.users();
+      // // console.log(u);
+      const u = {
+        displayName: ctx.user.nickname,
+        emailAddress: ctx.user.email,
+        username: ctx.user.email,
+      };
+
+      try {
+        let data = await ctx.api.users.postUsers(u);
+        console.log('set', data);
+      } catch (error) {
+        console.error(error);
+      }
+      try {
+        let data2 = await ctx.api.users.getUsers(ctx.user.email);
+        console.log('get', data2);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -82,8 +77,11 @@ export function AppLayout(props: IAppShellProps) {
       fixed
       header={<AppNavBar toggleColorScheme={props.toggleColorScheme} />}
     >
-      <Button variant="subtle" onClick={handleTestAPI}>
-        TEST API
+      <Button variant="subtle" onClick={handleTestAPIUser}>
+        TEST User
+      </Button>
+      <Button variant="subtle" onClick={handleTestAPIRecipe}>
+        TEST Recipe
       </Button>
       <RecipeLayout />
     </AppShell>
