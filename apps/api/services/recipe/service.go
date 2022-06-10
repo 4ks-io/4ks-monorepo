@@ -33,7 +33,7 @@ type RecipeService interface {
 	GetRecipeById(id *string) (*models.Recipe, error)
 	CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe, error)
 	UpdateRecipeById(id *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error)
-	ForkRecipeById(id *string) (*models.Recipe, error)
+	ForkRecipeById(id *string, forkAuthor models.UserSummary) (*models.Recipe, error)
 	StarRecipeById(id *string, user models.UserSummary) (bool, error)
 	GetRecipeRevisions(recipeId *string) ([]*models.RecipeRevision, error)
 	GetRecipeRevisionById(revisionId *string) (*models.RecipeRevision, error)
@@ -138,7 +138,7 @@ func (rs recipeService) UpdateRecipeById(recipeId *string, recipeUpdate *dtos.Up
 	return recipe, nil
 }
 
-func (rs recipeService) ForkRecipeById(recipeId *string) (*models.Recipe, error) {
+func (rs recipeService) ForkRecipeById(recipeId *string, forkAuthor models.UserSummary) (*models.Recipe, error) {
 	recipeDoc, err := recipeCollection.Doc(*recipeId).Get(ctx)
 
 	if err != nil {
@@ -154,6 +154,7 @@ func (rs recipeService) ForkRecipeById(recipeId *string) (*models.Recipe, error)
 	recipe.Source = recipe.Id
 	recipe.Id = newRecipeDocRef.ID
 
+	recipe.CurrentRevision.Author = forkAuthor
 	recipe.CurrentRevision.Id = newRevisionDocRef.ID
 	recipe.CurrentRevision.RecipeId = newRecipeDocRef.ID
 
