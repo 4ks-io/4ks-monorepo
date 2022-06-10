@@ -1,14 +1,17 @@
 package router
 
 import (
-	"4ks/apps/api/middleware"
+	"context"
 	"fmt"
 
-	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
-	"github.com/auth0/go-jwt-middleware/v2/validator"
 	"github.com/gin-gonic/gin"
 	adapter "github.com/gwatts/gin-adapter"
+
+	"4ks/apps/api/middleware"
+	"4ks/apps/api/utils"
 )
+
+type UserEmail struct{}
 
 // TestAuth godoc
 // @Summary 		Test JWT Auth
@@ -22,8 +25,8 @@ import (
 func TestJWTAuth(c *gin.Context) {
 	fmt.Println(c.Request.Header)
 
-	claims := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
-	customClaims := claims.CustomClaims.(*middleware.CustomClaims)
+	claims := utils.ExtractClaimsFromRequest(c.Request)
+	customClaims := utils.ExtractCustomClaimsFromClaims(&claims)
 
 	fmt.Println(customClaims.Email)
 
@@ -32,5 +35,13 @@ func TestJWTAuth(c *gin.Context) {
 
 func AuthRouter(router *gin.Engine) {
 	router.Use(adapter.Wrap(middleware.EnsureValidToken()))
+	router.Use(func(ctx *gin.Context) {
+		claims := utils.ExtractClaimsFromRequest(ctx.Request)
+		customClaims := utils.ExtractCustomClaimsFromClaims(&claims)
+
+		newContext := context.WithValue(ctx.Request.Context(), UserEmail{}, customClaims.Email)
+		ctx.Request = ctx.Request.WithContext(newContext)
+		ctx.Next()
+	})
 	router.GET("/auth-test", TestJWTAuth)
 }

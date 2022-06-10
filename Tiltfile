@@ -61,7 +61,7 @@ k8s_resource(
 k8s_resource(
     'jaeger',
     port_forwards=['9411:9411','5775:5775','6831:6831','6832:6832','5778:5778','16686:16686','14250:14250','14268:14268','14269:14269'],
-    labels=['database']
+    labels=['jaeger']
 )
 
 # config.main_path is the absolute path to the Tiltfile being run
