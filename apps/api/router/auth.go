@@ -11,8 +11,6 @@ import (
 	"4ks/apps/api/utils"
 )
 
-type UserEmail struct{}
-
 // TestAuth godoc
 // @Summary 		Test JWT Auth
 // @Description Test JWT Auth
@@ -39,7 +37,7 @@ func AuthRouter(router *gin.Engine) {
 		claims := utils.ExtractClaimsFromRequest(ctx.Request)
 		customClaims := utils.ExtractCustomClaimsFromClaims(&claims)
 
-		newContext := context.WithValue(ctx.Request.Context(), UserEmail{}, customClaims.Email)
+		newContext := context.WithValue(ctx.Request.Context(), utils.UserEmail{}, customClaims.Email)
 		ctx.Request = ctx.Request.WithContext(newContext)
 		ctx.Next()
 	})

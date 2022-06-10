@@ -1,5 +1,18 @@
 basePath: /api
 definitions:
+  dtos.CreateRecipe:
+    properties:
+      images:
+        items:
+          $ref: '#/definitions/models.Image'
+        type: array
+      instructions:
+        items:
+          $ref: '#/definitions/models.Instruction'
+        type: array
+      name:
+        type: string
+    type: object
   models.Image:
     properties:
       id:
@@ -120,7 +133,7 @@ paths:
         name: recipe
         required: true
         schema:
-          $ref: '#/definitions/models.Recipe'
+          $ref: '#/definitions/dtos.CreateRecipe'
       produces:
       - application/json
       responses:

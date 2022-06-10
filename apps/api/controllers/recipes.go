@@ -1,14 +1,17 @@
 package controllers
 
 import (
-	"4ks/apps/api/dtos"
-	_ "4ks/libs/go/models"
-
 	recipeService "4ks/apps/api/services/recipe"
+	userService "4ks/apps/api/services/user"
 
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"4ks/apps/api/dtos"
+	"4ks/apps/api/utils"
+	"4ks/libs/go/models"
+	_ "4ks/libs/go/models"
 )
 
 type RecipeController interface {
@@ -23,6 +26,7 @@ type RecipeController interface {
 
 type recipeController struct {
 	recipeService recipeService.RecipeService
+	userService   userService.UserService
 }
 
 func NewRecipeController() RecipeController {
@@ -38,7 +42,7 @@ func NewRecipeController() RecipeController {
 // @Tags 				Recipes
 // @Accept 			json
 // @Produce 		json
-// @Param       recipe   body  	   models.Recipe  true  "Recipe Data"
+// @Param       recipe   body  	   dtos.CreateRecipe  true  "Recipe Data"
 // @Success 		200 		 {array} 	 models.Recipe
 // @Router		 	/recipes [post]
 // @Security 		ApiKeyAuth
@@ -47,6 +51,23 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 	if err := c.BindJSON(&payload); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
+	}
+
+	userEmail := c.Request.Context().Value(utils.UserEmail{}).(string)
+	author, err := rc.userService.GetUserById(&userEmail)
+
+	if err != userService.ErrUserNotFound {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	} else if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	payload.Author = models.UserSummary{
+		Id:          author.Id,
+		Username:    author.Username,
+		DisplayName: author.DisplayName,
 	}
 
 	createdRecipe, err := rc.recipeService.CreateRecipe(&payload)

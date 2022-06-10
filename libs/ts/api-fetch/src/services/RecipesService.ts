@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { dtos_CreateRecipe } from '../models/dtos_CreateRecipe';
 import type { models_Recipe } from '../models/models_Recipe';
 import type { models_RecipeRevision } from '../models/models_RecipeRevision';
 
@@ -18,7 +19,7 @@ export class RecipesService {
      * @throws ApiError
      */
     public static postRecipes(
-        recipe: models_Recipe,
+        recipe: dtos_CreateRecipe,
     ): CancelablePromise<Array<models_Recipe>> {
         return __request(OpenAPI, {
             method: 'POST',
