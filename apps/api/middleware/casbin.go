@@ -22,7 +22,7 @@ func Authorize(obj string, act string) gin.HandlerFunc {
 		//ok, err := enforce(val.(string), obj, act, adapter)
 		if err != nil {
 			log.Println(err)
-			c.AbortWithStatusJSON(500, "error occurred when authorizing user")
+			c.AbortWithStatusJSON(500, "authorization error")
 			return
 		}
 		if !ok {

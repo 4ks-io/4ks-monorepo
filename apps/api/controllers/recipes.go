@@ -3,6 +3,7 @@ package controllers
 import (
 	"4ks/apps/api/dtos"
 	_ "4ks/libs/go/models"
+	"fmt"
 
 	recipeService "4ks/apps/api/services/recipe"
 
@@ -75,6 +76,8 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 func (rc *recipeController) GetRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
 	recipe, err := rc.recipeService.GetRecipeById(&recipeId)
+	fmt.Println("GetRecipe GetRecipe GetRecipe GetRecipe GetRecipe")
+	fmt.Printf(recipe.CurrentRevision.Author.Id)
 
 	if err == recipeService.ErrRecipeNotFound {
 		c.AbortWithError(http.StatusNotFound, err)
