@@ -33,8 +33,12 @@ func Authorize(obj string, act string) gin.HandlerFunc {
 	}
 }
 
+// where should this be declared?
+var model = "apps/api/config/model.conf"
+var policy = "apps/api/config/policy.csv"
+var enforcer = casbin.NewEnforcer(model, policy)
+
 func enforce(sub string, obj string, act string) (bool, error) {
-	enforcer := casbin.NewEnforcer("apps/api/config/model.conf", "apps/api/config/policy.csv")
 	err := enforcer.LoadPolicy()
 	if err != nil {
 		return false, fmt.Errorf("failed to load policy from DB: %w", err)
