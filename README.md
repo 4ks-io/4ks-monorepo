@@ -97,3 +97,6 @@ go install github.com/swaggo/swag/cmd/swag@latest
 4. Access Swagger at: https://local.4ks.io/swagger/index.html
 
 5. Run `pnpm swag` to refresh the swagger specs, build @4ks/swag, and update the web app using tilt.
+
+
+Yolo
