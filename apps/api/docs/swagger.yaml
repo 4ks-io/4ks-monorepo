@@ -13,6 +13,32 @@ definitions:
       name:
         type: string
     type: object
+  dtos.CreateUser:
+    properties:
+      displayName:
+        type: string
+      emailAddress:
+        type: string
+      username:
+        type: string
+    required:
+    - displayName
+    - emailAddress
+    - username
+    type: object
+  dtos.UpdateRecipe:
+    properties:
+      images:
+        items:
+          $ref: '#/definitions/models.Image'
+        type: array
+      instructions:
+        items:
+          $ref: '#/definitions/models.Instruction'
+        type: array
+      name:
+        type: string
+    type: object
   models.Image:
     properties:
       id:
@@ -183,6 +209,12 @@ paths:
         name: recipeId
         required: true
         type: string
+      - description: Recipe Update
+        in: body
+        name: recipeUpdate
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdateRecipe'
       produces:
       - application/json
       responses:
@@ -306,7 +338,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.User'
+          $ref: '#/definitions/dtos.CreateUser'
       produces:
       - application/json
       responses:

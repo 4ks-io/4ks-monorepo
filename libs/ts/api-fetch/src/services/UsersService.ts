@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { dtos_CreateUser } from '../models/dtos_CreateUser';
 import type { models_RecipeRevision } from '../models/models_RecipeRevision';
 import type { models_User } from '../models/models_User';
 
@@ -18,7 +19,7 @@ export class UsersService {
      * @throws ApiError
      */
     public static postUsers(
-        user: models_User,
+        user: dtos_CreateUser,
     ): CancelablePromise<Array<models_User>> {
         return __request(OpenAPI, {
             method: 'POST',

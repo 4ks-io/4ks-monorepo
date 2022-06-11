@@ -7,6 +7,8 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { dtos_CreateRecipe } from './models/dtos_CreateRecipe';
+export type { dtos_CreateUser } from './models/dtos_CreateUser';
+export type { dtos_UpdateRecipe } from './models/dtos_UpdateRecipe';
 export type { models_Image } from './models/models_Image';
 export type { models_Instruction } from './models/models_Instruction';
 export type { models_Recipe } from './models/models_Recipe';

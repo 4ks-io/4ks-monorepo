@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	firestore "cloud.google.com/go/firestore"
@@ -21,8 +22,9 @@ var storage, _ = firestore.NewClient(ctx, firstoreProjectId)
 var userCollection = storage.Collection("users")
 
 var (
-	ErrEmailInUse   = errors.New("a user with that email already exists")
-	ErrUserNotFound = errors.New("a user with that email was not found")
+	ErrEmailInUse    = errors.New("a user with that email already exists")
+	ErrUsernameInUse = errors.New("a user with that username already exists")
+	ErrUserNotFound  = errors.New("a user with that email was not found")
 )
 
 type UserService interface {
@@ -58,18 +60,36 @@ func (us userService) GetUserById(id *string) (*models.User, error) {
 }
 
 func (us userService) CreateUser(user *dtos.CreateUser) (*models.User, error) {
+	usersWithEmail, err := userCollection.Where("emailAddress", "==", strings.ToLower(user.EmailAddress)).Documents(ctx).GetAll()
+
+	if len(usersWithEmail) > 0 {
+		return nil, ErrEmailInUse
+	} else if err != nil {
+		return nil, err
+	}
+
+	usersWithUsername, err := userCollection.Where("username", "==", strings.ToLower(user.Username)).Documents(ctx).GetAll()
+
+	if len(usersWithUsername) > 0 {
+		return nil, ErrUsernameInUse
+	} else if err != nil {
+		return nil, err
+	}
+
+	newUserRef := userCollection.NewDoc()
 	newUser := &models.User{
-		Id:           user.EmailAddress,
-		Username:     user.Username,
+		Id:           newUserRef.ID,
+		Username:     strings.ToLower(user.Username),
 		DisplayName:  user.DisplayName,
-		EmailAddress: user.EmailAddress,
+		EmailAddress: strings.ToLower(user.EmailAddress),
 		CreatedDate:  time.Now().UTC(),
 		UpdatedDate:  time.Now().UTC(),
 	}
-	_, err := userCollection.Doc(user.EmailAddress).Create(ctx, newUser)
+
+	_, err = newUserRef.Create(ctx, newUser)
 
 	if err != nil {
-		return nil, ErrEmailInUse
+		return nil, err
 	}
 
 	return newUser, nil

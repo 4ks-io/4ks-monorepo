@@ -32,7 +32,7 @@ func NewUserController() UserController {
 // @Tags 				Users
 // @Accept 			json
 // @Produce 		json
-// @Param       user     body  	   models.User  true  "User Data"
+// @Param       user     body  	   dtos.CreateUser  true  "User Data"
 // @Success 		200 		 {array} 	 models.User
 // @Router		 	/users   [post]
 // @Security 		ApiKeyAuth
@@ -44,7 +44,7 @@ func (uc *userController) CreateUser(c *gin.Context) {
 	}
 
 	createdUser, err := uc.userService.CreateUser(&payload)
-	if err == userService.ErrEmailInUse {
+	if err == userService.ErrEmailInUse || err == userService.ErrUsernameInUse {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	} else if err != nil {

@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { dtos_CreateRecipe } from '../models/dtos_CreateRecipe';
+import type { dtos_UpdateRecipe } from '../models/dtos_UpdateRecipe';
 import type { models_Recipe } from '../models/models_Recipe';
 import type { models_RecipeRevision } from '../models/models_RecipeRevision';
 
@@ -70,11 +71,13 @@ export class RecipesService {
      * Update Recipe
      * Update Recipe
      * @param recipeId Recipe Id
+     * @param recipeUpdate Recipe Update
      * @returns models_RecipeRevision OK
      * @throws ApiError
      */
     public static patchRecipes(
         recipeId: string,
+        recipeUpdate: dtos_UpdateRecipe,
     ): CancelablePromise<Array<models_RecipeRevision>> {
         return __request(OpenAPI, {
             method: 'PATCH',
@@ -82,6 +85,7 @@ export class RecipesService {
             path: {
                 'recipeId': recipeId,
             },
+            body: recipeUpdate,
         });
     }
 

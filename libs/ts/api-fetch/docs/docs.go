@@ -186,6 +186,15 @@ const docTemplate = `{
                         "name": "recipeId",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "Recipe Update",
+                        "name": "recipeUpdate",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.UpdateRecipe"
+                        }
                     }
                 ],
                 "responses": {
@@ -346,7 +355,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/dtos.CreateUser"
                         }
                     }
                 ],
@@ -467,6 +476,45 @@ const docTemplate = `{
     },
     "definitions": {
         "dtos.CreateRecipe": {
+            "type": "object",
+            "properties": {
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Image"
+                    }
+                },
+                "instructions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Instruction"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.CreateUser": {
+            "type": "object",
+            "required": [
+                "displayName",
+                "emailAddress",
+                "username"
+            ],
+            "properties": {
+                "displayName": {
+                    "type": "string"
+                },
+                "emailAddress": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.UpdateRecipe": {
             "type": "object",
             "properties": {
                 "images": {
