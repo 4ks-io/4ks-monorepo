@@ -1,8 +1,6 @@
-p, r.sub = nic@4ks.io, /recipes, GET
-p, r.sub = nic@4ks.io, /recipes, POST
-p, r.sub = nic@4ks.io, /recipes, write
-p, r.sub = nic@4ks.io, /recipes, write
-p, r.sub = nic@4ks.io, /recipes/:id, write
-p, nic@4ks.io, /users, POST
-p, nic@4ks.io, /users/:id, GET
-p, nic@4ks.io, /users/:id, PATCH
+p, nic@4ks.io, /users, POST, allow
+p, nic@4ks.io, /users/:id, GET, allow
+p, nic@4ks.io, /users/:id, PATCH, allow
+p, nic@4ks.io, /recipes, POST, allow
+p, nic@4ks.io, /recipes/:id, GET, allow
+p, nic@4ks.io, /recipes/:id, PATCH, allow
