@@ -161,6 +161,8 @@ func (rs recipeService) ForkRecipeById(recipeId *string, forkAuthor models.UserS
 	recipe.CurrentRevision.Author = forkAuthor
 	recipe.CurrentRevision.Id = newRevisionDocRef.ID
 	recipe.CurrentRevision.RecipeId = newRecipeDocRef.ID
+	recipe.Metadata.Forks = 0
+	recipe.Metadata.Stars = 0
 
 	_, err = storage.Batch().Create(newRevisionDocRef, recipe.CurrentRevision).Create(newRecipeDocRef, recipe).Update(recipeDoc.Ref, []firestore.Update{
 		{Path: "metadata.forks", Value: firestore.Increment(1)},
