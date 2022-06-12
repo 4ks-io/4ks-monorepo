@@ -57,6 +57,12 @@ definitions:
     type: object
   models.Recipe:
     properties:
+      author:
+        $ref: '#/definitions/models.UserSummary'
+      contributors:
+        items:
+          $ref: '#/definitions/models.UserSummary'
+        type: array
       createdDate:
         type: string
       currentRevision:

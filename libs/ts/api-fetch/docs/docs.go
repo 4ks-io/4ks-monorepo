@@ -562,6 +562,15 @@ const docTemplate = `{
         "models.Recipe": {
             "type": "object",
             "properties": {
+                "author": {
+                    "$ref": "#/definitions/models.UserSummary"
+                },
+                "contributors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserSummary"
+                    }
+                },
                 "createdDate": {
                     "type": "string"
                 },
