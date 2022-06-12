@@ -9,6 +9,8 @@ type RecipeMetada struct {
 
 type Recipe struct {
 	Id              string         `firestore:"id" json:"id"`
+	Author          UserSummary    `firestore:"author" json:"author"`
+	Contributors    []UserSummary  `firestore:"contributors" json:"contributors"`
 	CurrentRevision RecipeRevision `firestore:"currentRevision" json:"currentRevision"`
 	Metadata        RecipeMetada   `firestore:"metadata" json:"metadata"`
 	Source          string         `firestore:"source" json:"source"`

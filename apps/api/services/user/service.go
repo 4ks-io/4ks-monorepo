@@ -29,6 +29,7 @@ var (
 
 type UserService interface {
 	GetUserById(id *string) (*models.User, error)
+	GetUserByEmail(emailAddress *string) (*models.User, error)
 	CreateUser(user *dtos.CreateUser) (*models.User, error)
 }
 
@@ -56,6 +57,25 @@ func (us userService) GetUserById(id *string) (*models.User, error) {
 	}
 
 	user.Id = result.Ref.ID
+	return user, nil
+}
+
+func (us userService) GetUserByEmail(emailAddress *string) (*models.User, error) {
+	result, err := userCollection.Where("emailAddress", "==", emailAddress).Documents(ctx).GetAll()
+
+	if err != nil || len(result) == 0 {
+		return nil, ErrUserNotFound
+	}
+
+	userSnapshot := result[0]
+	user := new(models.User)
+	err = userSnapshot.DataTo(user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user.Id = userSnapshot.Ref.ID
 	return user, nil
 }
 

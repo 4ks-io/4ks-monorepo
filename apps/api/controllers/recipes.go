@@ -10,8 +10,7 @@ import (
 
 	"4ks/apps/api/dtos"
 	"4ks/apps/api/utils"
-	"4ks/libs/go/models"
-	_ "4ks/libs/go/models"
+	models "4ks/libs/go/models"
 )
 
 type RecipeController interface {
@@ -32,6 +31,7 @@ type recipeController struct {
 func NewRecipeController() RecipeController {
 	return &recipeController{
 		recipeService: recipeService.New(),
+		userService:   userService.New(),
 	}
 }
 
@@ -54,13 +54,13 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 	}
 
 	userEmail := c.Request.Context().Value(utils.UserEmail{}).(string)
-	author, err := rc.userService.GetUserById(&userEmail)
+	author, err := rc.userService.GetUserByEmail(&userEmail)
 
-	if err != userService.ErrUserNotFound {
-		c.AbortWithStatus(http.StatusBadRequest)
+	if err == userService.ErrUserNotFound {
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	} else if err != nil {
-		c.AbortWithStatus(http.StatusInternalServerError)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
@@ -127,7 +127,25 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 		return
 	}
 
+	userEmail := c.Request.Context().Value(utils.UserEmail{}).(string)
+	author, err := rc.userService.GetUserByEmail(&userEmail)
+
+	if err == userService.ErrUserNotFound {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	payload.Author = models.UserSummary{
+		Id:          author.Id,
+		Username:    author.Username,
+		DisplayName: author.DisplayName,
+	}
+
 	createdRecipe, err := rc.recipeService.UpdateRecipeById(&recipeId, &payload)
+
 	if err == recipeService.ErrUnableToCreateRecipe {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -153,13 +171,13 @@ func (rc *recipeController) ForkRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
 
 	userEmail := c.Request.Context().Value(utils.UserEmail{}).(string)
-	author, err := rc.userService.GetUserById(&userEmail)
+	author, err := rc.userService.GetUserByEmail(&userEmail)
 
-	if err != userService.ErrUserNotFound {
-		c.AbortWithStatus(http.StatusBadRequest)
+	if err == userService.ErrUserNotFound {
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	} else if err != nil {
-		c.AbortWithStatus(http.StatusInternalServerError)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
@@ -190,9 +208,9 @@ func (rc *recipeController) StarRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
 
 	userEmail := c.Request.Context().Value(utils.UserEmail{}).(string)
-	author, err := rc.userService.GetUserById(&userEmail)
+	author, err := rc.userService.GetUserByEmail(&userEmail)
 
-	if err != userService.ErrUserNotFound {
+	if err == userService.ErrUserNotFound {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	} else if err != nil {

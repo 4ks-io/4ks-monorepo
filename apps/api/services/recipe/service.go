@@ -81,7 +81,9 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 		UpdatedDate:  recipeCreatedDate,
 	}
 	newRecipe := &models.Recipe{
-		Id: newRecipeDoc.ID,
+		Id:           newRecipeDoc.ID,
+		Author:       recipe.Author,
+		Contributors: []models.UserSummary{recipe.Author},
 		Metadata: models.RecipeMetada{
 			Stars: 0,
 			Forks: 0,
@@ -154,6 +156,8 @@ func (rs recipeService) ForkRecipeById(recipeId *string, forkAuthor models.UserS
 	recipe.Source = recipe.Id
 	recipe.Id = newRecipeDocRef.ID
 
+	recipe.Author = forkAuthor
+	recipe.Contributors = []models.UserSummary{forkAuthor}
 	recipe.CurrentRevision.Author = forkAuthor
 	recipe.CurrentRevision.Id = newRevisionDocRef.ID
 	recipe.CurrentRevision.RecipeId = newRecipeDocRef.ID
