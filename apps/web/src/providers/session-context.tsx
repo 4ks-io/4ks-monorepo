@@ -1,15 +1,16 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { useAuth0, User } from '@auth0/auth0-react';
-import ApiServiceFactory, { API } from '../services';
+import { ApiClient } from '@4ks/api-fetch';
+import ApiServiceFactory from '../services';
 
 export interface ISessionContext {
   user: User;
-  api: API;
+  api: ApiClient;
 }
 
 export interface ISessionContextU {
-  user: undefined;
-  api: undefined;
+  user: User | undefined | null;
+  api: ApiClient | undefined | null;
 }
 
 const initialState = {

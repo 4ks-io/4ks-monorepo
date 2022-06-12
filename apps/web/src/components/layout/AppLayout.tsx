@@ -4,6 +4,7 @@ import { AppShell, Button } from '@mantine/core';
 import AppNavBar from './AppNavBar';
 import { RecipeLayout } from '../recipe';
 import { useSessionContext } from '../../providers/session-context';
+import { dtos_CreateRecipe, dtos_CreateUser } from '@4ks/api-fetch';
 
 interface IAppShellProps {
   toggleColorScheme: () => void;
@@ -13,33 +14,24 @@ export function AppLayout(props: IAppShellProps) {
   const ctx = useSessionContext();
 
   const handleTestAPIRecipe = async () => {
-    const r: any = {
-      currentRevision: {
-        author: {
-          username: 'ndelorme',
-          displayName: 'Nic',
-        },
-        images: [
-          {
-            id: 'string',
-            url: 'string',
-          },
-        ],
+    const createRecipe: dtos_CreateRecipe = {
         instructions: [
           {
-            name: 'string',
-            text: 'string',
-            type: 'string',
+            name: 'Mix dry ingredients',
+            text: 'Mix flour and sugar together',
+            type: 'HowToStep',
           },
         ],
         name: 'Nics famous cookies',
-      },
-    };
+    }
 
     if (ctx?.api) {
-      let data = await ctx.api.recipes.postRecipes(r);
-      console.log('set', data);
-      data = await ctx.api.recipes.getRecipes(data.id);
+      let data = await ctx.api.recipes.postRecipes(createRecipe);
+      
+      if (data.id) {
+        data = await ctx.api.recipes.getRecipes(data.id);
+      }
+      
       console.log('get', data);
     }
   };
@@ -47,10 +39,14 @@ export function AppLayout(props: IAppShellProps) {
   const handleTestAPIUser = async () => {
     if (ctx?.api && ctx?.user) {
       console.log(ctx.user);
-      // // const u = new api.users();
-      // // console.log(u);
-      const u = {
-        displayName: ctx.user.nickname,
+
+      if(!ctx.user.nickname || !ctx.user.email) {
+        console.log("User information not available in context")
+        return;
+      }
+
+      const u: dtos_CreateUser = {
+        displayName: ctx.user.name || ctx.user.nickname,
         emailAddress: ctx.user.email,
         username: ctx.user.email,
       };

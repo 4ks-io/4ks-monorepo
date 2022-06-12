@@ -43,7 +43,7 @@ func NewRecipeController() RecipeController {
 // @Accept 			json
 // @Produce 		json
 // @Param       recipe   body  	   dtos.CreateRecipe  true  "Recipe Data"
-// @Success 		200 		 {array} 	 models.Recipe
+// @Success 		200 		 {object} 	 models.Recipe
 // @Router		 	/recipes [post]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) CreateRecipe(c *gin.Context) {
@@ -90,7 +90,7 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 // @Accept 	   	json
 // @Produce   	json
 // @Param       recipeId 	path      	string  true  "Recipe Id"
-// @Success 		200 		{array} 	models.Recipe
+// @Success 		200 		{object} 	models.Recipe
 // @Router 			/recipes/{recipeId} [get]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) GetRecipe(c *gin.Context) {
@@ -116,7 +116,7 @@ func (rc *recipeController) GetRecipe(c *gin.Context) {
 // @Produce 		json
 // @Param       recipeId 	path      	string  true  "Recipe Id"
 // @Param		recipeUpdate body		dtos.UpdateRecipe  true  "Recipe Update"
-// @Success 		200 		{array} 	models.RecipeRevision
+// @Success 		200 		{object} 	models.Recipe
 // @Router 			/recipes/{recipeId} [patch]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) UpdateRecipe(c *gin.Context) {
@@ -164,7 +164,7 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 // @Accept 			json
 // @Produce 		json
 // @Param       recipeId 	path      	string  true  "Recipe Id"
-// @Success 		200 		{array} 	models.RecipeRevision
+// @Success 		200 		{object} 	models.Recipe
 // @Router 			/recipes/{recipeId}/fork [post]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) ForkRecipe(c *gin.Context) {
@@ -201,7 +201,7 @@ func (rc *recipeController) ForkRecipe(c *gin.Context) {
 // @Accept 			json
 // @Produce 		json
 // @Param       recipeId 	path      	string  true  "Recipe Id"
-// @Success 		200 		{array} 	models.RecipeRevision
+// @Success 		200
 // @Router 			/recipes/{recipeId}/star [post]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) StarRecipe(c *gin.Context) {

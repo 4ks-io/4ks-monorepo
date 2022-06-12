@@ -33,7 +33,7 @@ func NewUserController() UserController {
 // @Accept 			json
 // @Produce 		json
 // @Param       user     body  	   dtos.CreateUser  true  "User Data"
-// @Success 		200 		 {array} 	 models.User
+// @Success 		200 		 {object} 	 models.User
 // @Router		 	/users   [post]
 // @Security 		ApiKeyAuth
 func (uc *userController) CreateUser(c *gin.Context) {
@@ -63,7 +63,7 @@ func (uc *userController) CreateUser(c *gin.Context) {
 // @Accept 	   	json
 // @Produce   	json
 // @Param       userId 	path      	string  true  "User Id"
-// @Success 		200 		{array} 	models.User
+// @Success 		200 		{object} 	models.User
 // @Router 			/users/{userId} [get]
 // @Security 		ApiKeyAuth
 func (uc *userController) GetUser(c *gin.Context) {

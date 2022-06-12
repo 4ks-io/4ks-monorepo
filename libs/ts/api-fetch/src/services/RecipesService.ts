@@ -7,10 +7,11 @@ import type { models_Recipe } from '../models/models_Recipe';
 import type { models_RecipeRevision } from '../models/models_RecipeRevision';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 
 export class RecipesService {
+
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
      * Create a new Recipe
@@ -19,10 +20,10 @@ export class RecipesService {
      * @returns models_Recipe OK
      * @throws ApiError
      */
-    public static postRecipes(
+    public postRecipes(
         recipe: dtos_CreateRecipe,
-    ): CancelablePromise<Array<models_Recipe>> {
-        return __request(OpenAPI, {
+    ): CancelablePromise<models_Recipe> {
+        return this.httpRequest.request({
             method: 'POST',
             url: '/recipes',
             body: recipe,
@@ -36,10 +37,10 @@ export class RecipesService {
      * @returns models_RecipeRevision OK
      * @throws ApiError
      */
-    public static getRecipesRevisions(
+    public getRecipesRevisions(
         revisionId: string,
     ): CancelablePromise<models_RecipeRevision> {
-        return __request(OpenAPI, {
+        return this.httpRequest.request({
             method: 'GET',
             url: '/recipes/revisions/{revisionId}',
             path: {
@@ -55,10 +56,10 @@ export class RecipesService {
      * @returns models_Recipe OK
      * @throws ApiError
      */
-    public static getRecipes(
+    public getRecipes(
         recipeId: string,
-    ): CancelablePromise<Array<models_Recipe>> {
-        return __request(OpenAPI, {
+    ): CancelablePromise<models_Recipe> {
+        return this.httpRequest.request({
             method: 'GET',
             url: '/recipes/{recipeId}',
             path: {
@@ -72,14 +73,14 @@ export class RecipesService {
      * Update Recipe
      * @param recipeId Recipe Id
      * @param recipeUpdate Recipe Update
-     * @returns models_RecipeRevision OK
+     * @returns models_Recipe OK
      * @throws ApiError
      */
-    public static patchRecipes(
+    public patchRecipes(
         recipeId: string,
         recipeUpdate: dtos_UpdateRecipe,
-    ): CancelablePromise<Array<models_RecipeRevision>> {
-        return __request(OpenAPI, {
+    ): CancelablePromise<models_Recipe> {
+        return this.httpRequest.request({
             method: 'PATCH',
             url: '/recipes/{recipeId}',
             path: {
@@ -93,13 +94,13 @@ export class RecipesService {
      * Fork Recipe
      * Fork Recipe
      * @param recipeId Recipe Id
-     * @returns models_RecipeRevision OK
+     * @returns models_Recipe OK
      * @throws ApiError
      */
-    public static postRecipesFork(
+    public postRecipesFork(
         recipeId: string,
-    ): CancelablePromise<Array<models_RecipeRevision>> {
-        return __request(OpenAPI, {
+    ): CancelablePromise<models_Recipe> {
+        return this.httpRequest.request({
             method: 'POST',
             url: '/recipes/{recipeId}/fork',
             path: {
@@ -115,10 +116,10 @@ export class RecipesService {
      * @returns models_RecipeRevision OK
      * @throws ApiError
      */
-    public static getRecipesRevisions1(
+    public getRecipesRevisions1(
         recipeId: string,
     ): CancelablePromise<Array<models_RecipeRevision>> {
-        return __request(OpenAPI, {
+        return this.httpRequest.request({
             method: 'GET',
             url: '/recipes/{recipeId}/revisions',
             path: {
@@ -131,13 +132,13 @@ export class RecipesService {
      * Star Recipe
      * Star Recipe
      * @param recipeId Recipe Id
-     * @returns models_RecipeRevision OK
+     * @returns any
      * @throws ApiError
      */
-    public static postRecipesStar(
+    public postRecipesStar(
         recipeId: string,
-    ): CancelablePromise<Array<models_RecipeRevision>> {
-        return __request(OpenAPI, {
+    ): CancelablePromise<any> {
+        return this.httpRequest.request({
             method: 'POST',
             url: '/recipes/{recipeId}/star',
             path: {

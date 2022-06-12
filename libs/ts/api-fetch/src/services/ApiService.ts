@@ -2,10 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 
 export class ApiService {
+
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
      * Test JWT Auth
@@ -13,8 +14,8 @@ export class ApiService {
      * @returns string OK
      * @throws ApiError
      */
-    public static getAuthTest(): CancelablePromise<string> {
-        return __request(OpenAPI, {
+    public getAuthTest(): CancelablePromise<string> {
+        return this.httpRequest.request({
             method: 'GET',
             url: '/auth-test',
         });
@@ -26,8 +27,8 @@ export class ApiService {
      * @returns string OK
      * @throws ApiError
      */
-    public static getVersion(): CancelablePromise<string> {
-        return __request(OpenAPI, {
+    public getVersion(): CancelablePromise<string> {
+        return this.httpRequest.request({
             method: 'GET',
             url: '/version',
         });

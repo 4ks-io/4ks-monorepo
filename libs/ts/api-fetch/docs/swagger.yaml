@@ -172,9 +172,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.Recipe'
-            type: array
+            $ref: '#/definitions/models.Recipe'
       security:
       - ApiKeyAuth: []
       summary: Create a new Recipe
@@ -197,9 +195,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.Recipe'
-            type: array
+            $ref: '#/definitions/models.Recipe'
       security:
       - ApiKeyAuth: []
       summary: Get a Recipe (by ID)
@@ -227,9 +223,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.RecipeRevision'
-            type: array
+            $ref: '#/definitions/models.Recipe'
       security:
       - ApiKeyAuth: []
       summary: Update Recipe
@@ -252,9 +246,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.RecipeRevision'
-            type: array
+            $ref: '#/definitions/models.Recipe'
       security:
       - ApiKeyAuth: []
       summary: Fork Recipe
@@ -300,11 +292,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.RecipeRevision'
-            type: array
+          description: ""
       security:
       - ApiKeyAuth: []
       summary: Star Recipe
@@ -351,9 +339,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.User'
-            type: array
+            $ref: '#/definitions/models.User'
       security:
       - ApiKeyAuth: []
       summary: Create a new User
@@ -376,9 +362,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.User'
-            type: array
+            $ref: '#/definitions/models.User'
       security:
       - ApiKeyAuth: []
       summary: Get a User (by ID)

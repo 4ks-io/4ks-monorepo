@@ -70,10 +70,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Recipe"
-                            }
+                            "$ref": "#/definitions/models.Recipe"
                         }
                     }
                 }
@@ -147,10 +144,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Recipe"
-                            }
+                            "$ref": "#/definitions/models.Recipe"
                         }
                     }
                 }
@@ -194,10 +188,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.RecipeRevision"
-                            }
+                            "$ref": "#/definitions/models.Recipe"
                         }
                     }
                 }
@@ -234,10 +225,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.RecipeRevision"
-                            }
+                            "$ref": "#/definitions/models.Recipe"
                         }
                     }
                 }
@@ -312,13 +300,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.RecipeRevision"
-                            }
-                        }
+                        "description": ""
                     }
                 }
             }
@@ -356,10 +338,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.User"
-                            }
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 }
@@ -396,10 +375,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.User"
-                            }
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 }

@@ -6,10 +6,11 @@ import type { models_RecipeRevision } from '../models/models_RecipeRevision';
 import type { models_User } from '../models/models_User';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 
 export class UsersService {
+
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
      * Create a new User
@@ -18,10 +19,10 @@ export class UsersService {
      * @returns models_User OK
      * @throws ApiError
      */
-    public static postUsers(
+    public postUsers(
         user: dtos_CreateUser,
-    ): CancelablePromise<Array<models_User>> {
-        return __request(OpenAPI, {
+    ): CancelablePromise<models_User> {
+        return this.httpRequest.request({
             method: 'POST',
             url: '/users',
             body: user,
@@ -35,10 +36,10 @@ export class UsersService {
      * @returns models_User OK
      * @throws ApiError
      */
-    public static getUsers(
+    public getUsers(
         userId: string,
-    ): CancelablePromise<Array<models_User>> {
-        return __request(OpenAPI, {
+    ): CancelablePromise<models_User> {
+        return this.httpRequest.request({
             method: 'GET',
             url: '/users/{userId}',
             path: {
@@ -54,10 +55,10 @@ export class UsersService {
      * @returns models_RecipeRevision OK
      * @throws ApiError
      */
-    public static patchUsers(
+    public patchUsers(
         userId: string,
     ): CancelablePromise<Array<models_RecipeRevision>> {
-        return __request(OpenAPI, {
+        return this.httpRequest.request({
             method: 'PATCH',
             url: '/users/{userId}',
             path: {
