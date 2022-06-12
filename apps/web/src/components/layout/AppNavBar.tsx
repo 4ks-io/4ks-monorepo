@@ -45,6 +45,8 @@ export function AppNavBar(props: IAppShellHaederProps) {
     logout({ returnTo: window.location.origin });
   }
 
+  const blue = '#407abf';
+
   return (
     <Header
       height={64}
@@ -70,9 +72,9 @@ export function AppNavBar(props: IAppShellHaederProps) {
             </Grid.Col>
           </Grid>
         </Grid.Col>
-        <Grid.Col style={highlight} span={1}>
-          <Grid columns={2}>
-            <Grid.Col style={highlight} span={1}>
+        <Grid.Col span={1}>
+          <Grid columns={3}>
+            <Grid.Col span={1}>
               <ActionIcon
                 variant="light"
                 size={24}
@@ -84,18 +86,34 @@ export function AppNavBar(props: IAppShellHaederProps) {
                   placement="center"
                   gutter={10}
                 >
-                  <Settings size={28} />
+                  <Settings color={blue} size={28} />
                 </Tooltip>
               </ActionIcon>
             </Grid.Col>
-            <Grid.Col style={highlight} span={1}>
-              <Avatar radius="xl" size={28} onClick={handleAvatarOnClick} />
+            <Grid.Col span={1}>
+              <Avatar
+                color={blue}
+                radius="xl"
+                size={28}
+                onClick={handleAvatarOnClick}
+              />
             </Grid.Col>
-            <Grid.Col style={highlight} span={1}>
-              <Login radius="xl" size={28} onClick={handleLoginOnClick} />
-            </Grid.Col>
-            <Grid.Col style={highlight} span={1}>
-              <Logout radius="xl" size={28} onClick={handleLogoutOnClick} />
+            <Grid.Col span={1}>
+              {isAuthenticated ? (
+                <Logout
+                  color={blue}
+                  radius="xl"
+                  size={28}
+                  onClick={handleLogoutOnClick}
+                />
+              ) : (
+                <Login
+                  color={blue}
+                  radius="xl"
+                  size={28}
+                  onClick={handleLoginOnClick}
+                />
+              )}
             </Grid.Col>
           </Grid>
         </Grid.Col>
