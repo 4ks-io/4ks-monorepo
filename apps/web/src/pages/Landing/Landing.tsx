@@ -34,7 +34,7 @@ const Landing = () => {
         horizontalAlign="center"
         style={{ width: '100%', rowGap: 10 }}
       >
-        <Image src={Logo} width={150} imageFit={ImageFit.contain}></Image>
+        <Image src={Logo} width={100} imageFit={ImageFit.contain}></Image>
         <TextField
           placeholder="Search for a recipe..."
           styles={{
