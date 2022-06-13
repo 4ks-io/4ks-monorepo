@@ -1,12 +1,14 @@
 import React from 'react';
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
-import AppLayout from './components/layout/AppLayout';
-import { SessionContextProvider } from './providers/session-context';
 import {
   MantineProvider,
   ColorSchemeProvider,
   ColorScheme,
 } from '@mantine/core';
+
+import AppLayout from './components/layout/AppLayout';
+import { SessionContextProvider } from './providers/session-context';
+import Router from './Router';
 
 export const themeHotKey = 'mod+J';
 
@@ -36,7 +38,7 @@ function App() {
         withNormalizeCSS
       >
         <SessionContextProvider>
-          <AppLayout toggleColorScheme={toggleColorScheme} />
+          <Router />
         </SessionContextProvider>
       </MantineProvider>
     </ColorSchemeProvider>
