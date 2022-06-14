@@ -21,12 +21,16 @@ import (
 // @Router 			/auth-test [get]
 // @Security 		ApiKeyAuth
 func TestJWTAuth(c *gin.Context) {
-	fmt.Println(c.Request.Header)
+	// fmt.Println(c.Request.Header)
+
+	userEmail := c.Request.Context().Value(utils.UserEmail{}).(string)
+	fmt.Println(userEmail)
+
+	userId := c.Request.Context().Value(utils.UserId{}).(string)
+	fmt.Println(userId)
 
 	claims := utils.ExtractClaimsFromRequest(c.Request)
-	customClaims := utils.ExtractCustomClaimsFromClaims(&claims)
-
-	fmt.Println(customClaims.Email)
+	// customClaims := utils.ExtractCustomClaimsFromClaims(&claims)
 
 	c.JSON(200, claims)
 }
@@ -38,7 +42,9 @@ func AuthRouter(router *gin.Engine) {
 		customClaims := utils.ExtractCustomClaimsFromClaims(&claims)
 
 		newContext := context.WithValue(ctx.Request.Context(), utils.UserEmail{}, customClaims.Email)
+		newContext = context.WithValue(newContext, utils.UserId{}, customClaims.Id)
 		ctx.Request = ctx.Request.WithContext(newContext)
+
 		ctx.Next()
 	})
 	router.GET("/auth-test", TestJWTAuth)

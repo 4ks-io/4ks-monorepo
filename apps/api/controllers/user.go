@@ -3,6 +3,7 @@ package controllers
 import (
 	"4ks/apps/api/dtos"
 	userService "4ks/apps/api/services/user"
+	"4ks/apps/api/utils"
 
 	"net/http"
 
@@ -37,13 +38,16 @@ func NewUserController() UserController {
 // @Router		 	/users   [post]
 // @Security 		ApiKeyAuth
 func (uc *userController) CreateUser(c *gin.Context) {
+	userId := c.Request.Context().Value(utils.UserId{}).(string)
+	userEmail := c.Request.Context().Value(utils.UserEmail{}).(string)
+
 	payload := dtos.CreateUser{}
 	if err := c.BindJSON(&payload); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	createdUser, err := uc.userService.CreateUser(&payload)
+	createdUser, err := uc.userService.CreateUser(&userId, &userEmail, &payload)
 	if err == userService.ErrEmailInUse || err == userService.ErrUsernameInUse {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return

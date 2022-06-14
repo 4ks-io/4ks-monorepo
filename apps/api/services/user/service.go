@@ -30,7 +30,7 @@ var (
 type UserService interface {
 	GetUserById(id *string) (*models.User, error)
 	GetUserByEmail(emailAddress *string) (*models.User, error)
-	CreateUser(user *dtos.CreateUser) (*models.User, error)
+	CreateUser(userId *string, userEmail *string, user *dtos.CreateUser) (*models.User, error)
 }
 
 type userService struct {
@@ -79,14 +79,19 @@ func (us userService) GetUserByEmail(emailAddress *string) (*models.User, error)
 	return user, nil
 }
 
-func (us userService) CreateUser(user *dtos.CreateUser) (*models.User, error) {
-	usersWithEmail, err := userCollection.Where("emailAddress", "==", strings.ToLower(user.EmailAddress)).Documents(ctx).GetAll()
+func (us userService) CreateUser(userId *string, userEmail *string, user *dtos.CreateUser) (*models.User, error) {
 
-	if len(usersWithEmail) > 0 {
+	existingUserId, _ := userCollection.Doc(*userId).Get(ctx)
+	if existingUserId.Exists() {
 		return nil, ErrEmailInUse
-	} else if err != nil {
-		return nil, err
 	}
+
+	// usersWithEmail, err := userCollection.Where("emailAddress", "==", strings.ToLower(user.EmailAddress)).Documents(ctx).GetAll()
+	// if len(existingUserId) > 0 {
+	// 	return nil, ErrEmailInUse
+	// } else if err != nil {
+	// 	return nil, err
+	// }
 
 	usersWithUsername, err := userCollection.Where("username", "==", strings.ToLower(user.Username)).Documents(ctx).GetAll()
 
@@ -96,17 +101,18 @@ func (us userService) CreateUser(user *dtos.CreateUser) (*models.User, error) {
 		return nil, err
 	}
 
-	newUserRef := userCollection.NewDoc()
+	// newUserRef := userCollection.NewDoc()
 	newUser := &models.User{
-		Id:           newUserRef.ID,
+		Id:           *userId,
 		Username:     strings.ToLower(user.Username),
 		DisplayName:  user.DisplayName,
-		EmailAddress: strings.ToLower(user.EmailAddress),
+		EmailAddress: strings.ToLower(*userEmail),
 		CreatedDate:  time.Now().UTC(),
 		UpdatedDate:  time.Now().UTC(),
 	}
 
-	_, err = newUserRef.Create(ctx, newUser)
+	// _, err = newUserRef.Create(ctx, newUser)
+	_, err = userCollection.Doc(*userId).Create(ctx, newUser)
 
 	if err != nil {
 		return nil, err

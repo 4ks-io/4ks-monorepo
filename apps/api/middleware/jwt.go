@@ -17,6 +17,7 @@ import (
 type CustomClaims struct {
 	Scope string `json:"scope"`
 	Email string `json:"https://4ks.io/email"`
+	Id    string `json:"https://4ks.io/id"`
 }
 
 // Validate does nothing for this example, but we need
