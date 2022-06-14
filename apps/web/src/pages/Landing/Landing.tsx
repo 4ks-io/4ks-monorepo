@@ -1,9 +1,25 @@
 import React from 'react';
-import { Stack, Image, ImageFit, TextField } from '@fluentui/react';
+import {
+  ActionButton,
+  Stack,
+  Image,
+  ImageFit,
+  TextField,
+} from '@fluentui/react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import Logo from '../../logo.svg';
 
 const Landing = () => {
+  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+
+  function handleLoginOnClick() {
+    loginWithRedirect();
+  }
+  function handleLogoutOnClick() {
+    logout({ returnTo: window.location.origin });
+  }
+
   return (
     <div
       style={{
@@ -32,6 +48,12 @@ const Landing = () => {
             },
           }}
         />
+
+        {isAuthenticated ? (
+          <ActionButton onClick={handleLogoutOnClick}>Logout</ActionButton>
+        ) : (
+          <ActionButton onClick={handleLoginOnClick}>Login</ActionButton>
+        )}
       </Stack>
     </div>
   );
