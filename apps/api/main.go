@@ -6,8 +6,6 @@ import (
 
 	ginprometheus "github.com/zsais/go-gin-prometheus"
 
-	// texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
-
 	router "4ks/apps/api/router"
 	utils "4ks/apps/api/utils"
 	tracing "4ks/libs/go/tracer"
@@ -35,10 +33,6 @@ func main() {
 
 	prom := ginprometheus.NewPrometheus("gin")
 	prom.Use(router)
-
-	// Configure Open Telemetry Middleware for Gin
-	// moved into groups to avoid logging system routes (eg. /ready)
-	// router.Use(otelgin.Middleware("4ks-api"))
 
 	addr := "0.0.0.0:" + utils.GetEnvVar("PORT", "5000")
 	if err := router.Run(addr); err != nil {
