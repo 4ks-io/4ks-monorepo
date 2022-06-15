@@ -313,6 +313,32 @@ const docTemplate = `{
             }
         },
         "/users": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get Current User (by ID)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get Current User (by ID)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -387,6 +413,38 @@ const docTemplate = `{
                     }
                 }
             },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete User",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete User",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User Id",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
             "patch": {
                 "security": [
                     {
@@ -419,7 +477,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.RecipeRevision"
+                                "$ref": "#/definitions/models.User"
                             }
                         }
                     }
@@ -475,17 +533,14 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "displayName",
-                "emailAddress",
                 "username"
             ],
             "properties": {
                 "displayName": {
                     "type": "string"
                 },
-                "emailAddress": {
-                    "type": "string"
-                },
                 "username": {
+                    "description": "Id           string ` + "`" + `json:\"id\" binding:\"required\"` + "`" + `",
                     "type": "string"
                 }
             }

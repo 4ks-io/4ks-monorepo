@@ -31,6 +31,7 @@ type UserService interface {
 	GetUserById(id *string) (*models.User, error)
 	GetUserByEmail(emailAddress *string) (*models.User, error)
 	CreateUser(userId *string, userEmail *string, user *dtos.CreateUser) (*models.User, error)
+	DeleteUser(id *string) error
 }
 
 type userService struct {
@@ -44,7 +45,6 @@ func New() UserService {
 
 func (us userService) GetUserById(id *string) (*models.User, error) {
 	result, err := userCollection.Doc(*id).Get(ctx)
-
 	if err != nil {
 		return nil, ErrUserNotFound
 	}
@@ -62,15 +62,14 @@ func (us userService) GetUserById(id *string) (*models.User, error) {
 
 func (us userService) GetUserByEmail(emailAddress *string) (*models.User, error) {
 	result, err := userCollection.Where("emailAddress", "==", emailAddress).Documents(ctx).GetAll()
-
 	if err != nil || len(result) == 0 {
 		return nil, ErrUserNotFound
 	}
 
 	userSnapshot := result[0]
 	user := new(models.User)
-	err = userSnapshot.DataTo(user)
 
+	err = userSnapshot.DataTo(user)
 	if err != nil {
 		return nil, err
 	}
@@ -80,18 +79,10 @@ func (us userService) GetUserByEmail(emailAddress *string) (*models.User, error)
 }
 
 func (us userService) CreateUser(userId *string, userEmail *string, user *dtos.CreateUser) (*models.User, error) {
-
 	existingUserId, _ := userCollection.Doc(*userId).Get(ctx)
 	if existingUserId.Exists() {
 		return nil, ErrEmailInUse
 	}
-
-	// usersWithEmail, err := userCollection.Where("emailAddress", "==", strings.ToLower(user.EmailAddress)).Documents(ctx).GetAll()
-	// if len(existingUserId) > 0 {
-	// 	return nil, ErrEmailInUse
-	// } else if err != nil {
-	// 	return nil, err
-	// }
 
 	usersWithUsername, err := userCollection.Where("username", "==", strings.ToLower(user.Username)).Documents(ctx).GetAll()
 
@@ -101,7 +92,6 @@ func (us userService) CreateUser(userId *string, userEmail *string, user *dtos.C
 		return nil, err
 	}
 
-	// newUserRef := userCollection.NewDoc()
 	newUser := &models.User{
 		Id:           *userId,
 		Username:     strings.ToLower(user.Username),
@@ -111,12 +101,25 @@ func (us userService) CreateUser(userId *string, userEmail *string, user *dtos.C
 		UpdatedDate:  time.Now().UTC(),
 	}
 
-	// _, err = newUserRef.Create(ctx, newUser)
 	_, err = userCollection.Doc(*userId).Create(ctx, newUser)
-
 	if err != nil {
 		return nil, err
 	}
 
 	return newUser, nil
+}
+
+// todo: add with disableUser/enableUser as we never want to delete a recipe
+func (us userService) DeleteUser(userId *string) error {
+	existingUserId, _ := userCollection.Doc(*userId).Get(ctx)
+	if !existingUserId.Exists() {
+		return ErrUserNotFound
+	}
+
+	_, err := userCollection.Doc(*userId).Delete(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -12,6 +12,8 @@ func UsersRouter(router *gin.Engine) {
 	users := router.Group("/users")
 	{
 		users.POST("", uc.CreateUser)
+		users.GET("", uc.GetCurrentUser)
+		users.DELETE(":id", uc.DeleteUser)
 		users.GET(":id", uc.GetUser)
 		users.PATCH(":id", uc.UpdateUser)
 	}

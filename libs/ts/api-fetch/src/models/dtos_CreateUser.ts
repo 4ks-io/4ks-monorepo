@@ -4,6 +4,8 @@
 
 export type dtos_CreateUser = {
     displayName: string;
-    emailAddress: string;
+    /**
+     * Id           string `json:"id" binding:"required"`
+     */
     username: string;
 };

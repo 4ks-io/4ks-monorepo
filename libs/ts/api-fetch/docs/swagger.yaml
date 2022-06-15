@@ -17,13 +17,11 @@ definitions:
     properties:
       displayName:
         type: string
-      emailAddress:
-        type: string
       username:
+        description: Id           string `json:"id" binding:"required"`
         type: string
     required:
     - displayName
-    - emailAddress
     - username
     type: object
   dtos.UpdateRecipe:
@@ -322,6 +320,22 @@ paths:
       tags:
       - Recipes
   /users:
+    get:
+      consumes:
+      - application/json
+      description: Get Current User (by ID)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Current User (by ID)
+      tags:
+      - Users
     post:
       consumes:
       - application/json
@@ -346,6 +360,26 @@ paths:
       tags:
       - Users
   /users/{userId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete User
+      parameters:
+      - description: User Id
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      security:
+      - ApiKeyAuth: []
+      summary: Delete User
+      tags:
+      - Users
     get:
       consumes:
       - application/json
@@ -385,7 +419,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.RecipeRevision'
+              $ref: '#/definitions/models.User'
             type: array
       security:
       - ApiKeyAuth: []

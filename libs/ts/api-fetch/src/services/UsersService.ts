@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { dtos_CreateUser } from '../models/dtos_CreateUser';
-import type { models_RecipeRevision } from '../models/models_RecipeRevision';
 import type { models_User } from '../models/models_User';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -11,6 +10,19 @@ import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 export class UsersService {
 
     constructor(public readonly httpRequest: BaseHttpRequest) {}
+
+    /**
+     * Get Current User (by ID)
+     * Get Current User (by ID)
+     * @returns models_User OK
+     * @throws ApiError
+     */
+    public getUsers(): CancelablePromise<models_User> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/users',
+        });
+    }
 
     /**
      * Create a new User
@@ -36,7 +48,7 @@ export class UsersService {
      * @returns models_User OK
      * @throws ApiError
      */
-    public getUsers(
+    public getUsers1(
         userId: string,
     ): CancelablePromise<models_User> {
         return this.httpRequest.request({
@@ -49,15 +61,34 @@ export class UsersService {
     }
 
     /**
+     * Delete User
+     * Delete User
+     * @param userId User Id
+     * @returns any
+     * @throws ApiError
+     */
+    public deleteUsers(
+        userId: string,
+    ): CancelablePromise<any> {
+        return this.httpRequest.request({
+            method: 'DELETE',
+            url: '/users/{userId}',
+            path: {
+                'userId': userId,
+            },
+        });
+    }
+
+    /**
      * Update User
      * Update User
      * @param userId User Id
-     * @returns models_RecipeRevision OK
+     * @returns models_User OK
      * @throws ApiError
      */
     public patchUsers(
         userId: string,
-    ): CancelablePromise<Array<models_RecipeRevision>> {
+    ): CancelablePromise<Array<models_User>> {
         return this.httpRequest.request({
             method: 'PATCH',
             url: '/users/{userId}',
