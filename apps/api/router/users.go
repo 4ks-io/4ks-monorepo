@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	controllers "4ks/apps/api/controllers"
+	"4ks/apps/api/middleware"
 )
 
 func UsersRouter(router *gin.Engine) {
@@ -11,9 +12,9 @@ func UsersRouter(router *gin.Engine) {
 
 	users := router.Group("/users")
 	{
+		users.DELETE(":id", middleware.Authorize("/users/*", "delete"), uc.DeleteUser)
 		users.POST("", uc.CreateUser)
 		users.GET("", uc.GetCurrentUser)
-		users.DELETE(":id", uc.DeleteUser)
 		users.GET(":id", uc.GetUser)
 		users.PATCH(":id", uc.UpdateUser)
 	}
