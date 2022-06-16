@@ -540,7 +540,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
-                    "description": "Id           string ` + "`" + `json:\"id\" binding:\"required\"` + "`" + `",
                     "type": "string"
                 }
             }
