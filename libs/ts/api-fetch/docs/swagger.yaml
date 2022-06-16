@@ -319,22 +319,6 @@ paths:
       tags:
       - Recipes
   /users:
-    get:
-      consumes:
-      - application/json
-      description: Get Current User (by ID)
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.User'
-      security:
-      - ApiKeyAuth: []
-      summary: Get Current User (by ID)
-      tags:
-      - Users
     post:
       consumes:
       - application/json
@@ -423,6 +407,42 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Update User
+      tags:
+      - Users
+  /users/list:
+    get:
+      consumes:
+      - application/json
+      description: Get All Users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Users
+      tags:
+      - Users
+  /users/profile:
+    get:
+      consumes:
+      - application/json
+      description: Get Current User
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Current User
       tags:
       - Users
   /version:

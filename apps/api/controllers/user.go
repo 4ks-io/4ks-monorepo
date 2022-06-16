@@ -14,6 +14,7 @@ import (
 type UserController interface {
 	CreateUser(c *gin.Context)
 	GetCurrentUser(c *gin.Context)
+	GetUserList(c *gin.Context)
 	DeleteUser(c *gin.Context)
 	GetUser(c *gin.Context)
 	// GetUsers(c *gin.Context)
@@ -117,13 +118,13 @@ func (uc *userController) GetUser(c *gin.Context) {
 
 // GetCurrentUser	godoc
 // @Schemes
-// @Summary 	  Get Current User (by ID)
-// @Description Get Current User (by ID)
+// @Summary 	  Get Current User
+// @Description Get Current User
 // @Tags 		    Users
 // @Accept 	   	json
 // @Produce   	json
 // @Success 		200 		{object} 	models.User
-// @Router 			/users [get]
+// @Router 			/users/profile [get]
 // @Security 		ApiKeyAuth
 func (uc *userController) GetCurrentUser(c *gin.Context) {
 	userId := c.Request.Context().Value(utils.UserId{}).(string)
@@ -133,6 +134,28 @@ func (uc *userController) GetCurrentUser(c *gin.Context) {
 		c.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
+
+// GetUserList	godoc
+// @Schemes
+// @Summary 	  Get All Users
+// @Description Get All Users
+// @Tags 		    Users
+// @Accept 	   	json
+// @Produce   	json
+// @Success 		200 		{array} 	models.User
+// @Router 			/users/list [get]
+// @Security 		ApiKeyAuth
+func (uc *userController) GetUserList(c *gin.Context) {
+	user, err := uc.userService.GetAllUsers()
+
+  if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}

@@ -12,19 +12,6 @@ export class UsersService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
-     * Get Current User (by ID)
-     * Get Current User (by ID)
-     * @returns models_User OK
-     * @throws ApiError
-     */
-    public getUsers(): CancelablePromise<models_User> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/users',
-        });
-    }
-
-    /**
      * Create a new User
      * Create a new User
      * @param user User Data
@@ -42,13 +29,39 @@ export class UsersService {
     }
 
     /**
+     * Get All Users
+     * Get All Users
+     * @returns models_User OK
+     * @throws ApiError
+     */
+    public getUsersList(): CancelablePromise<Array<models_User>> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/users/list',
+        });
+    }
+
+    /**
+     * Get Current User
+     * Get Current User
+     * @returns models_User OK
+     * @throws ApiError
+     */
+    public getUsersProfile(): CancelablePromise<models_User> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/users/profile',
+        });
+    }
+
+    /**
      * Get a User (by ID)
      * Get a User (by ID)
      * @param userId User Id
      * @returns models_User OK
      * @throws ApiError
      */
-    public getUsers1(
+    public getUsers(
         userId: string,
     ): CancelablePromise<models_User> {
         return this.httpRequest.request({
