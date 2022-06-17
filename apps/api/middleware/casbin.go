@@ -83,59 +83,55 @@ func enforce(sub string, obj string, act string) (bool, error) {
 	// return true, nil
 }
 
-
-func  nameIdList(data *[]models.UserSummary) []string {
+func nameIdList(data *[]models.UserSummary) []string {
 	var list []string
 	for _, user := range *data {
-			list = append(list, user.Id)
+		list = append(list, user.Id)
 	}
 	return list
 }
 
-
 func EnforceContributor(sub *string, obj *[]models.UserSummary) (bool, error) {
-		fmt.Println("EnforceContributor!!!")
-	
-		e, err := casbin.NewEnforcer(abacContributor, VERBOSE)
-		if err != nil {
-			return false, fmt.Errorf("failed to create enforcer: %w", err)
-		}
-	
-		err = e.LoadPolicy()
-		if err != nil {
-			return false, fmt.Errorf("failed to load policy from DB: %w", err)
-		}
+	fmt.Println("EnforceContributor!!!")
 
-		strs := nameIdList(obj)
-		fmt.Println(strs)
-
-		// convert string[] to interface
-		data := make([]interface{}, len(strs))
-		for i, s := range strs {
-				data[i] = s
-		}
-		fmt.Println(data)
-
-	
-		// eCtx := casbin.NewEnforceContext("1")
-		// fmt.Println(eCtx)
-		ok, err := e.Enforce( *sub, data)
-		if err != nil {
-			fmt.Errorf("failed to enforce policy: %w", err)
-			// return false, fmt.Errorf("failed to enforce policy: %w", err)
-		}
-		// ok := false
-		// print(err)
-
-		// []interface{}{"alice", "bob"}
-	
-		fmt.Println("ENFORCE! : ", *sub, " + ", data, " = ", ok)
-	
-		return ok, nil
-		// return true, nil
+	e, err := casbin.NewEnforcer(abacContributor, VERBOSE)
+	if err != nil {
+		return false, fmt.Errorf("failed to create enforcer: %w", err)
 	}
 
-	
+	err = e.LoadPolicy()
+	if err != nil {
+		return false, fmt.Errorf("failed to load policy from DB: %w", err)
+	}
+
+	strs := nameIdList(obj)
+	fmt.Println(strs)
+
+	// convert string[] to interface
+	data := make([]interface{}, len(strs))
+	for i, s := range strs {
+		data[i] = s
+	}
+	fmt.Println(data)
+
+	// eCtx := casbin.NewEnforceContext("1")
+	// fmt.Println(eCtx)
+	ok, err := e.Enforce(*sub, data)
+	if err != nil {
+		fmt.Errorf("failed to enforce policy: %w", err)
+		// return false, fmt.Errorf("failed to enforce policy: %w", err)
+	}
+	// ok := false
+	// print(err)
+
+	// []interface{}{"alice", "bob"}
+
+	fmt.Println("ENFORCE! : ", *sub, " + ", data, " = ", ok)
+
+	return ok, nil
+	// return true, nil
+}
+
 func EnforceAuthor(sub *string, obj *models.UserSummary) (bool, error) {
 	// fmt.Println("EnforceAuthor!!!")
 
@@ -151,7 +147,7 @@ func EnforceAuthor(sub *string, obj *models.UserSummary) (bool, error) {
 
 	// eCtx := casbin.NewEnforceContext("1")
 	// fmt.Println(eCtx)
-	ok, err := e.Enforce( *sub, obj)
+	ok, err := e.Enforce(*sub, obj)
 	if err != nil {
 		return false, fmt.Errorf("failed to enforce policy: %w", err)
 	}

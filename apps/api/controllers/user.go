@@ -141,7 +141,6 @@ func (uc *userController) GetCurrentUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-
 // GetUserList	godoc
 // @Schemes
 // @Summary 	  Get All Users
@@ -155,7 +154,7 @@ func (uc *userController) GetCurrentUser(c *gin.Context) {
 func (uc *userController) GetUserList(c *gin.Context) {
 	user, err := uc.userService.GetAllUsers()
 
-  if err != nil {
+	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}

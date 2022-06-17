@@ -29,7 +29,7 @@ var (
 )
 
 type UserService interface {
-	GetAllUsers()  ([]*models.User, error)
+	GetAllUsers() ([]*models.User, error)
 	GetUserById(id *string) (*models.User, error)
 	GetUserByEmail(emailAddress *string) (*models.User, error)
 	CreateUser(userId *string, userEmail *string, user *dtos.CreateUser) (*models.User, error)
@@ -45,35 +45,34 @@ func New() UserService {
 	return &userService{}
 }
 
-
 func (us userService) GetAllUsers() ([]*models.User, error) {
 	var all []*models.User
 	iter := userCollection.Documents(ctx)
 	defer iter.Stop() // add this line to ensure resources cleaned up
-	
-	for {
-    doc, err := iter.Next()
-    if err == iterator.Done {
-        break
-    }
-    if err != nil {
-        // Handle error, possibly by returning the error
-        // to the caller. Break the loop or return.
-        return nil, err
-    }
-    var u models.User
-    if err := doc.DataTo(&u); err != nil {
-        // Handle error, possibly by returning the error 
-        // to the caller. Continue the loop, 
-        // break the loop or return.
-        return nil, err
-    }
-		fmt.Println(u.Id)
-    all = append(all, &u)
-		
-}
 
-return all, nil
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			// Handle error, possibly by returning the error
+			// to the caller. Break the loop or return.
+			return nil, err
+		}
+		var u models.User
+		if err := doc.DataTo(&u); err != nil {
+			// Handle error, possibly by returning the error
+			// to the caller. Continue the loop,
+			// break the loop or return.
+			return nil, err
+		}
+		fmt.Println(u.Id)
+		all = append(all, &u)
+
+	}
+
+	return all, nil
 }
 
 func (us userService) GetUserById(id *string) (*models.User, error) {

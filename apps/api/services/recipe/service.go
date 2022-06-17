@@ -22,7 +22,7 @@ var recipeRevisionsCollection = storage.Collection("recipe-revisions")
 var recipeStarsCollection = storage.Collection("recipe-stars")
 
 var (
-	ErrUnauthorized						= errors.New("unauthorized user")
+	ErrUnauthorized           = errors.New("unauthorized user")
 	ErrUnableToUpdateRecipe   = errors.New("there was an error updating the recipe")
 	ErrUnableToForkRecipe     = errors.New("there was an error forking the recipe")
 	ErrUnableToCreateRecipe   = errors.New("there was an error creating the recipe")
@@ -104,7 +104,7 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 	return newRecipe, nil
 }
 
-func (rs recipeService) UpdateRecipeById(recipeId *string,  recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error) {
+func (rs recipeService) UpdateRecipeById(recipeId *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error) {
 	recipeDoc, err := recipeCollection.Doc(*recipeId).Get(ctx)
 
 	if err != nil {
@@ -115,7 +115,7 @@ func (rs recipeService) UpdateRecipeById(recipeId *string,  recipeUpdate *dtos.U
 	recipeDoc.DataTo(recipe)
 
 	// e, err := middleware.EnforceAuthor(&recipeUpdate.Author.Id, &recipe.Author)
-	e, err :=middleware.EnforceContributor(&recipeUpdate.Author.Id, &recipe.Contributors)
+	e, err := middleware.EnforceContributor(&recipeUpdate.Author.Id, &recipe.Contributors)
 	if err != nil {
 		return nil, ErrUnableToUpdateRecipe
 	} else if !e {
