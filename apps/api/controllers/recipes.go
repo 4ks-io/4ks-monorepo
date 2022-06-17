@@ -42,8 +42,8 @@ func NewRecipeController() RecipeController {
 // @Tags 				Recipes
 // @Accept 			json
 // @Produce 		json
-// @Param       recipe   body  	   dtos.CreateRecipe  true  "Recipe Data"
-// @Success 		200 		 {object} 	 models.Recipe
+// @Param       recipe   body  	   	dtos.CreateRecipe  true  "Recipe Data"
+// @Success 		200 		 {object}		models.Recipe
 // @Router		 	/recipes [post]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) CreateRecipe(c *gin.Context) {
@@ -53,8 +53,8 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 		return
 	}
 
-	userEmail := c.Request.Context().Value(utils.UserEmail{}).(string)
-	author, err := rc.userService.GetUserByEmail(&userEmail)
+	userId := c.Request.Context().Value(utils.UserId{}).(string)
+	author, err := rc.userService.GetUserById(&userId)
 
 	if err == userService.ErrUserNotFound {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -65,7 +65,7 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 	}
 
 	payload.Author = models.UserSummary{
-		Id:          author.Id,
+		Id:          userId,
 		Username:    author.Username,
 		DisplayName: author.DisplayName,
 	}
@@ -114,21 +114,22 @@ func (rc *recipeController) GetRecipe(c *gin.Context) {
 // @Tags 				Recipes
 // @Accept 			json
 // @Produce 		json
-// @Param       recipeId 	path      	string  true  "Recipe Id"
-// @Param		recipeUpdate body		dtos.UpdateRecipe  true  "Recipe Update"
-// @Success 		200 		{object} 	models.Recipe
+// @Param       recipeId 			path      string  true  "Recipe Id"
+// @Param				recipeUpdate 	body			dtos.UpdateRecipe  true  "Recipe Update"
+// @Success 		200 					{object} 	models.Recipe
 // @Router 			/recipes/{recipeId} [patch]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
 	payload := dtos.UpdateRecipe{}
+
 	if err := c.BindJSON(&payload); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	userEmail := c.Request.Context().Value(utils.UserEmail{}).(string)
-	author, err := rc.userService.GetUserByEmail(&userEmail)
+	userId := c.Request.Context().Value(utils.UserId{}).(string)
+	author, err := rc.userService.GetUserById(&userId)
 
 	if err == userService.ErrUserNotFound {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -139,7 +140,7 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 	}
 
 	payload.Author = models.UserSummary{
-		Id:          author.Id,
+		Id:          userId,
 		Username:    author.Username,
 		DisplayName: author.DisplayName,
 	}
@@ -148,6 +149,9 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 
 	if err == recipeService.ErrUnableToCreateRecipe {
 		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	} else if err == recipeService.ErrUnauthorized {
+		c.AbortWithError(http.StatusUnauthorized, err)
 		return
 	} else if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
@@ -170,8 +174,8 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 func (rc *recipeController) ForkRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
 
-	userEmail := c.Request.Context().Value(utils.UserEmail{}).(string)
-	author, err := rc.userService.GetUserByEmail(&userEmail)
+	userId := c.Request.Context().Value(utils.UserId{}).(string)
+	author, err := rc.userService.GetUserById(&userId)
 
 	if err == userService.ErrUserNotFound {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -182,7 +186,7 @@ func (rc *recipeController) ForkRecipe(c *gin.Context) {
 	}
 
 	newRecipe, err := rc.recipeService.ForkRecipeById(&recipeId, models.UserSummary{
-		Id:          author.Id,
+		Id:          userId,
 		Username:    author.Username,
 		DisplayName: author.DisplayName,
 	})
@@ -207,8 +211,8 @@ func (rc *recipeController) ForkRecipe(c *gin.Context) {
 func (rc *recipeController) StarRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
 
-	userEmail := c.Request.Context().Value(utils.UserEmail{}).(string)
-	author, err := rc.userService.GetUserByEmail(&userEmail)
+	userId := c.Request.Context().Value(utils.UserId{}).(string)
+	author, err := rc.userService.GetUserById(&userId)
 
 	if err == userService.ErrUserNotFound {
 		c.AbortWithStatus(http.StatusBadRequest)
@@ -219,7 +223,7 @@ func (rc *recipeController) StarRecipe(c *gin.Context) {
 	}
 
 	_, err = rc.recipeService.StarRecipeById(&recipeId, models.UserSummary{
-		Id:          author.Id,
+		Id:          userId,
 		Username:    author.Username,
 		DisplayName: author.DisplayName,
 	})

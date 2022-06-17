@@ -6,3 +6,4 @@ p, 1, admin_group, /users/*, delete, allow
 
 g, aa0afb0ac37b1c1e2e8da0fb79b9a7ddfd0fde9075e9db0b478daa42eca500ea, resource_users_group
 g, aa0afb0ac37b1c1e2e8da0fb79b9a7ddfd0fde9075e9db0b478daa42eca500ea, admin_group
+
