@@ -11,6 +11,8 @@ import (
 	"4ks/apps/api/utils"
 )
 
+var CASBIN_VERBOSE = true
+
 // TestAuth godoc
 // @Summary 		Test JWT Auth
 // @Description Test JWT Auth
@@ -36,7 +38,10 @@ func TestJWTAuth(c *gin.Context) {
 }
 
 func AuthRouter(router *gin.Engine) {
+	// validate jwt
 	router.Use(adapter.Wrap(middleware.EnsureValidToken()))
+
+	// append auth0 claims to context
 	router.Use(func(ctx *gin.Context) {
 		claims := utils.ExtractClaimsFromRequest(ctx.Request)
 		customClaims := utils.ExtractCustomClaimsFromClaims(&claims)
@@ -47,5 +52,6 @@ func AuthRouter(router *gin.Engine) {
 
 		ctx.Next()
 	})
+
 	router.GET("/auth-test", TestJWTAuth)
 }

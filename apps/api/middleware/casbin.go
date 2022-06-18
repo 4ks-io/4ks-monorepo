@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var VERBOSE = true
+var VERBOSE = false
 
 // Authorize determines if current subject has been authorized to take an action on an object.
 func Authorize(obj string, act string) gin.HandlerFunc {
@@ -42,119 +42,85 @@ func check(e error) {
 }
 
 // where should this be declared?
-var rbac = "apps/api/casbin/model-rbac.conf"
-var abacAuthor = "apps/api/casbin/model-abac-author.conf"
-var abacContributor = "apps/api/casbin/model-abac-contributor.conf"
+var model = "apps/api/casbin/model.conf"
 var policy = "apps/api/casbin/policy.csv"
+var e, err = casbin.NewEnforcer(model, policy, VERBOSE)
+
+// if err != nil {
+// 	fmt.Printf("failed to create enforcer: %w", err)
+// 	// return false, fmt.Errorf("failed to create enforcer: %w", err)
+// }
 
 func enforce(sub string, obj string, act string) (bool, error) {
-
-	// m, _ := os.ReadFile(model)
-	// fmt.Println(string(m))
-	// p, _ := os.ReadFile(policy)
-	// fmt.Println(string(p))
-
-	// var enforcer = NewEnforcer(model, policy)
-	e, err := casbin.NewEnforcer(rbac, policy)
-
-	// EnforceContext{"r1","p1","e1","m1"}
-
-	// type EnforceContext struct {
-	//     RType string
-	//     PType string
-	//     EType string
-	//     MType string
-	// }
-
 	err = e.LoadPolicy()
 	if err != nil {
-		return false, fmt.Errorf("failed to load policy from DB: %w", err)
+		return false, fmt.Errorf("failed to load policy: %w", err)
 	}
 
-	//  enforcer.Enforce(sub, obj, act)
-	ok, err := e.Enforce(sub, obj, act, VERBOSE)
+	ok, err := e.Enforce(sub, obj, act)
 	if err != nil {
 		return false, fmt.Errorf("failed to enforce policy: %w", err)
 	}
 
-	fmt.Println("ENFORCE! : ", sub, " + ", obj, " + ", act, " = ", ok)
-
 	return ok, nil
-	// return true, nil
 }
 
-func nameIdList(data *[]models.UserSummary) []string {
+var c2 = casbin.NewEnforceContext("2")
+
+func EnforceAuthor(sub *string, obj *models.UserSummary) (bool, error) {
+	// eCtx := casbin.NewEnforceContext("2")
+	// fmt.Println(eCtx)
+	err = e.LoadPolicy()
+	if err != nil {
+		return false, fmt.Errorf("failed to load policy: %w", err)
+	}
+
+	ok, err := e.Enforce(c2, *sub, obj)
+	if err != nil {
+		return false, fmt.Errorf("failed to enforce policy: %w", err)
+	}
+
+	return ok, nil
+}
+
+var c3 = casbin.EnforceContext{
+	RType: "r2",
+	PType: "p2",
+	EType: "e2",
+	MType: "m3",
+}
+
+func EnforceContributor(sub *string, obj *[]models.UserSummary) (bool, error) {
+	// eCtx := casbin.NewEnforceContext("2")
+	// eCtx.MType = "m3"
+	// fmt.Println(c3)
+	err := e.LoadPolicy()
+	if err != nil {
+		return false, fmt.Errorf("failed to load policy: %w", err)
+	}
+
+	data := getIds(obj)
+
+	ok, err := e.Enforce(c3, *sub, data)
+	if err != nil {
+		// fmt.Errorf("failed to enforce policy: %w", err)
+		return false, fmt.Errorf("failed to enforce policy: %w", err)
+	}
+
+	return ok, nil
+}
+
+// convert array of UserSummary models into string array of ids
+func getIds(data *[]models.UserSummary) []interface{} {
 	var list []string
 	for _, user := range *data {
 		list = append(list, user.Id)
 	}
-	return list
-}
 
-func EnforceContributor(sub *string, obj *[]models.UserSummary) (bool, error) {
-	fmt.Println("EnforceContributor!!!")
-
-	e, err := casbin.NewEnforcer(abacContributor, VERBOSE)
-	if err != nil {
-		return false, fmt.Errorf("failed to create enforcer: %w", err)
+	out := make([]interface{}, len(list))
+	for i, s := range list {
+		out[i] = s
 	}
 
-	err = e.LoadPolicy()
-	if err != nil {
-		return false, fmt.Errorf("failed to load policy from DB: %w", err)
-	}
-
-	strs := nameIdList(obj)
-	fmt.Println(strs)
-
-	// convert string[] to interface
-	data := make([]interface{}, len(strs))
-	for i, s := range strs {
-		data[i] = s
-	}
-	fmt.Println(data)
-
-	// eCtx := casbin.NewEnforceContext("1")
-	// fmt.Println(eCtx)
-	ok, err := e.Enforce(*sub, data)
-	if err != nil {
-		fmt.Errorf("failed to enforce policy: %w", err)
-		// return false, fmt.Errorf("failed to enforce policy: %w", err)
-	}
-	// ok := false
-	// print(err)
-
-	// []interface{}{"alice", "bob"}
-
-	fmt.Println("ENFORCE! : ", *sub, " + ", data, " = ", ok)
-
-	return ok, nil
-	// return true, nil
-}
-
-func EnforceAuthor(sub *string, obj *models.UserSummary) (bool, error) {
-	// fmt.Println("EnforceAuthor!!!")
-
-	e, err := casbin.NewEnforcer(abacAuthor, VERBOSE)
-	if err != nil {
-		return false, fmt.Errorf("failed to create enforcer: %w", err)
-	}
-
-	err = e.LoadPolicy()
-	if err != nil {
-		return false, fmt.Errorf("failed to load policy from DB: %w", err)
-	}
-
-	// eCtx := casbin.NewEnforceContext("1")
-	// fmt.Println(eCtx)
-	ok, err := e.Enforce(*sub, obj)
-	if err != nil {
-		return false, fmt.Errorf("failed to enforce policy: %w", err)
-	}
-	// print(err)
-
-	fmt.Println("ENFORCE! : ", *sub, " + ", obj.Id, " = ", ok)
-
-	return ok, nil
-	// return true, nil
+	return out
 }
