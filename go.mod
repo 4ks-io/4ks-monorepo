@@ -6,8 +6,8 @@ require (
 	cloud.google.com/go/firestore v1.6.1
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v1.7.0
 	github.com/auth0/go-jwt-middleware/v2 v2.0.0
+	github.com/casbin/casbin/v2 v2.47.2
 	github.com/geraldo-labs/merge-struct v1.0.0
-	github.com/gin-contrib/sessions v0.0.3
 	github.com/gin-gonic/gin v1.7.7
 	github.com/gwatts/gin-adapter v1.0.0
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
@@ -20,6 +20,7 @@ require (
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.4.1
 	go.opentelemetry.io/otel/sdk v1.7.0
 	go.opentelemetry.io/otel/trace v1.7.0
+	google.golang.org/api v0.77.0
 )
 
 require (
@@ -30,7 +31,6 @@ require (
 	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/casbin/casbin/v2 v2.47.2 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
@@ -47,9 +47,6 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/googleapis/gax-go/v2 v2.3.0 // indirect
-	github.com/gorilla/context v1.1.1 // indirect
-	github.com/gorilla/securecookie v1.1.1 // indirect
-	github.com/gorilla/sessions v1.1.3 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
@@ -74,7 +71,6 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.10 // indirect
 	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
-	google.golang.org/api v0.77.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220429170224-98d788798c3e // indirect
 	google.golang.org/grpc v1.46.0 // indirect
