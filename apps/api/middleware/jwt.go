@@ -15,9 +15,11 @@ import (
 
 // CustomClaims contains custom data we want from the token.
 type CustomClaims struct {
-	Scope string `json:"scope"`
-	Email string `json:"https://4ks.io/email"`
-	Id    string `json:"https://4ks.io/id"`
+	Scope       string `json:"scope"`
+	Email       string `json:"https://4ks.io/email"`
+	Id          string `json:"https://4ks.io/id"`
+	Timezone    string `json:"https://4ks.io/timeZone"`
+	CountryCode string `json:"https://4ks.io/countryCode"`
 }
 
 // Validate does nothing for this example, but we need

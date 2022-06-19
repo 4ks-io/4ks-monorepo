@@ -69,7 +69,6 @@ func (us userService) GetAllUsers() ([]*models.User, error) {
 		}
 		fmt.Println(u.Id)
 		all = append(all, &u)
-
 	}
 
 	return all, nil

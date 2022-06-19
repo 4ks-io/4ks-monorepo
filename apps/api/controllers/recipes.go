@@ -16,6 +16,7 @@ import (
 type RecipeController interface {
 	CreateRecipe(c *gin.Context)
 	GetRecipe(c *gin.Context)
+	GetRecipes(c *gin.Context)
 	UpdateRecipe(c *gin.Context)
 	ForkRecipe(c *gin.Context)
 	StarRecipe(c *gin.Context)
@@ -106,6 +107,30 @@ func (rc *recipeController) GetRecipe(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, recipe)
+}
+
+// GetRecipes		godoc
+// @Schemes
+// @Summary 	  Get All Recipes
+// @Description Get All Recipes
+// @Tags 		    Recipes
+// @Accept 	   	json
+// @Produce   	json
+// @Success 		200 			{array} 		models.Recipe
+// @Router 			/recipes 	[get]
+// @Security 		ApiKeyAuth
+func (rc *recipeController) GetRecipes(c *gin.Context) {
+	recipes, err := rc.recipeService.GetAllRecipes()
+
+	if err == recipeService.ErrRecipeNotFound {
+		c.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, recipes)
 }
 
 // UpdateRecipe	godoc

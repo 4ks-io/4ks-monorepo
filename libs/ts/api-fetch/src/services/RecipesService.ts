@@ -14,6 +14,19 @@ export class RecipesService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
+     * Get All Recipes
+     * Get All Recipes
+     * @returns models_Recipe OK
+     * @throws ApiError
+     */
+    public getRecipes(): CancelablePromise<Array<models_Recipe>> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/recipes',
+        });
+    }
+
+    /**
      * Create a new Recipe
      * Create a new Recipe
      * @param recipe Recipe Data
@@ -56,7 +69,7 @@ export class RecipesService {
      * @returns models_Recipe OK
      * @throws ApiError
      */
-    public getRecipes(
+    public getRecipes1(
         recipeId: string,
     ): CancelablePromise<models_Recipe> {
         return this.httpRequest.request({

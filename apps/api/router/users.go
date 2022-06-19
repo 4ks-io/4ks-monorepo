@@ -15,7 +15,7 @@ func UsersRouter(router *gin.Engine) {
 		users.DELETE(":id", middleware.Authorize("/users/*", "delete"), uc.DeleteUser)
 		users.POST("", uc.CreateUser)
 		users.GET("profile", uc.GetCurrentUser)
-		users.GET("list", middleware.Authorize("/users/*", "list"), uc.GetUserList)
+		users.GET("", middleware.Authorize("/users/*", "list"), uc.GetUsers)
 		users.GET(":id", uc.GetUser)
 		users.PATCH(":id", uc.UpdateUser)
 	}

@@ -13,6 +13,7 @@ func RecipesRouter(router *gin.Engine) {
 	{
 		recipes.POST("", rc.CreateRecipe)
 		recipes.GET(":id", rc.GetRecipe)
+		recipes.GET("", rc.GetRecipes)
 		recipes.PATCH(":id", rc.UpdateRecipe)
 		recipes.POST(":id/star", rc.StarRecipe)
 		recipes.POST(":id/fork", rc.ForkRecipe)

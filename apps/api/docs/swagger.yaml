@@ -152,6 +152,24 @@ paths:
       tags:
       - API
   /recipes:
+    get:
+      consumes:
+      - application/json
+      description: Get All Recipes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Recipe'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Recipes
+      tags:
+      - Recipes
     post:
       consumes:
       - application/json
@@ -319,6 +337,24 @@ paths:
       tags:
       - Recipes
   /users:
+    get:
+      consumes:
+      - application/json
+      description: Get All Users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Users
+      tags:
+      - Users
     post:
       consumes:
       - application/json
@@ -407,25 +443,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Update User
-      tags:
-      - Users
-  /users/list:
-    get:
-      consumes:
-      - application/json
-      description: Get All Users
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.User'
-            type: array
-      security:
-      - ApiKeyAuth: []
-      summary: Get All Users
       tags:
       - Users
   /users/profile:

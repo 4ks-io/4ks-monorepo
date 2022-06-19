@@ -14,10 +14,9 @@ import (
 type UserController interface {
 	CreateUser(c *gin.Context)
 	GetCurrentUser(c *gin.Context)
-	GetUserList(c *gin.Context)
-	DeleteUser(c *gin.Context)
 	GetUser(c *gin.Context)
-	// GetUsers(c *gin.Context)
+	GetUsers(c *gin.Context)
+	DeleteUser(c *gin.Context)
 	UpdateUser(c *gin.Context)
 }
 
@@ -141,7 +140,7 @@ func (uc *userController) GetCurrentUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-// GetUserList	godoc
+// GetUsers	godoc
 // @Schemes
 // @Summary 	  Get All Users
 // @Description Get All Users
@@ -149,9 +148,9 @@ func (uc *userController) GetCurrentUser(c *gin.Context) {
 // @Accept 	   	json
 // @Produce   	json
 // @Success 		200 		{array} 	models.User
-// @Router 			/users/list [get]
+// @Router 			/users	[get]
 // @Security 		ApiKeyAuth
-func (uc *userController) GetUserList(c *gin.Context) {
+func (uc *userController) GetUsers(c *gin.Context) {
 	user, err := uc.userService.GetAllUsers()
 
 	if err != nil {

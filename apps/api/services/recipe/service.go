@@ -3,11 +3,13 @@ package recipe
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
 	firestore "cloud.google.com/go/firestore"
 	mp "github.com/geraldo-labs/merge-struct"
+	"google.golang.org/api/iterator"
 
 	"4ks/apps/api/dtos"
 	"4ks/apps/api/middleware"
@@ -33,6 +35,7 @@ var (
 
 type RecipeService interface {
 	GetRecipeById(id *string) (*models.Recipe, error)
+	GetAllRecipes() ([]*models.Recipe, error)
 	CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe, error)
 	UpdateRecipeById(id *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error)
 	ForkRecipeById(id *string, forkAuthor models.UserSummary) (*models.Recipe, error)
@@ -64,6 +67,35 @@ func (rs recipeService) GetRecipeById(id *string) (*models.Recipe, error) {
 
 	recipe.Id = result.Ref.ID
 	return recipe, nil
+}
+
+func (rs recipeService) GetAllRecipes() ([]*models.Recipe, error) {
+	var all []*models.Recipe
+	iter := recipeCollection.Documents(ctx)
+	defer iter.Stop()
+
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			// Handle error, possibly by returning the error
+			// to the caller. Break the loop or return.
+			return nil, err
+		}
+		var u models.Recipe
+		if err := doc.DataTo(&u); err != nil {
+			// Handle error, possibly by returning the error
+			// to the caller. Continue the loop,
+			// break the loop or return.
+			return nil, err
+		}
+		fmt.Println(u.Id)
+		all = append(all, &u)
+	}
+
+	return all, nil
 }
 
 func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe, error) {
