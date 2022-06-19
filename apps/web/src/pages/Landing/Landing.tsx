@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   ActionButton,
   Stack,
@@ -12,12 +13,16 @@ import Logo from '../../logo.svg';
 
 const Landing = () => {
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+  const navigate = useNavigate();
 
   function handleLoginOnClick() {
     loginWithRedirect();
   }
   function handleLogoutOnClick() {
     logout({ returnTo: window.location.origin });
+  }
+  function handleHomeClick() {
+    navigate('/home', { replace: true });
   }
 
   return (
@@ -50,7 +55,11 @@ const Landing = () => {
         />
 
         {isAuthenticated ? (
-          <ActionButton onClick={handleLogoutOnClick}>Logout</ActionButton>
+          <>
+            <ActionButton onClick={handleHomeClick}>Home</ActionButton>
+            <br />
+            <ActionButton onClick={handleLogoutOnClick}>Logout</ActionButton>
+          </>
         ) : (
           <ActionButton onClick={handleLoginOnClick}>Login</ActionButton>
         )}
