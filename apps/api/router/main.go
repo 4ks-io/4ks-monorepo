@@ -20,9 +20,10 @@ func New() *gin.Engine {
 	SystemRouter(router)
 	router.Use(otelgin.Middleware("4ks-api"))
 
+	RecipesRouterUnauth(router)
 	AuthRouter(router)
 	UsersRouter(router)
-	RecipesRouter(router)
+	RecipesRouterAuth(router)
 
 	return router
 }

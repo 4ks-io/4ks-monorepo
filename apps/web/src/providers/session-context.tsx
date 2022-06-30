@@ -34,12 +34,16 @@ export function SessionContextProvider({
 
   useEffect(() => {
     if (user) {
-      // console.log(user);
       getAccessTokenSilently().then(async (t) => {
         dispatch({
           user,
           api: ApiServiceFactory(t),
         });
+      });
+    } else {
+      dispatch({
+        user: undefined,
+        api: ApiServiceFactory(undefined),
       });
     }
   }, [user]);
@@ -50,9 +54,5 @@ export function SessionContextProvider({
 }
 
 export function useSessionContext() {
-  const context = useContext(SessionContext);
-  if (context.user === undefined) {
-    console.log('login required');
-  }
-  return context;
+  return useContext(SessionContext);
 }

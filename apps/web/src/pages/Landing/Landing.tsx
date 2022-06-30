@@ -7,6 +7,7 @@ import {
   ImageFit,
   TextField,
 } from '@fluentui/react';
+import { PageLayout } from '../Layout';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import Logo from '../../logo.svg';
@@ -21,50 +22,45 @@ const Landing = () => {
   function handleLogoutOnClick() {
     logout({ returnTo: window.location.origin });
   }
-  function handleHomeClick() {
-    navigate('/home', { replace: true });
+  function handleMeClick() {
+    navigate('/me', { replace: true });
+  }
+  function handleRecipesClick() {
+    navigate('/recipes', { replace: true });
   }
 
   return (
-    <div
-      style={{
-        height: '100vh',
-        width: '100%',
-        display: 'flex',
-        alignContent: 'center',
-      }}
-    >
-      <Stack
-        verticalAlign="center"
-        horizontalAlign="center"
-        style={{ width: '100%', rowGap: 10 }}
+    <PageLayout>
+      <div
+        style={{
+          height: '100vh',
+          width: '100%',
+          display: 'flex',
+          alignContent: 'center',
+        }}
       >
-        <Image src={Logo} width={100} imageFit={ImageFit.contain}></Image>
-        <TextField
-          placeholder="Search for a recipe..."
-          styles={{
-            fieldGroup: {
-              height: '40px',
-              borderColor: 'lightgray',
-            },
-            field: {
-              fontSize: 16,
-              height: '40px',
-            },
-          }}
-        />
-
-        {isAuthenticated ? (
-          <>
-            <ActionButton onClick={handleHomeClick}>Home</ActionButton>
-            <br />
-            <ActionButton onClick={handleLogoutOnClick}>Logout</ActionButton>
-          </>
-        ) : (
-          <ActionButton onClick={handleLoginOnClick}>Login</ActionButton>
-        )}
-      </Stack>
-    </div>
+        <Stack
+          verticalAlign="center"
+          horizontalAlign="center"
+          style={{ width: '100%', rowGap: 10 }}
+        >
+          <Image src={Logo} width={100} imageFit={ImageFit.contain}></Image>
+          <TextField
+            placeholder="Search . . ."
+            styles={{
+              fieldGroup: {
+                height: '40px',
+                borderColor: 'lightgray',
+              },
+              field: {
+                fontSize: 16,
+                height: '40px',
+              },
+            }}
+          />
+        </Stack>
+      </div>
+    </PageLayout>
   );
 };
 
