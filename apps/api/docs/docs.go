@@ -578,6 +578,12 @@ const docTemplate = `{
                         "$ref": "#/definitions/models.Image"
                     }
                 },
+                "ingredients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Ingredient"
+                    }
+                },
                 "instructions": {
                     "type": "array",
                     "items": {
@@ -613,6 +619,12 @@ const docTemplate = `{
                         "$ref": "#/definitions/models.Image"
                     }
                 },
+                "ingredients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Ingredient"
+                    }
+                },
                 "instructions": {
                     "type": "array",
                     "items": {
@@ -631,6 +643,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Ingredient": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 }
             }
@@ -708,6 +734,12 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Image"
+                    }
+                },
+                "ingredients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Ingredient"
                     }
                 },
                 "instructions": {

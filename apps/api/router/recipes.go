@@ -18,7 +18,6 @@ func RecipesRouterAuth(router *gin.Engine) {
 	}
 }
 
-
 func RecipesRouterUnauth(router *gin.Engine) {
 	rc := controllers.NewRecipeController()
 

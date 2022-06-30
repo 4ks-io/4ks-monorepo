@@ -111,6 +111,7 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 		Author:       recipe.Author,
 		Images:       recipe.Images,
 		Instructions: recipe.Instructions,
+		Ingredients:  recipe.Ingredients,
 		CreatedDate:  recipeCreatedDate,
 		UpdatedDate:  recipeCreatedDate,
 	}

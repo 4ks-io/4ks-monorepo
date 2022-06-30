@@ -571,6 +571,12 @@
                         "$ref": "#/definitions/models.Image"
                     }
                 },
+                "ingredients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Ingredient"
+                    }
+                },
                 "instructions": {
                     "type": "array",
                     "items": {
@@ -606,6 +612,12 @@
                         "$ref": "#/definitions/models.Image"
                     }
                 },
+                "ingredients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Ingredient"
+                    }
+                },
                 "instructions": {
                     "type": "array",
                     "items": {
@@ -624,6 +636,20 @@
                     "type": "string"
                 },
                 "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Ingredient": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 }
             }
@@ -701,6 +727,12 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Image"
+                    }
+                },
+                "ingredients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Ingredient"
                     }
                 },
                 "instructions": {

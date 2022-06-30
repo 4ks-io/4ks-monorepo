@@ -6,6 +6,10 @@ definitions:
         items:
           $ref: '#/definitions/models.Image'
         type: array
+      ingredients:
+        items:
+          $ref: '#/definitions/models.Ingredient'
+        type: array
       instructions:
         items:
           $ref: '#/definitions/models.Instruction'
@@ -29,6 +33,10 @@ definitions:
         items:
           $ref: '#/definitions/models.Image'
         type: array
+      ingredients:
+        items:
+          $ref: '#/definitions/models.Ingredient'
+        type: array
       instructions:
         items:
           $ref: '#/definitions/models.Instruction'
@@ -41,6 +49,15 @@ definitions:
       id:
         type: string
       url:
+        type: string
+    type: object
+  models.Ingredient:
+    properties:
+      name:
+        type: string
+      quantity:
+        type: string
+      type:
         type: string
     type: object
   models.Instruction:
@@ -91,6 +108,10 @@ definitions:
       images:
         items:
           $ref: '#/definitions/models.Image'
+        type: array
+      ingredients:
+        items:
+          $ref: '#/definitions/models.Ingredient'
         type: array
       instructions:
         items:

@@ -7,4 +7,5 @@ type CreateRecipe struct {
 	Author       models.UserSummary   `json:"-"` // We populate the author using the request context and hence dont want this sent in the api
 	Images       []models.Image       `json:"images"`
 	Instructions []models.Instruction `json:"instructions"`
+	Ingredients  []models.Ingredient  `json:"ingredients"`
 }

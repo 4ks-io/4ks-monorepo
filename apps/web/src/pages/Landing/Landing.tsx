@@ -33,7 +33,7 @@ const Landing = () => {
     <PageLayout>
       <div
         style={{
-          height: '100vh',
+          height: '80vh',
           width: '100%',
           display: 'flex',
           alignContent: 'center',
