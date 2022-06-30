@@ -53,8 +53,6 @@ const AppBar: React.FunctionComponent = () => {
     // width: 50,
   };
 
-  const iconProps = { iconName: 'Search' };
-
   function handleLoginOnClick() {
     loginWithRedirect();
   }
@@ -69,7 +67,7 @@ const AppBar: React.FunctionComponent = () => {
         {showSearchInput && (
           <>
             <Image {...imageProps} alt="4ks.io" height={36} />
-            <TextField iconProps={iconProps} placeholder="Search" />
+            <TextField placeholder="Search" />
           </>
         )}
       </span>

@@ -66,7 +66,7 @@ const Recipe: React.FunctionComponent = () => {
   useEffect(() => {
     if (ctx?.api && recipeId) {
       ctx.api.recipes.getRecipes1(recipeId).then((r) => {
-        console.log(r);
+        // console.log(r);
         setRecipe(r);
       });
     }
