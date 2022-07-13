@@ -8,12 +8,14 @@ type Image struct {
 }
 
 type Instruction struct {
+	Id   int    `firestore:"id" json:"id"`
 	Type string `firestore:"type" json:"type"`
 	Name string `firestore:"name" json:"name"`
 	Text string `firestore:"text" json:"text"`
 }
 
 type Ingredient struct {
+	Id       int    `firestore:"id" json:"id"`
 	Type     string `firestore:"type" json:"type"`
 	Name     string `firestore:"name" json:"name"`
 	Quantity string `firestore:"quantity" json:"quantity"`
