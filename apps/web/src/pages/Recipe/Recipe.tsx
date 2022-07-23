@@ -9,6 +9,7 @@ import { RecipeInstructions } from './RecipeInstructions';
 import { RecipeHeader } from './RecipeHeader';
 import { RecipeControls } from './RecipeControls';
 import { RecipeSocial } from './RecipeSocial';
+import { DragDropContext } from 'react-beautiful-dnd';
 
 import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { RecipeSummary } from './RecipeSummary';
@@ -51,14 +52,16 @@ const Recipe: React.FunctionComponent = () => {
 
   return (
     <PageLayout>
-      <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
-        <RecipeHeader recipe={recipe} />
-        <RecipeControls />
-        <RecipeSummary recipe={recipe} />
-        <RecipeIngredients data={recipe.currentRevision?.ingredients} />
-        <RecipeInstructions data={recipe.currentRevision?.instructions} />
-        <RecipeSocial data={recipe.contributors} />
-      </Stack>
+      <DragDropContext>
+        <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
+          <RecipeHeader recipe={recipe} />
+          <RecipeControls />
+          <RecipeSummary recipe={recipe} />
+          <RecipeIngredients data={recipe.currentRevision?.ingredients} />
+          <RecipeInstructions data={recipe.currentRevision?.instructions} />
+          <RecipeSocial data={recipe.contributors} />
+        </Stack>
+      </DragDropContext>
     </PageLayout>
   );
 };

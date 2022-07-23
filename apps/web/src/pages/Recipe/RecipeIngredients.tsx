@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
-import {
-  Stack,
-  IStackTokens,
-  IStackItemStyles,
-} from '@fluentui/react/lib/Stack';
+import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { TextField } from '@fluentui/react/lib/TextField';
-import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
+import { DefaultButton } from '@fluentui/react/lib/Button';
 import { models_Ingredient } from '@4ks/api-fetch';
-import { Label } from '@fluentui/react/lib/Label';
 import {
   stackStyles,
   stackItemStyles,
   itemAlignmentsStackTokens,
 } from './styles';
-import { DefaultPalette } from '@fluentui/react';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 const stackTokens: IStackTokens = {
   childrenGap: 1,
@@ -69,9 +64,34 @@ export function RecipeIngredients({ data }: RecipeIngredientsProps) {
   return (
     <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
       <span>Ingredients</span>
-      {data?.map((i) => (
-        <Ingredient key={i.name} data={i} />
-      ))}
+      <Droppable droppableId="ingredients">
+        {(provided) => (
+          <ul
+            className="ingredients"
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+          >
+            {data?.map((ingredient, index) => (
+              <Draggable
+                key={ingredient.name}
+                draggableId={ingredient.name}
+                index={index}
+              >
+                {(provided) => (
+                  <li
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    <Ingredient key={ingredient.name} data={ingredient} />
+                  </li>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </ul>
+        )}
+      </Droppable>
       <DefaultButton
         text="Add Ingredient"
         onClick={() => {}}
