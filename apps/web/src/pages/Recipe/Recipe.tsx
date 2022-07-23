@@ -8,14 +8,9 @@ import { RecipeIngredients } from './RecipeIngredients';
 import { RecipeInstructions } from './RecipeInstructions';
 import { RecipeHeader } from './RecipeHeader';
 import { RecipeControls } from './RecipeControls';
-import { Label } from '@fluentui/react/lib/Label';
-import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
+import { RecipeSocial } from './RecipeSocial';
 
-import {
-  stackStyles,
-  stackItemStyles,
-  itemAlignmentsStackTokens,
-} from './styles';
+import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { RecipeSummary } from './RecipeSummary';
 
 const Recipe: React.FunctionComponent = () => {
@@ -59,27 +54,10 @@ const Recipe: React.FunctionComponent = () => {
       <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
         <RecipeHeader recipe={recipe} />
         <RecipeControls />
-
-        <RecipeSummary />
-        <Stack.Item align="stretch" styles={stackItemStyles}>
-          <RecipeIngredients data={recipe.currentRevision?.ingredients} />
-        </Stack.Item>
-        <Stack.Item align="stretch" styles={stackItemStyles}>
-          <RecipeInstructions data={recipe.currentRevision?.instructions} />
-        </Stack.Item>
-
-        <Stack.Item align="start" styles={stackItemStyles}>
-          <span>
-            <>Contributors</>
-          </span>
-        </Stack.Item>
-        {recipe.contributors?.map((c) => {
-          return (
-            <Stack.Item key={c.id} align="center" styles={stackItemStyles}>
-              <span>{c.displayName}</span>
-            </Stack.Item>
-          );
-        })}
+        <RecipeSummary recipe={recipe} />
+        <RecipeIngredients data={recipe.currentRevision?.ingredients} />
+        <RecipeInstructions data={recipe.currentRevision?.instructions} />
+        <RecipeSocial data={recipe.contributors} />
       </Stack>
     </PageLayout>
   );

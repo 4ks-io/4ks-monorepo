@@ -13,7 +13,11 @@ const imageProps: Partial<IImageProps> = {
   src: logo,
   styles: (props) => ({
     // root: { border: '1px solid ' + props.theme.palette.neutralSecondary },
-    root: { paddingLeft: '4px', paddingRight: '4px' },
+    root: {
+      paddingLeft: '4px',
+      paddingRight: '4px',
+      // borderBottom: '1px solid rgb(200, 200, 200)',
+    },
   }),
 };
 
@@ -40,17 +44,15 @@ const AppBar: React.FunctionComponent = () => {
   const stackStyles: IStackStyles = {
     root: {
       // background: DefaultPalette.themeTertiary,
+      borderBottom: '1px solid rgb(200, 200, 200)',
     },
   };
 
   const itemStyles: React.CSSProperties = {
     alignItems: 'center',
-    // background: DefaultPalette.themePrimary,
-    // color: DefaultPalette.white,
     display: 'flex',
     height: 48,
     justifyContent: 'center',
-    // width: 50,
   };
 
   function handleLoginOnClick() {

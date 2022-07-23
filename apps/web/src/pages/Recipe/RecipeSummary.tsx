@@ -6,15 +6,19 @@ import {
   IStackItemStyles,
 } from '@fluentui/react/lib/Stack';
 import { DefaultPalette } from '@fluentui/react';
+import { models_Recipe } from '@4ks/api-fetch';
+import { formatDate } from '../../utils/dateTime';
 
 import { stackStyles } from './styles';
-interface RecipeSummaryProps {}
+interface RecipeSummaryProps {
+  recipe: models_Recipe;
+}
 
-export function RecipeSummary({}: RecipeSummaryProps) {
+export function RecipeSummary({ recipe }: RecipeSummaryProps) {
   const stackItemStyles: IStackItemStyles = {
     root: {
-      background: DefaultPalette.themePrimary,
-      color: DefaultPalette.white,
+      // background: DefaultPalette.themePrimary,
+      // color: DefaultPalette.white,
       padding: 5,
     },
   };
@@ -31,7 +35,8 @@ export function RecipeSummary({}: RecipeSummaryProps) {
     paddingTop: '10px',
     paddingBottom: '10px',
     border: '1px solid rgb(200, 200, 200)',
-    // background: 'rgb(244, 244, 244)',
+    background: DefaultPalette.themePrimary,
+    color: DefaultPalette.white,
   };
 
   return (
@@ -62,7 +67,9 @@ export function RecipeSummary({}: RecipeSummaryProps) {
           <span style={spanStyle}>calories: 180 kcal</span>
         </Stack.Item>
         <Stack.Item grow styles={stackItemStyles}>
-          <span style={spanStyle}>difficulty: easy</span>
+          <span style={spanStyle}>
+            last update: {recipe.updatedDate && formatDate(recipe.updatedDate)}
+          </span>
         </Stack.Item>
       </Stack>
     </Stack.Item>

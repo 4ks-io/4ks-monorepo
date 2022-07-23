@@ -7,7 +7,6 @@ import {
 } from '@fluentui/react/lib/Breadcrumb';
 import { TooltipHost } from '@fluentui/react/lib/Tooltip';
 import { models_Recipe } from '@4ks/api-fetch';
-import { formatDate } from '../../utils/dateTime';
 import { FontIcon } from '@fluentui/react/lib/Icon';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
 
@@ -63,7 +62,6 @@ export function RecipeHeader({ recipe }: RecipeHeaderProps) {
         </Stack.Item>
 
         <Stack.Item align="end">
-          {recipe.updatedDate && formatDate(recipe.updatedDate)}
           <FontIcon
             aria-label="FavoriteStarIcon"
             iconName="FavoriteStarIcon"

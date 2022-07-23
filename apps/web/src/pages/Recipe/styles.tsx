@@ -21,8 +21,8 @@ export const itemAlignmentsStackTokens: IStackTokens = {
 
 export const stackItemStyles: IStackItemStyles = {
   root: {
-    background: DefaultPalette.themePrimary,
-    color: DefaultPalette.white,
+    // background: DefaultPalette.themePrimary,
+    // color: DefaultPalette.white,
     padding: 5,
   },
 };
