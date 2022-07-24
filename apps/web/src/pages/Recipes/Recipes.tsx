@@ -7,7 +7,7 @@ import {
   IStackTokens,
   IStackItemStyles,
 } from '@fluentui/react/lib/Stack';
-import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
+import { DefaultButton } from '@fluentui/react/lib/Button';
 
 import { useSessionContext } from '../../providers/session-context';
 import { models_Recipe } from '@4ks/api-fetch';
@@ -49,15 +49,11 @@ const Recipes: React.FunctionComponent = () => {
   function newRecipeButton() {
     if (isAuthenticated) {
       return (
-        // <Stack.Item align="stretch" styles={stackItemStyles}>
-        //   <span>
         <DefaultButton
           text="New Recipe"
           onClick={() => {}}
           allowDisabledFocus
         />
-        //   </span>
-        // </Stack.Item>
       );
     }
   }
