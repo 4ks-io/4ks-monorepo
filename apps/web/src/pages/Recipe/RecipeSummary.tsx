@@ -6,15 +6,16 @@ import {
   IStackItemStyles,
 } from '@fluentui/react/lib/Stack';
 import { DefaultPalette } from '@fluentui/react';
-import { models_Recipe } from '@4ks/api-fetch';
 import { formatDate } from '../../utils/dateTime';
+import { useRecipeContext } from '../../providers/recipe-context';
 
 import { stackStyles } from './styles';
-interface RecipeSummaryProps {
-  recipe: models_Recipe;
-}
 
-export function RecipeSummary({ recipe }: RecipeSummaryProps) {
+interface RecipeSummaryProps {}
+
+export function RecipeSummary(props: RecipeSummaryProps) {
+  const rtx = useRecipeContext();
+
   const stackItemStyles: IStackItemStyles = {
     root: {
       // background: DefaultPalette.themePrimary,
@@ -68,7 +69,8 @@ export function RecipeSummary({ recipe }: RecipeSummaryProps) {
         </Stack.Item>
         <Stack.Item grow styles={stackItemStyles}>
           <span style={spanStyle}>
-            last update: {recipe.updatedDate && formatDate(recipe.updatedDate)}
+            last update:{' '}
+            {rtx?.recipe?.updatedDate && formatDate(rtx.recipe.updatedDate)}
           </span>
         </Stack.Item>
       </Stack>

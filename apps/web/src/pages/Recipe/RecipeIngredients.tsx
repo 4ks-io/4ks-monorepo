@@ -9,6 +9,7 @@ import {
   itemAlignmentsStackTokens,
 } from './styles';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { useRecipeContext } from '../../providers/recipe-context';
 
 const stackTokens: IStackTokens = {
   childrenGap: 1,
@@ -56,11 +57,11 @@ function Ingredient(props: RecipeIngredientProps) {
   );
 }
 
-interface RecipeIngredientsProps {
-  data: models_Ingredient[] | undefined;
-}
+interface RecipeIngredientsProps {}
 
-export function RecipeIngredients({ data }: RecipeIngredientsProps) {
+export function RecipeIngredients(props: RecipeIngredientsProps) {
+  const rtx = useRecipeContext();
+
   return (
     <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
       <span>Ingredients</span>
@@ -71,23 +72,26 @@ export function RecipeIngredients({ data }: RecipeIngredientsProps) {
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
-            {data?.map((ingredient, index) => (
-              <Draggable
-                key={ingredient.name}
-                draggableId={ingredient.name}
-                index={index}
-              >
-                {(provided) => (
-                  <li
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
-                    <Ingredient key={ingredient.name} data={ingredient} />
-                  </li>
-                )}
-              </Draggable>
-            ))}
+            {rtx?.recipe?.currentRevision?.ingredients?.map(
+              (ingredient, index) => (
+                <Draggable
+                  key={ingredient.name}
+                  draggableId={`${ingredient.name}`}
+                  index={index}
+                >
+                  {(provided) => (
+                    <li
+                      // style={{ listStyleType: 'none' }}
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <Ingredient key={ingredient.name} data={ingredient} />
+                    </li>
+                  )}
+                </Draggable>
+              )
+            )}
             {provided.placeholder}
           </ul>
         )}

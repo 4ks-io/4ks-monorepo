@@ -9,6 +9,7 @@ import { TooltipHost } from '@fluentui/react/lib/Tooltip';
 import { models_Recipe } from '@4ks/api-fetch';
 import { FontIcon } from '@fluentui/react/lib/Icon';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
+import { useRecipeContext } from '../../providers/recipe-context';
 
 function _getCustomDivider(dividerProps: IDividerAsProps): JSX.Element {
   const tooltipText = dividerProps.item ? dividerProps.item.text : '';
@@ -24,11 +25,11 @@ function _getCustomDivider(dividerProps: IDividerAsProps): JSX.Element {
   );
 }
 
-interface RecipeHeaderProps {
-  recipe: models_Recipe;
-}
+interface RecipeHeaderProps {}
 
-export function RecipeHeader({ recipe }: RecipeHeaderProps) {
+export function RecipeHeader(props: RecipeHeaderProps) {
+  const rtx = useRecipeContext();
+
   const iconClass = mergeStyles({
     fontSize: 50,
     height: 50,
@@ -38,12 +39,12 @@ export function RecipeHeader({ recipe }: RecipeHeaderProps) {
 
   const crumbs: IBreadcrumbItem[] = [
     {
-      text: recipe.author?.displayName || '',
+      text: rtx?.recipe?.author?.displayName || '',
       key: 'author',
       onClick: () => {},
     },
     {
-      text: recipe.currentRevision?.name || '',
+      text: rtx?.recipe?.currentRevision?.name || '',
       key: 'recipe',
       onClick: () => {},
     },

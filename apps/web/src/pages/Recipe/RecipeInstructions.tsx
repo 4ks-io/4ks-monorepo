@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
-import {
-  Stack,
-  IStackTokens,
-  IStackItemStyles,
-} from '@fluentui/react/lib/Stack';
+import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { TextField } from '@fluentui/react/lib/TextField';
-import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
+import { DefaultButton } from '@fluentui/react/lib/Button';
 import { models_Instruction } from '@4ks/api-fetch';
-import { Label } from '@fluentui/react/lib/Label';
 import {
   stackStyles,
   stackItemStyles,
   itemAlignmentsStackTokens,
 } from './styles';
-import { DefaultPalette } from '@fluentui/react';
+import { useRecipeContext } from '../../providers/recipe-context';
 
 const stackTokens: IStackTokens = {
   childrenGap: 1,
@@ -65,15 +60,15 @@ function Instruction(props: RecipeInstructionProps) {
   );
 }
 
-interface RecipeInstructionsProps {
-  data: models_Instruction[] | undefined;
-}
+interface RecipeInstructionsProps {}
 
-export function RecipeInstructions({ data }: RecipeInstructionsProps) {
+export function RecipeInstructions(props: RecipeInstructionsProps) {
+  const rtx = useRecipeContext();
+
   return (
     <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
       <span>Instructions</span>
-      {data?.map((i) => (
+      {rtx?.recipe?.currentRevision?.instructions?.map((i) => (
         <Instruction key={i.name} data={i} />
       ))}
       <DefaultButton
