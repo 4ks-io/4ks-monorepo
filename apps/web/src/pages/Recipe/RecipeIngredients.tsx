@@ -16,12 +16,13 @@ const stackTokens: IStackTokens = {
 };
 
 interface RecipeIngredientProps {
+  index: number;
   data: models_Ingredient;
 }
 
-function Ingredient(props: RecipeIngredientProps) {
-  const [quantity, setQuantity] = useState(props.data.quantity);
-  const [name, setName] = useState(props.data.name);
+function Ingredient({ data, index }: RecipeIngredientProps) {
+  const [quantity, setQuantity] = useState(data.quantity);
+  const [name, setName] = useState(data.name);
 
   function handleQuantityChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -40,6 +41,14 @@ function Ingredient(props: RecipeIngredientProps) {
   return (
     <Stack.Item align="start" styles={stackItemStyles}>
       <Stack horizontal styles={stackStyles} tokens={stackTokens}>
+        <Stack.Item>
+          <TextField
+            style={{ width: '32px' }}
+            borderless
+            readOnly={true}
+            value={`${index}`}
+          />
+        </Stack.Item>
         <Stack.Item grow={2}>
           <TextField
             onChange={handleQuantityChange}
@@ -86,7 +95,11 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >
-                      <Ingredient key={ingredient.name} data={ingredient} />
+                      <Ingredient
+                        index={index}
+                        key={ingredient.name}
+                        data={ingredient}
+                      />
                     </li>
                   )}
                 </Draggable>

@@ -1,15 +1,14 @@
 import React from 'react';
-import { Stack } from '@fluentui/react/lib/Stack';
+import { IContextualMenuProps, Stack, IStackTokens } from '@fluentui/react';
 import {
   Breadcrumb,
   IBreadcrumbItem,
   IDividerAsProps,
 } from '@fluentui/react/lib/Breadcrumb';
 import { TooltipHost } from '@fluentui/react/lib/Tooltip';
-import { models_Recipe } from '@4ks/api-fetch';
-import { FontIcon } from '@fluentui/react/lib/Icon';
-import { mergeStyles } from '@fluentui/react/lib/Styling';
 import { useRecipeContext } from '../../providers/recipe-context';
+import { Icon } from '@fluentui/react/lib/Icon';
+import { PrimaryButton } from '@fluentui/react/lib/Button';
 
 function _getCustomDivider(dividerProps: IDividerAsProps): JSX.Element {
   const tooltipText = dividerProps.item ? dividerProps.item.text : '';
@@ -29,13 +28,6 @@ interface RecipeHeaderProps {}
 
 export function RecipeHeader(props: RecipeHeaderProps) {
   const rtx = useRecipeContext();
-
-  const iconClass = mergeStyles({
-    fontSize: 50,
-    height: 50,
-    width: 50,
-    margin: '0 25px',
-  });
 
   const crumbs: IBreadcrumbItem[] = [
     {
@@ -61,15 +53,29 @@ export function RecipeHeader(props: RecipeHeaderProps) {
             dividerAs={_getCustomDivider}
           />
         </Stack.Item>
-
         <Stack.Item align="end">
-          <FontIcon
-            aria-label="FavoriteStarIcon"
-            iconName="FavoriteStarIcon"
-            className={iconClass}
+          <PrimaryButton
+            iconProps={{ iconName: 'BranchFork2' }}
+            text="Fork"
+            onClick={_alertFork}
+          />
+        </Stack.Item>
+        <Stack.Item align="end">
+          <PrimaryButton
+            iconProps={{ iconName: 'FavoriteStar' }}
+            text="Star"
+            onClick={_alertStar}
           />
         </Stack.Item>
       </Stack>
     </Stack.Item>
   );
+}
+
+function _alertFork() {
+  alert('Fork!');
+}
+
+function _alertStar() {
+  alert('Star!');
 }

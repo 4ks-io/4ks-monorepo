@@ -8,7 +8,7 @@ import {
 import { DefaultPalette } from '@fluentui/react';
 import { formatDate } from '../../utils/dateTime';
 import { useRecipeContext } from '../../providers/recipe-context';
-
+import { Icon } from '@fluentui/react/lib/Icon';
 import { stackStyles } from './styles';
 
 interface RecipeSummaryProps {}
@@ -47,7 +47,14 @@ export function RecipeSummary(props: RecipeSummaryProps) {
         <Label>#beef</Label>
         <Label>#poutry</Label>
         <Label>#meat</Label>
-        <Label>#stuff</Label>
+        <Label>
+          <Icon
+            iconName="Add"
+            onClick={() => {
+              console.log('add some tag');
+            }}
+          />
+        </Label>
       </Stack>
       <Stack horizontal styles={stackStyles} tokens={stackTokens}>
         <Stack.Item grow styles={stackItemStyles}>
