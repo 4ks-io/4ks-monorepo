@@ -19,7 +19,7 @@ export function RecipeControls({}: RecipeControlsProps) {
   };
 
   return (
-    <Stack.Item align="stretch">
+    <Stack.Item align="stretch" style={{ paddingTop: '24px' }}>
       <Stack horizontal horizontalAlign="space-between" styles={stackStyles}>
         <Label style={selectedTabStyle}>Recipe</Label>
         <Label>Forks</Label>

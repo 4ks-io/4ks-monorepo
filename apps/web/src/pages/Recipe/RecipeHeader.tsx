@@ -1,5 +1,5 @@
 import React from 'react';
-import { IContextualMenuProps, Stack, IStackTokens } from '@fluentui/react';
+import { Stack } from '@fluentui/react';
 import {
   Breadcrumb,
   IBreadcrumbItem,
@@ -7,7 +7,6 @@ import {
 } from '@fluentui/react/lib/Breadcrumb';
 import { TooltipHost } from '@fluentui/react/lib/Tooltip';
 import { useRecipeContext } from '../../providers/recipe-context';
-import { Icon } from '@fluentui/react/lib/Icon';
 import { PrimaryButton } from '@fluentui/react/lib/Button';
 
 function _getCustomDivider(dividerProps: IDividerAsProps): JSX.Element {
@@ -53,6 +52,8 @@ export function RecipeHeader(props: RecipeHeaderProps) {
             dividerAs={_getCustomDivider}
           />
         </Stack.Item>
+      </Stack>
+      <Stack horizontal horizontalAlign="space-evenly">
         <Stack.Item align="end">
           <PrimaryButton
             iconProps={{ iconName: 'BranchFork2' }}
@@ -67,6 +68,13 @@ export function RecipeHeader(props: RecipeHeaderProps) {
             onClick={_alertStar}
           />
         </Stack.Item>
+        <Stack.Item align="end">
+          <PrimaryButton
+            iconProps={{ iconName: 'SocialListeningLogo' }}
+            text="Share"
+            onClick={_alertShare}
+          />
+        </Stack.Item>
       </Stack>
     </Stack.Item>
   );
@@ -78,4 +86,8 @@ function _alertFork() {
 
 function _alertStar() {
   alert('Star!');
+}
+
+function _alertShare() {
+  alert('Share!');
 }

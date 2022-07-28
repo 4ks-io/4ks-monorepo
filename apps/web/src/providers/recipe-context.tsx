@@ -7,6 +7,7 @@ export interface IRecipeContext {
   recipeId: string;
   recipe: models_Recipe;
   onSave: () => void;
+  edit: (recipe: models_Recipe) => void;
 }
 
 const RecipeContext = React.createContext<IRecipeContext | undefined>(
@@ -23,7 +24,12 @@ export function RecipeContextProvider({
 
   const [state, dispatch] = useState<IRecipeContext>();
 
+  function edit(recipe: models_Recipe) {}
+
   function onSave() {
+    console.log('SAVE!');
+    console.log(isAuthenticated);
+    console.log(state);
     if (state && isAuthenticated) {
       const { recipeId, recipe } = state;
       ctx?.api?.recipes.patchRecipes(recipeId, recipe as dtos_UpdateRecipe);
@@ -31,12 +37,13 @@ export function RecipeContextProvider({
   }
 
   useEffect(() => {
-    const recipedId = window.location.href.split('/').pop() as string;
-    ctx?.api?.recipes.getRecipes1(`${recipedId}`).then((r) => {
+    const recipeId = window.location.href.split('/').pop() as string;
+    ctx?.api?.recipes.getRecipes1(`${recipeId}`).then((recipe) => {
       dispatch({
-        recipeId: recipedId,
-        recipe: r,
-        onSave: onSave,
+        recipeId,
+        recipe,
+        onSave,
+        edit,
       });
     });
   }, [ctx]);

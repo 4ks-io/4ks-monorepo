@@ -1,88 +1,69 @@
 import React, { useState } from 'react';
 import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
-import { TextField } from '@fluentui/react/lib/TextField';
 import { DefaultButton } from '@fluentui/react/lib/Button';
 import { models_Ingredient } from '@4ks/api-fetch';
-import {
-  stackStyles,
-  stackItemStyles,
-  itemAlignmentsStackTokens,
-} from './styles';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { stackStyles, itemAlignmentsStackTokens } from './styles';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useRecipeContext } from '../../providers/recipe-context';
+import { RecipeIngredient } from './RecipeIngredient';
 
 const stackTokens: IStackTokens = {
   childrenGap: 1,
 };
 
-interface RecipeIngredientProps {
-  index: number;
-  data: models_Ingredient;
-}
-
-function Ingredient({ data, index }: RecipeIngredientProps) {
-  const [quantity, setQuantity] = useState(data.quantity);
-  const [name, setName] = useState(data.name);
-
-  function handleQuantityChange(
-    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    newValue?: string | undefined
-  ) {
-    setQuantity(newValue);
-  }
-
-  function handleNameChange(
-    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    newValue?: string | undefined
-  ) {
-    setName(newValue);
-  }
-
-  return (
-    <Stack.Item align="start" styles={stackItemStyles}>
-      <Stack horizontal styles={stackStyles} tokens={stackTokens}>
-        <Stack.Item>
-          <TextField
-            style={{ width: '32px' }}
-            borderless
-            readOnly={true}
-            value={`${index}`}
-          />
-        </Stack.Item>
-        <Stack.Item grow={2}>
-          <TextField
-            onChange={handleQuantityChange}
-            style={{ width: '64px' }}
-            borderless
-            readOnly={false}
-            value={quantity}
-          />
-        </Stack.Item>
-        <Stack.Item grow={8}>
-          <TextField onChange={handleNameChange} borderless value={name} />
-        </Stack.Item>
-      </Stack>
-    </Stack.Item>
-  );
-}
-
 interface RecipeIngredientsProps {}
+
+const reorder = (
+  list: models_Ingredient[],
+  startIndex: number,
+  endIndex: number
+): models_Ingredient[] => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
 
 export function RecipeIngredients(props: RecipeIngredientsProps) {
   const rtx = useRecipeContext();
 
+  const [ingredients, setIngredients] = useState(
+    rtx?.recipe.currentRevision?.ingredients
+  );
+
+  function onDragEnd(result: any) {
+    if (!ingredients || !result.destination) {
+      return;
+    }
+
+    if (result.destination.index === result.source.index) {
+      return;
+    }
+
+    const ingreds = reorder(
+      ingredients,
+      result.source.index,
+      result.destination.index
+    );
+
+    setIngredients(ingreds);
+  }
+
   return (
     <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
       <span>Ingredients</span>
-      <Droppable droppableId="ingredients">
-        {(provided) => (
-          <ul
-            className="ingredients"
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-          >
-            {rtx?.recipe?.currentRevision?.ingredients?.map(
-              (ingredient, index) => (
+
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="ingredients">
+          {(provided) => (
+            <ul
+              style={{ listStyleType: 'none' }}
+              className="ingredients"
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {ingredients?.map((ingredient, index) => (
                 <Draggable
                   key={ingredient.name}
                   draggableId={`${ingredient.name}`}
@@ -90,12 +71,11 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
                 >
                   {(provided) => (
                     <li
-                      // style={{ listStyleType: 'none' }}
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >
-                      <Ingredient
+                      <RecipeIngredient
                         index={index}
                         key={ingredient.name}
                         data={ingredient}
@@ -103,12 +83,12 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
                     </li>
                   )}
                 </Draggable>
-              )
-            )}
-            {provided.placeholder}
-          </ul>
-        )}
-      </Droppable>
+              ))}
+              {provided.placeholder}
+            </ul>
+          )}
+        </Droppable>
+      </DragDropContext>
       <DefaultButton
         text="Add Ingredient"
         onClick={() => {}}

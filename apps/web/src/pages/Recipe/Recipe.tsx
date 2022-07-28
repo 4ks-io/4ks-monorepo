@@ -17,7 +17,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 const Recipe: React.FunctionComponent = () => {
   const { isAuthenticated } = useAuth0();
-  const ctx = useSessionContext();
   const rtx = useRecipeContext();
 
   if (!rtx || !rtx.recipe) {
@@ -26,24 +25,22 @@ const Recipe: React.FunctionComponent = () => {
 
   return (
     <PageLayout>
-      <DragDropContext>
-        <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
-          <RecipeHeader />
-          <RecipeControls />
-          {isAuthenticated && (
-            <PrimaryButton
-              disabled={false}
-              text="Save Changes"
-              onClick={rtx?.onSave}
-              allowDisabledFocus
-            />
-          )}
-          <RecipeSummary />
-          <RecipeIngredients />
-          <RecipeInstructions />
-          <RecipeSocial />
-        </Stack>
-      </DragDropContext>
+      <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
+        <RecipeHeader />
+        <RecipeControls />
+        {isAuthenticated && (
+          <PrimaryButton
+            disabled={false}
+            text="Save Changes"
+            onClick={rtx?.onSave}
+            allowDisabledFocus
+          />
+        )}
+        <RecipeSummary />
+        <RecipeIngredients />
+        <RecipeInstructions />
+        <RecipeSocial />
+      </Stack>
     </PageLayout>
   );
 };
