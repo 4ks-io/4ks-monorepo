@@ -77,7 +77,7 @@ export class UsersService {
      * Delete User
      * Delete User
      * @param userId User Id
-     * @returns any
+     * @returns any OK
      * @throws ApiError
      */
     public deleteUsers(

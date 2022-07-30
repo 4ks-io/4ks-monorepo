@@ -145,7 +145,7 @@ export class RecipesService {
      * Star Recipe
      * Star Recipe
      * @param recipeId Recipe Id
-     * @returns any
+     * @returns any OK
      * @throws ApiError
      */
     public postRecipesStar(
