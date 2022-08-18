@@ -50,6 +50,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
             ariaLabel="Breadcrumb"
             overflowAriaLabel="More links"
             dividerAs={_getCustomDivider}
+            overflowIndex={1}
           />
         </Stack.Item>
       </Stack>

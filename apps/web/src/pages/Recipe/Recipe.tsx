@@ -8,19 +8,27 @@ import { RecipeInstructions } from './RecipeInstructions';
 import { RecipeHeader } from './RecipeHeader';
 import { RecipeControls } from './RecipeControls';
 import { RecipeSocial } from './RecipeSocial';
-import { DragDropContext } from 'react-beautiful-dnd';
 import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { RecipeSummary } from './RecipeSummary';
 import RecipeLoading from './RecipeLoading';
 import { PrimaryButton } from '@fluentui/react/lib/Button';
 import { useAuth0 } from '@auth0/auth0-react';
+import { dtos_UpdateRecipe } from '@4ks/api-fetch';
 
 const Recipe: React.FunctionComponent = () => {
   const { isAuthenticated } = useAuth0();
+  const ctx = useSessionContext();
   const rtx = useRecipeContext();
 
   if (!rtx || !rtx.recipe) {
     return <RecipeLoading />;
+  }
+
+  function saveRecipe() {
+    ctx?.api?.recipes.patchRecipes(
+      `${rtx?.recipeId}`,
+      rtx?.recipe.currentRevision as dtos_UpdateRecipe
+    );
   }
 
   return (
@@ -32,7 +40,7 @@ const Recipe: React.FunctionComponent = () => {
           <PrimaryButton
             disabled={false}
             text="Save Changes"
-            onClick={rtx?.onSave}
+            onClick={saveRecipe}
             allowDisabledFocus
           />
         )}

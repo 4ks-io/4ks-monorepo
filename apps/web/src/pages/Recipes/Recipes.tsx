@@ -15,7 +15,7 @@ import { PageLayout } from '../Layout';
 
 const Recipes: React.FunctionComponent = () => {
   const ctx = useSessionContext();
-  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+  const { isAuthenticated } = useAuth0();
 
   const [recipes, setRecipes] = useState<models_Recipe[] | undefined>();
 

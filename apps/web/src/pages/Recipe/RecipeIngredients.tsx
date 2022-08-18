@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { DefaultButton } from '@fluentui/react/lib/Button';
 import { models_Ingredient } from '@4ks/api-fetch';
@@ -6,10 +6,6 @@ import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useRecipeContext } from '../../providers/recipe-context';
 import { RecipeIngredient } from './RecipeIngredient';
-
-const stackTokens: IStackTokens = {
-  childrenGap: 1,
-};
 
 interface RecipeIngredientsProps {}
 
@@ -32,6 +28,11 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
     rtx?.recipe.currentRevision?.ingredients
   );
 
+  useEffect(
+    () => setIngredients(rtx?.recipe.currentRevision?.ingredients),
+    [rtx?.recipe.currentRevision?.ingredients]
+  );
+
   function onDragEnd(result: any) {
     if (!ingredients || !result.destination) {
       return;
@@ -47,6 +48,7 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
       result.destination.index
     );
 
+    rtx?.setIngredients(ingreds);
     setIngredients(ingreds);
   }
 
