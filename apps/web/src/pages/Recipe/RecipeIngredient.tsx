@@ -12,9 +12,14 @@ const stackTokens: IStackTokens = {
 interface RecipeIngredientProps {
   index: number;
   data: models_Ingredient;
+  handleDeleteIngredient: (index: number) => void;
 }
 
-export function RecipeIngredient({ data, index }: RecipeIngredientProps) {
+export function RecipeIngredient({
+  data,
+  index,
+  handleDeleteIngredient,
+}: RecipeIngredientProps) {
   const [quantity, setQuantity] = useState(data.quantity);
   const [name, setName] = useState(data.name);
 
@@ -30,6 +35,11 @@ export function RecipeIngredient({ data, index }: RecipeIngredientProps) {
     newValue?: string | undefined
   ) {
     setName(newValue);
+  }
+
+  function handleDelete() {
+    console.log(`delete ${index}`);
+    handleDeleteIngredient(index);
   }
 
   return (
@@ -57,6 +67,9 @@ export function RecipeIngredient({ data, index }: RecipeIngredientProps) {
         </Stack.Item>
         <Stack.Item grow={8}>
           <TextField onChange={handleNameChange} borderless value={name} />
+        </Stack.Item>
+        <Stack.Item>
+          <Icon iconName="Delete" onClick={handleDelete} />
         </Stack.Item>
       </Stack>
     </Stack.Item>

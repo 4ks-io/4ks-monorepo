@@ -11,6 +11,16 @@ const Router = () => {
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/recipes">
           <Route
+            path="0"
+            element={
+              <RecipeContextProvider>
+                <Recipe />
+              </RecipeContextProvider>
+            }
+          />
+        </Route>
+        <Route path="/recipes">
+          <Route
             path=":id"
             element={
               <RecipeContextProvider>

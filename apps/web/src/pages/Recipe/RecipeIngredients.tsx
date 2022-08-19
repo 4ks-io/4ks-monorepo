@@ -52,6 +52,19 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
     setIngredients(ingreds);
   }
 
+  function handleAddIngredient() {
+    const i = Object.assign([], ingredients);
+    i?.push({});
+    setIngredients(i);
+  }
+
+  function handleDeleteIngredient(index: number) {
+    console.log(index);
+    const i = Object.assign([], ingredients);
+    i.splice(index, 1);
+    setIngredients(i);
+  }
+
   return (
     <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
       <span>Ingredients</span>
@@ -81,6 +94,7 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
                         index={index}
                         key={ingredient.name}
                         data={ingredient}
+                        handleDeleteIngredient={handleDeleteIngredient}
                       />
                     </li>
                   )}
@@ -93,7 +107,7 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
       </DragDropContext>
       <DefaultButton
         text="Add Ingredient"
-        onClick={() => {}}
+        onClick={handleAddIngredient}
         allowDisabledFocus
       />
     </Stack>

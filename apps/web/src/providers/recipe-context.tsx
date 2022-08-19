@@ -38,10 +38,11 @@ export function RecipeContextProvider({
 
   useEffect(() => {
     const recipeId = window.location.href.split('/').pop() as string;
-    dispatch({
-      type: RecipeContextAction.SET_ID,
-      payload: recipeId,
-    });
+    recipeId != '0' &&
+      dispatch({
+        type: RecipeContextAction.SET_ID,
+        payload: recipeId,
+      });
   }, []);
 
   useEffect(() => {

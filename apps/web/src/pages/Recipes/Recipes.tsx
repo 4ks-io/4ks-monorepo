@@ -8,6 +8,7 @@ import {
   IStackItemStyles,
 } from '@fluentui/react/lib/Stack';
 import { DefaultButton } from '@fluentui/react/lib/Button';
+import { useNavigate } from 'react-router-dom';
 
 import { useSessionContext } from '../../providers/session-context';
 import { models_Recipe } from '@4ks/api-fetch';
@@ -16,6 +17,7 @@ import { PageLayout } from '../Layout';
 const Recipes: React.FunctionComponent = () => {
   const ctx = useSessionContext();
   const { isAuthenticated } = useAuth0();
+  const navigate = useNavigate();
 
   const [recipes, setRecipes] = useState<models_Recipe[] | undefined>();
 
@@ -26,6 +28,10 @@ const Recipes: React.FunctionComponent = () => {
       });
     }
   }, [ctx]);
+
+  function navigateNewRecipe() {
+    navigate('/recipes/new', { replace: true });
+  }
 
   const stackStyles: IStackStyles = {
     root: {
@@ -51,7 +57,7 @@ const Recipes: React.FunctionComponent = () => {
       return (
         <DefaultButton
           text="New Recipe"
-          onClick={() => {}}
+          onClick={navigateNewRecipe}
           allowDisabledFocus
         />
       );

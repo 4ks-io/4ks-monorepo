@@ -25,10 +25,19 @@ const Recipe: React.FunctionComponent = () => {
   }
 
   function saveRecipe() {
-    ctx?.api?.recipes.patchRecipes(
-      `${rtx?.recipeId}`,
-      rtx?.recipe.currentRevision as dtos_UpdateRecipe
-    );
+    console.log(rtx?.recipeId);
+    if (rtx?.recipeId == '0') {
+      console.log('post');
+      ctx?.api?.recipes.postRecipes(
+        rtx?.recipe.currentRevision as dtos_UpdateRecipe
+      );
+    } else {
+      console.log('patch');
+      ctx?.api?.recipes.patchRecipes(
+        `${rtx?.recipeId}`,
+        rtx?.recipe.currentRevision as dtos_UpdateRecipe
+      );
+    }
   }
 
   return (
