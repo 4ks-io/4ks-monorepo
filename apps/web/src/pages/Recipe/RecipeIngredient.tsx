@@ -12,13 +12,15 @@ const stackTokens: IStackTokens = {
 interface RecipeIngredientProps {
   index: number;
   data: models_Ingredient;
-  handleDeleteIngredient: (index: number) => void;
+  handleIngredientDelete: (index: number) => void;
+  handleIngredientChange: (index: number, data: models_Ingredient) => void;
 }
 
 export function RecipeIngredient({
   data,
   index,
-  handleDeleteIngredient,
+  handleIngredientDelete,
+  handleIngredientChange,
 }: RecipeIngredientProps) {
   const [quantity, setQuantity] = useState(data.quantity);
   const [name, setName] = useState(data.name);
@@ -38,8 +40,17 @@ export function RecipeIngredient({
   }
 
   function handleDelete() {
-    console.log(`delete ${index}`);
-    handleDeleteIngredient(index);
+    // console.log(`delete ${index}`);
+    handleIngredientDelete(index);
+  }
+
+  function handleValidationComplete() {
+    handleIngredientChange(index, {
+      id: data.id,
+      type: data.type,
+      name,
+      quantity,
+    } as models_Ingredient);
   }
 
   return (
@@ -63,10 +74,18 @@ export function RecipeIngredient({
             borderless
             readOnly={false}
             value={quantity}
+            validateOnFocusOut={true}
+            onNotifyValidationResult={handleValidationComplete}
           />
         </Stack.Item>
         <Stack.Item grow={8}>
-          <TextField onChange={handleNameChange} borderless value={name} />
+          <TextField
+            onChange={handleNameChange}
+            borderless
+            value={name}
+            validateOnFocusOut={true}
+            onNotifyValidationResult={handleValidationComplete}
+          />
         </Stack.Item>
         <Stack.Item>
           <Icon iconName="Delete" onClick={handleDelete} />

@@ -48,6 +48,21 @@ export function SessionContextProvider({
     }
   }, [user]);
 
+  useEffect(() => {
+    if (user && state.api) {
+      try {
+        state.api.users
+          .postUsers({
+            displayName: `${user.name}`,
+            username: `${user.name}`,
+          })
+          .then((data) => console.log(`welcome ${data.id}`));
+      } catch {
+        console.log(`welcome back`);
+      }
+    }
+  }, [user, state.api]);
+
   return (
     <SessionContext.Provider value={state}>{children}</SessionContext.Provider>
   );

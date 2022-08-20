@@ -185,6 +185,38 @@ const docTemplate = `{
                     }
                 }
             },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete Recipe",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "Delete Recipe",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Recipe Id",
+                        "name": "recipeId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
             "patch": {
                 "security": [
                     {
@@ -650,6 +682,9 @@ const docTemplate = `{
         "models.Ingredient": {
             "type": "object",
             "properties": {
+                "id": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -664,6 +699,9 @@ const docTemplate = `{
         "models.Instruction": {
             "type": "object",
             "properties": {
+                "id": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
                 },

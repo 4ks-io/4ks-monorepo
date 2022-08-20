@@ -24,14 +24,18 @@ const imageProps: Partial<IImageProps> = {
 const AppBar: React.FunctionComponent = () => {
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const navigate = useNavigate();
+
   const [showSearchInput, setShowSearchInput] = useState(true);
+  const [showRecipesLink, setShowRecipesLink] = useState(true);
 
   useEffect(() => {
-    // console.log(`|${window.location.pathname}|`);
-    if (window.location.pathname == '/') {
+    const pathname = window.location.pathname;
+    if (pathname == '/') {
       setShowSearchInput(false);
+    } else if (pathname == '/recipes') {
+      setShowRecipesLink(false);
     }
-  }, []);
+  }, [window.location.pathname]);
 
   function handleLandingClick() {
     navigate('/', { replace: true });
@@ -74,9 +78,10 @@ const AppBar: React.FunctionComponent = () => {
         )}
       </span>
       <span style={itemStyles}>
-        {showSearchInput ? (
+        {showSearchInput && (
           <ActionButton onClick={handleLandingClick}>Search</ActionButton>
-        ) : (
+        )}
+        {showRecipesLink && (
           <ActionButton onClick={handleRecipesClick}>Recipes</ActionButton>
         )}
         {isAuthenticated ? (

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Icon } from '@fluentui/react/lib/Icon';
 
 import {
   Stack,
@@ -14,6 +15,10 @@ import { useSessionContext } from '../../providers/session-context';
 import { models_Recipe } from '@4ks/api-fetch';
 import { PageLayout } from '../Layout';
 
+const stackTokens: IStackTokens = {
+  childrenGap: 1,
+};
+
 const Recipes: React.FunctionComponent = () => {
   const ctx = useSessionContext();
   const { isAuthenticated } = useAuth0();
@@ -21,16 +26,17 @@ const Recipes: React.FunctionComponent = () => {
 
   const [recipes, setRecipes] = useState<models_Recipe[] | undefined>();
 
+  function refreshRecipes() {
+    ctx?.api.recipes.getRecipes().then((r: models_Recipe) => {
+      setRecipes(r);
+    });
+  }
   useEffect(() => {
-    if (ctx?.api) {
-      ctx.api.recipes.getRecipes().then((r) => {
-        setRecipes(r);
-      });
-    }
+    refreshRecipes();
   }, [ctx]);
 
   function navigateNewRecipe() {
-    navigate('/recipes/new', { replace: true });
+    navigate('/recipes/0', { replace: true });
   }
 
   const stackStyles: IStackStyles = {
@@ -70,13 +76,28 @@ const Recipes: React.FunctionComponent = () => {
         {newRecipeButton()}
 
         {recipes &&
-          recipes.map((r) => (
-            <Stack.Item key={r.id} align="auto" styles={stackItemStyles}>
-              <span>
-                <a href={`/recipes/${r.id}`}>{r.currentRevision?.name}</a>
-              </span>
-            </Stack.Item>
-          ))}
+          recipes.map((r) => {
+            const handleDelete = () => {
+              ctx.api.recipes.deleteRecipes(r.id).then(() => refreshRecipes());
+            };
+
+            return (
+              <Stack.Item key={r.id}>
+                <Stack horizontal styles={stackStyles} tokens={stackTokens}>
+                  <Stack.Item align="auto" styles={stackItemStyles}>
+                    <span>
+                      <a href={`/recipes/${r.id}`}>
+                        {r.currentRevision?.name || `missing title`}
+                      </a>
+                    </span>
+                  </Stack.Item>
+                  <Stack.Item>
+                    <Icon iconName="Delete" onClick={handleDelete} />
+                  </Stack.Item>
+                </Stack>
+              </Stack.Item>
+            );
+          })}
       </Stack>
     </PageLayout>
   );

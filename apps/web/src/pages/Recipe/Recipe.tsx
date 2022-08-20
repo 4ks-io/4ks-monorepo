@@ -13,10 +13,12 @@ import { RecipeSummary } from './RecipeSummary';
 import RecipeLoading from './RecipeLoading';
 import { PrimaryButton } from '@fluentui/react/lib/Button';
 import { useAuth0 } from '@auth0/auth0-react';
-import { dtos_UpdateRecipe } from '@4ks/api-fetch';
+import { useNavigate } from 'react-router-dom';
+import { models_Recipe, dtos_UpdateRecipe } from '@4ks/api-fetch';
 
 const Recipe: React.FunctionComponent = () => {
   const { isAuthenticated } = useAuth0();
+  const navigate = useNavigate();
   const ctx = useSessionContext();
   const rtx = useRecipeContext();
 
@@ -24,15 +26,18 @@ const Recipe: React.FunctionComponent = () => {
     return <RecipeLoading />;
   }
 
+  function debugRecipe() {
+    console.log(rtx?.recipe);
+  }
+
   function saveRecipe() {
-    console.log(rtx?.recipeId);
     if (rtx?.recipeId == '0') {
-      console.log('post');
-      ctx?.api?.recipes.postRecipes(
-        rtx?.recipe.currentRevision as dtos_UpdateRecipe
-      );
+      ctx?.api?.recipes
+        .postRecipes(rtx?.recipe.currentRevision as dtos_UpdateRecipe)
+        .then((data: models_Recipe) =>
+          navigate(`/recipes/${data.id}`, { replace: true })
+        );
     } else {
-      console.log('patch');
       ctx?.api?.recipes.patchRecipes(
         `${rtx?.recipeId}`,
         rtx?.recipe.currentRevision as dtos_UpdateRecipe
@@ -45,6 +50,13 @@ const Recipe: React.FunctionComponent = () => {
       <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
         <RecipeHeader />
         <RecipeControls />
+        {isAuthenticated && (
+          <PrimaryButton
+            text="Debug"
+            onClick={debugRecipe}
+            allowDisabledFocus
+          />
+        )}
         {isAuthenticated && (
           <PrimaryButton
             disabled={false}

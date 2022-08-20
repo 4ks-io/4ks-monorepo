@@ -82,6 +82,25 @@ export class RecipesService {
     }
 
     /**
+     * Delete Recipe
+     * Delete Recipe
+     * @param recipeId Recipe Id
+     * @returns any
+     * @throws ApiError
+     */
+    public deleteRecipes(
+        recipeId: string,
+    ): CancelablePromise<any> {
+        return this.httpRequest.request({
+            method: 'DELETE',
+            url: '/recipes/{recipeId}',
+            path: {
+                'recipeId': recipeId,
+            },
+        });
+    }
+
+    /**
      * Update Recipe
      * Update Recipe
      * @param recipeId Recipe Id
@@ -145,7 +164,7 @@ export class RecipesService {
      * Star Recipe
      * Star Recipe
      * @param recipeId Recipe Id
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public postRecipesStar(

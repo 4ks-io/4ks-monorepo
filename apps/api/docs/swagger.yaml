@@ -53,6 +53,8 @@ definitions:
     type: object
   models.Ingredient:
     properties:
+      id:
+        type: integer
       name:
         type: string
       quantity:
@@ -62,6 +64,8 @@ definitions:
     type: object
   models.Instruction:
     properties:
+      id:
+        type: integer
       name:
         type: string
       text:
@@ -215,6 +219,26 @@ paths:
       tags:
       - Recipes
   /recipes/{recipeId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Recipe
+      parameters:
+      - description: Recipe Id
+        in: path
+        name: recipeId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Recipe
+      tags:
+      - Recipes
     get:
       consumes:
       - application/json

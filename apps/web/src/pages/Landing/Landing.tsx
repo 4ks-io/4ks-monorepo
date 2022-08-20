@@ -1,34 +1,10 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  ActionButton,
-  Stack,
-  Image,
-  ImageFit,
-  TextField,
-} from '@fluentui/react';
+import { Stack, Image, ImageFit, TextField } from '@fluentui/react';
 import { PageLayout } from '../Layout';
-import { useAuth0 } from '@auth0/auth0-react';
 
 import Logo from '../../logo.svg';
 
 const Landing = () => {
-  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
-  const navigate = useNavigate();
-
-  function handleLoginOnClick() {
-    loginWithRedirect();
-  }
-  function handleLogoutOnClick() {
-    logout({ returnTo: window.location.origin });
-  }
-  function handleMeClick() {
-    navigate('/me', { replace: true });
-  }
-  function handleRecipesClick() {
-    navigate('/recipes', { replace: true });
-  }
-
   return (
     <PageLayout>
       <div

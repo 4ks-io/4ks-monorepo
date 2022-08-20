@@ -3,6 +3,7 @@ package controllers
 import (
 	recipeService "4ks/apps/api/services/recipe"
 	userService "4ks/apps/api/services/user"
+	"fmt"
 
 	"net/http"
 
@@ -15,6 +16,7 @@ import (
 
 type RecipeController interface {
 	CreateRecipe(c *gin.Context)
+	DeleteRecipe(c *gin.Context)
 	GetRecipe(c *gin.Context)
 	GetRecipes(c *gin.Context)
 	UpdateRecipe(c *gin.Context)
@@ -81,6 +83,32 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, createdRecipe)
+}
+
+// DeleteRecipe godoc
+// @Summary 		Delete Recipe
+// @Description Delete Recipe
+// @Tags 				Recipes
+// @Accept 			json
+// @Produce 		json
+// @Param       recipeId 	path      string  true  "Recipe Id"
+// @Success 		200
+// @Router 			/recipes/{recipeId}   [delete]
+// @Security 		ApiKeyAuth
+func (rc *recipeController) DeleteRecipe(c *gin.Context) {
+	recipeId := c.Param("id")
+	fmt.Println(recipeId)
+	err := rc.recipeService.DeleteRecipe(&recipeId)
+
+	if err == recipeService.ErrRecipeNotFound {
+		c.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, "ok")
 }
 
 // GetRecipe		godoc

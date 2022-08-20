@@ -35,6 +35,7 @@ var (
 
 type RecipeService interface {
 	GetRecipeById(id *string) (*models.Recipe, error)
+	DeleteRecipe(id *string) error
 	GetAllRecipes() ([]*models.Recipe, error)
 	CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe, error)
 	UpdateRecipeById(id *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error)
@@ -67,6 +68,20 @@ func (rs recipeService) GetRecipeById(id *string) (*models.Recipe, error) {
 
 	recipe.Id = result.Ref.ID
 	return recipe, nil
+}
+
+func (rs recipeService) DeleteRecipe(id *string) error {
+	existingId, _ := recipeCollection.Doc(*id).Get(ctx)
+	if !existingId.Exists() {
+		return ErrRecipeNotFound
+	}
+
+	_, err := recipeCollection.Doc(*id).Delete(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (rs recipeService) GetAllRecipes() ([]*models.Recipe, error) {

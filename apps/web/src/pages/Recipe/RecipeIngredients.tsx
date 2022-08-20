@@ -52,16 +52,26 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
     setIngredients(ingreds);
   }
 
-  function handleAddIngredient() {
-    const i = Object.assign([], ingredients);
+  function cloneIngredients(): models_Ingredient[] {
+    return Object.assign([], ingredients) as models_Ingredient[];
+  }
+
+  function handleIngredientAdd() {
+    const i = cloneIngredients();
     i?.push({});
     setIngredients(i);
   }
 
-  function handleDeleteIngredient(index: number) {
-    console.log(index);
-    const i = Object.assign([], ingredients);
+  function handleIngredientDelete(index: number) {
+    const i = cloneIngredients();
     i.splice(index, 1);
+    setIngredients(i);
+  }
+
+  function handleIngredientChange(index: number, data: models_Ingredient) {
+    const i = cloneIngredients();
+    i[index] = data;
+    rtx?.setIngredients(i);
     setIngredients(i);
   }
 
@@ -80,7 +90,7 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
             >
               {ingredients?.map((ingredient, index) => (
                 <Draggable
-                  key={ingredient.name}
+                  key={`${index}+${ingredient.name}`}
                   draggableId={`${ingredient.name}`}
                   index={index}
                 >
@@ -94,7 +104,8 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
                         index={index}
                         key={ingredient.name}
                         data={ingredient}
-                        handleDeleteIngredient={handleDeleteIngredient}
+                        handleIngredientDelete={handleIngredientDelete}
+                        handleIngredientChange={handleIngredientChange}
                       />
                     </li>
                   )}
@@ -107,7 +118,7 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
       </DragDropContext>
       <DefaultButton
         text="Add Ingredient"
-        onClick={handleAddIngredient}
+        onClick={handleIngredientAdd}
         allowDisabledFocus
       />
     </Stack>
