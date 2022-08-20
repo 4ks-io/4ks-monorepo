@@ -38,6 +38,13 @@ export function RecipeContextProvider({
     });
   }
 
+  function setTitle(title: string) {
+    dispatch({
+      type: RecipeContextAction.SET_TITLE,
+      payload: title,
+    });
+  }
+
   useEffect(() => {
     const recipeId = window.location.href.split('/').pop() as string;
     recipeId != NO_RECIPE_ID &&
@@ -61,6 +68,7 @@ export function RecipeContextProvider({
       dispatch({
         type: RecipeContextAction.SET_CONTROLS,
         payload: {
+          setTitle,
           setIngredients,
           setInstructions,
         },

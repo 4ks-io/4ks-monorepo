@@ -7,11 +7,13 @@ import {
 export interface IRecipeContext {
   recipeId: string;
   recipe: models_Recipe;
+  setTitle: (title: string) => void;
   setIngredients: (ingredients: models_Ingredient[]) => void;
   setInstructions: (instructions: models_Instruction[]) => void;
 }
 
 export const initialState: IRecipeContext = {
+  setTitle: () => {},
   setIngredients: () => {},
   setInstructions: () => {},
   recipeId: '0',

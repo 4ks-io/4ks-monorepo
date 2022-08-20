@@ -12,8 +12,8 @@ interface RecipeHeaderProps {}
 export function RecipeHeader(props: RecipeHeaderProps) {
   const rtx = useRecipeContext();
   const ctx = useSessionContext();
-  const [isNew, setIsNew] = useState(true);
-  const [title, setTitle] = useState(`INSERT TITLE HERE`);
+  const [isNew, setIsNew] = useState(false);
+  const [title, setTitle] = useState('');
 
   function handleTitleChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -23,8 +23,22 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   }
 
   useEffect(() => {
-    rtx?.recipeId != '0' && setIsNew(false);
+    if (rtx?.recipeId == '0') {
+      console.log(rtx.recipeId);
+      setIsNew(true);
+      setTitle(`INSERT TITLE HERE`);
+    }
   }, [rtx?.recipeId]);
+
+  useEffect(() => {
+    if (rtx?.recipe?.currentRevision?.name) {
+      setTitle(rtx?.recipe?.currentRevision?.name);
+    }
+  }, [rtx?.recipe.currentRevision]);
+
+  function handleValidationComplete() {
+    rtx?.setTitle(title);
+  }
 
   return (
     <Stack.Item align="stretch">
@@ -39,8 +53,10 @@ export function RecipeHeader(props: RecipeHeaderProps) {
             onChange={handleTitleChange}
             style={{ fontWeight: 600 }}
             borderless
-            readOnly={!isNew}
-            value={rtx?.recipe?.currentRevision?.name || title}
+            readOnly={false}
+            validateOnFocusOut={true}
+            onNotifyValidationResult={handleValidationComplete}
+            value={title}
           />
         </span>
       </Stack>
