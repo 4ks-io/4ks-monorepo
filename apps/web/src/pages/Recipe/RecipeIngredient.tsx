@@ -57,20 +57,15 @@ export function RecipeIngredient({
     <Stack.Item align="start" styles={stackItemStyles}>
       <Stack horizontal styles={stackStyles} tokens={stackTokens}>
         <Stack.Item>
-          <Icon iconName="DragObject" />
-        </Stack.Item>
-        <Stack.Item>
-          <TextField
-            style={{ width: '32px' }}
-            borderless
-            readOnly={true}
-            value={`${index}`}
+          <Icon
+            iconName="DragObject"
+            style={{ paddingTop: '10px', paddingRight: '4px' }}
           />
         </Stack.Item>
         <Stack.Item grow={2}>
           <TextField
             onChange={handleQuantityChange}
-            style={{ width: '64px' }}
+            style={{ width: '96px' }}
             borderless
             readOnly={false}
             value={quantity}
@@ -88,7 +83,11 @@ export function RecipeIngredient({
           />
         </Stack.Item>
         <Stack.Item>
-          <Icon iconName="Delete" onClick={handleDelete} />
+          <Icon
+            iconName="Delete"
+            onClick={handleDelete}
+            style={{ paddingTop: '10px', paddingLeft: '4px' }}
+          />
         </Stack.Item>
       </Stack>
     </Stack.Item>

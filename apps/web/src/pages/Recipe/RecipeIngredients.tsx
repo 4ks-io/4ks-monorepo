@@ -83,7 +83,7 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
         <Droppable droppableId="ingredients">
           {(provided) => (
             <ul
-              style={{ listStyleType: 'none' }}
+              style={{ listStyleType: 'none', paddingInlineStart: '0px' }}
               className="ingredients"
               {...provided.droppableProps}
               ref={provided.innerRef}

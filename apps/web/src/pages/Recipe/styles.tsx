@@ -23,6 +23,6 @@ export const stackItemStyles: IStackItemStyles = {
   root: {
     // background: DefaultPalette.themePrimary,
     // color: DefaultPalette.white,
-    padding: 5,
+    padding: 2,
   },
 };
