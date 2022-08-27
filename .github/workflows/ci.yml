@@ -9,9 +9,11 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: Run a one-line script
-      run: echo Hello, world!
-    - name: Run a multi-line script
-      run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+    - name: Ubuntu Update
+      run: sudo apt-get update;sudo apt-get install ca-certificates curl gnupg lsb-release;sudo mkdir -p /etc/apt/keyrings;curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    - name: Docker Install
+      run: sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+    # - name: Run a multi-line script
+    #   run: |
+    #     echo Add other actions to build,
+    #     echo test, and deploy your project.
