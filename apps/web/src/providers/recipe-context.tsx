@@ -32,6 +32,7 @@ export function RecipeContextProvider({
   }
 
   function setInstructions(instructions: models_Instruction[]) {
+    console.log('setInstructions');
     dispatch({
       type: RecipeContextAction.SET_INSTRUCTIONS,
       payload: instructions,

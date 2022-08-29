@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { TextField } from '@fluentui/react/lib/TextField';
 import { models_Ingredient } from '@4ks/api-fetch';
@@ -25,6 +25,11 @@ export function RecipeIngredient({
   const [quantity, setQuantity] = useState(data.quantity);
   const [name, setName] = useState(data.name);
 
+  useEffect(() => {
+    setName(data.name);
+    setQuantity(data.quantity);
+  }, [data]);
+
   function handleQuantityChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue?: string | undefined
@@ -40,7 +45,6 @@ export function RecipeIngredient({
   }
 
   function handleDelete() {
-    // console.log(`delete ${index}`);
     handleIngredientDelete(index);
   }
 
@@ -64,20 +68,20 @@ export function RecipeIngredient({
         </Stack.Item>
         <Stack.Item grow={2}>
           <TextField
-            onChange={handleQuantityChange}
             style={{ width: '96px' }}
             borderless
             readOnly={false}
             value={quantity}
+            onChange={handleQuantityChange}
             validateOnFocusOut={true}
             onNotifyValidationResult={handleValidationComplete}
           />
         </Stack.Item>
         <Stack.Item grow={8}>
           <TextField
-            onChange={handleNameChange}
             borderless
             value={name}
+            onChange={handleNameChange}
             validateOnFocusOut={true}
             onNotifyValidationResult={handleValidationComplete}
           />

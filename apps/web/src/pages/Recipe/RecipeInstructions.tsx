@@ -1,91 +1,86 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { DefaultButton } from '@fluentui/react/lib/Button';
-import { models_Ingredient } from '@4ks/api-fetch';
+import { models_Instruction } from '@4ks/api-fetch';
 import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useRecipeContext } from '../../providers/recipe-context';
 import { RecipeInstruction } from './RecipeInstruction';
+import { SectionTitle } from './components/SectionTitle';
+import {
+  handleListAdd,
+  handleListChange,
+  handleListDelete,
+  handleListDragEnd,
+} from './dnd-functions';
 
-interface RecipeInstructionsProps {}
-
-const reorder = (
-  list: models_Ingredient[],
-  startIndex: number,
-  endIndex: number
-): models_Ingredient[] => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
-
-export function RecipeInstructions(props: RecipeInstructionsProps) {
+export function RecipeInstructions() {
   const rtx = useRecipeContext();
 
-  const [instructions, setInstructions] = useState(
-    rtx?.recipe.currentRevision?.instructions
+  const onDragEnd = handleListDragEnd<models_Instruction>(
+    rtx?.recipe.currentRevision?.instructions,
+    rtx?.setInstructions
   );
 
-  useEffect(
-    () => setInstructions(rtx?.recipe.currentRevision?.instructions),
-    [rtx?.recipe.currentRevision?.instructions]
-  );
-
-  function onDragEnd(result: any) {
-    if (!instructions || !result.destination) {
-      return;
-    }
-
-    if (result.destination.index === result.source.index) {
-      return;
-    }
-
-    const ingreds = reorder(
-      instructions,
-      result.source.index,
-      result.destination.index
+  const handleInstructionAdd = () =>
+    handleListAdd<models_Instruction>(
+      rtx?.recipe.currentRevision?.instructions,
+      rtx?.setInstructions
     );
 
-    rtx?.setInstructions(ingreds);
-    setInstructions(ingreds);
+  const handleInstructionDelete = (index: number) =>
+    handleListDelete<models_Instruction>(
+      index,
+      rtx?.recipe.currentRevision?.instructions,
+      rtx?.setInstructions
+    );
+
+  const handleInstructionChange = handleListChange<models_Instruction>(
+    rtx?.recipe.currentRevision?.instructions,
+    rtx?.setInstructions
+  );
+
+  if (!rtx?.recipe.currentRevision?.instructions) {
+    return null;
   }
 
   return (
     <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
-      <span>Instructions</span>
+      <SectionTitle value={'Instructions'} />
 
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="instructions">
           {(provided) => (
             <ul
-              style={{ listStyleType: 'none' }}
+              style={{ listStyleType: 'none', paddingInlineStart: '0px' }}
               className="instructions"
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {instructions?.map((instruction, index) => (
-                <Draggable
-                  key={instruction.name}
-                  draggableId={`${instruction.name}`}
-                  index={index}
-                >
-                  {(provided) => (
-                    <li
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <RecipeInstruction
-                        index={index}
-                        key={instruction.name}
-                        data={instruction}
-                      />
-                    </li>
-                  )}
-                </Draggable>
-              ))}
+              {rtx?.recipe.currentRevision?.instructions?.map(
+                (instruction, index) => {
+                  const key = `instruction_${index}_${instruction.name}`;
+                  return (
+                    <Draggable key={key} draggableId={key} index={index}>
+                      {(provided) => (
+                        <li
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <RecipeInstruction
+                            index={index}
+                            key={key}
+                            data={instruction}
+                            handleInstructionDelete={handleInstructionDelete}
+                            handleInstructionChange={handleInstructionChange}
+                          />
+                        </li>
+                      )}
+                    </Draggable>
+                  );
+                }
+              )}
               {provided.placeholder}
             </ul>
           )}
@@ -93,7 +88,7 @@ export function RecipeInstructions(props: RecipeInstructionsProps) {
       </DragDropContext>
       <DefaultButton
         text="Add Instruction"
-        onClick={() => {}}
+        onClick={handleInstructionAdd}
         allowDisabledFocus
       />
     </Stack>

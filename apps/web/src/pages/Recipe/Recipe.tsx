@@ -27,7 +27,8 @@ const Recipe: React.FunctionComponent = () => {
   }
 
   function debugRecipe() {
-    console.log(rtx?.recipe);
+    // console.log(rtx?.recipe.currentRevision?.ingredients);
+    console.log(rtx?.recipe.currentRevision?.instructions);
   }
 
   function saveRecipe() {

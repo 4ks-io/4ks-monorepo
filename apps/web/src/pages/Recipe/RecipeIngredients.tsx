@@ -6,78 +6,43 @@ import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useRecipeContext } from '../../providers/recipe-context';
 import { RecipeIngredient } from './RecipeIngredient';
+import { SectionTitle } from './components/SectionTitle';
+import {
+  handleListAdd,
+  handleListChange,
+  handleListDelete,
+  handleListDragEnd,
+} from './dnd-functions';
 
-interface RecipeIngredientsProps {}
-
-const reorder = (
-  list: models_Ingredient[],
-  startIndex: number,
-  endIndex: number
-): models_Ingredient[] => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
-
-export function RecipeIngredients(props: RecipeIngredientsProps) {
+export function RecipeIngredients() {
   const rtx = useRecipeContext();
 
-  const [ingredients, setIngredients] = useState(
-    rtx?.recipe.currentRevision?.ingredients
+  const onDragEnd = handleListDragEnd<models_Ingredient>(
+    rtx?.recipe.currentRevision?.ingredients,
+    rtx?.setIngredients
   );
 
-  useEffect(
-    () => setIngredients(rtx?.recipe.currentRevision?.ingredients),
-    [rtx?.recipe.currentRevision?.ingredients]
-  );
-
-  function onDragEnd(result: any) {
-    if (!ingredients || !result.destination) {
-      return;
-    }
-
-    if (result.destination.index === result.source.index) {
-      return;
-    }
-
-    const ingreds = reorder(
-      ingredients,
-      result.source.index,
-      result.destination.index
+  const handleIngredientAdd = () =>
+    handleListAdd<models_Ingredient>(
+      rtx?.recipe.currentRevision?.ingredients,
+      rtx?.setIngredients
     );
 
-    rtx?.setIngredients(ingreds);
-    setIngredients(ingreds);
-  }
+  const handleIngredientDelete = (index: number) =>
+    handleListDelete<models_Ingredient>(
+      index,
+      rtx?.recipe.currentRevision?.ingredients,
+      rtx?.setIngredients
+    );
 
-  function cloneIngredients(): models_Ingredient[] {
-    return Object.assign([], ingredients) as models_Ingredient[];
-  }
-
-  function handleIngredientAdd() {
-    const i = cloneIngredients();
-    i?.push({});
-    setIngredients(i);
-  }
-
-  function handleIngredientDelete(index: number) {
-    const i = cloneIngredients();
-    i.splice(index, 1);
-    setIngredients(i);
-  }
-
-  function handleIngredientChange(index: number, data: models_Ingredient) {
-    const i = cloneIngredients();
-    i[index] = data;
-    rtx?.setIngredients(i);
-    setIngredients(i);
-  }
+  const handleIngredientChange = handleListChange<models_Ingredient>(
+    rtx?.recipe.currentRevision?.ingredients,
+    rtx?.setIngredients
+  );
 
   return (
     <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
-      <span>Ingredients</span>
+      <SectionTitle value={'Ingredients'} />
 
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="ingredients">
@@ -88,29 +53,30 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {ingredients?.map((ingredient, index) => (
-                <Draggable
-                  key={`${index}+${ingredient.name}`}
-                  draggableId={`${ingredient.name}`}
-                  index={index}
-                >
-                  {(provided) => (
-                    <li
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <RecipeIngredient
-                        index={index}
-                        key={ingredient.name}
-                        data={ingredient}
-                        handleIngredientDelete={handleIngredientDelete}
-                        handleIngredientChange={handleIngredientChange}
-                      />
-                    </li>
-                  )}
-                </Draggable>
-              ))}
+              {rtx?.recipe.currentRevision?.ingredients?.map(
+                (ingredient, index) => {
+                  const key = `ingredient_${index}_${ingredient.id}`;
+                  return (
+                    <Draggable key={key} draggableId={key} index={index}>
+                      {(provided) => (
+                        <li
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <RecipeIngredient
+                            index={index}
+                            key={key}
+                            data={ingredient}
+                            handleIngredientDelete={handleIngredientDelete}
+                            handleIngredientChange={handleIngredientChange}
+                          />
+                        </li>
+                      )}
+                    </Draggable>
+                  );
+                }
+              )}
               {provided.placeholder}
             </ul>
           )}

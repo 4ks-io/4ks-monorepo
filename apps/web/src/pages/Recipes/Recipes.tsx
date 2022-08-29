@@ -27,7 +27,7 @@ const Recipes: React.FunctionComponent = () => {
   const [recipes, setRecipes] = useState<models_Recipe[] | undefined>();
 
   function refreshRecipes() {
-    ctx?.api.recipes.getRecipes().then((r: models_Recipe) => {
+    ctx?.api?.recipes.getRecipes().then((r) => {
       setRecipes(r);
     });
   }
@@ -78,7 +78,12 @@ const Recipes: React.FunctionComponent = () => {
         {recipes &&
           recipes.map((r) => {
             const handleDelete = () => {
-              ctx.api.recipes.deleteRecipes(r.id).then(() => refreshRecipes());
+              // todo - check that author is current user
+              // r.author
+              r.id &&
+                ctx?.api?.recipes
+                  .deleteRecipes(r.id)
+                  .then(() => refreshRecipes());
             };
 
             return (
