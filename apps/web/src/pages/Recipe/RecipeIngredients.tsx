@@ -6,8 +6,7 @@ import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useRecipeContext } from '../../providers/recipe-context';
 import { RecipeIngredient } from './RecipeIngredient';
-
-interface RecipeIngredientsProps {}
+import { SectionTitle } from './components/SectionTitle';
 
 const reorder = (
   list: models_Ingredient[],
@@ -21,7 +20,7 @@ const reorder = (
   return result;
 };
 
-export function RecipeIngredients(props: RecipeIngredientsProps) {
+export function RecipeIngredients() {
   const rtx = useRecipeContext();
 
   const [ingredients, setIngredients] = useState(
@@ -77,7 +76,7 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
 
   return (
     <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
-      <span>Ingredients</span>
+      <SectionTitle value={'Ingredients'} />
 
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="ingredients">

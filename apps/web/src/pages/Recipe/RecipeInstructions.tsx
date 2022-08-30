@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { DefaultButton } from '@fluentui/react/lib/Button';
-import { models_Ingredient } from '@4ks/api-fetch';
+import { models_Instruction } from '@4ks/api-fetch';
 import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useRecipeContext } from '../../providers/recipe-context';
 import { RecipeInstruction } from './RecipeInstruction';
-
-interface RecipeInstructionsProps {}
+import { SectionTitle } from './components/SectionTitle';
 
 const reorder = (
-  list: models_Ingredient[],
+  list: models_Instruction[],
   startIndex: number,
   endIndex: number
-): models_Ingredient[] => {
+): models_Instruction[] => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -21,7 +20,7 @@ const reorder = (
   return result;
 };
 
-export function RecipeInstructions(props: RecipeInstructionsProps) {
+export function RecipeInstructions() {
   const rtx = useRecipeContext();
 
   const [instructions, setInstructions] = useState(
@@ -52,15 +51,38 @@ export function RecipeInstructions(props: RecipeInstructionsProps) {
     setInstructions(ingreds);
   }
 
+  function cloneInstructions(): models_Instruction[] {
+    return Object.assign([], instructions) as models_Instruction[];
+  }
+
+  function handleInstructionAdd() {
+    const i = cloneInstructions();
+    i?.push({});
+    setInstructions(i);
+  }
+
+  function handleInstructionDelete(index: number) {
+    const i = cloneInstructions();
+    i.splice(index, 1);
+    setInstructions(i);
+  }
+
+  function handleInstructionChange(index: number, data: models_Instruction) {
+    const i = cloneInstructions();
+    i[index] = data;
+    rtx?.setInstructions(i);
+    setInstructions(i);
+  }
+
   return (
     <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
-      <span>Instructions</span>
+      <SectionTitle value={'Instructions'} />
 
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="instructions">
           {(provided) => (
             <ul
-              style={{ listStyleType: 'none' }}
+              style={{ listStyleType: 'none', paddingInlineStart: '0px' }}
               className="instructions"
               {...provided.droppableProps}
               ref={provided.innerRef}
@@ -77,8 +99,10 @@ export function RecipeInstructions(props: RecipeInstructionsProps) {
                       >
                         <RecipeInstruction
                           index={index}
-                          key={instruction.name}
+                          key={instruction.text}
                           data={instruction}
+                          handleInstructionDelete={handleInstructionDelete}
+                          handleInstructionChange={handleInstructionChange}
                         />
                       </li>
                     )}
@@ -92,7 +116,7 @@ export function RecipeInstructions(props: RecipeInstructionsProps) {
       </DragDropContext>
       <DefaultButton
         text="Add Instruction"
-        onClick={() => {}}
+        onClick={handleInstructionAdd}
         allowDisabledFocus
       />
     </Stack>
