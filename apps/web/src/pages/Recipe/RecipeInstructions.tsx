@@ -65,27 +65,26 @@ export function RecipeInstructions(props: RecipeInstructionsProps) {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {instructions?.map((instruction, index) => (
-                <Draggable
-                  key={instruction.name}
-                  draggableId={`${instruction.name}`}
-                  index={index}
-                >
-                  {(provided) => (
-                    <li
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <RecipeInstruction
-                        index={index}
-                        key={instruction.name}
-                        data={instruction}
-                      />
-                    </li>
-                  )}
-                </Draggable>
-              ))}
+              {instructions?.map((instruction, index) => {
+                const key = `instruction_${index}_${instruction.id}`;
+                return (
+                  <Draggable key={key} draggableId={key} index={index}>
+                    {(provided) => (
+                      <li
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <RecipeInstruction
+                          index={index}
+                          key={instruction.name}
+                          data={instruction}
+                        />
+                      </li>
+                    )}
+                  </Draggable>
+                );
+              })}
               {provided.placeholder}
             </ul>
           )}

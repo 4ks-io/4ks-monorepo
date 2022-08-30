@@ -88,29 +88,28 @@ export function RecipeIngredients(props: RecipeIngredientsProps) {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {ingredients?.map((ingredient, index) => (
-                <Draggable
-                  key={`${index}+${ingredient.name}`}
-                  draggableId={`${ingredient.name}`}
-                  index={index}
-                >
-                  {(provided) => (
-                    <li
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <RecipeIngredient
-                        index={index}
-                        key={ingredient.name}
-                        data={ingredient}
-                        handleIngredientDelete={handleIngredientDelete}
-                        handleIngredientChange={handleIngredientChange}
-                      />
-                    </li>
-                  )}
-                </Draggable>
-              ))}
+              {ingredients?.map((ingredient, index) => {
+                const key = `ingredient_${index}_${ingredient.id}`;
+                return (
+                  <Draggable key={key} draggableId={key} index={index}>
+                    {(provided) => (
+                      <li
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <RecipeIngredient
+                          index={index}
+                          key={ingredient.name}
+                          data={ingredient}
+                          handleIngredientDelete={handleIngredientDelete}
+                          handleIngredientChange={handleIngredientChange}
+                        />
+                      </li>
+                    )}
+                  </Draggable>
+                );
+              })}
               {provided.placeholder}
             </ul>
           )}
