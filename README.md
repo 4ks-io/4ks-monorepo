@@ -21,6 +21,8 @@ minikube start || k3d cluster create 4ks --registry-create 4ks-registry
 
 pnpm install
 
+go install github.com/swaggo/swag/cmd/swag@latest
+
 pnpm run swag
 
 tilt up
