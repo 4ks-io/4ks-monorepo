@@ -7,18 +7,12 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useRecipeContext } from '../../providers/recipe-context';
 import { RecipeIngredient } from './RecipeIngredient';
 import { SectionTitle } from './components/SectionTitle';
-
-const reorder = (
-  list: models_Ingredient[],
-  startIndex: number,
-  endIndex: number
-): models_Ingredient[] => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
+import {
+  handleListAdd,
+  handleListChange,
+  handleListDelete,
+  handleListDragEnd,
+} from './dnd-functions';
 
 export function RecipeIngredients() {
   const rtx = useRecipeContext();
@@ -32,47 +26,26 @@ export function RecipeIngredients() {
     [rtx?.recipe.currentRevision?.ingredients]
   );
 
-  function onDragEnd(result: any) {
-    if (!ingredients || !result.destination) {
-      return;
-    }
-
-    if (result.destination.index === result.source.index) {
-      return;
-    }
-
-    const ingreds = reorder(
-      ingredients,
-      result.source.index,
-      result.destination.index
-    );
-
-    rtx?.setIngredients(ingreds);
-    setIngredients(ingreds);
-  }
-
-  function cloneIngredients(): models_Ingredient[] {
-    return Object.assign([], ingredients) as models_Ingredient[];
-  }
-
-  function handleIngredientAdd() {
-    const i = cloneIngredients();
-    i?.push({});
-    setIngredients(i);
-  }
-
-  function handleIngredientDelete(index: number) {
-    const i = cloneIngredients();
-    i.splice(index, 1);
-    setIngredients(i);
-  }
-
-  function handleIngredientChange(index: number, data: models_Ingredient) {
-    const i = cloneIngredients();
-    i[index] = data;
+  function refreshIngredients(i: models_Ingredient[]) {
     rtx?.setIngredients(i);
     setIngredients(i);
   }
+
+  const onDragEnd = handleListDragEnd<models_Ingredient>(
+    ingredients,
+    refreshIngredients
+  );
+
+  const handleIngredientAdd = () =>
+    handleListAdd<models_Ingredient>(ingredients, refreshIngredients);
+
+  const handleIngredientDelete = (index: number) =>
+    handleListDelete<models_Ingredient>(index, ingredients, refreshIngredients);
+
+  const handleIngredientChange = handleListChange<models_Ingredient>(
+    ingredients,
+    refreshIngredients
+  );
 
   return (
     <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
