@@ -1,0 +1,15 @@
+FROM golang:1.18-alpine
+
+RUN go install github.com/mitranim/gow@latest
+
+WORKDIR /app
+
+COPY ./go.mod ./
+COPY ./go.sum ./
+COPY ./apps/api ./apps/api
+COPY ./libs/go ./libs/go
+
+RUN go mod tidy
+RUN go build ./apps/api/main.go
+
+CMD ["/app/main"]

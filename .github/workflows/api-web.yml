@@ -1,0 +1,29 @@
+name: API CI
+on:
+  # push:
+  #   branches: [main]
+  #   paths:
+  #     - '(nx|packagets|config.base|workspace).json'
+  #     - pnpm*
+  #     - 'apps/web/*'
+  #     - 'libs/ts/*'
+  pull_request:
+    branches: [main]
+    paths:
+      - '(nx|packagets|config.base|workspace).json'
+      - pnpm*
+      - 'apps/web/*'
+      - 'libs/ts/*'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
+          push: false
