@@ -14,10 +14,13 @@ import { useNavigate } from 'react-router-dom';
 import { useSessionContext } from '../../providers/session-context';
 import { models_Recipe } from '@4ks/api-fetch';
 import { PageLayout } from '../Layout';
+import { Text } from '@fluentui/react';
 
 const stackTokens: IStackTokens = {
-  childrenGap: 1,
+  childrenGap: 4,
 };
+
+const PLACEHOLDER_TAGS = ["vegan","beef","poultry", "meat"]
 
 const Recipes: React.FunctionComponent = () => {
   const ctx = useSessionContext();
@@ -25,9 +28,8 @@ const Recipes: React.FunctionComponent = () => {
   const navigate = useNavigate();
 
   const [recipes, setRecipes] = useState<models_Recipe[] | undefined>();
-
   function refreshRecipes() {
-    ctx?.api.recipes.getRecipes().then((r: models_Recipe) => {
+    ctx.api?.recipes.getRecipes().then((r: models_Recipe[]) => {
       setRecipes(r);
     });
   }
@@ -55,6 +57,7 @@ const Recipes: React.FunctionComponent = () => {
       // background: DefaultPalette.themePrimary,
       // color: DefaultPalette.white,
       padding: 5,
+
     },
   };
 
@@ -78,22 +81,46 @@ const Recipes: React.FunctionComponent = () => {
         {recipes &&
           recipes.map((r) => {
             const handleDelete = () => {
-              ctx.api.recipes.deleteRecipes(r.id).then(() => refreshRecipes());
+              if (r.id) {
+                ctx.api?.recipes.deleteRecipes(r.id).then(() => refreshRecipes());
+              }
             };
 
             return (
-              <Stack.Item key={r.id}>
-                <Stack horizontal styles={stackStyles} tokens={stackTokens}>
-                  <Stack.Item align="auto" styles={stackItemStyles}>
-                    <span>
-                      <a href={`/recipes/${r.id}`}>
-                        {r.currentRevision?.name || `missing title`}
-                      </a>
-                    </span>
-                  </Stack.Item>
-                  <Stack.Item>
-                    <Icon iconName="Delete" onClick={handleDelete} />
-                  </Stack.Item>
+              <Stack.Item key={r.id} style={{
+                borderWidth: 1,
+                borderStyle: "solid",
+                borderColor: "gray",
+                padding: 8
+              }}>
+                <Stack styles={stackStyles} tokens={stackTokens}>
+                  <Stack horizontal>
+                    <Stack.Item align="auto" styles={stackItemStyles}>
+                      <span>
+                        <a href={`/recipes/${r.id}`}>
+                          <Text variant='xLarge' style={{fontWeight: "bold"}}>{r.currentRevision?.name || `missing title`}</Text>
+                        </a>
+                      </span>
+                    </Stack.Item>
+                    <Stack.Item>
+                      <Icon iconName="Delete" onClick={handleDelete} />
+                    </Stack.Item>
+                  </Stack>
+                  <Stack horizontal tokens={{
+                    childrenGap: 4
+                  }}> 
+                    {PLACEHOLDER_TAGS.map(tag => {
+                      return <Stack.Item><Text style={{
+                        fontWeight: "bold"
+                      }}>#{tag}</Text></Stack.Item>
+                    })}
+                  </Stack>
+                  <Stack horizontal tokens={{childrenGap: 4}}>
+                    <Stack.Item>Chefs:</Stack.Item>
+                    {r.contributors?.map((contributor, idx) => <Stack.Item style={{fontWeight: "bold"}}>
+                      {contributor.displayName}{idx < (r.contributors?.length || 0) - 1 ? "," : "" } 
+                    </Stack.Item>)}
+                  </Stack>
                 </Stack>
               </Stack.Item>
             );
