@@ -1,29 +1,29 @@
-name: API CI
+name: WEB CI
 on:
-  # push:
-  #   branches: [main]
-  #   paths:
-  #     - '(nx|packagets|config.base|workspace).json'
-  #     - pnpm*
-  #     - 'apps/web/*'
-  #     - 'libs/ts/*'
   pull_request:
-    branches: [main]
+    types: [opened, synchronize]
     paths:
-      - '(nx|packagets|config.base|workspace).json'
+      - (nx|packagets|config.base|workspace).json
       - pnpm*
-      - 'apps/web/*'
-      - 'libs/ts/*'
+      - apps/web/**
+      - libs/ts/**
 
 jobs:
   docker:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Build and push
+      - uses: actions/checkout@v3
+        # with:
+        #   fetch-depth: 1
+      # - shell: bash
+      #   run: |
+      #     pwd
+      #     ls -la
+      - name: Build
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: ./Dockerfile
+          file: ./apps/web/Dockerfile.ci
           builder: ${{ steps.buildx.outputs.name }}
           push: false
+          # tags: 4ks/web-ci:latest

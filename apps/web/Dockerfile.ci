@@ -1,5 +1,7 @@
 FROM node:18-alpine
-RUN apk --no-cache add git bash
+RUN apk --no-cache add git bash go
+COPY --from=golang:1.18-alpine /usr/local/go/ /usr/local/go/ 
+ENV PATH="/usr/local/go/bin:${PATH}"
 
 RUN npm install -g pnpm
 
@@ -11,6 +13,7 @@ COPY pnpm* ./
 COPY apps/web/package.json ./apps/web/
 COPY libs/ts/api-fetch/package.json ./libs/ts/api-fetch/
 
+RUN pnpm swag
 RUN pnpm install
 RUN vite build
 
