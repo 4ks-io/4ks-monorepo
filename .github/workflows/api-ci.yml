@@ -1,17 +1,25 @@
 name: API CI
 on:
   pull_request:
+    types: [opened, synchronize]
     paths:
-      - '(nx|workspace).json'
+      - (nx|workspace).json
       - go*
-      - 'apps/api/*'
-      - 'libs/go/*'
+      - apps/api/**
+      - libs/go/**
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - name: Build and push
+      - uses: actions/checkout@v3
+        # with:
+        #   fetch-depth: 1
+      - shell: bash
+        run: |
+          pwd
+          ls -la
+      - name: Build
         uses: docker/build-push-action@v2
         with:
           context: ./
