@@ -1,6 +1,7 @@
 name: API CI
 on:
   pull_request:
+    types: [opened, synchronize]
     paths:
       - './(nx|workspace).json'
       - ./go*
