@@ -13,8 +13,8 @@ COPY pnpm* ./
 COPY apps/web/package.json ./apps/web/
 COPY libs/ts/api-fetch/package.json ./libs/ts/api-fetch/
 
-RUN pnpm swag
 RUN pnpm install
+RUN pnpm swag
 RUN vite build
 
 COPY ./ .
