@@ -2,10 +2,10 @@ name: API CI
 on:
   pull_request:
     paths:
-      - '(nx|workspace).json'
-      - go*
-      - 'apps/api/*'
-      - 'libs/go/*'
+      - './(nx|workspace).json'
+      - ./go*
+      - './apps/api/*'
+      - './libs/go/*'
 
 jobs:
   docker:
