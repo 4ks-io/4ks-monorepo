@@ -3,10 +3,10 @@ on:
   pull_request:
     types: [opened, synchronize]
     paths:
-      - '(nx|workspace).json'
+      - (nx|workspace).json
       - go*
-      - apps/api/*'
-      - 'libs/go/*'
+      - apps/api/**
+      - libs/go/**
 
 jobs:
   docker:
