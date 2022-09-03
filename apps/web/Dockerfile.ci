@@ -16,6 +16,6 @@ RUN pnpm swag:web
 WORKDIR /app/apps/web
 RUN npx vite build
 
-# CMD [ "node", "/app/apps/api/web/dist/server.js" ]
+CMD [ "node", "/app/apps/web/dist/assets/index.*.js" ]
 
 
