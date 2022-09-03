@@ -13,12 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        # with:
-        #   fetch-depth: 1
-      - shell: bash
-        run: |
-          pwd
-          ls -la
+      - name: Pull Latest Alpine Go
+        run: docker pull golang:1.18-alpine
       - name: Build
         uses: docker/build-push-action@v2
         with:
@@ -26,6 +22,6 @@ jobs:
           file: ./apps/api/Dockerfile.ci
           builder: ${{ steps.buildx.outputs.name }}
           push: false
-          tags: 4ks/api-ci:latest
+          # tags: 4ks/api-ci:latest
           # cache-from: type=registry,ref=4ks/api-ci:buildcache
           # cache-to: type=registry,ref=4ks/api-ci:buildcache,mode=max

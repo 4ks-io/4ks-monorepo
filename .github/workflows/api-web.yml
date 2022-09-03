@@ -1,29 +1,27 @@
-name: API CI
+name: WEB CI
 on:
-  # push:
-  #   branches: [main]
-  #   paths:
-  #     - '(nx|packagets|config.base|workspace).json'
-  #     - pnpm*
-  #     - 'apps/web/*'
-  #     - 'libs/ts/*'
   pull_request:
-    branches: [main]
+    types: [opened, synchronize]
     paths:
-      - '(nx|packagets|config.base|workspace).json'
+      - (nx|packagets|config.base|workspace).json
       - pnpm*
-      - 'apps/web/*'
-      - 'libs/ts/*'
+      - apps/web/**
+      - libs/ts/**
 
 jobs:
   docker:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Build and push
+      - uses: actions/checkout@v3
+      - name: Pull Latest Alpine Node
+        run: docker pull node:18-alpine
+      - name: Pull Latest Alpine Go
+        run: docker pull golang:1.18-alpine
+      - name: Build
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: ./Dockerfile
+          file: ./apps/web/Dockerfile.ci
           builder: ${{ steps.buildx.outputs.name }}
           push: false
+          # tags: 4ks/web-ci:latest
