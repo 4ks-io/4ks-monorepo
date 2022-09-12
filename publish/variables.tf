@@ -1,4 +1,5 @@
 
+
 variable "region" {
   default = "us-east4"
 }
@@ -9,9 +10,10 @@ variable "zone" {
 
 variable "stage" {
   default = "dev"
-
 }
 
+
 locals {
-  project = "${var.stage}-4ks"
+  organization = "4ks"
+  project = "${var.stage}-${local.organization}"
 }

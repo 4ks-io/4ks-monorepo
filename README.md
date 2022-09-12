@@ -33,7 +33,36 @@ https://local.4ks.io/ (must be added to host file)
 # Production build
 
 ```
-docker build . -f ./apps/api/Dockerfile -t 4ks/api:latest
+# build
+docker build . -f ./apps/api/Dockerfile -t 4ks/api:local
+docker run --rm 4ks/api:local
+
+# puublish
+gcloud auth configure-docker us-east4-docker.pkg.dev
+docker tag e9bc4da49216 us-east4-docker.pkg.dev/dev-4ks/api/api:0.0.1
+docker push us-east4-docker.pkg.dev/dev-4ks/api/api:0.0.1
+
+// this requires a slight tilt mod to disable web/api
+docker run --rm \
+    -e FIRESTORE_EMULATOR_HOST=127.0.0.1:8200 \
+    -e FIRESTORE_PROJECT_ID=4ks-dev \
+    -e AUTH0_DOMAIN=4ks-dev.us.auth0.com \
+    -e AUTH0_AUDIENCE='https://local.4ks.io/api' \
+    -e EXPORTER_TYPE=JAEGER \
+    -p 5734:5000 \
+    4ks/api:latest
+```
+
+# Run Terraform locally
+
+Note: TF Cloud's default Execution Mode is Remote which runs TF code on their VMs. When this
+is true, creds such as GCP must be set as ENV VARs in TF CLOUD.
+https://app.terraform.io/app/4ks/workspaces/core-dev-us-east/ is currently set to run
+locally.
+
+```
+export GOOGLE_CREDENTIALS=$(cat /home/<user>/.dev-4ks-<hash>.json | tr -s '\n' ' ')
+export TF_TOKEN_app_terraform_io=*****
 ```
 
 # 4ks Api

@@ -2,12 +2,13 @@ terraform {
   required_version = ">= 1.2.6"
   cloud {
     organization = "4ks"
-
     workspaces {
-      name = "core-dev-us-east"
+      # https://www.terraform.io/cli/cloud/settings
+      tags = ["app"]
     }
   }
 }
+
 
 provider "google" {
   project = local.project
