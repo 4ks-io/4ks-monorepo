@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"time"
@@ -16,8 +17,6 @@ import (
 )
 
 var firstoreProjectId = os.Getenv("FIRESTORE_PROJECT_ID")
-var firestoreEmulatorHost = os.Getenv("FIRESTORE_EMULATOR_HOST")
-
 var ctx = context.Background()
 var storage, _ = firestore.NewClient(ctx, firstoreProjectId)
 var userCollection = storage.Collection("users")
@@ -40,8 +39,9 @@ type userService struct {
 }
 
 func New() UserService {
-	fmt.Println(firestoreEmulatorHost)
-
+	if value, ok := os.LookupEnv("FIRESTORE_EMULATOR_HOST"); ok {
+		log.Printf("Using Firestore Emulator: '%s'", value)
+	}
 	return &userService{}
 }
 

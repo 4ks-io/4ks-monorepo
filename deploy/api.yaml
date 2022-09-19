@@ -32,6 +32,10 @@ spec:
           env:
             - name: PORT
               value: '5000'
+            - name: SWAGGER_ENABLED
+              value: 'true'
+            - name: SWAGGER_URL_PREFIX
+              value: '/api'
             - name: FIRESTORE_EMULATOR_HOST
               value: firestore:8200
             - name: FIRESTORE_PROJECT_ID

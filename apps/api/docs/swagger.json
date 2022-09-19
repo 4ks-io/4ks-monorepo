@@ -6,7 +6,6 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "local.4ks.io",
     "basePath": "/api",
     "paths": {
         "/auth-test": {

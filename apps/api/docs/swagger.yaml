@@ -152,7 +152,6 @@ definitions:
       username:
         type: string
     type: object
-host: local.4ks.io
 info:
   contact: {}
   description: This is the 4ks api

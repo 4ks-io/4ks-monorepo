@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -49,6 +50,9 @@ type recipeService struct {
 }
 
 func New() RecipeService {
+	if value, ok := os.LookupEnv("FIRESTORE_EMULATOR_HOST"); ok {
+		log.Printf("Using Firestore Emulator: '%s'", value)
+	}
 	return &recipeService{}
 }
 

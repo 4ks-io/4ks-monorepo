@@ -1,10 +1,9 @@
-FROM golang:1.18-alpine as builder
+FROM golang:1.18-alpine as build
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-RUN go install github.com/mitranim/gow@latest
 WORKDIR /app
 
-COPY ./go.mod ./
-COPY ./go.sum ./
+COPY ./go.mod .
+COPY ./go.sum .
 RUN go mod download
 
 COPY ./apps/api ./apps/api
@@ -12,7 +11,8 @@ COPY ./libs/go ./libs/go
 RUN CGO_ENABLED=0 GIN_MODE=release go build -o 4ksapi ./apps/api/main.go
 
 FROM scratch
-COPY --from=builder /app/4ksapi /4ksapi
-COPY --from=builder /etc/passwd /etc/passwd
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build /app/4ksapi /4ksapi
+COPY --from=build /etc/passwd /etc/passwd
 USER appuser
 CMD ["/4ksapi"]

@@ -17,7 +17,6 @@ import (
 // @version 1.0
 // @description This is the 4ks api
 
-// @host local.4ks.io
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization

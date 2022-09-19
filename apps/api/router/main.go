@@ -1,6 +1,9 @@
 package router
 
 import (
+	"log"
+	"os"
+
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -12,11 +15,23 @@ import (
 
 func New() *gin.Engine {
 	router := gin.Default()
+	router.SetTrustedProxies(nil)
 	router.Use(middleware.CorsMiddleware())
+	
+	if value, ok := os.LookupEnv("SWAGGER_ENABLED"); ok {
+		log.Printf("Swagger enabled: '%s'", value)
 
-	swaggerUrl := ginSwagger.URL("/api/swagger/doc.json") // The url pointing to API definition
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, swaggerUrl))
+		prefix := ""
+		if prefix, ok = os.LookupEnv("SWAGGER_URL_PREFIX"); ok {
+			log.Printf("Swagger url prefix: '%s'", prefix)
+		}
 
+		swaggerUrl := ginSwagger.URL(prefix + "/swagger/doc.json") // The url pointing to API definition
+		router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, swaggerUrl))
+	}
+	
+
+	
 	SystemRouter(router)
 	router.Use(otelgin.Middleware("4ks-api"))
 

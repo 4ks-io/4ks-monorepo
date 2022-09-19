@@ -33,14 +33,17 @@ https://local.4ks.io/ (must be added to host file)
 # Production build
 
 ```
+# auth
+gcloud auth configure-docker us-east4-docker.pkg.dev
+
 # build
 docker build . -f ./apps/api/Dockerfile -t 4ks/api:local
-docker run --rm 4ks/api:local
 
-# puublish
-gcloud auth configure-docker us-east4-docker.pkg.dev
-docker tag e9bc4da49216 us-east4-docker.pkg.dev/dev-4ks/api/api:0.0.1
-docker push us-east4-docker.pkg.dev/dev-4ks/api/api:0.0.1
+# publish
+VERSION=0.0.6
+LATEST=$(docker images | grep 4ks/api | grep local | awk '{print $3}')
+docker tag $LATEST us-east4-docker.pkg.dev/dev-4ks/api/api:$VERSION
+docker push us-east4-docker.pkg.dev/dev-4ks/api/api:$VERSION
 
 // this requires a slight tilt mod to disable web/api
 docker run --rm \
