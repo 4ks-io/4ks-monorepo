@@ -4,6 +4,10 @@ variable "region" {
   default = "us-east4"
 }
 
+variable "project-id" {
+  default = "dev-4ks"
+}
+
 variable "zone" {
   default = "us-east1-b"
 }
