@@ -40,6 +40,8 @@ docker run --rm 4ks/api:local
 # puublish
 gcloud auth configure-docker us-east4-docker.pkg.dev
 docker tag e9bc4da49216 us-east4-docker.pkg.dev/dev-4ks/api/api:0.0.1
+
+docker tag 0c34f5a5ffeb us-east4-docker.pkg.dev/dev-4ks/api/api:0.0.1
 docker push us-east4-docker.pkg.dev/dev-4ks/api/api:0.0.1
 
 // this requires a slight tilt mod to disable web/api
