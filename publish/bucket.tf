@@ -1,6 +1,5 @@
 resource "google_storage_bucket" "test_bucket" {
-  # name          = "${local.domain}"
-  name          = "${local.organization}-test-bucket"
+  name          = "${local.organization}-test-bucket-temp"
   location      = var.region
   force_destroy = true
 

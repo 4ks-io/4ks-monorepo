@@ -1,0 +1,24 @@
+# openapi2-functions.yaml
+swagger: '2.0'
+info:
+  title: API_ID optional-string
+  description: Sample API on API Gateway with a Google Cloud Functions backend
+  version: 1.0.0
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /:
+    get:
+      summary: Greet a user
+      operationId: hello
+      x-google-backend:
+        address: https://app-wlg4huzsea-uk.a.run.app
+      security:
+        - api_key_header: [xxxxyyyyy]
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
