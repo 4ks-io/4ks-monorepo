@@ -41,3 +41,4 @@ Thumbs.db
 *.log
 .terraform
 .terraform.lock.hcl
+PACKAGE_JSON/

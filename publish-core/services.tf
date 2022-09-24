@@ -4,18 +4,22 @@ variable "gcp_service_list" {
   type        = list(any)
   default = [
     "artifactregistry.googleapis.com",
-    "cloudapis.googleapis.com", # Google Cloud APIs
+    "cloudapis.googleapis.com",
     "cloudresourcemanager.googleapis.com",
-    "iam.googleapis.com", # Identity and Access Management (IAM) API
+    "iam.googleapis.com",
     "firestore.googleapis.com",
     "run.googleapis.com",
+    "domains.googleapis.com",
+    "compute.googleapis.com",
+    "dns.googleapis.com",
+    "serviceusage.googleapis.com",
+    "storage-component.googleapis.com",
     # "iamcredentials.googleapis.com",    # IAM Service Account Credentials API
-    # "logging.googleapis.com",           # Stackdriver Logging API
+    "logging.googleapis.com",           # Stackdriver Logging API
     # "monitoring.googleapis.com",        # Stackdriver Monitoring API
     # "servicemanagement.googleapis.com", # Service Management API
-    # "serviceusage.googleapis.com",      # Service Usage API
     # "sourcerepo.googleapis.com",        # Cloud Source Repositories API
-    # "sql-component.googleapis.com",     # Cloud SQL
+    "sql-component.googleapis.com",     # Cloud SQL
     # "storage-api.googleapis.com",       # Google Cloud Storage JSON API
     # "storage-component.googleapis.com", # Cloud Storage
     # "cloudfunctions.googleapis.com",
@@ -27,5 +31,6 @@ resource "google_project_service" "gcp_services" {
   count   = length(var.gcp_service_list)
   service = var.gcp_service_list[count.index]
 
-  disable_dependent_services = true
+  disable_dependent_services = false
+  disable_on_destroy = false
 }

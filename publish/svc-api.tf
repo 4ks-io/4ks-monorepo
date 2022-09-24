@@ -12,7 +12,7 @@ resource "google_artifact_registry_repository" "api" {
 #   template {
 #     spec {
 #       containers {
-#         image = "us-east4-docker.pkg.dev/dev-4ks/api/api:0.0.6"
+#         image = "us-east4-docker.pkg.dev/dev-4ks/api/app:latest"
 #         ports {
 #           container_port = 5000
 #         }

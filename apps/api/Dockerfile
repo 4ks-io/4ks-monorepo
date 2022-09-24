@@ -8,11 +8,11 @@ RUN go mod download
 
 COPY ./apps/api ./apps/api
 COPY ./libs/go ./libs/go
-RUN CGO_ENABLED=0 GIN_MODE=release go build -o 4ksapi ./apps/api/main.go
+RUN CGO_ENABLED=0 go build -o 4ksapi ./apps/api/main.go
 
 FROM scratch
+COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /app/4ksapi /4ksapi
-COPY --from=build /etc/passwd /etc/passwd
 USER appuser
 CMD ["/4ksapi"]
