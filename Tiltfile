@@ -28,7 +28,8 @@ docker_build(
     live_update=[
         fall_back_on('./apps/web/vite.config.ts'),
         sync('./', '/app/'),
-        sync('./libs/ts/api-fetch/dist', '/app/libs/ts/api-fetch/dist'),
+        sync('./libs/ts/api-fetch', '/app/libs/ts/api-fetch'),
+        run('npx nx run ts-api-fetch:build-fetch',trigger=['./libs/ts/api-fetch/'] ),
         run(
             'pnpm install',
             trigger=['./package.json', './apps/web/package.json']
