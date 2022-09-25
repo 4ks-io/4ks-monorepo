@@ -16,7 +16,11 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 import { models_Recipe, dtos_UpdateRecipe } from '@4ks/api-fetch';
 
-const Recipe: React.FunctionComponent = () => {
+type RecipeProps = {
+  create?: boolean
+}
+
+const Recipe = ({create}: RecipeProps) => {
   const { isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   const ctx = useSessionContext();
@@ -31,7 +35,7 @@ const Recipe: React.FunctionComponent = () => {
   }
 
   function saveRecipe() {
-    if (rtx?.recipeId == '0') {
+    if (create) {
       ctx?.api?.recipes
         .postRecipes(rtx?.recipe.currentRevision as dtos_UpdateRecipe)
         .then((data: models_Recipe) =>

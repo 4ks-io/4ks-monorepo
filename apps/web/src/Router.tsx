@@ -9,26 +9,19 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/recipes" element={<Recipes />} />
-        <Route path="/recipes">
-          <Route
-            path="0"
+        <Route path="/recipes/0"
             element={
+              <RecipeContextProvider>
+                <Recipe create/>
+              </RecipeContextProvider>
+            }
+          />
+        <Route path="/recipes/:id" element={
               <RecipeContextProvider>
                 <Recipe />
               </RecipeContextProvider>
             }
           />
-        </Route>
-        <Route path="/recipes">
-          <Route
-            path=":id"
-            element={
-              <RecipeContextProvider>
-                <Recipe />
-              </RecipeContextProvider>
-            }
-          />
-        </Route>
         <Route path="/me" element={<Recipes />} />
       </Routes>
     </BrowserRouter>
