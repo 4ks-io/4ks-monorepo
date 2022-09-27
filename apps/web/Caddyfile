@@ -1,4 +1,8 @@
-"http://localhost:5000" {
+{
+	auto_https off
+}
+
+:5000 {
 	handle /config.json {
 		root * /app
 		rewrite * configs/{$APP_ENV}.json
