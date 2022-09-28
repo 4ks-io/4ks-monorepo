@@ -13,7 +13,7 @@ variable "stage" {
 }
 
 variable "app_env_mapping" {
-    type = "map"
+    type = map
     default = {
         "app-dev-us-east"  = "dev"
         "app-prd-us-east"  = "prd"
