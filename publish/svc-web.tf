@@ -31,7 +31,7 @@ resource "google_cloud_run_service" "web" {
 
         env {
           name = "APP_ENV"
-          value = terraform.workspace
+          value = var.app_env_mapping[terraform.workspace]
         }
       }
     }

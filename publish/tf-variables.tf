@@ -12,6 +12,11 @@ variable "stage" {
   default = "dev"
 }
 
+variable "app_env_mapping" {
+  app-dev-us-east = "dev"
+  app-prd-us-east = "prd"
+}
+
 variable "dns_managed_zone_name" {
   description = "The name of the Cloud DNS Managed Zone in which to create the DNS A Record specified in var.custom_domain_name. Only used if var.create_dns_entry is true."
   type        = string
