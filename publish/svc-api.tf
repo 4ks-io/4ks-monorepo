@@ -42,6 +42,16 @@ resource "google_cloud_run_service" "api" {
           value = "release"
         }
 
+        env {
+          name  = "SWAGGER_ENABLED"
+          value = var.api_swagger_enabled[terraform.workspace]
+        }
+
+        env {
+          name  = "SWAGGER_URL_PREFIX"
+          value = "/api"
+        }
+
       }
 
     }

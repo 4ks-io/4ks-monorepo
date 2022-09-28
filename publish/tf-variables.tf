@@ -13,10 +13,18 @@ variable "stage" {
 }
 
 variable "app_env_mapping" {
-  type = map(any)
+  type = map(string)
   default = {
     "app-dev-us-east" = "dev"
     "app-prd-us-east" = "prd"
+  }
+}
+
+variable "api_swagger_enabled" {
+  type = map(string)
+  default = {
+    "app-dev-us-east" = true
+    "app-prd-us-east" = false
   }
 }
 
