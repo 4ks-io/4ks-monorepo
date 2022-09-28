@@ -12,7 +12,7 @@ resource "google_cloud_run_service" "web" {
   template {
     spec {
       containers {
-        image = "us-east4-docker.pkg.dev/dev-4ks/web/app:latest"
+        image = "us-east4-docker.pkg.dev/dev-4ks/web/app:0.0.6"
         ports {
           container_port = 5000
         }
@@ -30,7 +30,7 @@ resource "google_cloud_run_service" "web" {
         }
 
         env {
-          name = "APP_ENV"
+          name  = "APP_ENV"
           value = var.app_env_mapping[terraform.workspace]
         }
       }
@@ -66,10 +66,10 @@ resource "google_compute_region_network_endpoint_group" "web_neg" {
 }
 
 resource "google_compute_backend_service" "web" {
-  name      = "${local.project}-web-backend"
+  name = "${local.project}-web-backend"
 
-  protocol  = "HTTP"
-  port_name = "http"
+  protocol    = "HTTP"
+  port_name   = "http"
   timeout_sec = 30
 
   backend {

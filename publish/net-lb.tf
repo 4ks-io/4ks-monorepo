@@ -1,8 +1,8 @@
 
 module "lb" {
-  source  = "./modules/http-load-balancer"
-  name    = local.project
-  project = data.google_project.project.number
+  source                = "./modules/http-load-balancer"
+  name                  = local.project
+  project               = data.google_project.project.number
   url_map               = google_compute_url_map.urlmap.self_link
   dns_managed_zone_name = var.dns_managed_zone_name
   # custom_domain_names   = [var.custom_domain_name[terraform.workspace], "bugr.io"]
@@ -33,15 +33,18 @@ resource "google_compute_url_map" "urlmap" {
     name            = "all"
     default_service = google_compute_backend_service.web.id
 
-
-    route_rules {
-      priority = 1
-      service  = google_compute_backend_service.api.id
-      match_rules {
-        prefix_match = "/api"
-        ignore_case  = false
+    path_rule {
+      paths   = ["/api/*"]
+      service = google_compute_backend_service.api.id
+      route_action {
+        url_rewrite {
+          path_prefix_rewrite = "/"
+        }
       }
     }
+
+ 
+
     # route_rules {
     #   priority = 2
     #   service  = google_compute_backend_service.api.id
@@ -53,6 +56,12 @@ resource "google_compute_url_map" "urlmap" {
     #     url_rewrite {
     #       path_prefix_rewrite = "/"
     #     }
+    #   }
+    # }
+
+    # route_action {
+    #   url_rewrite {
+    #     path_prefix_rewrite = "/"
     #   }
     # }
 
@@ -69,5 +78,11 @@ resource "google_compute_url_map" "urlmap" {
     #       path_prefix_rewrite = "A replacement path"
     #   }
     # }
+  }
+
+   test {
+    service = google_compute_backend_service.api.id
+    host    = "dev.4ks.io"
+    path    = "/api/ready"
   }
 }

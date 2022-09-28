@@ -12,14 +12,14 @@ resource "google_cloud_run_service" "api" {
   template {
     spec {
       containers {
-        image = "us-east4-docker.pkg.dev/dev-4ks/api/app:latest"
+        image = "us-east4-docker.pkg.dev/dev-4ks/api/app:0.0.3"
         ports {
           container_port = 5000
         }
 
         env {
           name  = "FIRESTORE_PROJECT_ID"
-          value = "4ks-dev"
+          value = "dev-4ks"
         }
         env {
           name  = "SWAGGER_ENABLED"
@@ -31,15 +31,14 @@ resource "google_cloud_run_service" "api" {
         }
         env {
           name  = "AUTH0_AUDIENCE"
-          # value = "https://dev.4ks.io/api"
-          value = "https://api-wlg4huzsea-uk.a.run.app"
+          value = "https://dev.4ks.io/api"
         }
         env {
           name  = "EXPORTER_TYPE"
           value = "JAEGER"
         }
         env {
-          name = "GIN_MODE"
+          name  = "GIN_MODE"
           value = "release"
         }
 
@@ -77,10 +76,10 @@ resource "google_compute_region_network_endpoint_group" "api_neg" {
 }
 
 resource "google_compute_backend_service" "api" {
-  name      = "${local.project}-api-backend"
+  name = "${local.project}-api-backend"
 
-  protocol  = "HTTP"
-  port_name = "http"
+  protocol    = "HTTP"
+  port_name   = "http"
   timeout_sec = 30
 
   backend {

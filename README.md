@@ -42,7 +42,7 @@ gcloud auth configure-docker us-east4-docker.pkg.dev
 docker build . -f ./apps/api/Dockerfile -t 4ks/api:latest
 
 # publish
-VERSION=0.0.1
+VERSION=0.0.3
 LATEST=$(docker images | grep 4ks/api | grep latest | head -n1  | awk '{print $3}')
 docker tag $LATEST us-east4-docker.pkg.dev/dev-4ks/api/app:latest
 docker tag $LATEST us-east4-docker.pkg.dev/dev-4ks/api/app:$VERSION
@@ -56,7 +56,7 @@ docker run --rm \
     -e AUTH0_DOMAIN=4ks-dev.us.auth0.com \
     -e AUTH0_AUDIENCE='https://local.4ks.io/api' \
     -e EXPORTER_TYPE=JAEGER \
-    -p 5734:5000 \
+    -p 5000:5000 \
     4ks/api:latest
 ```
 
@@ -74,7 +74,7 @@ docker build --cache-from $PRD --target dev -f apps/web/Dockerfile . -t $DEV
 docker build --cache-from $DEV --target build -f apps/web/Dockerfile . -t $BUILD
 docker build --cache-from $BUILD --target app -f apps/web/Dockerfile . -t $APP
 
-VERSION=0.0.1
+VERSION=0.0.6
 LATEST=$(docker images | grep 4ks/web | grep latest | head -n1 | awk '{print $3}')
 docker tag $LATEST us-east4-docker.pkg.dev/dev-4ks/web/app:latest
 docker tag $LATEST us-east4-docker.pkg.dev/dev-4ks/web/app:$VERSION

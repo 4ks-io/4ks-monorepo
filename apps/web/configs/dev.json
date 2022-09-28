@@ -1,5 +1,5 @@
 {
-    "AUTH0_AUDIENCE":"https://dev.4ks.io/api",
-    "AUTH0_DOMAIN": "4ks-dev.us.auth0.com",
-    "AUTH0_CLIENT_ID": "eM5Zyyfp6coLg3zORMFsZEnQmpqxBjHd"
+  "AUTH0_AUDIENCE": "https://dev.4ks.io/api",
+  "AUTH0_DOMAIN": "4ks-dev.us.auth0.com",
+  "AUTH0_CLIENT_ID": "eM5Zyyfp6coLg3zORMFsZEnQmpqxBjHd"
 }
