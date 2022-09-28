@@ -1,0 +1,16 @@
+{
+	auto_https off
+}
+
+:5000 {
+	handle /config.json {
+		root * /app
+		rewrite * configs/{$APP_ENV}.json
+		file_server
+	}
+
+	handle {
+		root * /app
+		file_server
+	}
+}

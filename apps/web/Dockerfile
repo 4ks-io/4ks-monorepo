@@ -32,9 +32,10 @@ COPY ./pnpm-workspace.yaml .
 COPY ./tsconfig.base.json .
 COPY ./workspace.json .
 COPY ./libs/ts ./libs/ts
-COPY ./apps/web/ ./apps/web
 COPY ./PACKAGE_JSON/ ./
 RUN pnpm install
+
+COPY ./apps/web/ ./apps/web
 
 # libs (nx??)
 WORKDIR /app/libs/ts/api-fetch
@@ -49,10 +50,11 @@ FROM yobasystems/alpine:3.15.4-amd64 as app
 COPY --from=amd64/caddy:2-alpine /usr/bin/caddy /app/caddy
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /app/apps/web/dist/ /app
-
+COPY --from=build /app/apps/web/Caddyfile /app/Caddyfile
+COPY --from=build /app/apps/web/configs /app/configs
 USER appuser
 EXPOSE 5000
 WORKDIR /app
-CMD ./caddy file-server --listen :5000
+CMD ./caddy run
 
 

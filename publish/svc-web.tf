@@ -29,8 +29,11 @@ resource "google_cloud_run_service" "web" {
           value = "4ks-dev.us.auth0.com"
         }
 
+        env {
+          name = "APP_ENV"
+          value = var.app_env_mapping[terraform.workspace]
+        }
       }
-
     }
   }
 
