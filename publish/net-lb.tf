@@ -43,7 +43,7 @@ resource "google_compute_url_map" "urlmap" {
       }
     }
 
- 
+
 
     # route_rules {
     #   priority = 2
@@ -80,7 +80,7 @@ resource "google_compute_url_map" "urlmap" {
     # }
   }
 
-   test {
+  test {
     service = google_compute_backend_service.api.id
     host    = "dev.4ks.io"
     path    = "/api/ready"
