@@ -43,46 +43,39 @@ resource "google_compute_url_map" "urlmap" {
       }
     }
 
-
-
-    # route_rules {
-    #   priority = 2
-    #   service  = google_compute_backend_service.api.id
-    #   match_rules {
-    #     ignore_case  = false
-    #     prefix_match = "/api"
-    #   }
-    #   route_action {
-    #     url_rewrite {
-    #       path_prefix_rewrite = "/"
-    #     }
-    #   }
-    # }
-
-    # route_action {
-    #   url_rewrite {
-    #     path_prefix_rewrite = "/"
-    #   }
-    # }
-
-    # path_rule {
-    #   paths   = ["/api/auth/*"]
-    #   service = google_compute_backend_service.dashboard.id
-    # }
-
-    # path_rule {
-    #   paths   = ["/api/*"]
-    #   service = google_compute_backend_service.api.id
-
-    #   url_rewrite {
-    #       path_prefix_rewrite = "A replacement path"
-    #   }
-    # }
   }
 
   test {
     service = google_compute_backend_service.api.id
     host    = "dev.4ks.io"
     path    = "/api/ready"
+  }
+}
+
+resource "google_compute_security_policy" "development" {
+  name = "dev-policy"
+
+  # rule {
+  #   action   = "deny(403)"
+  #   priority = "1000"
+  #   match {
+  #     versioned_expr = "SRC_IPS_V1"
+  #     config {
+  #       src_ip_ranges = ["71.191.48.46"]
+  #     }
+  #   }
+  #   description = "Deny access to IPs in 71.191.48.46/32"
+  # }
+
+   rule {
+    action   = "allow"
+    priority = "2147483647"
+    match {
+      versioned_expr = "SRC_IPS_V1"
+      config {
+        src_ip_ranges = ["*"]
+      }
+    }
+    description = "default rule"
   }
 }
