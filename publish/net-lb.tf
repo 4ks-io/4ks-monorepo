@@ -55,19 +55,20 @@ resource "google_compute_url_map" "urlmap" {
 resource "google_compute_security_policy" "development" {
   name = "dev-policy"
 
-  # rule {
-  #   action   = "deny(403)"
-  #   priority = "1000"
-  #   match {
-  #     versioned_expr = "SRC_IPS_V1"
-  #     config {
-  #       src_ip_ranges = ["71.191.48.46"]
-  #     }
-  #   }
-  #   description = "Deny access to IPs in 71.191.48.46/32"
-  # }
+  rule {
+    action   = "allow"
+    priority = "1000"
+    match {
+      versioned_expr = "SRC_IPS_V1"
+      config {
+        src_ip_ranges = ["71.191.48.46/32"]
+      }
+    }
+    description = "Allow access to IPs in 71.191.48.46"
+  }
 
-   rule {
+  rule {
+    # action   = "deny(403)"
     action   = "allow"
     priority = "2147483647"
     match {

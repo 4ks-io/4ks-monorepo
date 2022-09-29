@@ -36,7 +36,7 @@ export class RecipesService {
     public postRecipes(
         recipe: dtos_CreateRecipe,
     ): CancelablePromise<models_Recipe> {
-        return this.httpRequest.request({ 
+        return this.httpRequest.request({
             method: 'POST',
             url: '/recipes',
             body: recipe,
@@ -85,7 +85,7 @@ export class RecipesService {
      * Delete Recipe
      * Delete Recipe
      * @param recipeId Recipe Id
-     * @returns any OK  
+     * @returns any
      * @throws ApiError
      */
     public deleteRecipes(
@@ -164,7 +164,7 @@ export class RecipesService {
      * Star Recipe
      * Star Recipe
      * @param recipeId Recipe Id
-     * @returns any OK
+     * @returns any
      * @throws ApiError
      */
     public postRecipesStar(
