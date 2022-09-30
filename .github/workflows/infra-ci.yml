@@ -9,6 +9,7 @@ on:
 env:
   GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
   TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+  TF_WORKSPACE: app-dev-us-east
 
 jobs:
   terraform:
@@ -33,7 +34,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform workspace select app-dev-us-east
+        run: terraform init
 
       - name: Terraform Validate
         id: validate
