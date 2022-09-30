@@ -68,7 +68,7 @@ resource "google_compute_security_policy" "development" {
   }
 
   rule {
-    action   = "deny(403)"
+    action = "deny(403)"
     # action   = "allow"
     priority = "2147483647"
     match {
