@@ -33,7 +33,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: terraform workspace select app-dev-us-east
 
       - name: Terraform Validate
         id: validate
