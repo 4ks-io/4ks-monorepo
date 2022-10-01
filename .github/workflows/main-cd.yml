@@ -25,7 +25,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: './apps/${{APP}}/Dockerfile'
+          file: ./apps/${{APP}}/Dockerfile
           # builder: ${{ steps.buildx.outputs.name }}
           push: true
           login: true
