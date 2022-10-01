@@ -24,12 +24,17 @@ jobs:
       # - name: Pull Latest Alpine Go
       #   run: docker pull golang:1.18-alpine
       - name: GCP Registry Auth
-        run: |
-          # gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
-          echo ${{ env.GOOGLE_CREDENTIALS }} > ./gcloud-key.json
-          gcloud auth activate-service-account --key-file gcloud-key.json
-          gcloud config set project ${{ env.PROJECT }}
-          gcloud auth configure-docker
+        uses: 'google-github-actions/auth@v0'
+        with:
+          project_id: ${{ env.PROJECT }}
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0'
+        # run: |
+        #   gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
+        #   # echo ${{ env.GOOGLE_CREDENTIALS }} > ./gcloud-key.json
+        #   # gcloud auth activate-service-account --key-file gcloud-key.json
+        #   # gcloud config set project ${{ env.PROJECT }}
+        #   # gcloud auth configure-docker
       - name: Build
         uses: docker/build-push-action@v3
         with:
