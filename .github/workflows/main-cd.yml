@@ -5,14 +5,18 @@ on:
       - main
 env:
   BUILD_NUMBER: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
-  TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
-  GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-  REGISTRY: us-east4-docker.pkg.dev
-  PROJECT: dev-4ks
-  ENVIRONMENT: dev
+  # TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+  # GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+  # REGISTRY: us-east4-docker.pkg.dev
+  # PROJECT: dev-4ks
+  # ENVIRONMENT: dev
 jobs:
   api:
     uses: ./.github/workflows/build-container.yaml
     with:
       app_name: api
-      # environment: dev
+      environment: dev
+      gcp_project_name: dev-4ks
+      gcp_creds: ${{ secrets.GOOGLE_CREDENTIALS }}
+      gcp_registry: ${{ env.us-east4-docker.pkg.dev }}
+      build_number: ${{ env.BUILD_NUMBER }}
