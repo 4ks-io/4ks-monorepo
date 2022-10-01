@@ -19,10 +19,10 @@ on:
         description: "container registry url"
         required: true
         type: string
-      # build_number:
-      #   description: 'build number'
-      #   required: true
-      #   type: string
+      build_number:
+        description: "build number"
+        required: true
+        type: string
     secrets:
       cgp_creds:
         required: true
@@ -40,6 +40,8 @@ jobs:
       - name: Env Vars
         run: |
           echo $GITHUB_ENV
+          echo "${{ inputs.gcp_project_name }}"
+          echo "${{ inputs.build_number }}"
       # - name: Pull Latest Alpine Go
       #   run: docker pull golang:1.18-alpine
       # - name: GCP Auth

@@ -23,4 +23,4 @@ jobs:
       environment: dev
       gcp_project_name: dev-4ks
       gcp_registry: us-east4-docker.pkg.dev
-      # build_number: "$BUILD_NUMBER"
+      build_number: ${{ env.BUILD_NUMBER }}
