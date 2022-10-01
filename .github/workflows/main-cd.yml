@@ -13,7 +13,6 @@ jobs:
   build:
     env:
       APP: api
-      TAG: ${{ env.REGISTRY }}/${{ env.APP }}/app:${{ env.BUILD_NUMBER }}, ${{ env.REGISTRY }}/${{ env.APP }}/app:latest
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
