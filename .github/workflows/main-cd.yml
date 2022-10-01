@@ -27,6 +27,6 @@ jobs:
           file: ./apps/{{APP}}/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ${{REGISTRY}}/${{APP}}/app:${{BUILD_NUMBER}}, ${{REGISTRY}}/${{APP}}/app:latest
+          tags: "$REGISTRY/$APP/app:$BUILD_NUMBER", "$REGISTRY/$APP/app:latest"
           # cache-from: type=registry,ref=4ks/${{APP}}-ci:buildcache
           # cache-to: type=registry,ref=4ks/${{APP}}-ci:buildcache,mode=max
