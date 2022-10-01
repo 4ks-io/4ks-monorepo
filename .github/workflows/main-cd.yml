@@ -19,7 +19,7 @@ jobs:
       - name: Version
         run: |
           echo $BUILD_NUMBER
-          local TAGS=$REGISTRY/$APP/app:$BUILD_NUMBER, $REGISTRY/$APP/app:latest"
+          local TAGS="$REGISTRY/$APP/app:$BUILD_NUMBER, $REGISTRY/$APP/app:latest"
           echo "TAGS=$TAGS" >> $GITHUB_ENV
           echo $GITHUB_ENV
       - name: Pull Latest Alpine Go
