@@ -33,20 +33,15 @@ jobs:
         uses: google-github-actions/setup-gcloud@v0
       - name: GCP Config
         run: |
-          gcloud auth configure-docker -q
-        # run: |
-        #   gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
-        #   # echo ${{ env.GOOGLE_CREDENTIALS }} > ./gcloud-key.json
-        #   # gcloud auth activate-service-account --key-file gcloud-key.json
-        #   # gcloud config set project ${{ env.PROJECT }}
-        #   # gcloud auth configure-docker
+          # gcloud auth configure-docker -q
+          gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
       - name: Build
         uses: docker/build-push-action@v3
         with:
           context: .
           file: ./apps/${{ env.APP }}/Dockerfile
-          push: false
-          login: true
+          push: true
+          # login: true
           tags: ${{ env.TAGS }}
           # cache-from: type=registry,ref=4ks/${{APP}}-ci:buildcache
           # cache-to: type=registry,ref=4ks/${{APP}}-ci:buildcache,mode=max
