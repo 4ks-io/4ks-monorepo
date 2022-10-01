@@ -13,21 +13,23 @@ jobs:
   build:
     env:
       APP: api
+      TAGS: '$REGISTRY/$APP/app:$BUILD_NUMBER, $REGISTRY/$APP/app:latest'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Increment version
         run: |
           echo $BUILD_NUMBER
+          echo $TAGS
       - name: Pull Latest Alpine Go
         run: docker pull golang:1.18-alpine
       - name: Build
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: "./apps/$APP/Dockerfile"
+          file: './apps/$APP/Dockerfile'
           push: true
           login: true
-          tags: "$REGISTRY/$APP/app:$BUILD_NUMBER", "$REGISTRY/$APP/app:latest"
+          tags: $TAGS
           # cache-from: type=registry,ref=4ks/${{APP}}-ci:buildcache
           # cache-to: type=registry,ref=4ks/${{APP}}-ci:buildcache,mode=max
