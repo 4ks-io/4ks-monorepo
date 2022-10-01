@@ -4,14 +4,15 @@ on:
     branches:
       - main
 env:
+  BUILD_NUMBER: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
   TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
   GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
   REGISTRY: us-east4-docker.pkg.dev/dev-4ks
   ENVIRONMENT: dev
-  APP: api
-  BUILD_NUMBER: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
 jobs:
-  docker:
+  build:
+    env:
+      APP: api
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -24,10 +25,10 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: './apps/api/Dockerfile'
+          file: './apps/${{APP}}/Dockerfile'
           # builder: ${{ steps.buildx.outputs.name }}
-          push: false
-          # login: true
-          # tags: "$REGISTRY/$APP/app:$BUILD_NUMBER", "$REGISTRY/$APP/app:latest"
+          push: true
+          login: true
+          tags: "${{REGISTRY}}/${{APP}}/app:${{BUILD_NUMBER}}", "${{REGISTRY}}/${{APP}}/app:latest"
           # cache-from: type=registry,ref=4ks/${{APP}}-ci:buildcache
           # cache-to: type=registry,ref=4ks/${{APP}}-ci:buildcache,mode=max
