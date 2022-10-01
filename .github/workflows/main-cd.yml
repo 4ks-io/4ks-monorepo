@@ -13,6 +13,7 @@ env:
 jobs:
   api:
     uses: ./.github/workflows/build-container.yaml
+    secrets: inherit
     with:
       app_name: api
       environment: dev
