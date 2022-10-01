@@ -16,11 +16,7 @@ jobs:
     name: build and publish api
     steps:
       - uses: actions/checkout@v3
-      - name: Verbose
-        run: |
-          pwd
-          ls -la
-      - name: Build
-        uses: ./.github/composite/build-container
+      - uses: ./.github/workflows/build-container
         with:
           app_name: api
+          environment: dev
