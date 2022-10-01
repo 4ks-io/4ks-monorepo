@@ -23,13 +23,13 @@ jobs:
           echo "TAGS=$TAGS" >> $GITHUB_ENV
       # - name: Pull Latest Alpine Go
       #   run: docker pull golang:1.18-alpine
-      - name: GCP Registry Auth
-        uses: 'google-github-actions/auth@v0'
+      - name: GCP Auth
+        uses: google-github-actions/auth@v0
         with:
           project_id: ${{ env.PROJECT }}
           credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v0'
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
         # run: |
         #   gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
         #   # echo ${{ env.GOOGLE_CREDENTIALS }} > ./gcloud-key.json
@@ -41,8 +41,11 @@ jobs:
         with:
           context: .
           file: ./apps/${{ env.APP }}/Dockerfile
-          push: true
-          login: true
+          push: false
+          login: false
           tags: ${{ env.TAGS }}
           # cache-from: type=registry,ref=4ks/${{APP}}-ci:buildcache
           # cache-to: type=registry,ref=4ks/${{APP}}-ci:buildcache,mode=max
+      - name: TAGS
+        run: |
+          docker images
