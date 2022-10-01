@@ -16,7 +16,7 @@ paths:
       x-google-backend:
         address: https://app-wlg4huzsea-uk.a.run.app
       security:
-        - api_key_header: [xxxxyyyyy]
+        - bearer: [xxxxyyyyy]
       responses:
         '200':
           description: A successful response
