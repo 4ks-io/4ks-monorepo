@@ -13,12 +13,13 @@ jobs:
   build:
     env:
       APP: api
+      TAG: ${{ env.REGISTRY }}/${{ env.APP }}/app:${{ env.BUILD_NUMBER }}, ${{ env.REGISTRY }}/${{ env.APP }}/app:latest
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Version
         run: |
-          local TAGS="${{ env.REGISTRY }}/$APP/app:$BUILD_NUMBER, ${{ env.REGISTRY }}/$APP/app:latest"
+          TAGS="${{ env.REGISTRY }}/${{ env.APP }}/app:${{ env.BUILD_NUMBER }}, ${{ env.REGISTRY }}/${{ env.APP }}/app:latest"
           echo "TAGS=$TAGS" >> $GITHUB_ENV
           echo $GITHUB_ENV
       - name: Pull Latest Alpine Go
