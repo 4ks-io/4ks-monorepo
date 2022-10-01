@@ -30,9 +30,9 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: './apps/$APP/Dockerfile'
+          file: ./apps/$APP/Dockerfile
           push: true
           login: true
-          tags: ${{ env.TAGS }}
+          tags: $TAGS
           # cache-from: type=registry,ref=4ks/${{APP}}-ci:buildcache
           # cache-to: type=registry,ref=4ks/${{APP}}-ci:buildcache,mode=max
