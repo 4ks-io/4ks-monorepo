@@ -1,12 +1,18 @@
 name: Build and Publish API
 description: Build and Publish API
+
+inputs:
+  app_name:
+    description: 'API/WEB'
+    required: true
+
 runs:
   using: 'composite'
   steps:
     - uses: actions/checkout@v3
     - name: Set Env Vars
       run: |
-        TAGS="${{ env.REGISTRY }}/${{ env.PROJECT }}/${{ env.APP }}/app:${{ env.BUILD_NUMBER }}, ${{ env.REGISTRY }}/${{ env.PROJECT }}/${{ env.APP }}/app:latest"
+        TAGS="${{ env.REGISTRY }}/${{ env.PROJECT }}/${{ inputs.app_name }}/app:${{ env.BUILD_NUMBER }}, ${{ env.REGISTRY }}/${{ env.PROJECT }}/${{ inputs.app_name }}/app:latest"
         echo "TAGS=$TAGS" >> $GITHUB_ENV
     # - name: Pull Latest Alpine Go
     #   run: docker pull golang:1.18-alpine
@@ -26,7 +32,7 @@ runs:
       uses: docker/build-push-action@v3
       with:
         context: .
-        file: ./apps/${{ env.APP }}/Dockerfile
+        file: ./apps/${{ inputs.app_name }}/Dockerfile
         push: true
         tags: ${{ env.TAGS }}
         # cache-from: type=registry,ref=4ks/${{APP}}-ci:buildcache

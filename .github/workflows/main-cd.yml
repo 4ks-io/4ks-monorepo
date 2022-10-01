@@ -11,10 +11,10 @@ env:
   PROJECT: dev-4ks
   ENVIRONMENT: dev
 jobs:
-  build_api:
+  api:
     env:
       APP: api
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/composite/container-build
+      # - uses: actions/checkout@v3
+      - uses: ./.github/actions/build-image
