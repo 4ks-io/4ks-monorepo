@@ -21,13 +21,15 @@ jobs:
         run: |
           TAGS="${{ env.REGISTRY }}/${{ env.PROJECT }}/${{ env.APP }}/app:${{ env.BUILD_NUMBER }}, ${{ env.REGISTRY }}/${{ env.PROJECT }}/${{ env.APP }}/app:latest"
           echo "TAGS=$TAGS" >> $GITHUB_ENV
-      # - name: Env Vars
-      #   run: |
-      #     echo $GITHUB_ENV
-      - name: Pull Latest Alpine Go
-        run: docker pull golang:1.18-alpine
+      # - name: Pull Latest Alpine Go
+      #   run: docker pull golang:1.18-alpine
       - name: GCP Registry Auth
-        run: gcloud auth configure-docker ${{ env.REGISTRY }}
+        run: |
+          # gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
+          echo ${{ env.GOOGLE_CREDENTIALS }} > ./gcloud-key.json
+          gcloud auth activate-service-account --key-file gcloud-key.json
+          gcloud config set project ${{ env.PROJECT }}
+          gcloud auth configure-docker
       - name: Build
         uses: docker/build-push-action@v3
         with:

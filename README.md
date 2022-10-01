@@ -16,17 +16,11 @@ There are two proposals for an architecture in the diagram below
 
 ```
 docker-compose up -d
-
 minikube start || k3d cluster create 4ks --registry-create 4ks-registry
-
 pnpm install
-
 go install github.com/swaggo/swag/cmd/swag@latest
-
 pnpm run swag
-
 tilt up
-
 https://local.4ks.io/ (must be added to host file)
 ```
 
