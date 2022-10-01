@@ -13,11 +13,11 @@ jobs:
   build:
     env:
       APP: api
-      TAGS: '$REGISTRY/$APP/app:$BUILD_NUMBER, $REGISTRY/$APP/app:latest'
+      TAGS: $REGISTRY/$APP/app:$BUILD_NUMBER, $REGISTRY/$APP/app:latest
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Increment version
+      - name: Version
         run: |
           echo $BUILD_NUMBER
           echo $TAGS
