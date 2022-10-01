@@ -15,4 +15,4 @@ jobs:
     uses: ./.github/workflows/build-container.yaml
     with:
       app_name: api
-      environment: dev
+      # environment: dev
