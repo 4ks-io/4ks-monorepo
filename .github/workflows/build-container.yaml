@@ -35,12 +35,12 @@ jobs:
       - uses: actions/checkout@v3
       - name: Set Env Vars
         run: |
-          TAGS="${{ inputs.gcp_registry }}/${{ inputs.gcp_project_name }}/${{ inputs.app_name }}/app:${{ env.BUILD_NUMBER }}, ${{ inputs.gcp_registry }}/${{ inputs.gcp_project_name }}/${{ inputs.app_name }}/app:latest"
+          TAG_NAME="${{ inputs.gcp_registry }}/${{ inputs.gcp_project_name }}/${{ inputs.app_name }}/app"
+          TAGS="$TAG_NAME:${{ inputs.build_number }}, $TAG_NAME:latest"
           echo "TAGS=$TAGS" >> $GITHUB_ENV
       - name: Env Vars
         run: |
           echo $GITHUB_ENV
-          echo "${{ inputs.gcp_project_name }}"
           echo "${{ inputs.build_number }}"
       # - name: Pull Latest Alpine Go
       #   run: docker pull golang:1.18-alpine
