@@ -9,6 +9,7 @@ on:
 env:
   GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
   TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+  TF_WORKSPACE: app-dev-us-east
 
 jobs:
   terraform:
@@ -43,4 +44,4 @@ jobs:
         id: plan
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
-        continue-on-error: true
+        continue-on-error: false
