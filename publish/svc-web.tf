@@ -17,19 +17,6 @@ resource "google_cloud_run_service" "web" {
           container_port = 5000
         }
         env {
-          name  = "VITE_AUTH0_CLIENT_ID"
-          value = "eM5Zyyfp6coLg3zORMFsZEnQmpqxBjHd"
-        }
-        env {
-          name  = "VITE_AUTH0_AUDIENCE"
-          value = "https://dev.4ks.io/api"
-        }
-        env {
-          name  = "VITE_AUTH0_DOMAIN"
-          value = "4ks-dev.us.auth0.com"
-        }
-
-        env {
           name  = "APP_ENV"
           value = var.app_env_mapping[terraform.workspace]
         }
