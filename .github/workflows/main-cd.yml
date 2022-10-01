@@ -25,6 +25,8 @@ jobs:
       #     echo $GITHUB_ENV
       - name: Pull Latest Alpine Go
         run: docker pull golang:1.18-alpine
+      - name: GCP Registry Auth
+        run: gcloud auth configure-docker ${{ env.REGISTRY }}
       - name: Build
         uses: docker/build-push-action@v3
         with:
