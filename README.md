@@ -32,7 +32,7 @@ https://local.4ks.io/ (must be added to host file)
 
 # Production build / publish
 
-## api
+## api build/publish steps
 
 ```
 # auth
@@ -60,7 +60,7 @@ docker run --rm \
     4ks/api:latest
 ```
 
-## web
+## web build/publish steps
 
 ```
 ./tools/package_json.sh
