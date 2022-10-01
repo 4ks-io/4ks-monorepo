@@ -11,6 +11,13 @@ env:
   # PROJECT: dev-4ks
   # ENVIRONMENT: dev
 jobs:
+  verbose:
+    name: verbose
+    runs-on: ubuntu-latest
+    steps:
+      - name: Env Vars
+        run: |
+          echo $GITHUB_ENV
   api:
     uses: ./.github/workflows/build-container.yaml
     secrets:
@@ -20,4 +27,4 @@ jobs:
       environment: dev
       gcp_project_name: dev-4ks
       gcp_registry: us-east4-docker.pkg.dev
-      build_number: ${{ env.BUILD_NUMBER }}
+      build_number: $BUILD_NUMBER
