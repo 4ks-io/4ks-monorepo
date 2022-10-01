@@ -24,7 +24,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./apps/${{APP}}/Dockerfile
+          file: ./apps/${{ APP }}/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: false
           # tags: "$REGISTRY/$APP/app:$BUILD_NUMBER", "$REGISTRY/$APP/app:latest"
