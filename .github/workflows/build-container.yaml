@@ -41,7 +41,7 @@ jobs:
       - name: Env Vars
         run: |
           echo $GITHUB_ENV
-          echo "${{ inputs.build_number }}"
+          echo ${{ inputs.build_number }}
       # - name: Pull Latest Alpine Go
       #   run: docker pull golang:1.18-alpine
       # - name: GCP Auth
