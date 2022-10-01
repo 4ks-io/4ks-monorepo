@@ -53,7 +53,6 @@ jobs:
         with:
           project_id: ${{ inputs.gcp_project_name }}
           credentials_json: ${{ secrets.cgp_creds }}
-          export_default_credentials: true
       - name: GCP Cloud SDK
         uses: google-github-actions/setup-gcloud@v0
       - name: GCP Config

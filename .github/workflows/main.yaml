@@ -11,8 +11,8 @@ env:
 jobs:
   dev:
     uses: ./.github/workflows/deploy-env.yaml
-    secrets:
-      cgp_creds: ${{ secrets.GOOGLE_CREDENTIALS }}
     with:
       environment: dev
       build_number: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
+    secrets:
+      cgp_creds: ${{ secrets.GOOGLE_CREDENTIALS }}
