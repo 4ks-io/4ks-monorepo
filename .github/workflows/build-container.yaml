@@ -34,6 +34,9 @@ jobs:
     environment: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@v3
+      - name: PACKAGE_JSON hack
+        run: |
+          ./tools/package_json.sh
       - name: Set Env Vars
         run: |
           TAG_NAME="${{ inputs.gcp_registry }}/${{ inputs.gcp_project_name }}/${{ inputs.app_name }}/app"
