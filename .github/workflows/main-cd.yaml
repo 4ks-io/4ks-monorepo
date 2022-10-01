@@ -6,6 +6,7 @@ on:
 env:
   BUILD_NUMBER: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
   # TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+
 jobs:
   # verbose:
   #   name: verbose
@@ -23,4 +24,4 @@ jobs:
       environment: dev
       gcp_project_name: dev-4ks
       gcp_registry: us-east4-docker.pkg.dev
-      build_number: ${{ env.BUILD_NUMBER }}
+      build_number: $BUILD_NUMBER
