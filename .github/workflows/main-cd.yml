@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Version
+      - name: Set Env Vars
         run: |
           TAGS="${{ env.REGISTRY }}/${{ env.PROJECT }}/${{ env.APP }}/app:${{ env.BUILD_NUMBER }}, ${{ env.REGISTRY }}/${{ env.PROJECT }}/${{ env.APP }}/app:latest"
           echo "TAGS=$TAGS" >> $GITHUB_ENV
@@ -49,3 +49,4 @@ jobs:
       - name: TAGS
         run: |
           docker images
+          docker push "${{ env.REGISTRY }}/${{ env.PROJECT }}/${{ env.APP }}/app:${{ env.BUILD_NUMBER }}"
