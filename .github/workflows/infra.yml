@@ -3,7 +3,7 @@ name: 'INFRA CI'
 on:
   push:
     branches:
-      - main
+      - main-DISABLED
 
 env:
   GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
@@ -32,7 +32,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: terraform workspace select app-dev-us-east
 
       - name: Terraform Validate
         id: validate

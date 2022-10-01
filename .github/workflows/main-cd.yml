@@ -3,14 +3,13 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - '**/VERSION'
 env:
+  TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
   GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
   REGISTRY: us-east4-docker.pkg.dev/dev-4ks
-  VESRION_FILE: apps/api/VERSION
   ENVIRONMENT: dev
   APP: api
+  BUILD_NUMBER: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -18,11 +17,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Increment version
         run: |
-          echo "SHORTSHA=$(echo $GITHUB_SHA | cut -c 1-6)" >> $GITHUB_ENV
-          local VERSION=$(cat $VESRION_FILE | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo $VERSION > $VESRION_FILE
-          echo $VERSION
+          echo $BUILD_NUMBER
       - name: Pull Latest Alpine Go
         run: docker pull golang:1.18-alpine
       - name: Build
@@ -32,23 +27,6 @@ jobs:
           file: ./apps/{{APP}}/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ${{REGISTRY}}/${{APP}}/app:${{SHORTSHA}}, ${{REGISTRY}}/${{APP}}/app:${{VERSION}}, ${{REGISTRY}}/${{APP}}/app:latest
+          tags: ${{REGISTRY}}/${{APP}}/app:${{BUILD_NUMBER}}, ${{REGISTRY}}/${{APP}}/app:latest
           # cache-from: type=registry,ref=4ks/${{APP}}-ci:buildcache
           # cache-to: type=registry,ref=4ks/${{APP}}-ci:buildcache,mode=max
-      - uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
-        with:
-          add: $VESRION_FILE
-          author_name: ci
-          author_email: ci@4ks.io
-          message: 'ci auto inc version '
-          pull: '--rebase --autostash ...'
-          # push: true
-          tag: '${{APP}}-v${{VERSION}} --force'
-          # tag_push: '--force'
-
-          # The way the action should handle pathspec errors from the add and remove commands. Three options are available:
-          # - ignore -> errors will be logged but the step won't fail
-          # - exitImmediately -> the action will stop right away, and the step will fail
-          # - exitAtEnd -> the action will go on, every pathspec error will be logged at the end, the step will fail.
-          # Default: ignore
-          pathspec_error_handling: exitImmediately
