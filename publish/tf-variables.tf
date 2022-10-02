@@ -46,6 +46,11 @@ variable "dns_record_ttl" {
   default     = 60
 }
 
+variable "build_number" {
+  type    = string
+  default = "3168852161.3.1"
+}
+
 
 locals {
   organization = "4ks"
