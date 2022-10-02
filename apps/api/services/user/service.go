@@ -3,7 +3,6 @@ package user
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -67,7 +66,7 @@ func (us userService) GetAllUsers() ([]*models.User, error) {
 			// break the loop or return.
 			return nil, err
 		}
-		fmt.Println(u.Id)
+		// fmt.Println(u.Id)
 		all = append(all, &u)
 	}
 

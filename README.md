@@ -86,6 +86,7 @@ locally.
 ```
 export GOOGLE_CREDENTIALS=$(cat /home/<user>/.dev-4ks-<hash>.json | tr -s '\n' ' ')
 export TF_TOKEN_app_terraform_io=*****
+export TF_WORKSPACE="app-dev-us-east"
 ```
 
 # 4ks Api

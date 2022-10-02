@@ -12,7 +12,7 @@ resource "google_cloud_run_service" "api" {
   template {
     spec {
       containers {
-        image = "us-east4-docker.pkg.dev/dev-4ks/api/app:0.0.3"
+        image = "us-east4-docker.pkg.dev/dev-4ks/api/app:latest"
         ports {
           container_port = 5000
         }

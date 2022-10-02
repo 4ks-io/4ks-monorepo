@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { useSessionContext } from '../../providers/session-context';
 import { useRecipeContext } from '../../providers/recipe-context';
@@ -8,6 +8,7 @@ import { RecipeInstructions } from './RecipeInstructions';
 import { RecipeHeader } from './RecipeHeader';
 import { RecipeControls } from './RecipeControls';
 import { RecipeSocial } from './RecipeSocial';
+import { RecipeDangerZone } from './RecipeDangerZone';
 import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { RecipeSummary } from './RecipeSummary';
 import RecipeLoading from './RecipeLoading';
@@ -17,21 +18,27 @@ import { useNavigate } from 'react-router-dom';
 import { models_Recipe, dtos_UpdateRecipe } from '@4ks/api-fetch';
 
 type RecipeProps = {
-  create?: boolean
-}
+  create?: boolean;
+};
 
-const Recipe = ({create}: RecipeProps) => {
+const Recipe = ({ create }: RecipeProps) => {
   const { isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   const ctx = useSessionContext();
   const rtx = useRecipeContext();
 
+  const [isRecipeContributor, setIsRecipeContributor] = useState(false);
+
+  useEffect(() => {
+    setIsRecipeContributor(
+      (isAuthenticated &&
+        rtx?.recipe.contributors?.map((c) => c.id).includes(ctx.user?.id)) ||
+        false
+    );
+  }, [rtx, ctx.user]);
+
   if (!rtx || !rtx.recipe) {
     return <RecipeLoading />;
-  }
-
-  function debugRecipe() {
-    console.log(rtx?.recipe);
   }
 
   function saveRecipe() {
@@ -56,13 +63,6 @@ const Recipe = ({create}: RecipeProps) => {
         <RecipeControls />
         {isAuthenticated && (
           <PrimaryButton
-            text="Debug"
-            onClick={debugRecipe}
-            allowDisabledFocus
-          />
-        )}
-        {isAuthenticated && (
-          <PrimaryButton
             disabled={false}
             text="Save Changes"
             onClick={saveRecipe}
@@ -73,6 +73,10 @@ const Recipe = ({create}: RecipeProps) => {
         <RecipeIngredients />
         <RecipeInstructions />
         <RecipeSocial />
+
+        {rtx?.recipeId && rtx?.recipeId != '0' && isRecipeContributor && (
+          <RecipeDangerZone />
+        )}
       </Stack>
     </PageLayout>
   );

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Icon } from '@fluentui/react/lib/Icon';
 
 import {
   Stack,
@@ -26,15 +25,12 @@ const Recipes: React.FunctionComponent = () => {
   const ctx = useSessionContext();
   const { isAuthenticated } = useAuth0();
   const navigate = useNavigate();
-
   const [recipes, setRecipes] = useState<models_Recipe[] | undefined>();
-  function refreshRecipes() {
+
+  useEffect(() => {
     ctx.api?.recipes.getRecipes().then((r: models_Recipe[]) => {
       setRecipes(r);
     });
-  }
-  useEffect(() => {
-    refreshRecipes();
   }, [ctx]);
 
   function navigateNewRecipe() {
@@ -76,17 +72,8 @@ const Recipes: React.FunctionComponent = () => {
     <PageLayout>
       <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
         {newRecipeButton()}
-
         {recipes &&
           recipes.map((r) => {
-            const handleDelete = () => {
-              if (r.id) {
-                ctx.api?.recipes
-                  .deleteRecipes(r.id)
-                  .then(() => refreshRecipes());
-              }
-            };
-
             return (
               <Stack.Item
                 key={r.id}
@@ -108,9 +95,6 @@ const Recipes: React.FunctionComponent = () => {
                         </Link>
                       </span>
                     </Stack.Item>
-                    <Stack.Item>
-                      <Icon iconName="Delete" onClick={handleDelete} />
-                    </Stack.Item>
                   </Stack>
                   <Stack
                     horizontal
@@ -120,7 +104,7 @@ const Recipes: React.FunctionComponent = () => {
                   >
                     {PLACEHOLDER_TAGS.map((tag) => {
                       return (
-                        <Stack.Item>
+                        <Stack.Item key={`${r.id}_${tag}`}>
                           <Text
                             style={{
                               fontWeight: 'bold',
@@ -135,7 +119,10 @@ const Recipes: React.FunctionComponent = () => {
                   <Stack horizontal tokens={{ childrenGap: 4 }}>
                     <Stack.Item>Chefs:</Stack.Item>
                     {r.contributors?.map((contributor, idx) => (
-                      <Stack.Item style={{ fontWeight: 'bold' }}>
+                      <Stack.Item
+                        style={{ fontWeight: 'bold' }}
+                        key={`${r.id}_${contributor}`}
+                      >
                         {contributor.displayName}
                         {idx < (r.contributors?.length || 0) - 1 ? ',' : ''}
                       </Stack.Item>
