@@ -32,13 +32,13 @@ func InitTracerProvider() *sdktrace.TracerProvider {
 	var exporter sdktrace.SpanExporter
 	var err error
 
-	exporterType := strings.ToUpper(utils.GetEnvVar("EXPORTER_TYPE", "CONSOLE"))
+	exporterType := strings.ToUpper(utils.GetStrEnvVar("EXPORTER_TYPE", "CONSOLE"))
 	switch exporterType {
 	case "GOOGLE":
 		projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
 		exporter, err = texporter.New(texporter.WithProjectID(projectID))
 	case "JAEGER":
-		jaegerEndpoint := utils.GetEnvVar("OTEL_EXPORTER_JAEGER_ENDPOINT", "http://jaeger:14268/api/traces")
+		jaegerEndpoint := utils.GetStrEnvVar("OTEL_EXPORTER_JAEGER_ENDPOINT", "http://jaeger:14268/api/traces")
 		exporter, err = jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(jaegerEndpoint)))
 	case "CONSOLE":
 		exporter, err = stdout.New(stdout.WithPrettyPrint())

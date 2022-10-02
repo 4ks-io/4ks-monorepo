@@ -33,10 +33,10 @@ https://local.4ks.io/ (must be added to host file)
 gcloud auth configure-docker us-east4-docker.pkg.dev
 
 # build
-docker build . -f ./apps/api/Dockerfile -t 4ks/api:latest
+VERSION=0.0.3
+docker build . --build-arg VERSION=$VERSION -f ./apps/api/Dockerfile -t 4ks/api:latest
 
 # publish
-VERSION=0.0.3
 LATEST=$(docker images | grep 4ks/api | grep latest | head -n1  | awk '{print $3}')
 docker tag $LATEST us-east4-docker.pkg.dev/dev-4ks/api/app:latest
 docker tag $LATEST us-east4-docker.pkg.dev/dev-4ks/api/app:$VERSION
@@ -65,7 +65,7 @@ export BUILD="$LATEST-build"
 export APP="$LATEST"
 docker build --target prd -f apps/web/Dockerfile . -t $PRD
 docker build --cache-from $PRD --target dev -f apps/web/Dockerfile . -t $DEV
-docker build --cache-from $DEV --target build -f apps/web/Dockerfile . -t $BUILD
+docker build --cache-from $DEV --build-arg VERSION=$VERSION --target build -f apps/web/Dockerfile . -t $BUILD
 docker build --cache-from $BUILD --target app -f apps/web/Dockerfile . -t $APP
 
 VERSION=0.0.6

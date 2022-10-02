@@ -23,7 +23,7 @@ RUN pnpm install && rm -rf /app
 
 # stage: build
 FROM dev as build
-RUN apk --no-cache add bash
+RUN apk --no-cache add bash jq
 WORKDIR /app
 COPY ./.npmrc .
 COPY ./nx.json .
@@ -31,10 +31,10 @@ COPY ./pnpm-lock.yaml .
 COPY ./pnpm-workspace.yaml .
 COPY ./tsconfig.base.json .
 COPY ./workspace.json .
-COPY ./libs/ts ./libs/ts
 COPY ./PACKAGE_JSON/ ./
 RUN pnpm install
 
+COPY ./libs/ts ./libs/ts
 COPY ./apps/web/ ./apps/web
 
 # libs (nx??)
@@ -46,12 +46,18 @@ WORKDIR /app/apps/web
 RUN npx vite build
   # output -> /app/apps/web/dist
 
+# configs
+ARG VERSION=0.0.0
+ENV VERSION=$VERSION
+RUN find /app/apps/web/configs -type f -exec sh -c 'V=$2; jq --arg variable "$V" ".VERSION = \"$V\"" $1 > $1.tmp && mv $1.tmp $1' -- {} $VERSION \;
+
 FROM yobasystems/alpine:3.15.4-amd64 as app
 COPY --from=amd64/caddy:2-alpine /usr/bin/caddy /app/caddy
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /app/apps/web/dist/ /app
 COPY --from=build /app/apps/web/Caddyfile /app/Caddyfile
 COPY --from=build /app/apps/web/configs /app/configs
+
 USER appuser
 EXPOSE 5000
 WORKDIR /app

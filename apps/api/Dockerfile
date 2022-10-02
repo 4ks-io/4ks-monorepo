@@ -10,10 +10,15 @@ COPY ./apps/api ./apps/api
 COPY ./libs/go ./libs/go
 RUN CGO_ENABLED=0 go build -o 4ksapi ./apps/api/main.go
 
+ARG VERSION=0.0.0
+ENV VERSION=$VERSION
+RUN echo "${VERSION}" > /VERSION
+
 FROM scratch
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY ./apps/api/casbin /apps/api/casbin
 COPY --from=build /app/4ksapi /4ksapi
+COPY --from=build /VERSION /VERSION
 USER appuser
 CMD ["/4ksapi"]

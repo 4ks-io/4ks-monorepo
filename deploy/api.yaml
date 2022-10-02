@@ -46,6 +46,8 @@ spec:
               value: 'https://local.4ks.io/api'
             - name: EXPORTER_TYPE
               value: JAEGER
+            - name: VERSION_FILE_PATH
+              value: apps/api/VERSION
           ports:
             - containerPort: 5000
           readinessProbe:

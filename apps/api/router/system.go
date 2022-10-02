@@ -1,9 +1,13 @@
 package router
 
 import (
+	"os"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 
 	controllers "4ks/apps/api/controllers"
+	utils "4ks/apps/api/utils"
 )
 
 // GetAPIVersion godoc
@@ -14,14 +18,21 @@ import (
 // @Produce 		json
 // @Success 		200 		 {string} data
 // @Router 			/version [get]
-func GetAPIVersion(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"data": "0.1.0",
-	})
+func GetAPIVersion(version string) func(c *gin.Context) {
+	return func (c *gin.Context) {
+		c.JSON(200, gin.H{
+			"data": version,
+		})
+	}
 }
 
 func SystemRouter(router *gin.Engine) {
+	path := utils.GetStrEnvVar("VERSION_FILE_PATH", "/VERSION")
+	v, err := os.ReadFile(path)
+	if err != nil {
+		panic(err)
+	}
 	systemCtlr := controllers.NewSystemController()
-	router.GET("/version", GetAPIVersion)
+	router.GET("/version", GetAPIVersion(strings.TrimSuffix(string(v), "\n") ))
 	router.GET("/ready", systemCtlr.CheckReadiness)
 }
