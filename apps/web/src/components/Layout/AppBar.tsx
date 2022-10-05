@@ -7,11 +7,11 @@ import { DefaultPalette, IStackStyles, IStackTokens } from '@fluentui/react';
 import { usePageContext } from '../../renderer/usePageContext';
 
 import { useAuth0 } from '@auth0/auth0-react';
-import logo from '../../assets/logo.svg';
+import logoUrl from '../../../assets/logo.svg';
 import { Image, IImageProps } from '@fluentui/react/lib/Image';
 
 const imageProps: Partial<IImageProps> = {
-  src: logo,
+  src: logoUrl,
   styles: (props) => ({
     // root: { border: '1px solid ' + props.theme.palette.neutralSecondary },
     root: {
@@ -72,7 +72,9 @@ const AppBar: React.FunctionComponent = () => {
   }
 
   function handleLogoutOnClick() {
-    logout({ returnTo: pageContext.urlPathname });
+    logout({
+      returnTo: import.meta.env.VITE_BASE_URL + pageContext.urlPathname,
+    });
   }
 
   return (

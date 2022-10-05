@@ -30,6 +30,10 @@ spec:
         - name: 4ks-web
           image: 4ks-web
           env:
+            - name: VITE_APP_VERSION
+              value: 0.0.0
+            - name: VITE_BASE_URL
+              value: 'https://local.4ks.io'
             - name: VITE_AUTH0_AUDIENCE
               value: 'https://local.4ks.io/api'
             - name: VITE_CLIENT_PORT

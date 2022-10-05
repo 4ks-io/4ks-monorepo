@@ -2,9 +2,12 @@ import React from 'react';
 import { Counter } from './Counter';
 import { Stack } from '@fluentui/react';
 
-export { Page };
+export const documentProps = {
+  title: '4ks',
+  description: 'Find 4ks.',
+};
 
-function Page() {
+export function Page() {
   return (
     <>
       <Stack horizontal horizontalAlign="space-between">

@@ -1,9 +1,11 @@
-import React from 'react'
-import './code.css'
+import React from 'react';
 
-export { Page }
+export const documentProps = {
+  title: 'About',
+  description: 'Find 4ks.',
+};
 
-function Page() {
+export function Page() {
   return (
     <>
       <h1>About</h1>
@@ -11,5 +13,5 @@ function Page() {
         Demo using <code>vite-plugin-ssr</code>.
       </p>
     </>
-  )
+  );
 }

@@ -18,27 +18,15 @@ function PageShell({
   children: React.ReactNode;
   pageContext: PageContext;
 }) {
-  console.log(pageContext.urlPathname);
+  console.log(import.meta.env.VITE_APP_VERSION);
   return (
     <React.StrictMode>
       <PageContextProvider pageContext={pageContext}>
-        {/* <Layout>
-          <Sidebar>
-            <Logo />
-            <Link className="navitem" href="/">
-              Home
-            </Link>
-            <Link className="navitem" href="/about">
-              About
-            </Link>
-          </Sidebar>
-          <Content>{children}</Content>
-        </Layout> */}
         <Auth0Provider
           audience={import.meta.env.VITE_AUTH0_AUDIENCE as string}
           domain={import.meta.env.VITE_AUTH0_DOMAIN as string}
           clientId={import.meta.env.VITE_AUTH0_CLIENT_ID as string}
-          redirectUri={'https://local.4ks.io/'}
+          redirectUri={import.meta.env.VITE_BASE_URL + pageContext.urlPathname}
           cacheLocation={'localstorage'}
         >
           <SessionContextProvider>
