@@ -1,17 +1,25 @@
-import React from 'react'
-import logo from './logo.svg'
-import { PageContextProvider } from './usePageContext'
-import type { PageContext } from './types'
-import './PageShell.css'
-import { Link } from './Link'
+import React from 'react';
+import logo from './logo.svg';
+import { PageContextProvider } from './usePageContext';
+import type { PageContext } from './types';
+import './PageShell.css';
+import { Link } from './Link';
+import { Auth0Provider } from '@auth0/auth0-react';
+// import { SessionContextProvider } from './providers/session-context';
 
-export { PageShell }
+export { PageShell };
 
-function PageShell({ children, pageContext }: { children: React.ReactNode; pageContext: PageContext }) {
+function PageShell({
+  children,
+  pageContext,
+}: {
+  children: React.ReactNode;
+  pageContext: PageContext;
+}) {
   return (
     <React.StrictMode>
       <PageContextProvider pageContext={pageContext}>
-        <Layout>
+        {/* <Layout>
           <Sidebar>
             <Logo />
             <Link className="navitem" href="/">
@@ -22,10 +30,20 @@ function PageShell({ children, pageContext }: { children: React.ReactNode; pageC
             </Link>
           </Sidebar>
           <Content>{children}</Content>
-        </Layout>
+        </Layout> */}
+        <Auth0Provider
+          audience={import.meta.env.VITE_AUTH0_AUDIENCE as string}
+          domain={import.meta.env.VITE_AUTH0_DOMAIN as string}
+          clientId={import.meta.env.VITE_AUTH0_CLIENT_ID as string}
+          redirectUri={pageContext.urlPathname}
+          cacheLocation={'localstorage'}
+        >
+          {/* <SessionContextProvider>Something</SessionContextProvider> */}
+          Something
+        </Auth0Provider>
       </PageContextProvider>
     </React.StrictMode>
-  )
+  );
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -34,12 +52,12 @@ function Layout({ children }: { children: React.ReactNode }) {
       style={{
         display: 'flex',
         maxWidth: 900,
-        margin: 'auto'
+        margin: 'auto',
       }}
     >
       {children}
     </div>
-  )
+  );
 }
 
 function Sidebar({ children }: { children: React.ReactNode }) {
@@ -51,12 +69,12 @@ function Sidebar({ children }: { children: React.ReactNode }) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        lineHeight: '1.8em'
+        lineHeight: '1.8em',
       }}
     >
       {children}
     </div>
-  )
+  );
 }
 
 function Content({ children }: { children: React.ReactNode }) {
@@ -66,12 +84,12 @@ function Content({ children }: { children: React.ReactNode }) {
         padding: 20,
         paddingBottom: 50,
         borderLeft: '2px solid #eee',
-        minHeight: '100vh'
+        minHeight: '100vh',
       }}
     >
       {children}
     </div>
-  )
+  );
 }
 
 function Logo() {
@@ -79,12 +97,12 @@ function Logo() {
     <div
       style={{
         marginTop: 20,
-        marginBottom: 10
+        marginBottom: 10,
       }}
     >
       <a href="/">
         <img src={logo} height={64} width={64} alt="logo" />
       </a>
     </div>
-  )
+  );
 }
