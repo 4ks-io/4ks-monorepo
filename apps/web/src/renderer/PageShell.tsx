@@ -5,7 +5,9 @@ import type { PageContext } from './types';
 import './PageShell.css';
 import { Link } from './Link';
 import { Auth0Provider } from '@auth0/auth0-react';
-// import { SessionContextProvider } from './providers/session-context';
+import { SessionContextProvider } from '../providers/session-context';
+import { AppBar } from '../components/Layout';
+import { Stack } from '@fluentui/react/lib/Stack';
 
 export { PageShell };
 
@@ -16,6 +18,7 @@ function PageShell({
   children: React.ReactNode;
   pageContext: PageContext;
 }) {
+  console.log(pageContext.urlPathname);
   return (
     <React.StrictMode>
       <PageContextProvider pageContext={pageContext}>
@@ -35,11 +38,15 @@ function PageShell({
           audience={import.meta.env.VITE_AUTH0_AUDIENCE as string}
           domain={import.meta.env.VITE_AUTH0_DOMAIN as string}
           clientId={import.meta.env.VITE_AUTH0_CLIENT_ID as string}
-          redirectUri={pageContext.urlPathname}
+          redirectUri={'https://local.4ks.io/'}
           cacheLocation={'localstorage'}
         >
-          {/* <SessionContextProvider>Something</SessionContextProvider> */}
-          Something
+          <SessionContextProvider>
+            <Stack verticalAlign="space-between">
+              <AppBar />
+              {children}
+            </Stack>
+          </SessionContextProvider>
         </Auth0Provider>
       </PageContextProvider>
     </React.StrictMode>

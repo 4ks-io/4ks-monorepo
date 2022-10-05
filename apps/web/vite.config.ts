@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [tsconfigPaths(), react(), ssr()],
   server: {
     host: '0.0.0.0',
-    port: 5735,
+    port: 3000,
     hmr: {
       path: '/hmr',
       clientPort: 443,

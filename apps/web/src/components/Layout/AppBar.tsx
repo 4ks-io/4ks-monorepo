@@ -6,46 +6,52 @@ import { TextField } from '@fluentui/react/lib/TextField';
 import { DefaultPalette, IStackStyles, IStackTokens } from '@fluentui/react';
 import { usePageContext } from '../../renderer/usePageContext';
 
-// import { useAuth0 } from '@auth0/auth0-react';
-// import logo from '../../logo.svg';
-// import { Image, IImageProps } from '@fluentui/react/lib/Image';
+import { useAuth0 } from '@auth0/auth0-react';
+import logo from '../../assets/logo.svg';
+import { Image, IImageProps } from '@fluentui/react/lib/Image';
 
-// const imageProps: Partial<IImageProps> = {
-//   src: logo,
-//   styles: (props) => ({
-//     // root: { border: '1px solid ' + props.theme.palette.neutralSecondary },
-//     root: {
-//       paddingLeft: '4px',
-//       paddingRight: '4px',
-//       // borderBottom: '1px solid rgb(200, 200, 200)',
-//     },
-//   }),
-// };
+const imageProps: Partial<IImageProps> = {
+  src: logo,
+  styles: (props) => ({
+    // root: { border: '1px solid ' + props.theme.palette.neutralSecondary },
+    root: {
+      paddingLeft: '4px',
+      paddingRight: '4px',
+      // borderBottom: '1px solid rgb(200, 200, 200)',
+    },
+  }),
+};
 
 const AppBar: React.FunctionComponent = () => {
-  // const pageContext = usePageContext();
-  // const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
-  // // const navigate = useNavigate();
+  const pageContext = usePageContext();
+  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+  // const navigate = useNavigate();
 
-  // const [showSearchInput, setShowSearchInput] = useState(true);
-  // const [showRecipesLink, setShowRecipesLink] = useState(true);
+  const [showSearchInput, setShowSearchInput] = useState(true);
+  const [showRecipesLink, setShowRecipesLink] = useState(true);
 
-  // useEffect(() => {
-  //   const pathname = pageContext.urlPathname;
-  //   if (pathname == '/') {
-  //     setShowSearchInput(false);
-  //   } else if (pathname == '/recipes') {
-  //     setShowRecipesLink(false);
-  //   }
-  // }, [pageContext.urlPathname]);
+  useEffect(() => {
+    const pathname = pageContext.urlPathname;
+    if (pathname == '/') {
+      setShowSearchInput(false);
+    } else if (pathname == '/recipes') {
+      setShowRecipesLink(false);
+    }
+  }, [pageContext.urlPathname]);
 
-  // function handleLandingClick() {
-  //   // navigate('/', { replace: true });
-  // }
+  function handleLandingClick() {
+    // navigate('/', { replace: true });
+    if (window) {
+      window.location.href = '/';
+    }
+  }
 
-  // function handleRecipesClick() {
-  //   // navigate('/recipes', { replace: true });
-  // }
+  function handleRecipesClick() {
+    // navigate('/recipes', { replace: true });
+    if (window) {
+      window.location.href = '/recipes';
+    }
+  }
 
   const stackStyles: IStackStyles = {
     root: {
@@ -61,18 +67,17 @@ const AppBar: React.FunctionComponent = () => {
     justifyContent: 'center',
   };
 
-  // function handleLoginOnClick() {
-  //   loginWithRedirect();
-  // }
+  function handleLoginOnClick() {
+    loginWithRedirect();
+  }
 
-  // function handleLogoutOnClick() {
-  //   logout({ returnTo: window.location.origin });
-  // }
+  function handleLogoutOnClick() {
+    logout({ returnTo: pageContext.urlPathname });
+  }
 
   return (
     <Stack horizontal horizontalAlign="space-between" styles={stackStyles}>
-      AppBar
-      {/* <span style={itemStyles}>
+      <span style={itemStyles}>
         {showSearchInput && (
           <>
             <Image {...imageProps} alt="4ks.io" height={36} />
@@ -92,7 +97,7 @@ const AppBar: React.FunctionComponent = () => {
         ) : (
           <ActionButton onClick={handleLoginOnClick}>Login</ActionButton>
         )}
-      </span> */}
+      </span>
     </Stack>
   );
 };
