@@ -8,7 +8,7 @@ import {
   IStackItemStyles,
 } from '@fluentui/react/lib/Stack';
 import { DefaultButton } from '@fluentui/react/lib/Button';
-import { useNavigate, Link } from 'react-router-dom';
+// import { useNavigate, Link } from 'react-router-dom';
 
 import { useSessionContext } from '../../providers/session-context';
 import { models_Recipe } from '@4ks/api-fetch';
@@ -24,7 +24,7 @@ const PLACEHOLDER_TAGS = ['vegan', 'beef', 'poultry', 'meat'];
 const Recipes: React.FunctionComponent = () => {
   const ctx = useSessionContext();
   const { isAuthenticated } = useAuth0();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [recipes, setRecipes] = useState<models_Recipe[] | undefined>();
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const Recipes: React.FunctionComponent = () => {
   }, [ctx]);
 
   function navigateNewRecipe() {
-    navigate('/recipes/0', { replace: true });
+    // navigate('/recipes/0', { replace: true });
   }
 
   const stackStyles: IStackStyles = {
@@ -88,11 +88,11 @@ const Recipes: React.FunctionComponent = () => {
                   <Stack horizontal>
                     <Stack.Item align="auto" styles={stackItemStyles}>
                       <span>
-                        <Link to={`/recipes/${r.id}`}>
+                        {/* <Link to={`/recipes/${r.id}`}>
                           <Text variant="xLarge" style={{ fontWeight: 'bold' }}>
                             {r.currentRevision?.name || `missing title`}
                           </Text>
-                        </Link>
+                        </Link> */}
                       </span>
                     </Stack.Item>
                   </Stack>

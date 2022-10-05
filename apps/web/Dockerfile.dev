@@ -17,6 +17,6 @@ COPY ./ .
 
 RUN npx nx run ts-api-fetch:build-fetch
 
-CMD [ "pnpm", "start", "web" ]
+CMD [ "npx", "vite" ]
 
 

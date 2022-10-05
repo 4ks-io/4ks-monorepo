@@ -5,20 +5,19 @@ import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { useSessionContext } from '../../providers/session-context';
 import { useRecipeContext } from '../../providers/recipe-context';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 interface RecipeDangerZoneProps {}
 
 export function RecipeDangerZone({}: RecipeDangerZoneProps) {
   const ctx = useSessionContext();
   const rtx = useRecipeContext();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleDelete = () => {
     if (rtx?.recipeId) {
-      ctx.api?.recipes
-        .deleteRecipes(rtx.recipeId)
-        .then(() => navigate(`/recipes`, { replace: true }));
+      ctx.api?.recipes.deleteRecipes(rtx.recipeId);
+      // .then(() => navigate(`/recipes`, { replace: true }));
     }
   };
 

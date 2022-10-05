@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { ActionButton } from '@fluentui/react/lib/Button';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { TextField } from '@fluentui/react/lib/TextField';
@@ -23,7 +23,7 @@ const imageProps: Partial<IImageProps> = {
 
 const AppBar: React.FunctionComponent = () => {
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [showSearchInput, setShowSearchInput] = useState(true);
   const [showRecipesLink, setShowRecipesLink] = useState(true);
@@ -38,11 +38,11 @@ const AppBar: React.FunctionComponent = () => {
   }, [window.location.pathname]);
 
   function handleLandingClick() {
-    navigate('/', { replace: true });
+    // navigate('/', { replace: true });
   }
 
   function handleRecipesClick() {
-    navigate('/recipes', { replace: true });
+    // navigate('/recipes', { replace: true });
   }
 
   const stackStyles: IStackStyles = {

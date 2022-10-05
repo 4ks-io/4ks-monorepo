@@ -1,23 +1,22 @@
 import React from 'react';
 import App from './App';
 import { Auth0Provider } from '@auth0/auth0-react';
+import { usePageContext } from '../renderer/usePageContext';
+import { Landing, Recipes, Recipe } from './pages';
 
-type AppConfig = {
-  AUTH0_AUDIENCE: string
-  AUTH0_DOMAIN: string
-  AUTH0_CLIENT_ID: string
-}
+function AppAuth() {
+  const pageContext = usePageContext();
 
-function AppAuth({ appConfig }: {appConfig: AppConfig}) {
   return (
     <Auth0Provider
-      audience={appConfig.AUTH0_AUDIENCE}
-      domain={appConfig.AUTH0_DOMAIN}
-      clientId={appConfig.AUTH0_CLIENT_ID}
-      redirectUri={window.location.origin}
+      audience={import.meta.env.VITE_AUTH0_AUDIENCE as string}
+      domain={import.meta.env.VITE_AUTH0_DOMAIN as string}
+      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID as string}
+      redirectUri={pageContext.urlPathname}
       cacheLocation={'localstorage'}
     >
-      <App />
+      {/* <App /> */}
+      <Landing />
     </Auth0Provider>
   );
 }
