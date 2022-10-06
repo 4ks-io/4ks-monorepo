@@ -7,9 +7,10 @@ import type { PageContextServer } from './types';
 
 export { render };
 // See https://vite-plugin-ssr.com/data-fetching
-export const passToClient = ['pageProps', 'urlPathname'];
+export const passToClient = ['pageProps', 'urlPathname', 'urlOriginal'];
 
 async function render(pageContext: PageContextServer) {
+  console.log(`render ${pageContext.urlOriginal}`);
   const { Page, pageProps } = pageContext;
   const pageHtml = ReactDOMServer.renderToString(
     <PageShell pageContext={pageContext}>

@@ -10,17 +10,19 @@ import { useAuth0 } from '@auth0/auth0-react';
 import logoUrl from '../../../assets/logo.svg';
 import { Image, IImageProps } from '@fluentui/react/lib/Image';
 
-const imageProps: Partial<IImageProps> = {
-  src: logoUrl,
-  styles: (props) => ({
-    // root: { border: '1px solid ' + props.theme.palette.neutralSecondary },
-    root: {
-      paddingLeft: '4px',
-      paddingRight: '4px',
-      // borderBottom: '1px solid rgb(200, 200, 200)',
-    },
-  }),
-};
+// const imageProps: Partial<IImageProps> = {
+//   src: logoUrl,
+//   styles: (props) => ({
+//     maxHeight: '32px',
+//     // root: { border: '1px solid ' + props.theme.palette.neutralSecondary },
+//     root: {
+//       paddingLeft: '4px',
+//       paddingRight: '4px',
+
+//       // borderBottom: '1px solid rgb(200, 200, 200)',
+//     },
+//   }),
+// };
 
 const AppBar: React.FunctionComponent = () => {
   const pageContext = usePageContext();
@@ -31,13 +33,13 @@ const AppBar: React.FunctionComponent = () => {
   const [showRecipesLink, setShowRecipesLink] = useState(true);
 
   useEffect(() => {
-    const pathname = pageContext.urlPathname;
-    if (pathname == '/') {
+    console.log(pageContext.urlOriginal);
+    if (pageContext.urlOriginal == '/') {
       setShowSearchInput(false);
-    } else if (pathname == '/recipes') {
+    } else if (pageContext.urlOriginal == '/recipes') {
       setShowRecipesLink(false);
     }
-  }, [pageContext.urlPathname]);
+  }, [pageContext.urlOriginal]);
 
   function handleLandingClick() {
     // navigate('/', { replace: true });
@@ -82,13 +84,13 @@ const AppBar: React.FunctionComponent = () => {
       <span style={itemStyles}>
         {showSearchInput && (
           <>
-            <Image {...imageProps} alt="4ks.io" height={36} />
+            <Image src={logoUrl} alt="4ks.io" height={36} />
             <TextField placeholder="Search" />
           </>
         )}
       </span>
       <span style={itemStyles}>
-        {showSearchInput && (
+        {pageContext.urlOriginal != '/' && (
           <ActionButton onClick={handleLandingClick}>Search</ActionButton>
         )}
         {showRecipesLink && (
