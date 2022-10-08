@@ -33,13 +33,12 @@ const AppBar: React.FunctionComponent = () => {
   const [showRecipesLink, setShowRecipesLink] = useState(true);
 
   useEffect(() => {
-    console.log(pageContext.urlOriginal);
-    if (pageContext.urlOriginal == '/') {
+    if (pageContext.urlPathname == '/') {
       setShowSearchInput(false);
-    } else if (pageContext.urlOriginal == '/recipes') {
+    } else if (pageContext.urlPathname == '/recipes') {
       setShowRecipesLink(false);
     }
-  }, [pageContext.urlOriginal]);
+  }, [pageContext.urlPathname]);
 
   function handleLandingClick() {
     // navigate('/', { replace: true });
@@ -90,7 +89,7 @@ const AppBar: React.FunctionComponent = () => {
         )}
       </span>
       <span style={itemStyles}>
-        {pageContext.urlOriginal != '/' && (
+        {pageContext.urlPathname != '/' && (
           <ActionButton onClick={handleLandingClick}>Search</ActionButton>
         )}
         {showRecipesLink && (

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Stack } from '@fluentui/react/lib/Stack';
-import { useSessionContext } from '../../providers/session-context';
-import { useRecipeContext } from '../../providers/recipe-context';
-import { PageLayout } from '../Layout';
+import { useSessionContext } from '../../../providers/session-context';
+import { useRecipeContext } from '../../../providers/recipe-context';
 import { RecipeIngredients } from './RecipeIngredients';
 import { RecipeInstructions } from './RecipeInstructions';
 import { RecipeHeader } from './RecipeHeader';
@@ -17,11 +16,16 @@ import { useAuth0 } from '@auth0/auth0-react';
 // import { useNavigate } from 'react-router-dom';
 import { models_Recipe, dtos_UpdateRecipe } from '@4ks/api-fetch';
 
-type RecipeProps = {
-  create?: boolean;
+// type RecipeProps = {
+//   create?: boolean;
+// };
+
+export const documentProps = {
+  title: '4ks',
+  description: '{{Insert Recipe Name?}}',
 };
 
-const Recipe = ({ create }: RecipeProps) => {
+export function Page() {
   const { isAuthenticated } = useAuth0();
   // const navigate = useNavigate();
   const ctx = useSessionContext();
@@ -42,44 +46,40 @@ const Recipe = ({ create }: RecipeProps) => {
   }
 
   function saveRecipe() {
-    if (create) {
-      ctx?.api?.recipes
-        .postRecipes(rtx?.recipe.currentRevision as dtos_UpdateRecipe)
-        .then((data: models_Recipe) =>
-          // navigate(`/recipes/${data.id}`, { replace: true })
-        );
-    } else {
-      ctx?.api?.recipes.patchRecipes(
-        `${rtx?.recipeId}`,
-        rtx?.recipe.currentRevision as dtos_UpdateRecipe
-      );
-    }
+    // if (create) {
+    //   ctx?.api?.recipes
+    //     .postRecipes(rtx?.recipe.currentRevision as dtos_UpdateRecipe)
+    //     .then((data: models_Recipe) =>
+    //       // navigate(`/recipes/${data.id}`, { replace: true })
+    //     );
+    // } else {
+    //   ctx?.api?.recipes.patchRecipes(
+    //     `${rtx?.recipeId}`,
+    //     rtx?.recipe.currentRevision as dtos_UpdateRecipe
+    //   );
+    // }
   }
 
   return (
-    <PageLayout>
-      <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
-        <RecipeHeader />
-        <RecipeControls />
-        {isAuthenticated && (
-          <PrimaryButton
-            disabled={false}
-            text="Save Changes"
-            onClick={saveRecipe}
-            allowDisabledFocus
-          />
-        )}
-        <RecipeSummary />
-        <RecipeIngredients />
-        <RecipeInstructions />
-        <RecipeSocial />
+    <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
+      <RecipeHeader />
+      <RecipeControls />
+      {isAuthenticated && (
+        <PrimaryButton
+          disabled={false}
+          text="Save Changes"
+          onClick={saveRecipe}
+          allowDisabledFocus
+        />
+      )}
+      <RecipeSummary />
+      <RecipeIngredients />
+      <RecipeInstructions />
+      <RecipeSocial />
 
-        {rtx?.recipeId && rtx?.recipeId != '0' && isRecipeContributor && (
-          <RecipeDangerZone />
-        )}
-      </Stack>
-    </PageLayout>
+      {rtx?.recipeId && rtx?.recipeId != '0' && isRecipeContributor && (
+        <RecipeDangerZone />
+      )}
+    </Stack>
   );
-};
-
-export default Recipe;
+}
