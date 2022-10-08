@@ -4,7 +4,7 @@ import logoUrl from '../../../assets/logo.svg';
 
 export const documentProps = {
   title: '4ks',
-  description: 'Find 4ks.',
+  description: '4ks Home',
 };
 
 export function Page() {

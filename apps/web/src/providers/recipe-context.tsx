@@ -20,8 +20,8 @@ export function RecipeContextProvider({
   children,
 }: RecipeContextProviderProps) {
   const { isAuthenticated } = useAuth0();
-  const pageContext = usePageContext();
   const ctx = useSessionContext();
+  const ptx = usePageContext();
 
   const [state, dispatch] = useReducer(recipeContextReducer, initialState);
   const NO_RECIPE_ID = '0';
@@ -48,13 +48,13 @@ export function RecipeContextProvider({
   }
 
   useEffect(() => {
-    const recipeId = pageContext?.routeParams?.productId;
+    const recipeId = ptx?.routeParams?.recipeId;
     recipeId != NO_RECIPE_ID &&
       dispatch({
         type: RecipeContextAction.SET_ID,
         payload: recipeId,
       });
-  }, [window.location.pathname]);
+  }, [ptx?.routeParams?.recipeId]);
 
   useEffect(() => {
     state.recipeId != NO_RECIPE_ID &&

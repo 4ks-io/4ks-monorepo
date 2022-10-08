@@ -10,19 +10,19 @@ import { useAuth0 } from '@auth0/auth0-react';
 import logoUrl from '../../../assets/logo.svg';
 import { Image, IImageProps } from '@fluentui/react/lib/Image';
 
-// const imageProps: Partial<IImageProps> = {
-//   src: logoUrl,
-//   styles: (props) => ({
-//     maxHeight: '32px',
-//     // root: { border: '1px solid ' + props.theme.palette.neutralSecondary },
-//     root: {
-//       paddingLeft: '4px',
-//       paddingRight: '4px',
+const imageProps: Partial<IImageProps> = {
+  src: logoUrl,
+  styles: (props) => ({
+    maxHeight: '32px',
+    // root: { border: '1px solid ' + props.theme.palette.neutralSecondary },
+    root: {
+      paddingLeft: '4px',
+      paddingRight: '4px',
 
-//       // borderBottom: '1px solid rgb(200, 200, 200)',
-//     },
-//   }),
-// };
+      // borderBottom: '1px solid rgb(200, 200, 200)',
+    },
+  }),
+};
 
 const AppBar: React.FunctionComponent = () => {
   const pageContext = usePageContext();
@@ -83,7 +83,7 @@ const AppBar: React.FunctionComponent = () => {
       <span style={itemStyles}>
         {showSearchInput && (
           <>
-            <Image src={logoUrl} alt="4ks.io" height={36} />
+            <Image {...imageProps} alt="4ks.io" height={36} />
             <TextField placeholder="Search" />
           </>
         )}

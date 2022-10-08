@@ -24,7 +24,6 @@ export function RecipeHeader(props: RecipeHeaderProps) {
 
   useEffect(() => {
     if (rtx?.recipeId == '0') {
-      console.log(rtx.recipeId);
       setIsNew(true);
       setTitle(`INSERT TITLE HERE`);
     }

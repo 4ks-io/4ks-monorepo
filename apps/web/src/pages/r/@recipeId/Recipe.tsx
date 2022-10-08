@@ -16,16 +16,11 @@ import { useAuth0 } from '@auth0/auth0-react';
 // import { useNavigate } from 'react-router-dom';
 import { models_Recipe, dtos_UpdateRecipe } from '@4ks/api-fetch';
 
-// type RecipeProps = {
-//   create?: boolean;
-// };
-
-export const documentProps = {
-  title: '4ks',
-  description: '{{Insert Recipe Name?}}',
+type RecipeProps = {
+  create?: boolean;
 };
 
-export function Page() {
+const Recipe = ({ create }: RecipeProps) => {
   const { isAuthenticated } = useAuth0();
   // const navigate = useNavigate();
   const ctx = useSessionContext();
@@ -61,25 +56,29 @@ export function Page() {
   }
 
   return (
-    <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
-      <RecipeHeader />
-      <RecipeControls />
-      {isAuthenticated && (
-        <PrimaryButton
-          disabled={false}
-          text="Save Changes"
-          onClick={saveRecipe}
-          allowDisabledFocus
-        />
-      )}
-      <RecipeSummary />
-      <RecipeIngredients />
-      <RecipeInstructions />
-      <RecipeSocial />
+    <>
+      <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
+        <RecipeHeader />
+        <RecipeControls />
+        {isAuthenticated && (
+          <PrimaryButton
+            disabled={false}
+            text="Save Changes"
+            onClick={saveRecipe}
+            allowDisabledFocus
+          />
+        )}
+        <RecipeSummary />
+        <RecipeIngredients />
+        <RecipeInstructions />
+        <RecipeSocial />
 
-      {rtx?.recipeId && rtx?.recipeId != '0' && isRecipeContributor && (
-        <RecipeDangerZone />
-      )}
-    </Stack>
+        {rtx?.recipeId && rtx?.recipeId != '0' && isRecipeContributor && (
+          <RecipeDangerZone />
+        )}
+      </Stack>
+    </>
   );
-}
+};
+
+export default Recipe;

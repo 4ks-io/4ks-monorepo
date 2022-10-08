@@ -1,18 +1,22 @@
-import React from 'react'
-import { hydrateRoot } from 'react-dom/client'
-import { PageShell } from './PageShell'
-import type { PageContextClient } from './types'
+import React from 'react';
+import { hydrateRoot } from 'react-dom/client';
+import { PageShell } from './PageShell';
+import type { PageContextClient } from './types';
+import { initializeIcons } from '@fluentui/react/lib/Icons';
 
-export { render }
+// https://github.com/microsoft/fluentui/wiki/Using-icons
+// initializeIcons();
+
+export { render };
 
 async function render(pageContext: PageContextClient) {
-  const { Page, pageProps } = pageContext
+  const { Page, pageProps } = pageContext;
   hydrateRoot(
     document.getElementById('page-view')!,
     <PageShell pageContext={pageContext}>
       <Page {...pageProps} />
     </PageShell>
-  )
+  );
 }
 
 /* To enable Client-side Routing:
