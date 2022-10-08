@@ -57,6 +57,7 @@ COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /app/apps/web/dist/ /app
 COPY --from=build /app/apps/web/Caddyfile /app/Caddyfile
 COPY --from=build /app/apps/web/configs /app/configs
+RUN mkdir /home/appuser && chmod 777 /home/appuser
 
 USER appuser
 EXPOSE 5000

@@ -9,8 +9,14 @@
 		file_server
 	}
 
+	handle /assets/* {
+		root * /app
+		file_server
+	}
+
 	handle {
 		root * /app
+		rewrite * /
 		file_server
 	}
 }

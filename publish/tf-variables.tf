@@ -46,11 +46,15 @@ variable "dns_record_ttl" {
   default     = 60
 }
 
-variable "build_number" {
+variable "api_build_number" {
   type    = string
   default = "3168852161.3.1"
 }
 
+variable "web_build_number" {
+  type    = string
+  default = "0.0.7"
+}
 
 locals {
   organization = "4ks"
