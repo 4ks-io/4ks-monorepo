@@ -7,6 +7,7 @@ WORKDIR /app
 
 # Copy all dependency related files and install dependencies
 COPY package.json ./
+COPY .npmrc ./
 COPY pnpm* ./
 COPY apps/web/package.json ./apps/web/
 COPY libs/ts/api-fetch/package.json ./libs/ts/api-fetch/
@@ -15,8 +16,11 @@ RUN pnpm install
 
 COPY ./ .
 
-RUN npx nx run ts-api-fetch:build-fetch
+# RUN npx nx run ts-api-fetch:build-fetch
+WORKDIR /app/libs/ts/api-fetch
+RUN pnpm run codegen && pnpm run build-fetch
 
-CMD [ "pnpm", "start", "web" ]
+WORKDIR /app/apps/web
+CMD [ "npx", "vite" ]
 
 

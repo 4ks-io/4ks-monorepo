@@ -1,48 +1,57 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { ActionButton } from '@fluentui/react/lib/Button';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { TextField } from '@fluentui/react/lib/TextField';
 import { DefaultPalette, IStackStyles, IStackTokens } from '@fluentui/react';
+import { usePageContext } from '../../renderer/usePageContext';
 
 import { useAuth0 } from '@auth0/auth0-react';
-import logo from '../../logo.svg';
+import logoUrl from '../../../assets/logo.svg';
 import { Image, IImageProps } from '@fluentui/react/lib/Image';
 
 const imageProps: Partial<IImageProps> = {
-  src: logo,
+  src: logoUrl,
   styles: (props) => ({
+    maxHeight: '32px',
     // root: { border: '1px solid ' + props.theme.palette.neutralSecondary },
     root: {
       paddingLeft: '4px',
       paddingRight: '4px',
+
       // borderBottom: '1px solid rgb(200, 200, 200)',
     },
   }),
 };
 
 const AppBar: React.FunctionComponent = () => {
+  const pageContext = usePageContext();
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [showSearchInput, setShowSearchInput] = useState(true);
   const [showRecipesLink, setShowRecipesLink] = useState(true);
 
   useEffect(() => {
-    const pathname = window.location.pathname;
-    if (pathname == '/') {
+    if (pageContext.urlPathname == '/') {
       setShowSearchInput(false);
-    } else if (pathname == '/recipes') {
+    } else if (pageContext.urlPathname == '/recipes') {
       setShowRecipesLink(false);
     }
-  }, [window.location.pathname]);
+  }, [pageContext.urlPathname]);
 
   function handleLandingClick() {
-    navigate('/', { replace: true });
+    // navigate('/', { replace: true });
+    if (window) {
+      window.location.href = '/';
+    }
   }
 
   function handleRecipesClick() {
-    navigate('/recipes', { replace: true });
+    // navigate('/recipes', { replace: true });
+    if (window) {
+      window.location.href = '/rs';
+    }
   }
 
   const stackStyles: IStackStyles = {
@@ -64,7 +73,9 @@ const AppBar: React.FunctionComponent = () => {
   }
 
   function handleLogoutOnClick() {
-    logout({ returnTo: window.location.origin });
+    logout({
+      returnTo: import.meta.env.VITE_BASE_URL + pageContext.urlPathname,
+    });
   }
 
   return (
@@ -78,7 +89,7 @@ const AppBar: React.FunctionComponent = () => {
         )}
       </span>
       <span style={itemStyles}>
-        {showSearchInput && (
+        {pageContext.urlPathname != '/' && (
           <ActionButton onClick={handleLandingClick}>Search</ActionButton>
         )}
         {showRecipesLink && (

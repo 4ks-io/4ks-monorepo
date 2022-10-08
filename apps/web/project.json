@@ -9,7 +9,7 @@
       "executor": "nx-plugin-vite:serve",
       "options": {
         "configFile": "apps/web/vite.config.ts",
-        "port": 3000,
+        "port": 5735,
         "host": false,
         "https": false
       }

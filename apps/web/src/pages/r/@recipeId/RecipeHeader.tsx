@@ -4,8 +4,8 @@ import { TextField } from '@fluentui/react/lib/TextField';
 import { PrimaryButton } from '@fluentui/react/lib/Button';
 import { TooltipHost } from '@fluentui/react/lib/Tooltip';
 import { Label } from '@fluentui/react/lib/Label';
-import { useRecipeContext } from '../../providers/recipe-context';
-import { useSessionContext } from '../../providers/session-context';
+import { useRecipeContext } from '../../../providers/recipe-context';
+import { useSessionContext } from '../../../providers/session-context';
 
 interface RecipeHeaderProps {}
 
@@ -24,7 +24,6 @@ export function RecipeHeader(props: RecipeHeaderProps) {
 
   useEffect(() => {
     if (rtx?.recipeId == '0') {
-      console.log(rtx.recipeId);
       setIsNew(true);
       setTitle(`INSERT TITLE HERE`);
     }

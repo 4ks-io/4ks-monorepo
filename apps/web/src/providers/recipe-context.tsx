@@ -8,6 +8,7 @@ import {
   RecipeContextAction,
 } from './recipe-context-reducer';
 import { models_Recipe } from '../../../../libs/ts/api-fetch/dist';
+import { usePageContext } from '../renderer/usePageContext';
 
 const RecipeContext = React.createContext<IRecipeContext | undefined>(
   undefined
@@ -20,6 +21,7 @@ export function RecipeContextProvider({
 }: RecipeContextProviderProps) {
   const { isAuthenticated } = useAuth0();
   const ctx = useSessionContext();
+  const ptx = usePageContext();
 
   const [state, dispatch] = useReducer(recipeContextReducer, initialState);
   const NO_RECIPE_ID = '0';
@@ -46,13 +48,13 @@ export function RecipeContextProvider({
   }
 
   useEffect(() => {
-    const recipeId = window.location.href.split('/').pop() as string;
+    const recipeId = ptx?.routeParams?.recipeId;
     recipeId != NO_RECIPE_ID &&
       dispatch({
         type: RecipeContextAction.SET_ID,
         payload: recipeId,
       });
-  }, [window.location.pathname]);
+  }, [ptx?.routeParams?.recipeId]);
 
   useEffect(() => {
     state.recipeId != NO_RECIPE_ID &&

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Stack } from '@fluentui/react/lib/Stack';
-import { useSessionContext } from '../../providers/session-context';
-import { useRecipeContext } from '../../providers/recipe-context';
-import { PageLayout } from '../Layout';
+import { useSessionContext } from '../../../providers/session-context';
+import { useRecipeContext } from '../../../providers/recipe-context';
 import { RecipeIngredients } from './RecipeIngredients';
 import { RecipeInstructions } from './RecipeInstructions';
 import { RecipeHeader } from './RecipeHeader';
@@ -14,7 +13,7 @@ import { RecipeSummary } from './RecipeSummary';
 import RecipeLoading from './RecipeLoading';
 import { PrimaryButton } from '@fluentui/react/lib/Button';
 import { useAuth0 } from '@auth0/auth0-react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { models_Recipe, dtos_UpdateRecipe } from '@4ks/api-fetch';
 
 type RecipeProps = {
@@ -23,7 +22,7 @@ type RecipeProps = {
 
 const Recipe = ({ create }: RecipeProps) => {
   const { isAuthenticated } = useAuth0();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const ctx = useSessionContext();
   const rtx = useRecipeContext();
 
@@ -42,22 +41,22 @@ const Recipe = ({ create }: RecipeProps) => {
   }
 
   function saveRecipe() {
-    if (create) {
-      ctx?.api?.recipes
-        .postRecipes(rtx?.recipe.currentRevision as dtos_UpdateRecipe)
-        .then((data: models_Recipe) =>
-          navigate(`/recipes/${data.id}`, { replace: true })
-        );
-    } else {
-      ctx?.api?.recipes.patchRecipes(
-        `${rtx?.recipeId}`,
-        rtx?.recipe.currentRevision as dtos_UpdateRecipe
-      );
-    }
+    // if (create) {
+    //   ctx?.api?.recipes
+    //     .postRecipes(rtx?.recipe.currentRevision as dtos_UpdateRecipe)
+    //     .then((data: models_Recipe) =>
+    //       // navigate(`/recipes/${data.id}`, { replace: true })
+    //     );
+    // } else {
+    //   ctx?.api?.recipes.patchRecipes(
+    //     `${rtx?.recipeId}`,
+    //     rtx?.recipe.currentRevision as dtos_UpdateRecipe
+    //   );
+    // }
   }
 
   return (
-    <PageLayout>
+    <>
       <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
         <RecipeHeader />
         <RecipeControls />
@@ -78,7 +77,7 @@ const Recipe = ({ create }: RecipeProps) => {
           <RecipeDangerZone />
         )}
       </Stack>
-    </PageLayout>
+    </>
   );
 };
 

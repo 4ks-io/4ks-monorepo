@@ -30,6 +30,10 @@ spec:
         - name: 4ks-web
           image: 4ks-web
           env:
+            - name: VITE_APP_VERSION
+              value: 0.0.0
+            - name: VITE_BASE_URL
+              value: 'https://local.4ks.io'
             - name: VITE_AUTH0_AUDIENCE
               value: 'https://local.4ks.io/api'
             - name: VITE_CLIENT_PORT
@@ -38,6 +42,8 @@ spec:
               value: 4ks-dev.us.auth0.com
             - name: VITE_AUTH0_CLIENT_ID
               value: eM5Zyyfp6coLg3zORMFsZEnQmpqxBjHd
+            - name: DEBUG
+              value: vps:routing
           ports:
             - containerPort: 3000
           # readinessProbe:
