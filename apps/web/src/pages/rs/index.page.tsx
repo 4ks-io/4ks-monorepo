@@ -28,18 +28,14 @@ export const documentProps = {
 export function Page() {
   const ctx = useSessionContext();
   const { isAuthenticated } = useAuth0();
-  // const navigate = useNavigate();
   const [recipes, setRecipes] = useState<models_Recipe[] | undefined>();
 
   useEffect(() => {
-    ctx.api?.recipes.getRecipes().then((r: models_Recipe[]) => {
-      console.log(r);
-      setRecipes(r);
-    });
+    ctx.api?.recipes.getRecipes().then((r: models_Recipe[]) => setRecipes(r));
   }, [ctx]);
 
   function navigateNewRecipe() {
-    // navigate('/recipes/0', { replace: true });
+    window.location.href = '/r/0';
   }
 
   const stackStyles: IStackStyles = {
@@ -92,7 +88,7 @@ export function Page() {
                 <Stack horizontal>
                   <Stack.Item align="auto" styles={stackItemStyles}>
                     <span>
-                      <a href={`/recipes/${r.id}`}>
+                      <a href={`/r/${r.id}`}>
                         <Text variant="xLarge" style={{ fontWeight: 'bold' }}>
                           {r.currentRevision?.name || `missing title`}
                         </Text>

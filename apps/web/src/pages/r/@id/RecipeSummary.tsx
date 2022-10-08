@@ -6,7 +6,7 @@ import {
   IStackItemStyles,
 } from '@fluentui/react/lib/Stack';
 import { DefaultPalette } from '@fluentui/react';
-import { formatDate } from '../../utils/dateTime';
+import { formatDate } from '../../../utils/dateTime';
 import { useRecipeContext } from '../../../providers/recipe-context';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { stackStyles } from './styles';

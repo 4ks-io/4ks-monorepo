@@ -50,7 +50,7 @@ const AppBar: React.FunctionComponent = () => {
   function handleRecipesClick() {
     // navigate('/recipes', { replace: true });
     if (window) {
-      window.location.href = '/recipes';
+      window.location.href = '/rs';
     }
   }
 
