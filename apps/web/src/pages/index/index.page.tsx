@@ -9,7 +9,6 @@ export const documentProps = {
 
 export function Page() {
   return (
-    // <PageLayout>
     <div
       style={{
         height: '80vh',
@@ -39,6 +38,5 @@ export function Page() {
         />
       </Stack>
     </div>
-    // </PageLayout>
   );
 }

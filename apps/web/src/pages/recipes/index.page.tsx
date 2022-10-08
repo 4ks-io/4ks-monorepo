@@ -10,7 +10,7 @@ import {
 import { DefaultButton } from '@fluentui/react/lib/Button';
 // import { useNavigate, Link } from 'react-router-dom';
 
-import { useSessionContext } from '../../../providers/session-context';
+import { useSessionContext } from '../../providers/session-context';
 import { models_Recipe } from '@4ks/api-fetch';
 import { Text } from '@fluentui/react';
 
@@ -33,6 +33,7 @@ export function Page() {
 
   useEffect(() => {
     ctx.api?.recipes.getRecipes().then((r: models_Recipe[]) => {
+      console.log(r);
       setRecipes(r);
     });
   }, [ctx]);
@@ -91,11 +92,11 @@ export function Page() {
                 <Stack horizontal>
                   <Stack.Item align="auto" styles={stackItemStyles}>
                     <span>
-                      {/* <Link to={`/recipes/${r.id}`}>
-                          <Text variant="xLarge" style={{ fontWeight: 'bold' }}>
-                            {r.currentRevision?.name || `missing title`}
-                          </Text>
-                        </Link> */}
+                      <a href={`/recipes/${r.id}`}>
+                        <Text variant="xLarge" style={{ fontWeight: 'bold' }}>
+                          {r.currentRevision?.name || `missing title`}
+                        </Text>
+                      </a>
                     </span>
                   </Stack.Item>
                 </Stack>
