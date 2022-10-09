@@ -1,10 +1,7 @@
 import React from 'react';
 import { SessionContextProvider } from './providers/session-context';
-import { initializeIcons } from '@fluentui/react/lib/Icons';
 import Router from './Router';
 import { Auth0Provider } from '@auth0/auth0-react';
-
-initializeIcons();
 
 type AppConfig = {
   AUTH0_AUDIENCE: string;

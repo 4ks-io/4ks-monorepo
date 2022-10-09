@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import { initializeIcons } from '@fluentui/react/lib/Icons';
+
+initializeIcons();
 
 (async () => {
   let appConfig = {
