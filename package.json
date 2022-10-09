@@ -9,7 +9,7 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test",    
+    "test": "nx test",
     "swag:api": "swag init --parseDependency --parseInternal --parseDepth 1 -d apps/api/ -o apps/api/docs",
     "swag:web": "pnpm build ts-api-fetch",
     "swag": "npm-run-all swag:api swag:web"
@@ -43,7 +43,6 @@
   "dependencies": {
     "@4ks/api-fetch": "workspace:*",
     "@auth0/auth0-react": "^1.10.1",
-    "@fluentui/font-icons-mdl2": "^8.4.4",
     "@fluentui/react": "^8.74.0",
     "@fluentui/react-hooks": "^8.6.0",
     "date-fns": "2.28.0",
