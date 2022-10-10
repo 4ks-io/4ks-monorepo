@@ -53,7 +53,7 @@ variable "api_build_number" {
 
 variable "web_build_number" {
   type    = string
-  default = "0.0.7"
+  default = "3221232807.11.1"
 }
 
 # variable "tls_key" {
