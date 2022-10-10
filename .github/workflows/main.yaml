@@ -23,6 +23,6 @@ jobs:
       tls_key: ${{ secrets.CERT_DEV_KEY }}
       tls_crt: ${{ secrets.CERT_DEV_CRT }}
     with:
-      environment: ${{ inputs.environment }}
+      environment: dev
       # build_number: ${{ inputs.build_number }}
       build_number: 3221232807.11.1
