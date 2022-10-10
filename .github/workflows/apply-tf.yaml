@@ -1,0 +1,39 @@
+name: 'Apply TF'
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: "dev | tst | prd"
+        required: true
+        type: string
+      build_number:
+        description: "build number"
+        required: true
+        type: string
+    secrets:
+      cgp_creds:
+        required: true
+      tf_token:
+        required: true
+env:
+  TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.tf_token }}
+  GOOGLE_CREDENTIALS: ${{ secrets.cgp_creds }}
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    name: 'Terraform'
+    defaults:
+      run:
+        working-directory: publish
+    steps:
+      # - name: Checkout
+      #   uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply --auto-approve
+        
