@@ -34,7 +34,7 @@ const Recipes: React.FunctionComponent = () => {
   }, [ctx]);
 
   function navigateNewRecipe() {
-    navigate('/recipes/0', { replace: true });
+    navigate('/r/0', { replace: true });
   }
 
   const stackStyles: IStackStyles = {
@@ -88,7 +88,7 @@ const Recipes: React.FunctionComponent = () => {
                   <Stack horizontal>
                     <Stack.Item align="auto" styles={stackItemStyles}>
                       <span>
-                        <Link to={`/recipes/${r.id}`}>
+                        <Link to={`/r/${r.id}`}>
                           <Text variant="xLarge" style={{ fontWeight: 'bold' }}>
                             {r.currentRevision?.name || `missing title`}
                           </Text>

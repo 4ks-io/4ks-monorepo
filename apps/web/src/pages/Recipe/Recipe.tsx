@@ -46,7 +46,7 @@ const Recipe = ({ create }: RecipeProps) => {
       ctx?.api?.recipes
         .postRecipes(rtx?.recipe.currentRevision as dtos_UpdateRecipe)
         .then((data: models_Recipe) =>
-          navigate(`/recipes/${data.id}`, { replace: true })
+          navigate(`/r/${data.id}`, { replace: true })
         );
     } else {
       ctx?.api?.recipes.patchRecipes(

@@ -1,6 +1,15 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Landing, Recipes, Recipe, Login, Logout, PageNotFound } from './pages';
+import {
+  Landing,
+  Login,
+  Logout,
+  PageNotFound,
+  Profile,
+  Recipes,
+  Recipe,
+  Settings,
+} from './pages';
 import { RecipeContextProvider } from './providers/recipe-context';
 
 const Router = () => {
@@ -10,9 +19,9 @@ const Router = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
-        <Route path="/recipes" element={<Recipes />} />
+        <Route path="/r" element={<Recipes />} />
         <Route
-          path="/recipes/0"
+          path="/r/0"
           element={
             <RecipeContextProvider>
               <Recipe create />
@@ -20,14 +29,15 @@ const Router = () => {
           }
         />
         <Route
-          path="/recipes/:id"
+          path="/r/:recipeId"
           element={
             <RecipeContextProvider>
               <Recipe />
             </RecipeContextProvider>
           }
         />
-        <Route path="/me" element={<Recipes />} />
+        <Route path="/me" element={<Settings />} />
+        <Route path="/:uid" element={<Profile />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
