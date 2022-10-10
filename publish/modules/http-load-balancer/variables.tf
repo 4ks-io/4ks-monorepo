@@ -34,6 +34,16 @@ variable "ssl_certificates" {
   default     = []
 }
 
+variable "tls_key" {
+  type = string
+    description = "TLS Key"
+}
+
+variable "tls_crt" {
+  type = string
+    description = "TLS Cert"
+}
+
 variable "enable_http" {
   description = "Set to true to enable plain http. Note that disabling http does not force SSL and/or redirect HTTP traffic. See https://issuetracker.google.com/issues/35904733"
   type        = bool
