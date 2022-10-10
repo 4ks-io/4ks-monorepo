@@ -44,6 +44,5 @@ jobs:
       gcp_api_token: ${{ secrets.gcp_api_token }}
       tf_api_token: ${{ secrets.tf_api_token }}
     with:
-      app_name: web
       environment: ${{ inputs.environment }}
       build_number: ${{ inputs.build_number }}
