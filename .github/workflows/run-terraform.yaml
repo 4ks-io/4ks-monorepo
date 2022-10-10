@@ -31,13 +31,13 @@ jobs:
       - uses: actions/checkout@v3
       - name: select workspace
         run: |
-          echo "GOOGLE_CREDENTIALS=${{ secrets.gcp_api_token }}"
+          echo "GOOGLE_CREDENTIALS=${{ secrets.gcp_api_token }}" >> $GITHUB_ENV
           echo "TF_WORKSPACE=app-${{ inputs.environment }}-us-east" >> $GITHUB_ENV
-          echo "TF_stage=${{ inputs.environment }}"
-          echo "TF_tls_key=${{ secrets.tls_key }}"
-          echo "TF_tls_crt=${{ secrets.tls_crt }}"
-          echo "TF_api_build_number=${{ inputs.build_number }}"
-          echo "TF_web_build_number=${{ inputs.build_number }}"
+          echo "TF_stage=${{ inputs.environment }}" >> $GITHUB_ENV
+          echo "TF_tls_key=${{ secrets.tls_key }}" >> $GITHUB_ENV
+          echo "TF_tls_crt=${{ secrets.tls_crt }}" >> $GITHUB_ENV
+          echo "TF_api_build_number=${{ inputs.build_number }}" >> $GITHUB_ENV
+          echo "TF_web_build_number=${{ inputs.build_number }}" >> $GITHUB_ENV
       - name: verbose
         run: |
           env

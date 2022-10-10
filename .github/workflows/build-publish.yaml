@@ -1,0 +1,38 @@
+name: Deploy to Environment
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'dev | tst | prd'
+        required: true
+        type: string
+      build_number:
+        description: 'build number'
+        required: true
+        type: string
+    secrets:
+      gcp_api_token:
+        required: true
+
+jobs:
+  api:
+    uses: ./.github/workflows/build-container.yaml
+    secrets:
+      gcp_api_token: ${{ secrets.gcp_api_token }}
+    with:
+      app_name: api
+      environment: ${{ inputs.environment }}
+      gcp_project_name: ${{ inputs.environment }}-4ks
+      gcp_registry: us-east4-docker.pkg.dev
+      build_number: ${{ inputs.build_number }}
+  web:
+    uses: ./.github/workflows/build-container.yaml
+    secrets:
+      gcp_api_token: ${{ secrets.gcp_api_token }}
+    with:
+      app_name: web
+      environment: ${{ inputs.environment }}
+      gcp_project_name: ${{ inputs.environment }}-4ks
+      gcp_registry: us-east4-docker.pkg.dev
+      build_number: ${{ inputs.build_number }}
