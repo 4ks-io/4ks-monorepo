@@ -16,10 +16,10 @@ on:
         required: true
       tf_api_token:
         required: true
-      tls_key:
-        required: true
-      tls_crt:
-        required: true
+      # tls_key:
+      #   required: true
+      # tls_crt:
+      #   required: true
 
 jobs:
   build:
@@ -90,7 +90,7 @@ jobs:
           TF_WORKSPACE: app-${{ inputs.environment }}-us-east
           GOOGLE_CREDENTIALS: ${{ secrets.gcp_api_token }}
           TF_stage: ${{ secrets.gcp_api_token }}
-          TF_tls_key: ${{ secrets.tls_key }}
-          TF_tls_crt: ${{ secrets.tls_crt }}
+          # TF_tls_key: ${{ secrets.tls_key }}
+          # TF_tls_crt: ${{ secrets.tls_crt }}
           TF_api_build_number: ${{ inputs.build_number }}
           TF_web_build_number: ${{ inputs.build_number }}

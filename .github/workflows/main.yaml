@@ -20,8 +20,8 @@ jobs:
     secrets:
       gcp_api_token: ${{ secrets.GOOGLE_CREDENTIALS }}
       tf_api_token: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
-      tls_key: ${{ secrets.CERT_DEV_KEY }}
-      tls_crt: ${{ secrets.CERT_DEV_CRT }}
+      # tls_key: ${{ secrets.CERT_DEV_KEY }}
+      # tls_crt: ${{ secrets.CERT_DEV_CRT }}
     with:
       environment: dev
       # build_number: ${{ inputs.build_number }}
