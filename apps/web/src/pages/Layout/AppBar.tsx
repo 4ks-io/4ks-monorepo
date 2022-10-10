@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useConst, useBoolean } from '@fluentui/react-hooks';
+import { useConst } from '@fluentui/react-hooks';
 import { ActionButton } from '@fluentui/react/lib/Button';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { TextField } from '@fluentui/react/lib/TextField';
 import { DefaultPalette, IStackStyles, IStackTokens } from '@fluentui/react';
-import { Icon } from '@fluentui/react/lib/Icon';
 import { useAuth0 } from '@auth0/auth0-react';
 import logo from '../../logo.svg';
-import { Callout } from '@fluentui/react/lib/Callout';
 import { Image, IImageProps } from '@fluentui/react/lib/Image';
-// import { Panel } from '@fluentui/react/lib/Panel';
-import { DefaultButton } from '@fluentui/react/lib/Button';
+import { IconButton } from '@fluentui/react/lib/Button';
 import {
   ContextualMenuItemType,
   IContextualMenuProps,
-  IContextualMenuItemProps,
 } from '@fluentui/react/lib/ContextualMenu';
+import { useSessionContext } from '../../providers/session-context';
 
 const imageProps: Partial<IImageProps> = {
   src: logo,
@@ -30,11 +27,10 @@ const imageProps: Partial<IImageProps> = {
   }),
 };
 
-const AppBar: React.FunctionComponent = () => {
+const AppBar = () => {
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const navigate = useNavigate();
-  const [isOpen, { setTrue: openPanel, setFalse: dismissPanel }] =
-    useBoolean(false);
+  const ctx = useSessionContext();
 
   const [showSearchInput, setShowSearchInput] = useState(true);
   const [showRecipesLink, setShowRecipesLink] = useState(true);
@@ -44,7 +40,7 @@ const AppBar: React.FunctionComponent = () => {
     items: [
       {
         key: 'profile',
-        onClick: handleSettingsClick,
+        onClick: handleProfileClick,
         iconProps: { iconName: 'contact' },
         text: 'Profile',
       },
@@ -57,6 +53,7 @@ const AppBar: React.FunctionComponent = () => {
       { key: 'divider_1', itemType: ContextualMenuItemType.Divider },
       {
         key: 'logout',
+        onClick: handleLogoutOnClick,
         iconProps: { iconName: 'StatusCircleErrorX' },
         text: 'Logout',
       },
@@ -87,8 +84,13 @@ const AppBar: React.FunctionComponent = () => {
   function handleLogoutOnClick() {
     logout({ returnTo: window.location.origin + '/logout' });
   }
+
   function handleSettingsClick() {
     navigate('/me', { replace: true });
+  }
+
+  function handleProfileClick() {
+    navigate(`/${ctx.user?.username}` || '', { replace: true });
   }
 
   const stackStyles: IStackStyles = {
@@ -128,21 +130,12 @@ const AppBar: React.FunctionComponent = () => {
           <ActionButton onClick={handleRecipesClick}>Recipes</ActionButton>
         )}
         {isAuthenticated ? (
-          <>
-            {/* <Panel
-              headerText="Options"
-              isOpen={isOpen}
-              onDismiss={dismissPanel}
-              // You MUST provide this prop! Otherwise screen readers will just say "button" with no label.
-              closeButtonAriaLabel="Close"
-            >
-              <DefaultButton onClick={handleSettingsClick} text="Settings" />
-              <DefaultButton onClick={handleLogoutOnClick} text="Logout" />
-            </Panel> */}
-            <DefaultButton menuProps={menuProps}>
-              <Icon iconName="Contact" onClick={openPanel} />
-            </DefaultButton>
-          </>
+          <IconButton
+            menuProps={menuProps}
+            iconProps={{ iconName: 'Contact' }}
+            title="Options"
+            ariaLabel="Options"
+          />
         ) : (
           <ActionButton onClick={handleLoginOnClick}>Login</ActionButton>
         )}

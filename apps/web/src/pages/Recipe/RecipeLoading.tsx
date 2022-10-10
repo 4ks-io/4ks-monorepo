@@ -2,7 +2,7 @@ import React from 'react';
 import { Stack, IStackProps } from '@fluentui/react/lib/Stack';
 import { Spinner, SpinnerSize } from '@fluentui/react/lib/Spinner';
 
-const RecipeLoading: React.FunctionComponent = () => {
+const RecipeLoading = () => {
   const rowProps: IStackProps = { horizontal: true, verticalAlign: 'center' };
   const tokens = {
     sectionStack: {

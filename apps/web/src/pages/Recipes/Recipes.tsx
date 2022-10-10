@@ -21,7 +21,7 @@ const stackTokens: IStackTokens = {
 
 const PLACEHOLDER_TAGS = ['vegan', 'beef', 'poultry', 'meat'];
 
-const Recipes: React.FunctionComponent = () => {
+const Recipes = () => {
   const ctx = useSessionContext();
   const { isAuthenticated } = useAuth0();
   const navigate = useNavigate();

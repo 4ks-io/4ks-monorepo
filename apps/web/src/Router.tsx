@@ -1,16 +1,17 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { RecipeContextProvider } from './providers/recipe-context';
 import {
   Landing,
   Login,
   Logout,
+  NewUser,
   PageNotFound,
   Profile,
   Recipes,
   Recipe,
   Settings,
 } from './pages';
-import { RecipeContextProvider } from './providers/recipe-context';
 
 const Router = () => {
   return (
@@ -36,8 +37,9 @@ const Router = () => {
             </RecipeContextProvider>
           }
         />
+        <Route path="/new" element={<NewUser />} />
         <Route path="/me" element={<Settings />} />
-        <Route path="/:uid" element={<Profile />} />
+        <Route path="/:username" element={<Profile />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
