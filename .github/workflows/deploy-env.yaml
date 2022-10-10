@@ -18,26 +18,26 @@ on:
         required: true
 
 jobs:
-  api:
-    uses: ./.github/workflows/build-container.yaml
-    secrets:
-      gcp_api_token: ${{ secrets.gcp_api_token }}
-    with:
-      app_name: api
-      environment: ${{ inputs.environment }}
-      gcp_project_name: ${{ inputs.environment }}-4ks
-      gcp_registry: us-east4-docker.pkg.dev
-      build_number: ${{ inputs.build_number }}
-  web:
-    uses: ./.github/workflows/build-container.yaml
-    secrets:
-      gcp_api_token: ${{ secrets.gcp_api_token }}
-    with:
-      app_name: web
-      environment: ${{ inputs.environment }}
-      gcp_project_name: ${{ inputs.environment }}-4ks
-      gcp_registry: us-east4-docker.pkg.dev
-      build_number: ${{ inputs.build_number }}
+  # api:
+  #   uses: ./.github/workflows/build-container.yaml
+  #   secrets:
+  #     gcp_api_token: ${{ secrets.gcp_api_token }}
+  #   with:
+  #     app_name: api
+  #     environment: ${{ inputs.environment }}
+  #     gcp_project_name: ${{ inputs.environment }}-4ks
+  #     gcp_registry: us-east4-docker.pkg.dev
+  #     build_number: ${{ inputs.build_number }}
+  # web:
+  #   uses: ./.github/workflows/build-container.yaml
+  #   secrets:
+  #     gcp_api_token: ${{ secrets.gcp_api_token }}
+  #   with:
+  #     app_name: web
+  #     environment: ${{ inputs.environment }}
+  #     gcp_project_name: ${{ inputs.environment }}-4ks
+  #     gcp_registry: us-east4-docker.pkg.dev
+  #     build_number: ${{ inputs.build_number }}
   tf:
     uses: ./.github/workflows/run-terraform.yaml
     secrets:
