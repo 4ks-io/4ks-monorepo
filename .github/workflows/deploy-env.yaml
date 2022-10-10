@@ -36,3 +36,10 @@ jobs:
       gcp_project_name: ${{ inputs.environment }}-4ks
       gcp_registry: us-east4-docker.pkg.dev
       build_number: ${{ inputs.build_number }}
+
+
+
+
+
+
+  

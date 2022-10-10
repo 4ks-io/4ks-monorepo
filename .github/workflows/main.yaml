@@ -1,5 +1,6 @@
 name: main cd
 on:
+  workflow_call:
   push:
     branches:
       - main
@@ -9,10 +10,21 @@ env:
   # TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
 
 jobs:
-  dev:
+  build:
     uses: ./.github/workflows/deploy-env.yaml
     with:
       environment: dev
       build_number: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
     secrets:
       cgp_creds: ${{ secrets.GOOGLE_CREDENTIALS }}
+  dev:
+    # Check github action dependencies
+    uses: ./.github/workflows/apply-tf.yaml 
+    with:
+      environment: dev
+      #Check if we can use environment variables
+      build_number: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
+      
+    secrets:
+      cgp_creds: ${{ secrets.GOOGLE_CREDENTIALS }}
+      tf_token : ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
