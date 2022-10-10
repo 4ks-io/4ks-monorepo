@@ -48,7 +48,7 @@ variable "dns_record_ttl" {
 
 variable "api_build_number" {
   type    = string
-  default = "3168852161.3.1"
+  default = "3221232807.11.1"
 }
 
 variable "web_build_number" {
