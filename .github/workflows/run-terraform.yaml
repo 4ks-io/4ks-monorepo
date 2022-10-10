@@ -30,6 +30,9 @@ jobs:
       # checkout
       - uses: actions/checkout@v3
       # tf setup
+      - name: verbose
+        run: |
+          echo "app-${{ inputs.environment }}-us-east"
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
