@@ -56,6 +56,16 @@ variable "web_build_number" {
   default = "0.0.7"
 }
 
+variable "tls_key" {
+  type        = string
+  description = "TLS Key"
+}
+
+variable "tls_crt" {
+  type        = string
+  description = "TLS Cert"
+}
+
 locals {
   organization = "4ks"
   project      = "${var.stage}-${local.organization}"

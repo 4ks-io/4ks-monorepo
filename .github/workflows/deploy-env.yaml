@@ -16,6 +16,10 @@ on:
         required: true
       tf_api_token:
         required: true
+      tls_key:
+        required: true
+      tls_crt:
+        required: true
 
 jobs:
   # api:
@@ -43,6 +47,8 @@ jobs:
     secrets:
       gcp_api_token: ${{ secrets.gcp_api_token }}
       tf_api_token: ${{ secrets.tf_api_token }}
+      tls_key: ${{ secrets.tls_key }}
+      tls_crt: ${{ secrets.tls_crt }}
     with:
       environment: ${{ inputs.environment }}
       build_number: ${{ inputs.build_number }}
