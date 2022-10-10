@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SessionContextProvider } from './providers/session-context';
 import Router from './Router';
 import { Auth0Provider } from '@auth0/auth0-react';
@@ -15,7 +15,7 @@ function App({ appConfig }: { appConfig: AppConfig }) {
       audience={appConfig.AUTH0_AUDIENCE}
       domain={appConfig.AUTH0_DOMAIN}
       clientId={appConfig.AUTH0_CLIENT_ID}
-      redirectUri={window.location.origin}
+      redirectUri={window.location.origin + `/login`}
       cacheLocation={'localstorage'}
     >
       <SessionContextProvider>

@@ -64,7 +64,7 @@ const AppBar: React.FunctionComponent = () => {
   }
 
   function handleLogoutOnClick() {
-    logout({ returnTo: window.location.origin });
+    logout({ returnTo: window.location.origin + '/logout' });
   }
 
   return (
