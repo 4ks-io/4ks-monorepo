@@ -6,7 +6,6 @@ on:
 env:
   # can this not be passed to the jobs below??
   BUILD_NUMBER: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
-  # TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
 
 jobs:
   dev:
@@ -15,4 +14,5 @@ jobs:
       environment: dev
       build_number: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
     secrets:
-      cgp_creds: ${{ secrets.GOOGLE_CREDENTIALS }}
+      gcp_api_token: ${{ secrets.GOOGLE_CREDENTIALS }}
+      tf_api_token: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
