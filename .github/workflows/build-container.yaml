@@ -59,7 +59,7 @@ jobs:
         with:
           context: .
           build-args: |
-            "VERSION=${{ inputs.build_number }}"
+            VERSION=${{ inputs.build_number }}
           file: ./apps/${{ inputs.app_name }}/Dockerfile
           push: true
           tags: |

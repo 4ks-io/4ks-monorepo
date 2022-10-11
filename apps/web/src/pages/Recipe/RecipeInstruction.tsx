@@ -24,12 +24,14 @@ export function RecipeInstruction({
 }: RecipeInstructionProps) {
   const [active, setActive] = useState(false);
   const [text, setText] = useState(data.text);
+  const [isMultiline, setIsMultiline] = useState(false);
 
   function handleTextChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue?: string | undefined
   ) {
     setText(newValue);
+    setIsMultiline((newValue && newValue?.length > 36) || true);
   }
 
   function handleDelete() {
@@ -62,6 +64,8 @@ export function RecipeInstruction({
         <Stack.Item grow={2}>
           <TextField
             borderless
+            autoAdjustHeight
+            multiline={isMultiline}
             readOnly={false}
             value={text}
             onFocus={handleFocus}

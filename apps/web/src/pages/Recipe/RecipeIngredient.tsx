@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { TextField } from '@fluentui/react/lib/TextField';
 import { models_Ingredient } from '@4ks/api-fetch';
@@ -25,6 +25,16 @@ export function RecipeIngredient({
   const [quantity, setQuantity] = useState(data.quantity);
   const [name, setName] = useState(data.name);
   const [active, setActive] = useState(false);
+  const [isNameMultiline, setIsNameMultiline] = useState(false);
+  const [isQuantityMultiline, setIsQuantityMultiline] = useState(false);
+
+  useEffect(() => {
+    setIsNameMultiline((name && name?.length >= 24) || false);
+  }, [name]);
+
+  useEffect(() => {
+    setIsQuantityMultiline((quantity && quantity?.length >= 8) || false);
+  }, [quantity]);
 
   function handleQuantityChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -71,6 +81,8 @@ export function RecipeIngredient({
           <TextField
             style={{ width: '96px' }}
             borderless
+            multiline={isQuantityMultiline}
+            autoAdjustHeight
             readOnly={false}
             value={quantity}
             onFocus={handleFocus}
@@ -81,6 +93,8 @@ export function RecipeIngredient({
         <Stack.Item grow={8}>
           <TextField
             borderless
+            multiline={isNameMultiline}
+            autoAdjustHeight
             value={name}
             onFocus={handleFocus}
             onBlur={handleBlur}
