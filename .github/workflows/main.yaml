@@ -25,4 +25,4 @@ jobs:
     with:
       environment: dev
       # build_number: ${{ inputs.build_number }}
-      build_number: 3221232807.11.1
+      build_number: $BUILD_NUMBER

@@ -20,18 +20,15 @@ on:
       #   required: true
       # tls_crt:
       #   required: true
-env:
-  TF_stage: ${{ inputs.environment }}
-  TF_api_build_number: '3221232807.11.1'
-  TF_web_build_number: '3221232807.11.1'
-  TF_WORKSPACE: app-${{ inputs.environment }}-us-east
-  GOOGLE_CREDENTIALS: ${{ secrets.gcp_api_token }}
 
 jobs:
   build:
     name: Setup Terraform
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    defaults:
+      run:
+        working-directory: ./publish
     steps:
       # checkout
       - uses: actions/checkout@v3
@@ -40,20 +37,18 @@ jobs:
         run: |
           echo "app-${{ inputs.environment }}-us-east"
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
       # - name: Terraform Format
       #   id: fmt
       #   run: terraform fmt -check
       - name: Terraform Init
-        working-directory: ./publish
         id: init
         run: terraform init
         env:
           TF_WORKSPACE: app-${{ inputs.environment }}-us-east
       - name: Terraform Plan
-        working-directory: ./publish
         id: plan
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
@@ -66,7 +61,6 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            cd ./publish/
             const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
             #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
             #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
@@ -89,14 +83,12 @@ jobs:
               body: output
             })
       - name: Terraform Apply
-        working-directory: ./publish
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
         env:
-          TF_stage: ${{ inputs.environment }}
-          TF_api_build_number: '3221232807.11.1'
-          TF_web_build_number: '3221232807.11.1'
-          TF_WORKSPACE: app-${{ inputs.environment }}-us-east
+          TF_VAR_stage: ${{ inputs.environment }}
+          TF_VAR_api_build_number: ${{ inputs.build_number }}
+          TF_VAR_web_build_number: ${{ inputs.build_number }}
           GOOGLE_CREDENTIALS: ${{ secrets.gcp_api_token }}
           # TF_tls_key: ${{ secrets.tls_key }}
           # TF_tls_crt: ${{ secrets.tls_crt }}
