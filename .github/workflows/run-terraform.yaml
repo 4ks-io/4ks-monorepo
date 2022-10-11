@@ -92,5 +92,5 @@ jobs:
           TF_stage: ${{ secrets.gcp_api_token }}
           # TF_tls_key: ${{ secrets.tls_key }}
           # TF_tls_crt: ${{ secrets.tls_crt }}
-          TF_api_build_number: 3221232807.11.1
-          TF_web_build_number: 3221232807.11.1
+          TF_api_build_number: '3221232807.11.1'
+          TF_web_build_number: '3221232807.11.1'
