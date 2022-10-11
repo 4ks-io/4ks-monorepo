@@ -3,18 +3,16 @@ on:
   push:
     branches:
       - main
-env:
-  # can this not be passed to the jobs below??
-  BUILD_NUMBER: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
 
 jobs:
-  # dev_build_publish:
-  #   uses: ./.github/workflows/build-publish.yaml
-  #   with:
-  #     environment: dev
-  #     build_number: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
-  #   secrets:
-  #     gcp_api_token: ${{ secrets.GOOGLE_CREDENTIALS }}
+  dev_build:
+    uses: ./.github/workflows/build-publish.yaml
+    with:
+      environment: dev
+      build_number: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
+    secrets:
+      gcp_api_token: ${{ secrets.GOOGLE_CREDENTIALS }}
+
   dev_tf:
     uses: ./.github/workflows/run-terraform.yaml
     secrets:
@@ -24,5 +22,4 @@ jobs:
       # tls_crt: ${{ secrets.CERT_DEV_CRT }}
     with:
       environment: dev
-      # build_number: ${{ inputs.build_number }}
-      build_number: ${{ env.BUILD_NUMBER }}
+      build_number: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
