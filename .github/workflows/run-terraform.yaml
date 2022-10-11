@@ -20,6 +20,12 @@ on:
       #   required: true
       # tls_crt:
       #   required: true
+env:
+  TF_stage: ${{ inputs.environment }}
+  TF_api_build_number: '3221232807.11.1'
+  TF_web_build_number: '3221232807.11.1'
+  TF_WORKSPACE: app-${{ inputs.environment }}-us-east
+  GOOGLE_CREDENTIALS: ${{ secrets.gcp_api_token }}
 
 jobs:
   build:
