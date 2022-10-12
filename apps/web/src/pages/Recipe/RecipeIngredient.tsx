@@ -74,6 +74,7 @@ export function RecipeIngredient({
         </Stack.Item>
         <Stack.Item grow={2}>
           <TextField
+            className="contentResizer"
             style={{ width: '96px' }}
             borderless
             multiline={isQuantityMultiline}
@@ -88,6 +89,7 @@ export function RecipeIngredient({
         </Stack.Item>
         <Stack.Item grow={8}>
           <TextField
+            className="contentResizer"
             borderless
             multiline={isNameMultiline}
             autoAdjustHeight

@@ -16,6 +16,7 @@ import { PrimaryButton } from '@fluentui/react/lib/Button';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 import { models_Recipe, dtos_UpdateRecipe } from '@4ks/api-fetch';
+import FontSizeChanger from 'react-font-size-changer';
 
 type RecipeProps = {
   create?: boolean;
@@ -58,7 +59,11 @@ const Recipe = ({ create }: RecipeProps) => {
 
   return (
     <PageLayout>
-      <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
+      <Stack
+        styles={stackStyles}
+        tokens={itemAlignmentsStackTokens}
+        id="target"
+      >
         <RecipeHeader />
         <RecipeControls />
         {isAuthenticated && (
@@ -73,6 +78,29 @@ const Recipe = ({ create }: RecipeProps) => {
         <RecipeIngredients />
         <RecipeInstructions />
         <RecipeSocial />
+
+        <FontSizeChanger
+          targets={['#target .contentResizer']}
+          // onChange={(element: any, newValue: any, oldValue: any) => {
+          //   console.log(element, newValue, oldValue);
+          // }}
+          options={{
+            stepSize: 2,
+            range: 3,
+          }}
+          customButtons={{
+            up: <span style={{ fontSize: '36px' }}>A</span>,
+            down: <span style={{ fontSize: '20px' }}>A</span>,
+            style: {
+              backgroundColor: 'red',
+              color: 'white',
+              WebkitBoxSizing: 'border-box',
+              WebkitBorderRadius: '5px',
+              width: '60px',
+            },
+            buttonsMargin: 2,
+          }}
+        />
 
         {rtx?.recipeId && rtx?.recipeId != '0' && isRecipeContributor && (
           <RecipeDangerZone />

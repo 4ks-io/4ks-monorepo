@@ -64,6 +64,7 @@ export function RecipeInstruction({
         </Stack.Item>
         <Stack.Item grow={2}>
           <TextField
+            className="contentResizer"
             borderless
             autoAdjustHeight
             resizable={false}
