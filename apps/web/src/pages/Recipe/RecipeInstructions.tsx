@@ -31,6 +31,10 @@ export function RecipeInstructions() {
     setInstructions(i);
   }
 
+  function onDragStart() {
+    console.log('drag start: change color!');
+  }
+
   const onDragEnd = handleListDragEnd<models_Instruction>(
     instructions,
     refreshInstructions
@@ -55,7 +59,7 @@ export function RecipeInstructions() {
     <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
       <SectionTitle value={'Instructions'} />
 
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <Droppable droppableId="instructions">
           {(provided) => (
             <ul

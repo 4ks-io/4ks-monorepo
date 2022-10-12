@@ -22,32 +22,27 @@ export function RecipeIngredient({
   handleIngredientDelete,
   handleIngredientChange,
 }: RecipeIngredientProps) {
-  const [quantity, setQuantity] = useState(data.quantity);
-  const [name, setName] = useState(data.name);
+  const [quantity, setQuantity] = useState(data.quantity || '');
+  const [name, setName] = useState(data.name || '');
   const [active, setActive] = useState(false);
   const [isNameMultiline, setIsNameMultiline] = useState(false);
   const [isQuantityMultiline, setIsQuantityMultiline] = useState(false);
 
-  useEffect(() => {
-    setIsNameMultiline((name && name?.length >= 24) || false);
-  }, [name]);
-
-  useEffect(() => {
-    setIsQuantityMultiline((quantity && quantity?.length >= 8) || false);
-  }, [quantity]);
+  useEffect(() => setIsNameMultiline(name?.length >= 24), [name]);
+  useEffect(() => setIsQuantityMultiline(quantity?.length >= 8), [quantity]);
 
   function handleQuantityChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue?: string | undefined
   ) {
-    setQuantity(newValue);
+    setQuantity(`${newValue}`);
   }
 
   function handleNameChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue?: string | undefined
   ) {
-    setName(newValue);
+    setName(`${newValue}`);
   }
 
   function handleDelete() {
@@ -73,7 +68,7 @@ export function RecipeIngredient({
       <Stack horizontal styles={stackStyles} tokens={stackTokens}>
         <Stack.Item>
           <Icon
-            iconName="DragObject"
+            iconName="ToggleBorder"
             style={{ paddingTop: '10px', paddingRight: '4px' }}
           />
         </Stack.Item>
@@ -83,6 +78,7 @@ export function RecipeIngredient({
             borderless
             multiline={isQuantityMultiline}
             autoAdjustHeight
+            resizable={false}
             readOnly={false}
             value={quantity}
             onFocus={handleFocus}
@@ -95,6 +91,7 @@ export function RecipeIngredient({
             borderless
             multiline={isNameMultiline}
             autoAdjustHeight
+            resizable={false}
             value={name}
             onFocus={handleFocus}
             onBlur={handleBlur}

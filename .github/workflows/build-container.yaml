@@ -64,5 +64,6 @@ jobs:
           push: true
           tags: |
             ${{ inputs.gcp_registry }}/${{ inputs.gcp_project_name }}/${{ inputs.app_name }}/app:${{ inputs.build_number }}
+            ${{ inputs.gcp_registry }}/${{ inputs.gcp_project_name }}/${{ inputs.app_name }}/app:latest
           # cache-from: type=registry,ref=4ks/${{APP}}-ci:buildcache
           # cache-to: type=registry,ref=4ks/${{APP}}-ci:buildcache,mode=max

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { TextField } from '@fluentui/react/lib/TextField';
 import { models_Instruction } from '@4ks/api-fetch';
@@ -23,15 +23,16 @@ export function RecipeInstruction({
   handleInstructionChange,
 }: RecipeInstructionProps) {
   const [active, setActive] = useState(false);
-  const [text, setText] = useState(data.text);
+  const [text, setText] = useState(data.text || '');
   const [isMultiline, setIsMultiline] = useState(false);
+
+  useEffect(() => setIsMultiline(text?.length > 36), [text]);
 
   function handleTextChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue?: string | undefined
   ) {
-    setText(newValue);
-    setIsMultiline((newValue && newValue?.length > 36) || true);
+    setText(`${newValue}`);
   }
 
   function handleDelete() {
@@ -57,7 +58,7 @@ export function RecipeInstruction({
       <Stack horizontal styles={stackStyles} tokens={stackTokens}>
         <Stack.Item>
           <Icon
-            iconName="DragObject"
+            iconName="ToggleBorder"
             style={{ paddingTop: '10px', paddingRight: '4px' }}
           />
         </Stack.Item>
@@ -65,6 +66,7 @@ export function RecipeInstruction({
           <TextField
             borderless
             autoAdjustHeight
+            resizable={false}
             multiline={isMultiline}
             readOnly={false}
             value={text}
