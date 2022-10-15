@@ -1,4 +1,10 @@
-
+variable "development_ip_addresses" {
+  type = list(string)
+  default = [
+    "71.191.48.46/32", # nic home
+    "172.58.243.29/32" # nic mobile
+  ]
+}
 
 variable "region" {
   default = "us-east4"

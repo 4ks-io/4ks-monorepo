@@ -61,17 +61,14 @@ resource "google_compute_security_policy" "development" {
     match {
       versioned_expr = "SRC_IPS_V1"
       config {
-        src_ip_ranges = [
-          "71.191.48.46/32", # nic home
-          "172.58.243.29/32" # nic mobile
-          ]
+        src_ip_ranges = var.development_ip_addresses
       }
     }
-    description = "Allow access to IPs in 71.191.48.46"
+    description = "Allow access to non-production sites"
   }
 
   rule {
-    action   = "deny(403)"
+    action = "deny(403)"
     # action   = "allow"
     priority = "2147483647"
     match {
