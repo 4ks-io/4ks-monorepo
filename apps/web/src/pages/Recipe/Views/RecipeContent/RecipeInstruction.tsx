@@ -63,7 +63,7 @@ export function RecipeInstruction({
 
   const dragItemStyles: IStackItemStyles = {
     root: {
-      background: 'rgb(243, 242, 241)',
+      // background: 'rgb(243, 242, 241)',
       padding: 2,
     },
   };
