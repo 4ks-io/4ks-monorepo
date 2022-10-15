@@ -2,13 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Stack } from '@fluentui/react';
 import { TextField } from '@fluentui/react/lib/TextField';
 import { DefaultButton } from '@fluentui/react/lib/Button';
-import { TooltipHost } from '@fluentui/react/lib/Tooltip';
-import {
-  Breadcrumb,
-  IBreadcrumbItem,
-  IDividerAsProps,
-} from '@fluentui/react/lib/Breadcrumb';
-import { Label } from '@fluentui/react/lib/Label';
+import { Breadcrumb, IBreadcrumbItem } from '@fluentui/react/lib/Breadcrumb';
 import { useRecipeContext } from '../../providers/recipe-context';
 import { useSessionContext } from '../../providers/session-context';
 import { IconButton } from '@fluentui/react/lib/Button';
@@ -19,7 +13,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   const ctx = useSessionContext();
   const [isNew, setIsNew] = useState(false);
   const [title, setTitle] = useState('');
-  const [editingTitle, setEditingTitle] = useState(true);
+  const [editingTitle, setEditingTitle] = useState(false);
 
   function handleTitleChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
