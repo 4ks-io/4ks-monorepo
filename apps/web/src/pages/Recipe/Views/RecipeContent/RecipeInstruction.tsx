@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { TextField } from '@fluentui/react/lib/TextField';
 import { models_Instruction } from '@4ks/api-fetch';
-import { stackStyles, stackItemStyles } from './styles';
+import { stackStyles, stackItemStyles } from './../../styles';
 import { Icon } from '@fluentui/react/lib/Icon';
 
 const stackTokens: IStackTokens = {

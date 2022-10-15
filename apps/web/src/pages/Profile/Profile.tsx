@@ -3,11 +3,11 @@ import { PageLayout } from '../Layout';
 import { useParams } from 'react-router-dom';
 
 const Profile = () => {
-  let { username } = useParams();
+  let { userName } = useParams();
 
   return (
     <PageLayout>
-      <h2>Profile for {username}</h2>
+      <h2>Profile for {userName}</h2>
     </PageLayout>
   );
 };

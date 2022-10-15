@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Stack } from '@fluentui/react';
 import { TextField } from '@fluentui/react/lib/TextField';
-import { PrimaryButton } from '@fluentui/react/lib/Button';
+import { DefaultButton } from '@fluentui/react/lib/Button';
 import { TooltipHost } from '@fluentui/react/lib/Tooltip';
+import {
+  Breadcrumb,
+  IBreadcrumbItem,
+  IDividerAsProps,
+} from '@fluentui/react/lib/Breadcrumb';
 import { Label } from '@fluentui/react/lib/Label';
 import { useRecipeContext } from '../../providers/recipe-context';
 import { useSessionContext } from '../../providers/session-context';
-
+import { IconButton } from '@fluentui/react/lib/Button';
 interface RecipeHeaderProps {}
 
 export function RecipeHeader(props: RecipeHeaderProps) {
@@ -14,6 +19,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   const ctx = useSessionContext();
   const [isNew, setIsNew] = useState(false);
   const [title, setTitle] = useState('');
+  const [editingTitle, setEditingTitle] = useState(true);
 
   function handleTitleChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -39,44 +45,89 @@ export function RecipeHeader(props: RecipeHeaderProps) {
     rtx?.setTitle(title);
   }
 
+  function handleEditTitleComplete() {
+    setEditingTitle(false);
+  }
+
+  function toggleEditTitle(
+    ev: React.MouseEvent<HTMLElement> | undefined,
+    item: IBreadcrumbItem | undefined
+  ): void {
+    setEditingTitle(!editingTitle);
+  }
+
+  const userBreadcrumb: IBreadcrumbItem = {
+    text: rtx?.recipe?.author?.displayName || `${ctx.user?.name}`,
+    key: 'DisplayName',
+    href: encodeURI(`/${rtx?.recipe?.author?.displayName}`),
+  };
+
+  const titleBreadcrumb: IBreadcrumbItem = {
+    text: title,
+    key: 'title',
+    onClick: toggleEditTitle,
+    isCurrentItem: true,
+  };
+
+  const fakeBreadcrumb: IBreadcrumbItem = {
+    text: '',
+    key: 'fake',
+    isCurrentItem: true,
+  };
+
   return (
     <Stack.Item align="stretch">
-      <Stack horizontal horizontalAlign="start">
-        <span>
-          <Label style={{ fontWeight: 400 }}>
-            {rtx?.recipe?.author?.displayName || `${ctx.user?.name}`}/
-          </Label>
-        </span>
-        <span>
-          <TextField
-            onChange={handleTitleChange}
-            style={{ fontWeight: 600 }}
-            borderless
-            readOnly={false}
-            validateOnFocusOut={true}
-            onNotifyValidationResult={handleValidationComplete}
-            value={title}
+      <div style={{ marginBottom: '12px' }}>
+        {editingTitle ? (
+          <Stack horizontal horizontalAlign="start">
+            <Stack
+              horizontal
+              horizontalAlign="start"
+              style={{ margin: '11px 0px 1px' }}
+            >
+              <IconButton
+                iconProps={{ iconName: 'Completed' }}
+                aria-label="Complete"
+                onClick={handleEditTitleComplete}
+              />
+              <TextField
+                onChange={handleTitleChange}
+                style={{ fontWeight: 600, fontSize: '18px' }}
+                borderless
+                readOnly={false}
+                validateOnFocusOut={true}
+                onNotifyValidationResult={handleValidationComplete}
+                value={title}
+              />
+            </Stack>
+          </Stack>
+        ) : (
+          <Breadcrumb
+            items={[userBreadcrumb, titleBreadcrumb]}
+            maxDisplayedItems={2}
+            ariaLabel="Breadcrumb with items rendered as links"
+            overflowAriaLabel="More links"
           />
-        </span>
-      </Stack>
+        )}
+      </div>
       {isNew && (
         <Stack horizontal horizontalAlign="space-evenly">
           <Stack.Item align="end">
-            <PrimaryButton
+            <DefaultButton
               iconProps={{ iconName: 'BranchFork2' }}
               text="Fork"
               onClick={_alertFork}
             />
           </Stack.Item>
           <Stack.Item align="end">
-            <PrimaryButton
+            <DefaultButton
               iconProps={{ iconName: 'FavoriteStar' }}
               text="Star"
               onClick={_alertStar}
             />
           </Stack.Item>
           <Stack.Item align="end">
-            <PrimaryButton
+            <DefaultButton
               iconProps={{ iconName: 'SocialListeningLogo' }}
               text="Share"
               onClick={_alertShare}

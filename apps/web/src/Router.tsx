@@ -20,7 +20,18 @@ const Router = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
+        <Route path="/new" element={<NewUser />} />
+        <Route path="/me" element={<Settings />} />
+        <Route path="/:userName" element={<Profile />} />
         <Route path="/r" element={<Recipes />} />
+        <Route
+          path="/:userName/:recipeTitle"
+          element={
+            <RecipeContextProvider>
+              <Recipe />
+            </RecipeContextProvider>
+          }
+        />
         <Route
           path="/r/0"
           element={
@@ -37,9 +48,6 @@ const Router = () => {
             </RecipeContextProvider>
           }
         />
-        <Route path="/new" element={<NewUser />} />
-        <Route path="/me" element={<Settings />} />
-        <Route path="/:username" element={<Profile />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

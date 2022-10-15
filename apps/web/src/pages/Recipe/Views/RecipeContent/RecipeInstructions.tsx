@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { DefaultButton } from '@fluentui/react/lib/Button';
 import { models_Instruction } from '@4ks/api-fetch';
-import { stackStyles, itemAlignmentsStackTokens } from './styles';
+import { stackStyles, itemAlignmentsStackTokens } from './../../styles';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { useRecipeContext } from '../../providers/recipe-context';
+import { useRecipeContext } from '../../../../providers/recipe-context';
 import { RecipeInstruction } from './RecipeInstruction';
 import { SectionTitle } from './components/SectionTitle';
 import {
