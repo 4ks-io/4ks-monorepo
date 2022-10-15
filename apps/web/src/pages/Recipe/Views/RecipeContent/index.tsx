@@ -6,6 +6,7 @@ import { RecipeInstructions } from './RecipeInstructions';
 import { RecipeSocial } from './RecipeSocial';
 import { RecipeDangerZone } from './RecipeDangerZone';
 import { stackStyles, itemAlignmentsStackTokens } from './../../styles';
+import { RecipeEditingControls } from './RecipeEditingControls';
 import { RecipeSummary } from './RecipeSummary';
 import RecipeLoading from './RecipeLoading';
 import { PrimaryButton } from '@fluentui/react/lib/Button';
@@ -56,6 +57,7 @@ const RecipeContentView = ({ create }: RecipeProps) => {
 
   return (
     <>
+      <RecipeEditingControls />
       {isAuthenticated && (
         <PrimaryButton
           disabled={false}

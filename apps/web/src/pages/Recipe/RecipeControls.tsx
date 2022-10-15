@@ -33,7 +33,7 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
     },
     {
       key: 'forks',
-      text: 'Fork',
+      text: 'Forks',
       iconProps: { iconName: 'BranchFork' },
       onClick: () => setSelectedView(RecipeViews.Forks),
     },

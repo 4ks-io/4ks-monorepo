@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
+import {
+  Stack,
+  IStackTokens,
+  IStackItemStyles,
+} from '@fluentui/react/lib/Stack';
 import { TextField } from '@fluentui/react/lib/TextField';
 import { models_Ingredient } from '@4ks/api-fetch';
-import { stackStyles, stackItemStyles } from './../../styles';
+import { stackStyles } from './../../styles';
 import { Icon } from '@fluentui/react/lib/Icon';
 
 const stackTokens: IStackTokens = {
@@ -65,13 +69,20 @@ export function RecipeIngredient({
     } as models_Ingredient);
   }
 
+  const dragItemStyles: IStackItemStyles = {
+    root: {
+      background: 'rgb(243, 242, 241)',
+      padding: 2,
+    },
+  };
+
   return (
-    <Stack.Item align="start" styles={stackItemStyles}>
+    <Stack.Item align="start" styles={dragItemStyles}>
       <Stack horizontal styles={stackStyles} tokens={stackTokens}>
         <Stack.Item>
           <Icon
             iconName="ToggleBorder"
-            style={{ paddingTop: '10px', paddingRight: '4px' }}
+            style={{ paddingTop: '10px', paddingRight: '12px' }}
           />
         </Stack.Item>
         <Stack.Item grow={2}>

@@ -63,7 +63,12 @@ export function RecipeIngredients() {
               {ingredients?.map((ingredient, index) => {
                 const key = `ingredient_${index}_${ingredient.id}`;
                 return (
-                  <Draggable key={key} draggableId={key} index={index}>
+                  <Draggable
+                    key={key}
+                    draggableId={key}
+                    index={index}
+                    isDragDisabled={!rtx?.editing}
+                  >
                     {(provided) => (
                       <li
                         ref={provided.innerRef}
@@ -88,11 +93,13 @@ export function RecipeIngredients() {
           )}
         </Droppable>
       </DragDropContext>
-      <DefaultButton
-        text="Add Ingredient"
-        onClick={handleIngredientAdd}
-        allowDisabledFocus
-      />
+      {rtx?.editing && (
+        <DefaultButton
+          text="Add Ingredient"
+          onClick={handleIngredientAdd}
+          allowDisabledFocus
+        />
+      )}
     </Stack>
   );
 }
