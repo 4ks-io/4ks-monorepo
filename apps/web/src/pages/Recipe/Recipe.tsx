@@ -9,13 +9,21 @@ import { RecipeCommentsView } from './Views/RecipeComments';
 import { RecipeStoryView } from './Views/RecipeStory';
 import { RecipeForksView } from './Views/RecipeForks';
 import { RecipeViews } from './RecipeControls';
+import { Toggle } from '@fluentui/react/lib/Toggle';
+import { useRecipeContext } from '../../providers/recipe-context';
 
 type RecipeProps = {
   create?: boolean;
 };
 
 const Recipe = ({ create }: RecipeProps) => {
+  const rtx = useRecipeContext();
+
   const [selectedView, setSelectedView] = useState(RecipeViews.RecipeContent);
+
+  function toggleEditing() {
+    rtx?.setEditing(!rtx?.editing);
+  }
 
   return (
     <PageLayout>
@@ -26,6 +34,14 @@ const Recipe = ({ create }: RecipeProps) => {
       >
         <RecipeHeader />
         <RecipeControls setSelectedView={setSelectedView} />
+        <Stack.Item align="end">
+          <Toggle
+            /* label={<div>Edit</div>} */ label="Edit"
+            inlineLabel
+            onChange={toggleEditing}
+          />
+        </Stack.Item>
+
         {selectedView == RecipeViews.RecipeContent && (
           <RecipeContentView create={create} />
         )}

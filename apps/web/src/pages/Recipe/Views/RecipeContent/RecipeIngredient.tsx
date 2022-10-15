@@ -12,6 +12,7 @@ const stackTokens: IStackTokens = {
 interface RecipeIngredientProps {
   index: number;
   data: models_Ingredient;
+  editing: boolean;
   handleIngredientDelete: (index: number) => void;
   handleIngredientChange: (index: number, data: models_Ingredient) => void;
 }
@@ -19,6 +20,7 @@ interface RecipeIngredientProps {
 export function RecipeIngredient({
   data,
   index,
+  editing,
   handleIngredientDelete,
   handleIngredientChange,
 }: RecipeIngredientProps) {
@@ -80,7 +82,7 @@ export function RecipeIngredient({
             multiline={isQuantityMultiline}
             autoAdjustHeight
             resizable={false}
-            readOnly={false}
+            readOnly={!editing}
             value={quantity}
             onFocus={handleFocus}
             onBlur={handleBlur}
@@ -94,13 +96,14 @@ export function RecipeIngredient({
             multiline={isNameMultiline}
             autoAdjustHeight
             resizable={false}
+            readOnly={!editing}
             value={name}
             onFocus={handleFocus}
             onBlur={handleBlur}
             onChange={handleNameChange}
           />
         </Stack.Item>
-        {active && (
+        {editing && active && (
           <Stack.Item>
             <Icon
               iconName="Delete"

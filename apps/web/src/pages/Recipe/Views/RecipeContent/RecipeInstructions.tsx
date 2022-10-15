@@ -82,6 +82,7 @@ export function RecipeInstructions() {
                           index={index}
                           key={instruction.text}
                           data={instruction}
+                          editing={rtx?.editing || false}
                           handleInstructionDelete={handleInstructionDelete}
                           handleInstructionChange={handleInstructionChange}
                         />

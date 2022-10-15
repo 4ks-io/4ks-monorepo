@@ -26,6 +26,13 @@ export function RecipeContextProvider({
   const [state, dispatch] = useReducer(recipeContextReducer, initialState);
   const NO_RECIPE_ID = '0';
 
+  function setEditing(editing: boolean) {
+    dispatch({
+      type: RecipeContextAction.SET_EDIT_MODE,
+      payload: editing,
+    });
+  }
+
   function setIngredients(ingredients: models_Ingredient[]) {
     dispatch({
       type: RecipeContextAction.SET_INGREDIENTS,
@@ -70,11 +77,24 @@ export function RecipeContextProvider({
       dispatch({
         type: RecipeContextAction.SET_CONTROLS,
         payload: {
+          setEditing,
           setTitle,
           setIngredients,
           setInstructions,
         },
       });
+    } else {
+      if (state.recipe.id != NO_RECIPE_ID) {
+        dispatch({
+          type: RecipeContextAction.SET_CONTROLS,
+          payload: {
+            setEditing,
+            setTitle: () => {},
+            setIngredients: () => {},
+            setInstructions: () => {},
+          },
+        });
+      }
     }
   }, [state.recipe.id]);
 

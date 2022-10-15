@@ -6,6 +6,8 @@ import { Breadcrumb, IBreadcrumbItem } from '@fluentui/react/lib/Breadcrumb';
 import { useRecipeContext } from '../../providers/recipe-context';
 import { useSessionContext } from '../../providers/session-context';
 import { IconButton } from '@fluentui/react/lib/Button';
+import { Toggle } from '@fluentui/react/lib/Toggle';
+
 interface RecipeHeaderProps {}
 
 export function RecipeHeader(props: RecipeHeaderProps) {
@@ -72,7 +74,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   return (
     <Stack.Item align="stretch">
       <div style={{ marginBottom: '12px' }}>
-        {editingTitle ? (
+        {rtx?.editing && editingTitle ? (
           <Stack horizontal horizontalAlign="start">
             <Stack
               horizontal

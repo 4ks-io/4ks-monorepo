@@ -74,6 +74,7 @@ export function RecipeIngredients() {
                           index={index}
                           key={ingredient.name}
                           data={ingredient}
+                          editing={rtx?.editing || false}
                           handleIngredientDelete={handleIngredientDelete}
                           handleIngredientChange={handleIngredientChange}
                         />

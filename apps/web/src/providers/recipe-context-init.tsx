@@ -6,17 +6,21 @@ import {
 
 export interface IRecipeContext {
   recipeId: string;
+  editing: boolean;
   recipe: models_Recipe;
+  setEditing: (editing: boolean) => void;
   setTitle: (title: string) => void;
   setIngredients: (ingredients: models_Ingredient[]) => void;
   setInstructions: (instructions: models_Instruction[]) => void;
 }
 
 export const initialState: IRecipeContext = {
+  setEditing: () => {},
   setTitle: () => {},
   setIngredients: () => {},
   setInstructions: () => {},
   recipeId: '0',
+  editing: false,
   recipe: {
     author: {
       displayName: '',

@@ -12,10 +12,15 @@ export enum RecipeContextAction {
   SET_INGREDIENTS = 'setRecipeIngredients',
   SET_INSTRUCTIONS = 'setRecipeInstructions',
   SET_TITLE = 'setRecipeTitle',
+  SET_EDIT_MODE = 'setEditMode',
 }
 
 export function recipeContextReducer(state: IRecipeContext, action: IAction) {
   switch (action.type) {
+    //
+    case RecipeContextAction.SET_EDIT_MODE:
+      return { ...state, editing: action.payload };
+    //
     case RecipeContextAction.SET_ID:
       return { ...state, recipeId: action.payload };
     //
@@ -23,9 +28,11 @@ export function recipeContextReducer(state: IRecipeContext, action: IAction) {
       return { ...state, recipe: action.payload };
     //
     case RecipeContextAction.SET_CONTROLS:
-      const { setIngredients, setInstructions, setTitle } = action.payload;
+      const { setEditing, setIngredients, setInstructions, setTitle } =
+        action.payload;
       return {
         ...state,
+        setEditing,
         setIngredients,
         setInstructions,
         setTitle,

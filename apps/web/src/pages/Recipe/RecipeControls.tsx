@@ -1,14 +1,10 @@
 import React from 'react';
-import { Label } from '@fluentui/react/lib/Label';
-import { Stack, IStackStyles } from '@fluentui/react/lib/Stack';
+import { Stack } from '@fluentui/react/lib/Stack';
 import {
   CommandBar,
   ICommandBarItemProps,
   ICommandBarStyles,
 } from '@fluentui/react/lib/CommandBar';
-import { FocusTrapZone } from '@fluentui/react/lib/FocusTrapZone';
-import { setVirtualParent } from '@fluentui/dom-utilities';
-import { IButtonProps } from '@fluentui/react/lib/Button';
 
 export enum RecipeViews {
   RecipeContent,
@@ -20,8 +16,6 @@ export enum RecipeViews {
 interface RecipeControlsProps {
   setSelectedView: (view: RecipeViews) => void;
 }
-
-const overflowProps: IButtonProps = { ariaLabel: 'More commands' };
 
 const CommandBarStyles: ICommandBarStyles = {
   root: {
@@ -61,14 +55,14 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
     <Stack.Item align="stretch" style={{ paddingTop: '24px' }}>
       <div
         style={{
-          borderBottom: '1px solid black',
+          borderBottom: '1px solid gray',
           paddingBottom: '5px',
         }}
       >
         <CommandBar
           styles={CommandBarStyles}
           items={_items}
-          ariaLabel="Inbox actions"
+          ariaLabel="Page Navigation"
           primaryGroupAriaLabel="PageNavigation"
         />
       </div>
