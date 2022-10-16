@@ -11,6 +11,8 @@ export enum RecipeViews {
   Forks,
   Comments,
   Story,
+  Versions,
+  Settings,
 }
 
 interface RecipeControlsProps {
@@ -48,6 +50,18 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
       text: 'Story',
       iconProps: { iconName: 'SingleBookmark' },
       onClick: () => setSelectedView(RecipeViews.Story),
+    },
+    {
+      key: 'versions',
+      text: 'Versions',
+      iconProps: { iconName: 'WebAppBuilderFragment' },
+      onClick: () => setSelectedView(RecipeViews.Versions),
+    },
+    {
+      key: 'settings',
+      text: 'Settings',
+      iconProps: { iconName: 'Settings' },
+      onClick: () => setSelectedView(RecipeViews.Settings),
     },
   ];
 

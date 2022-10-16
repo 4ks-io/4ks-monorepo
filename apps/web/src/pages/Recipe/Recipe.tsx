@@ -6,7 +6,9 @@ import { RecipeControls } from './RecipeControls';
 import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { RecipeContentView } from './Views/RecipeContent';
 import { RecipeCommentsView } from './Views/RecipeComments';
+import { RecipeVersionsView } from './Views/RecipeVersions';
 import { RecipeStoryView } from './Views/RecipeStory';
+import { RecipeSettingsView } from './Views/RecipeSettings';
 import { RecipeForksView } from './Views/RecipeForks';
 import { RecipeViews } from './RecipeControls';
 
@@ -33,6 +35,8 @@ const Recipe = ({ create }: RecipeProps) => {
         {selectedView == RecipeViews.Forks && <RecipeForksView />}
         {selectedView == RecipeViews.Comments && <RecipeCommentsView />}
         {selectedView == RecipeViews.Story && <RecipeStoryView />}
+        {selectedView == RecipeViews.Versions && <RecipeVersionsView />}
+        {selectedView == RecipeViews.Settings && <RecipeSettingsView />}
       </Stack>
     </PageLayout>
   );

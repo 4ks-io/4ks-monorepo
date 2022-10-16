@@ -108,27 +108,27 @@ export function RecipeHeader(props: RecipeHeaderProps) {
       </div>
       {isNew && (
         <Stack horizontal horizontalAlign="space-evenly">
-          <Stack.Item align="end">
-            <DefaultButton
-              iconProps={{ iconName: 'BranchFork2' }}
-              text="Fork"
-              onClick={_alertFork}
-            />
-          </Stack.Item>
-          <Stack.Item align="end">
-            <DefaultButton
-              iconProps={{ iconName: 'FavoriteStar' }}
-              text="Star"
-              onClick={_alertStar}
-            />
-          </Stack.Item>
-          <Stack.Item align="end">
-            <DefaultButton
-              iconProps={{ iconName: 'SocialListeningLogo' }}
-              text="Share"
-              onClick={_alertShare}
-            />
-          </Stack.Item>
+          {/* <Stack.Item align="end"> */}
+          <DefaultButton
+            iconProps={{ iconName: 'BranchFork2' }}
+            text="Fork"
+            onClick={_alertFork}
+          />
+          {/* </Stack.Item>
+          <Stack.Item align="end"> */}
+          <DefaultButton
+            iconProps={{ iconName: 'FavoriteStar' }}
+            text="Star"
+            onClick={_alertStar}
+          />
+          {/* </Stack.Item>
+          <Stack.Item align="end"> */}
+          <DefaultButton
+            iconProps={{ iconName: 'SocialListeningLogo' }}
+            text="Share"
+            onClick={_alertShare}
+          />
+          {/* </Stack.Item> */}
         </Stack>
       )}
     </Stack.Item>

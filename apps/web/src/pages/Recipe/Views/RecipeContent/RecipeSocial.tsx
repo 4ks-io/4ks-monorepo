@@ -2,7 +2,7 @@ import React from 'react';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { stackItemStyles } from './../../styles';
 import { useRecipeContext } from '../../../../providers/recipe-context';
-import { SectionTitle } from './components/SectionTitle';
+import { SectionTitle } from '../components/SectionTitle';
 
 interface RecipeSocialProps {}
 
