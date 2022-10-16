@@ -90,7 +90,7 @@ const AppBar = () => {
   }
 
   function handleProfileClick() {
-    navigate(`/${ctx.user?.username}` || '', { replace: true });
+    navigate(encodeURI(`/${ctx.user?.username}`), { replace: true });
   }
 
   const stackStyles: IStackStyles = {
