@@ -33,8 +33,8 @@ const Recipe = ({ create }: RecipeProps) => {
           <RecipeContentView create={create} />
         )}
         {selectedView == RecipeViews.Forks && <RecipeForksView />}
-        {selectedView == RecipeViews.Comments && <RecipeCommentsView />}
-        {selectedView == RecipeViews.Story && <RecipeStoryView />}
+        {/* {selectedView == RecipeViews.Comments && <RecipeCommentsView />} */}
+        {/* {selectedView == RecipeViews.Story && <RecipeStoryView />} */}
         {selectedView == RecipeViews.Versions && <RecipeVersionsView />}
         {selectedView == RecipeViews.Settings && <RecipeSettingsView />}
       </Stack>

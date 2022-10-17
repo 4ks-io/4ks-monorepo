@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stack } from '@fluentui/react/lib/Stack';
+import { useAuth0 } from '@auth0/auth0-react';
 import {
   CommandBar,
   ICommandBarItemProps,
   ICommandBarStyles,
 } from '@fluentui/react/lib/CommandBar';
+import { useRecipeContext } from '../../providers/recipe-context';
+import { useSessionContext } from '../../providers/session-context';
 
 export enum RecipeViews {
   RecipeContent,
@@ -26,7 +29,21 @@ const CommandBarStyles: ICommandBarStyles = {
 };
 
 export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
-  const _items: ICommandBarItemProps[] = [
+  const { isAuthenticated } = useAuth0();
+  const ctx = useSessionContext();
+  const rtx = useRecipeContext();
+
+  const [isRecipeContributor, setIsRecipeContributor] = useState(false);
+
+  useEffect(() => {
+    setIsRecipeContributor(
+      (isAuthenticated &&
+        rtx?.recipe.contributors?.map((c) => c.id).includes(ctx.user?.id)) ||
+        false
+    );
+  }, [rtx, ctx.user]);
+
+  const _items_base: ICommandBarItemProps[] = [
     {
       key: 'recipe',
       text: 'Recipe',
@@ -40,23 +57,13 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
       onClick: () => setSelectedView(RecipeViews.Forks),
     },
     {
-      key: 'comments',
-      text: 'Comments',
-      iconProps: { iconName: 'Message' },
-      onClick: () => setSelectedView(RecipeViews.Comments),
-    },
-    {
-      key: 'story',
-      text: 'Story',
-      iconProps: { iconName: 'SingleBookmark' },
-      onClick: () => setSelectedView(RecipeViews.Story),
-    },
-    {
       key: 'versions',
       text: 'Versions',
       iconProps: { iconName: 'WebAppBuilderFragment' },
       onClick: () => setSelectedView(RecipeViews.Versions),
     },
+  ];
+  const _items_owner: ICommandBarItemProps[] = [
     {
       key: 'settings',
       text: 'Settings',
@@ -64,6 +71,20 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
       onClick: () => setSelectedView(RecipeViews.Settings),
     },
   ];
+  // const _items_disabled: ICommandBarItemProps[] = [
+  //   {
+  //     key: 'comments',
+  //     text: 'Comments',
+  //     iconProps: { iconName: 'Message' },
+  //     onClick: () => setSelectedView(RecipeViews.Comments),
+  //   },
+  //   {
+  //     key: 'story',
+  //     text: 'Story',
+  //     iconProps: { iconName: 'SingleBookmark' },
+  //     onClick: () => setSelectedView(RecipeViews.Story),
+  //   },
+  // ];
 
   return (
     <Stack.Item align="stretch" style={{ paddingTop: '24px' }}>
@@ -75,7 +96,11 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
       >
         <CommandBar
           styles={CommandBarStyles}
-          items={_items}
+          items={
+            rtx?.recipeId && rtx?.recipeId != '0' && isRecipeContributor
+              ? _items_base.concat(_items_owner)
+              : _items_base
+          }
           ariaLabel="Page Navigation"
           primaryGroupAriaLabel="PageNavigation"
         />
