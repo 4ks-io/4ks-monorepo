@@ -32,6 +32,7 @@ type UserService interface {
 	GetUserByEmail(emailAddress *string) (*models.User, error)
 	CreateUser(userId *string, userEmail *string, user *dtos.CreateUser) (*models.User, error)
 	DeleteUser(id *string) error
+	TestUsernameExist(username *string) (bool, error)
 }
 
 type userService struct {
@@ -152,4 +153,17 @@ func (us userService) DeleteUser(userId *string) error {
 	}
 
 	return nil
+}
+
+
+func (us userService) TestUsernameExist(username *string) (bool, error) {
+	usersWithUsername, err := userCollection.Where("username", "==", strings.ToLower(*username)).Documents(ctx).GetAll()
+
+	if err != nil  {
+		return false, ErrUserNotFound
+	}
+	if  len(usersWithUsername) == 0 {
+		return false, nil
+	}
+	return true, nil
 }

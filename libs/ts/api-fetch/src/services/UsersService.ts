@@ -55,6 +55,25 @@ export class UsersService {
     }
 
     /**
+     * Test if a username exists
+     * Test if a username exists
+     * @param username UserName
+     * @returns boolean OK
+     * @throws ApiError
+     */
+    public getUsersUsername(
+        username: string,
+    ): CancelablePromise<Array<boolean>> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/users/username/{username}',
+            path: {
+                'username': username,
+            },
+        });
+    }
+
+    /**
      * Get a User (by ID)
      * Get a User (by ID)
      * @param userId User Id

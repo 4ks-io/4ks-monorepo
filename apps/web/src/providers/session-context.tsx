@@ -34,18 +34,23 @@ export function SessionContextProvider({
   );
 
   useEffect(() => {
+    console.log('useEffect');
     if (user) {
+      console.log('is user');
       getAccessTokenSilently().then(async (t) => {
+        console.log('got token');
         let a = ApiServiceFactory(t);
         let u: models_User;
 
         try {
+          console.log('trying getUsersProfile');
           u = await a.users.getUsersProfile();
           dispatch({
             user: u,
             api: a,
           });
         } catch {
+          console.log('catching postUsers');
           try {
             u = await a.users.postUsers({
               displayName: `${user.name}`,
@@ -61,6 +66,7 @@ export function SessionContextProvider({
         }
       });
     } else {
+      console.log('dispatch undefined');
       dispatch({
         user: undefined,
         api: ApiServiceFactory(undefined),

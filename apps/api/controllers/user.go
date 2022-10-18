@@ -18,6 +18,7 @@ type UserController interface {
 	GetUsers(c *gin.Context)
 	DeleteUser(c *gin.Context)
 	UpdateUser(c *gin.Context)
+	TestUsername(c *gin.Context)
 }
 
 type userController struct {
@@ -174,3 +175,33 @@ func (uc *userController) GetUsers(c *gin.Context) {
 func (uc *userController) UpdateUser(c *gin.Context) {
 
 }
+
+
+// TestUsername	godoc
+// @Summary 		Test if a username exists
+// @Description Test if a username exists
+// @Tags 				Users
+// @Accept 			json
+// @Produce 		json
+// @Param       username 	path    string  true  "UserName"
+// @Success 		200 		{array} 	bool
+// @Router 			/users/username/{username}   [get]
+// @Security 		ApiKeyAuth
+func (uc *userController) TestUsername(c *gin.Context) {
+	username := c.Param("username")
+	fmt.Println("TestUsername: " + username)
+
+	found, err := uc.userService.TestUsernameExist(&username)
+
+	if err == userService.ErrUserNotFound {
+		c.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, found)
+
+}
+

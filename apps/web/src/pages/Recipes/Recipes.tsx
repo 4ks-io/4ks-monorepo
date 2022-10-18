@@ -123,7 +123,7 @@ const Recipes = () => {
                         style={{ fontWeight: 'bold' }}
                         key={`${r.id}_${contributor}`}
                       >
-                        {contributor.displayName}
+                        {contributor.username}
                         {idx < (r.contributors?.length || 0) - 1 ? ',' : ''}
                       </Stack.Item>
                     ))}

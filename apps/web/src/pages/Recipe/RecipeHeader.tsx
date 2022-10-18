@@ -53,9 +53,9 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   }
 
   const userBreadcrumb: IBreadcrumbItem = {
-    text: rtx?.recipe?.author?.displayName || `${ctx.user?.name}`,
-    key: 'DisplayName',
-    href: encodeURI(`/${rtx?.recipe?.author?.displayName}`),
+    text: rtx?.recipe?.author?.username || `${ctx.user?.username}`,
+    key: 'UserName',
+    href: encodeURI(`/${rtx?.recipe?.author?.username}`),
   };
 
   const titleBreadcrumb: IBreadcrumbItem = {

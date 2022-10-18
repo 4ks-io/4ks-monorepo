@@ -18,5 +18,6 @@ func UsersRouter(router *gin.Engine) {
 		users.GET("", middleware.Authorize("/users/*", "list"), uc.GetUsers)
 		users.GET(":id", uc.GetUser)
 		users.PATCH(":id", uc.UpdateUser)
+		users.GET("username/:username", uc.TestUsername)
 	}
 }

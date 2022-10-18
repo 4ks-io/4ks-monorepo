@@ -15,7 +15,7 @@ export function RecipeSocial(props: RecipeSocialProps) {
       {rtx?.recipe?.contributors?.map((c) => {
         return (
           <Stack.Item key={c.id} align="center" styles={stackItemStyles}>
-            <span>{c.displayName}</span>
+            <span>{c.username}</span>
           </Stack.Item>
         );
       })}

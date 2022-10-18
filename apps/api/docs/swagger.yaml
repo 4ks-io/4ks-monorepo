@@ -506,6 +506,31 @@ paths:
       summary: Get Current User
       tags:
       - Users
+  /users/username/{username}:
+    get:
+      consumes:
+      - application/json
+      description: Test if a username exists
+      parameters:
+      - description: UserName
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: boolean
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Test if a username exists
+      tags:
+      - Users
   /version:
     get:
       consumes:
