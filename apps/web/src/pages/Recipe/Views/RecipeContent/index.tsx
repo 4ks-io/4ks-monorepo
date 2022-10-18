@@ -11,7 +11,7 @@ type RecipeProps = {
   create?: boolean;
 };
 
-const RecipeContentView = ({ create }: RecipeProps) => {
+const RecipeContentView = ({ create = false }: RecipeProps) => {
   const rtx = useRecipeContext();
 
   if (!rtx || !rtx.recipe) {
@@ -20,7 +20,7 @@ const RecipeContentView = ({ create }: RecipeProps) => {
 
   return (
     <>
-      <RecipeEditingControls />
+      <RecipeEditingControls create={create} />
       {/* <RecipeSummary /> */}
       <RecipeIngredients />
       <RecipeInstructions />

@@ -8,6 +8,7 @@ export interface IRecipeContext {
   recipeId: string;
   editing: boolean;
   recipe: models_Recipe;
+  resetRecipe: () => void;
   setEditing: (editing: boolean) => void;
   setTitle: (title: string) => void;
   setIngredients: (ingredients: models_Ingredient[]) => void;
@@ -15,6 +16,7 @@ export interface IRecipeContext {
 }
 
 export const initialState: IRecipeContext = {
+  resetRecipe: () => {},
   setEditing: () => {},
   setTitle: () => {},
   setIngredients: () => {},

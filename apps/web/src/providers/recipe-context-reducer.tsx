@@ -28,10 +28,17 @@ export function recipeContextReducer(state: IRecipeContext, action: IAction) {
       return { ...state, recipe: action.payload };
     //
     case RecipeContextAction.SET_CONTROLS:
-      const { setEditing, setIngredients, setInstructions, setTitle } =
-        action.payload;
+      const {
+        resetRecipe,
+        setEditing,
+        setIngredients,
+        setInstructions,
+        setTitle,
+      } = action.payload;
+
       return {
         ...state,
+        resetRecipe,
         setEditing,
         setIngredients,
         setInstructions,

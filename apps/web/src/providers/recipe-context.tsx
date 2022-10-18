@@ -54,6 +54,14 @@ export function RecipeContextProvider({
     });
   }
 
+  function resetRecipe() {
+    ctx?.api?.recipes
+      .getRecipes1(`${state.recipeId}`)
+      .then((recipe: models_Recipe) => {
+        dispatch({ type: RecipeContextAction.SET_CONTENT, payload: recipe });
+      });
+  }
+
   useEffect(() => {
     recipeId != NO_RECIPE_ID &&
       dispatch({
@@ -77,6 +85,7 @@ export function RecipeContextProvider({
       dispatch({
         type: RecipeContextAction.SET_CONTROLS,
         payload: {
+          resetRecipe,
           setEditing,
           setTitle,
           setIngredients,
@@ -88,6 +97,7 @@ export function RecipeContextProvider({
         dispatch({
           type: RecipeContextAction.SET_CONTROLS,
           payload: {
+            resetRecipe,
             setEditing,
             setTitle: () => {},
             setIngredients: () => {},

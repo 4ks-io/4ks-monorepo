@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 import { Stack } from '@fluentui/react/lib/Stack';
@@ -8,23 +8,29 @@ import { useRecipeContext } from '../../../../providers/recipe-context';
 import { useSessionContext } from '../../../../providers/session-context';
 import { models_Recipe, dtos_UpdateRecipe } from '@4ks/api-fetch';
 import { IContextualMenuProps } from '@fluentui/react';
-import { DefaultButton } from '@fluentui/react/lib/Button';
+import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 
 interface RecipeEditingControlsProps {
   create?: boolean;
 }
 
-export function RecipeEditingControls({ create }: RecipeEditingControlsProps) {
+export function RecipeEditingControls({
+  create = false,
+}: RecipeEditingControlsProps) {
   const { isAuthenticated } = useAuth0();
+  const [isEditing, setIsEditing] = React.useState(false);
   const rtx = useRecipeContext();
   const ctx = useSessionContext();
   const navigate = useNavigate();
 
-  function toggleEditing() {
-    rtx?.setEditing(!rtx?.editing);
+  function toggleEditing(
+    event: React.MouseEvent<HTMLElement>,
+    checked?: boolean
+  ) {
+    if (typeof checked !== 'undefined') {
+      rtx?.setEditing(checked);
+    }
   }
-
-  function discardChanges() {}
 
   function saveRecipe() {
     if (create) {
@@ -41,39 +47,31 @@ export function RecipeEditingControls({ create }: RecipeEditingControlsProps) {
     }
   }
 
-  const menuProps: IContextualMenuProps = {
-    items: [
-      {
-        key: 'discard',
-        text: 'Discard Changes',
-        iconProps: { iconName: 'Cancel' },
-        onClick: discardChanges,
-      },
-    ],
-  };
-
   return (
     <Stack.Item>
       <Stack horizontal horizontalAlign="space-between">
         <Stack.Item>
           <Toggle
-            /* label={<div>Edit</div>} */ label="Edit"
+            label="Edit"
             inlineLabel
             onChange={toggleEditing}
+            // defaultChecked={isEditing}
           />
         </Stack.Item>
-        {rtx?.editing && isAuthenticated && (
-          <Stack.Item>
-            <DefaultButton
-              text="Save Changes"
-              split
-              disabled={!isAuthenticated}
-              splitButtonAriaLabel="See 2 options"
-              aria-roledescription="split button"
-              menuProps={menuProps}
-              onClick={saveRecipe}
-            />
-          </Stack.Item>
+        {rtx?.editing && (
+          <Stack horizontal horizontalAlign="space-between">
+            <Stack.Item style={{ paddingRight: 12 }}>
+              <PrimaryButton
+                text="Save"
+                disabled={!isAuthenticated}
+                onClick={saveRecipe}
+              />
+            </Stack.Item>
+
+            <Stack.Item>
+              <DefaultButton text="Discard" onClick={rtx?.resetRecipe} />
+            </Stack.Item>
+          </Stack>
         )}
       </Stack>
     </Stack.Item>

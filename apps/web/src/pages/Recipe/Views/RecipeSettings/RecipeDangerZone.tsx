@@ -6,6 +6,7 @@ import { Icon } from '@fluentui/react/lib/Icon';
 import { useSessionContext } from '../../../../providers/session-context';
 import { useRecipeContext } from '../../../../providers/recipe-context';
 import { useNavigate } from 'react-router-dom';
+import { DefaultButton } from '@fluentui/react/lib/Button';
 
 interface RecipeDangerZoneProps {}
 
@@ -26,8 +27,8 @@ export function RecipeDangerZone({}: RecipeDangerZoneProps) {
     <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
       <SectionTitle value={'Danger Zone'} />
       <Stack.Item>
-        Delete
         <Icon iconName="Delete" onClick={handleDelete} />
+        <DefaultButton text="Delete Recipe" onClick={handleDelete} />
       </Stack.Item>
     </Stack>
   );

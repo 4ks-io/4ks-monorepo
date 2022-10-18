@@ -13,7 +13,7 @@ import {
   Settings,
 } from './pages';
 
-const Router = () => {
+function Router() {
   return (
     <BrowserRouter>
       <Routes>
@@ -28,7 +28,7 @@ const Router = () => {
           path="/:userName/:recipeTitle"
           element={
             <RecipeContextProvider>
-              <Recipe />
+              <Recipe create={false} />
             </RecipeContextProvider>
           }
         />
@@ -44,7 +44,7 @@ const Router = () => {
           path="/r/:recipeId"
           element={
             <RecipeContextProvider>
-              <Recipe />
+              <Recipe create={false} />
             </RecipeContextProvider>
           }
         />
@@ -52,6 +52,6 @@ const Router = () => {
       </Routes>
     </BrowserRouter>
   );
-};
+}
 
 export default Router;

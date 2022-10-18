@@ -11,12 +11,13 @@ import { RecipeStoryView } from './Views/RecipeStory';
 import { RecipeSettingsView } from './Views/RecipeSettings';
 import { RecipeForksView } from './Views/RecipeForks';
 import { RecipeViews } from './RecipeControls';
+import { useRecipeContext } from '../../providers/recipe-context';
 
 type RecipeProps = {
   create?: boolean;
 };
 
-const Recipe = ({ create }: RecipeProps) => {
+const Recipe = ({ create = false }: RecipeProps) => {
   const [selectedView, setSelectedView] = useState(RecipeViews.RecipeContent);
 
   return (
