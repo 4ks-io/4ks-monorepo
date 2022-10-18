@@ -71,13 +71,21 @@ export function RecipeContextProvider({
   }, [recipeId]);
 
   useEffect(() => {
-    state.recipeId &&
-      state.recipeId != NO_RECIPE_ID &&
-      ctx?.api?.recipes
-        .getRecipes1(`${state.recipeId}`)
-        .then((recipe: models_Recipe) => {
-          dispatch({ type: RecipeContextAction.SET_CONTENT, payload: recipe });
-        });
+    if (state.recipeId) {
+      if (state.recipeId == NO_RECIPE_ID) {
+        setEditing(true);
+      } else {
+        setEditing(false);
+        ctx?.api?.recipes
+          .getRecipes1(`${state.recipeId}`)
+          .then((recipe: models_Recipe) => {
+            dispatch({
+              type: RecipeContextAction.SET_CONTENT,
+              payload: recipe,
+            });
+          });
+      }
+    }
   }, [state.recipeId]);
 
   useEffect(() => {

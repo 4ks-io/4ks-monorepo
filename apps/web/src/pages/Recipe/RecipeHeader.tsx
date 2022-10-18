@@ -6,7 +6,6 @@ import { Breadcrumb, IBreadcrumbItem } from '@fluentui/react/lib/Breadcrumb';
 import { useRecipeContext } from '../../providers/recipe-context';
 import { useSessionContext } from '../../providers/session-context';
 import { IconButton } from '@fluentui/react/lib/Button';
-import { Toggle } from '@fluentui/react/lib/Toggle';
 
 interface RecipeHeaderProps {}
 
@@ -15,7 +14,6 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   const ctx = useSessionContext();
   const [isNew, setIsNew] = useState(false);
   const [title, setTitle] = useState('');
-  const [editingTitle, setEditingTitle] = useState(false);
 
   function handleTitleChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -41,17 +39,6 @@ export function RecipeHeader(props: RecipeHeaderProps) {
     rtx?.setTitle(title);
   }
 
-  function handleEditTitleComplete() {
-    setEditingTitle(false);
-  }
-
-  function toggleEditTitle(
-    ev: React.MouseEvent<HTMLElement> | undefined,
-    item: IBreadcrumbItem | undefined
-  ): void {
-    setEditingTitle(!editingTitle);
-  }
-
   const userBreadcrumb: IBreadcrumbItem = {
     text: rtx?.recipe?.author?.username || `${ctx.user?.username}`,
     key: 'UserName',
@@ -61,7 +48,6 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   const titleBreadcrumb: IBreadcrumbItem = {
     text: title,
     key: 'title',
-    onClick: toggleEditTitle,
     isCurrentItem: true,
   };
 
@@ -74,7 +60,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   return (
     <Stack.Item align="stretch">
       <div style={{ marginBottom: '12px' }}>
-        {rtx?.editing && editingTitle ? (
+        {rtx?.editing ? (
           <Stack horizontal horizontalAlign="start">
             <Stack
               horizontal
@@ -82,9 +68,8 @@ export function RecipeHeader(props: RecipeHeaderProps) {
               style={{ margin: '11px 0px 1px' }}
             >
               <IconButton
-                iconProps={{ iconName: 'Completed' }}
-                aria-label="Complete"
-                onClick={handleEditTitleComplete}
+                iconProps={{ iconName: 'EditMirrored' }}
+                aria-label="EditMirrored"
               />
               <TextField
                 onChange={handleTitleChange}

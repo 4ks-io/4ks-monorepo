@@ -1,13 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 import { Stack } from '@fluentui/react/lib/Stack';
-import { Label } from '@fluentui/react/lib/Label';
 import { Toggle } from '@fluentui/react/lib/Toggle';
 import { useRecipeContext } from '../../../../providers/recipe-context';
 import { useSessionContext } from '../../../../providers/session-context';
 import { models_Recipe, dtos_UpdateRecipe } from '@4ks/api-fetch';
-import { IContextualMenuProps } from '@fluentui/react';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 
 interface RecipeEditingControlsProps {
@@ -18,7 +16,6 @@ export function RecipeEditingControls({
   create = false,
 }: RecipeEditingControlsProps) {
   const { isAuthenticated } = useAuth0();
-  const [isEditing, setIsEditing] = React.useState(false);
   const rtx = useRecipeContext();
   const ctx = useSessionContext();
   const navigate = useNavigate();
@@ -55,7 +52,7 @@ export function RecipeEditingControls({
             label="Edit"
             inlineLabel
             onChange={toggleEditing}
-            // defaultChecked={isEditing}
+            defaultChecked={create}
           />
         </Stack.Item>
         {rtx?.editing && (
