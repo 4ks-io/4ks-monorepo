@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState, useReducer } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { ApiClient } from '@4ks/api-fetch';
-import ApiServiceFactory from '../services';
+import ApiServiceFactory from '../services/api';
 import {
   ISessionContext,
   initialState,

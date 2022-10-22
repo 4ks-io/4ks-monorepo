@@ -12,7 +12,6 @@ import { useNavigate, Link } from 'react-router-dom';
 
 import { useSessionContext } from '../../providers/session-context';
 import { models_Recipe } from '@4ks/api-fetch';
-import { PageLayout } from '../Layout';
 import { Text } from '@fluentui/react';
 
 const stackTokens: IStackTokens = {
@@ -69,71 +68,69 @@ const Recipes = () => {
   }
 
   return (
-    <PageLayout>
-      <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
-        {newRecipeButton()}
-        {recipes &&
-          recipes.map((r) => {
-            return (
-              <Stack.Item
-                key={r.id}
-                style={{
-                  borderWidth: 1,
-                  borderStyle: 'solid',
-                  borderColor: 'gray',
-                  padding: 8,
-                }}
-              >
-                <Stack styles={stackStyles} tokens={stackTokens}>
-                  <Stack horizontal>
-                    <Stack.Item align="auto" styles={stackItemStyles}>
-                      <span>
-                        <Link to={`/r/${r.id}`}>
-                          <Text variant="xLarge" style={{ fontWeight: 'bold' }}>
-                            {r.currentRevision?.name || `missing title`}
-                          </Text>
-                        </Link>
-                      </span>
-                    </Stack.Item>
-                  </Stack>
-                  <Stack
-                    horizontal
-                    tokens={{
-                      childrenGap: 4,
-                    }}
-                  >
-                    {PLACEHOLDER_TAGS.map((tag) => {
-                      return (
-                        <Stack.Item key={`${r.id}_${tag}`}>
-                          <Text
-                            style={{
-                              fontWeight: 'bold',
-                            }}
-                          >
-                            #{tag}
-                          </Text>
-                        </Stack.Item>
-                      );
-                    })}
-                  </Stack>
-                  <Stack horizontal tokens={{ childrenGap: 4 }}>
-                    <Stack.Item>Chefs:</Stack.Item>
-                    {r.contributors?.map((contributor, idx) => (
-                      <Stack.Item
-                        style={{ fontWeight: 'bold' }}
-                        key={`${r.id}_${contributor}`}
-                      >
-                        {contributor.username}
-                        {idx < (r.contributors?.length || 0) - 1 ? ',' : ''}
-                      </Stack.Item>
-                    ))}
-                  </Stack>
+    <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
+      {newRecipeButton()}
+      {recipes &&
+        recipes.map((r) => {
+          return (
+            <Stack.Item
+              key={r.id}
+              style={{
+                borderWidth: 1,
+                borderStyle: 'solid',
+                borderColor: 'gray',
+                padding: 8,
+              }}
+            >
+              <Stack styles={stackStyles} tokens={stackTokens}>
+                <Stack horizontal>
+                  <Stack.Item align="auto" styles={stackItemStyles}>
+                    <span>
+                      <Link to={`/r/${r.id}`}>
+                        <Text variant="xLarge" style={{ fontWeight: 'bold' }}>
+                          {r.currentRevision?.name || `missing title`}
+                        </Text>
+                      </Link>
+                    </span>
+                  </Stack.Item>
                 </Stack>
-              </Stack.Item>
-            );
-          })}
-      </Stack>
-    </PageLayout>
+                <Stack
+                  horizontal
+                  tokens={{
+                    childrenGap: 4,
+                  }}
+                >
+                  {PLACEHOLDER_TAGS.map((tag) => {
+                    return (
+                      <Stack.Item key={`${r.id}_${tag}`}>
+                        <Text
+                          style={{
+                            fontWeight: 'bold',
+                          }}
+                        >
+                          #{tag}
+                        </Text>
+                      </Stack.Item>
+                    );
+                  })}
+                </Stack>
+                <Stack horizontal tokens={{ childrenGap: 4 }}>
+                  <Stack.Item>Chefs:</Stack.Item>
+                  {r.contributors?.map((contributor, idx) => (
+                    <Stack.Item
+                      style={{ fontWeight: 'bold' }}
+                      key={`${r.id}_${contributor}`}
+                    >
+                      {contributor.username}
+                      {idx < (r.contributors?.length || 0) - 1 ? ',' : ''}
+                    </Stack.Item>
+                  ))}
+                </Stack>
+              </Stack>
+            </Stack.Item>
+          );
+        })}
+    </Stack>
   );
 };
 

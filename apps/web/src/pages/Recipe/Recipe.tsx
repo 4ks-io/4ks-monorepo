@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Stack } from '@fluentui/react/lib/Stack';
-import { PageLayout } from '../Layout';
 import { RecipeHeader } from './RecipeHeader';
 import { RecipeControls } from './RecipeControls';
 import { stackStyles, itemAlignmentsStackTokens } from './styles';
@@ -21,25 +20,19 @@ const Recipe = ({ create = false }: RecipeProps) => {
   const [selectedView, setSelectedView] = useState(RecipeViews.RecipeContent);
 
   return (
-    <PageLayout>
-      <Stack
-        styles={stackStyles}
-        tokens={itemAlignmentsStackTokens}
-        id="target"
-      >
-        <RecipeHeader />
-        <RecipeControls setSelectedView={setSelectedView} />
+    <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens} id="target">
+      <RecipeHeader />
+      <RecipeControls setSelectedView={setSelectedView} />
 
-        {selectedView == RecipeViews.RecipeContent && (
-          <RecipeContentView create={create} />
-        )}
-        {selectedView == RecipeViews.Forks && <RecipeForksView />}
-        {/* {selectedView == RecipeViews.Comments && <RecipeCommentsView />} */}
-        {/* {selectedView == RecipeViews.Story && <RecipeStoryView />} */}
-        {selectedView == RecipeViews.Versions && <RecipeVersionsView />}
-        {selectedView == RecipeViews.Settings && <RecipeSettingsView />}
-      </Stack>
-    </PageLayout>
+      {selectedView == RecipeViews.RecipeContent && (
+        <RecipeContentView create={create} />
+      )}
+      {selectedView == RecipeViews.Forks && <RecipeForksView />}
+      {/* {selectedView == RecipeViews.Comments && <RecipeCommentsView />} */}
+      {/* {selectedView == RecipeViews.Story && <RecipeStoryView />} */}
+      {selectedView == RecipeViews.Versions && <RecipeVersionsView />}
+      {selectedView == RecipeViews.Settings && <RecipeSettingsView />}
+    </Stack>
   );
 };
 

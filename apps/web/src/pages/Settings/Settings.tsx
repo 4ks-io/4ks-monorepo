@@ -1,53 +1,48 @@
 import React, { useEffect } from 'react';
 import { useSessionContext } from '../../providers/session-context';
-import { PageLayout } from '../Layout';
 import { TextField } from '@fluentui/react/lib/TextField';
-import { DefaultButton } from '@fluentui/react/lib/Button';
+import { PrimaryButton } from '@fluentui/react/lib/Button';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
+import { usernameValidator } from '../../hooks/username-validator';
 
 const Settings = () => {
   const ctx = useSessionContext();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth0();
-  const [username, setUsername] = React.useState(ctx.user?.username);
   const [validationErrorMsg, setValidationErrorMsg] = React.useState('');
-  const [saveUsernameDisabled, setSaveUsernameDisabled] = React.useState(true);
+  const [disableSaveUsername, setDisableSaveUsername] = React.useState(true);
+  const uValidator = usernameValidator();
 
-  useEffect(() => setUsername(ctx.user?.username), [ctx.user]);
+  useEffect(
+    () => uValidator.setUsername(`${ctx.user?.username}`),
+    [ctx.user?.username]
+  );
 
-  function handleUsernameChange(
-    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    newValue: string | undefined
-  ) {
-    setUsername(`${newValue}`);
-    // console.log('handleUsernameChange');
-    ctx.api?.users
-      .getUsersUsername(encodeURI(`${newValue}`))
-      .then((d) => {
-        if (!!d) {
-          setValidationErrorMsg('');
-          setSaveUsernameDisabled(true);
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-        setValidationErrorMsg('Invalid username or username already in use');
-        setSaveUsernameDisabled(false);
-      });
-  }
-
-  function handleUpdateUsername() {}
+  useEffect(() => {
+    setValidationErrorMsg(uValidator.feedbackMsg);
+    setDisableSaveUsername(
+      uValidator.username == ctx.user?.username || !uValidator.isValid
+    );
+  }, [uValidator]);
 
   if (!isAuthenticated) {
     navigate('/');
   }
 
-  const disableSave =
-    !ctx.user || saveUsernameDisabled || ctx.user.username == username;
+  function handleUsernameChange(
+    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+    newValue: string | undefined
+  ) {
+    uValidator.setUsername(`${newValue}`);
+  }
+
+  function handleUpdateUsername() {}
+
+  const disableSave = !ctx.user || disableSaveUsername;
 
   return (
-    <PageLayout>
+    <>
       <h2>Settings</h2>
       <p>
         Current Username: <b>{ctx.user?.username}</b>
@@ -57,23 +52,23 @@ const Settings = () => {
         errorMessage={validationErrorMsg}
         label="Username"
         deferredValidationTime={1000}
-        value={username}
+        value={uValidator.username}
         onChange={handleUsernameChange}
       />
       <ul>
-        <li>Username must be minimum 4 and maximum 16 characters.</li>
+        <li>Username must be minimum 8 and maximum 24 characters.</li>
         <li>It may only contain alphanumeric characters or single hyphens.</li>
         <li>It cannot begin or end with a hyphen.</li>
       </ul>
       <p>
         <b>Renaming may take a few minutes to complete.</b>
       </p>
-      <DefaultButton
+      <PrimaryButton
         text="Save"
-        disabled={!disableSave}
+        disabled={disableSave}
         onClick={handleUpdateUsername}
       />
-    </PageLayout>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useConst } from '@fluentui/react-hooks';
 import { ActionButton } from '@fluentui/react/lib/Button';
 import { Stack } from '@fluentui/react/lib/Stack';
@@ -31,6 +31,7 @@ const AppBar = () => {
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   const ctx = useSessionContext();
+  const location = useLocation();
 
   const [showSearchInput, setShowSearchInput] = useState(true);
   const [showRecipesLink, setShowRecipesLink] = useState(true);
@@ -61,13 +62,14 @@ const AppBar = () => {
   });
 
   useEffect(() => {
-    const pathname = window.location.pathname;
-    if (pathname == '/') {
+    if (location.pathname == '/') {
       setShowSearchInput(false);
-    } else if (pathname == '/r') {
+      setShowRecipesLink(true);
+    } else if (location.pathname == '/r') {
+      setShowSearchInput(true);
       setShowRecipesLink(false);
     }
-  }, [window.location.pathname]);
+  }, [location.pathname]);
 
   function handleLandingClick() {
     navigate('/');
@@ -123,9 +125,6 @@ const AppBar = () => {
         )}
       </span>
       <span style={itemStyles}>
-        {/* {showSearchInput && (
-          <ActionButton onClick={handleLandingClick}>Home</ActionButton>
-        )} */}
         {showRecipesLink && (
           <ActionButton onClick={handleRecipesClick}>Recipes</ActionButton>
         )}

@@ -4,14 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { useSessionContext } from '../../providers/session-context';
 
 const Login = () => {
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated, user } = useAuth0();
   const ctx = useSessionContext();
   const navigate = useNavigate();
 
   const p = localStorage.getItem('locationPathname') || '/';
 
   useEffect(() => {
-    if (isAuthenticated && typeof ctx?.api != undefined) {
+    if (isAuthenticated && user && typeof ctx?.api != undefined) {
       ctx?.api?.users
         .getUsersProfile()
         .then((u) => {
@@ -21,7 +21,7 @@ const Login = () => {
           navigate('/new', { replace: true });
         });
     }
-  }, [isAuthenticated, ctx?.api]);
+  }, [isAuthenticated, user, ctx?.api]);
 
   return <div>loading</div>;
 };

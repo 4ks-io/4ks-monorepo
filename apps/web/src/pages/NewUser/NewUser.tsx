@@ -4,16 +4,26 @@ import { TextField } from '@fluentui/react/lib/TextField';
 import { useSessionContext } from '../../providers/session-context';
 import { PrimaryButton } from '@fluentui/react/lib/Button';
 import { useNavigate } from 'react-router-dom';
+import { usernameValidator } from '../../hooks/username-validator';
 
 const NewUser: React.FunctionComponent = () => {
   const { user, isAuthenticated, logout } = useAuth0();
   const ctx = useSessionContext();
-  const [displayName, setDisplayName] = React.useState<string>('');
-  const [username, setUsername] = React.useState('something-random');
-  const [country, setCountry] = React.useState<string>();
-  const [locale, setLocale] = React.useState<string>();
-  const [validationErrorMsg, setValidationErrorMsg] = React.useState('');
   const navigate = useNavigate();
+
+  const [displayName, setDisplayName] = React.useState<string>('');
+  // const [country, setCountry] = React.useState<string>();
+  // const [locale, setLocale] = React.useState<string>();
+  const [validationErrorMsg, setValidationErrorMsg] = React.useState('');
+  const [disableSaveUsername, setDisableSaveUsername] = React.useState(true);
+  const uValidator = usernameValidator();
+
+  useEffect(() => {
+    setValidationErrorMsg(uValidator.feedbackMsg);
+    setDisableSaveUsername(
+      uValidator.username == ctx.user?.username || !uValidator.isValid
+    );
+  }, [uValidator]);
 
   function handleNameChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -22,47 +32,48 @@ const NewUser: React.FunctionComponent = () => {
     setDisplayName(`${newValue}`);
   }
 
-  function handleCountryChange(
-    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    newValue: string | undefined
-  ) {
-    setCountry(`${newValue}`);
-  }
+  // function handleCountryChange(
+  //   event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+  //   newValue: string | undefined
+  // ) {
+  //   setCountry(`${newValue}`);
+  // }
 
-  function handleLocaleChange(
-    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    newValue: string | undefined
-  ) {
-    setCountry(`${newValue}`);
-  }
+  // function handleLocaleChange(
+  //   event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+  //   newValue: string | undefined
+  // ) {
+  //   setCountry(`${newValue}`);
+  // }
 
   function handleUsernameChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue: string | undefined
   ) {
-    setUsername(`${newValue}`);
-    ctx.api?.users
-      .getUsersUsername(encodeURI(`${newValue}`))
-      .then(() => setValidationErrorMsg(''))
-      .catch((e) => {
-        console.log(e);
-        // TODO
-        // if 400 invalid username
-        // if 409 user already in use
-        // other unknown error
-        setValidationErrorMsg('Username already in use');
-      });
+    uValidator.setUsername(`${newValue}`);
+
+    // ctx.api?.users
+    //   .getUsersUsername(encodeURI(`${newValue}`))
+    //   .then(() => setValidationErrorMsg(''))
+    //   .catch((e) => {
+    //     console.log(e);
+    //     // TODO
+    //     // if 400 invalid username
+    //     // if 409 user already in use
+    //     // other unknown error
+    //     setValidationErrorMsg('Username already in use');
+    //   });
   }
 
   useEffect(() => {
     if (user?.name) {
-      setUsername(`${user?.name?.replace(' ', '-')}`);
+      uValidator.setUsername(`${user?.name?.replace(' ', '-')}`);
       setDisplayName(`${user?.name}`);
     }
-    if (user?.locale) {
-      setCountry(`${user?.locale}`);
-      setLocale(`${user?.locale}`);
-    }
+    // if (user?.locale) {
+    //   setCountry(`${user?.locale}`);
+    //   setLocale(`${user?.locale}`);
+    // }
   }, [user]);
 
   useEffect(() => {
@@ -74,10 +85,10 @@ const NewUser: React.FunctionComponent = () => {
 
   function handleSave() {
     console.log(ctx.actions);
-    if (ctx?.actions?.createUser) {
+    if (ctx?.actions?.createUser && uValidator.username) {
       try {
         ctx?.actions?.createUser({
-          username,
+          username: uValidator.username,
           displayName,
         });
       } catch {
@@ -90,7 +101,7 @@ const NewUser: React.FunctionComponent = () => {
   return (
     <>
       <TextField label="Name" value={displayName} onChange={handleNameChange} />
-      <TextField
+      {/* <TextField
         label="Country"
         value={country}
         onChange={handleCountryChange}
@@ -99,23 +110,23 @@ const NewUser: React.FunctionComponent = () => {
         label="Prefered Locale"
         value={locale}
         onChange={handleLocaleChange}
-      />
+      /> */}
       <TextField
         errorMessage={validationErrorMsg}
         label="Username"
         deferredValidationTime={1000}
-        value={username}
+        value={uValidator.username}
         onChange={handleUsernameChange}
       />
       <ul>
-        <li>Username must be minimum 4 and maximum 16 characters.</li>
+        <li>Username must be minimum 8 and maximum 16 characters.</li>
         <li>It may only contain alphanumeric characters or single hyphens.</li>
         <li>It cannot begin or end with a hyphen.</li>
       </ul>
 
       <PrimaryButton
         text="Save"
-        disabled={!isAuthenticated}
+        disabled={!isAuthenticated || disableSaveUsername}
         onClick={handleSave}
       />
     </>

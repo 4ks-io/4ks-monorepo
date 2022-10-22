@@ -114,14 +114,14 @@ func (us userService) GetUserByEmail(emailAddress *string) (*models.User, error)
 
 func isValidUsername(username string) bool {
 	/*
-		1. at least 4 characters
-		2. no longer than 16 characters
+		1. at least 8 characters
+		2. no longer than 24 characters
 		3. alphanumeric characters or hyphens
 		4. no consecutive hyphens
 		5. cannot begin or end with a hyphen
 	*/
 
-	if regexp.MustCompile("^[a-zA-Z0-9][a-zA-Z0-9-]{2,14}[a-zA-Z0-9]$").MatchString(username) {
+	if regexp.MustCompile("^[a-zA-Z0-9][a-zA-Z0-9-]{6,22}[a-zA-Z0-9]$").MatchString(username) {
 		if regexp.MustCompile("--").MatchString(username) {
 			return false
 		}
@@ -191,13 +191,9 @@ func (us userService) TestUsernameExist(username *string) (bool, error) {
 		return false, ErrInvalidUsername
 	}
 
-	usersWithUsername, err := userCollection.Where("username", "==", strings.ToLower(u)).Documents(ctx).GetAll()
-
-	if err != nil {
+	usersWithUsername, err := userCollection.Where("usernameLower", "==", strings.ToLower(u)).Documents(ctx).GetAll()
+	if err != nil || len(usersWithUsername) > 0  {
 		return false, ErrUsernameInUse
-	}
-	if len(usersWithUsername) == 0 {
-		return false, nil
 	}
 	return true, nil
 }
