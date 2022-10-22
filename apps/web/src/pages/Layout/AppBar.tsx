@@ -4,7 +4,7 @@ import { useConst } from '@fluentui/react-hooks';
 import { ActionButton } from '@fluentui/react/lib/Button';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { TextField } from '@fluentui/react/lib/TextField';
-import { DefaultPalette, IStackStyles, IStackTokens } from '@fluentui/react';
+import { IStackStyles } from '@fluentui/react';
 import { useAuth0 } from '@auth0/auth0-react';
 import logo from '../../logo.svg';
 import { Image, IImageProps } from '@fluentui/react/lib/Image';
@@ -70,11 +70,11 @@ const AppBar = () => {
   }, [window.location.pathname]);
 
   function handleLandingClick() {
-    navigate('/', { replace: true });
+    navigate('/');
   }
 
   function handleRecipesClick() {
-    navigate('/r', { replace: true });
+    navigate('/r');
   }
 
   function handleLoginOnClick() {
@@ -86,11 +86,11 @@ const AppBar = () => {
   }
 
   function handleSettingsClick() {
-    navigate('/me', { replace: true });
+    navigate('/me');
   }
 
   function handleProfileClick() {
-    navigate(encodeURI(`/${ctx.user?.username}`), { replace: true });
+    navigate(encodeURI(`/${ctx.user?.username}`));
   }
 
   const stackStyles: IStackStyles = {

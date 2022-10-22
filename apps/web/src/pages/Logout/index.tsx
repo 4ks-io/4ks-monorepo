@@ -10,7 +10,7 @@ const Logout = () => {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate(p, { replace: true });
+      navigate(p);
     }
   }, [isAuthenticated]);
 

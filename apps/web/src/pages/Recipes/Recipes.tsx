@@ -34,7 +34,7 @@ const Recipes = () => {
   }, [ctx]);
 
   function navigateNewRecipe() {
-    navigate('/r/0', { replace: true });
+    navigate('/r/0');
   }
 
   const stackStyles: IStackStyles = {

@@ -19,7 +19,7 @@ import (
 // @Success 		200 		 {string} data
 // @Router 			/version [get]
 func GetAPIVersion(version string) func(c *gin.Context) {
-	return func (c *gin.Context) {
+	return func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"data": version,
 		})
@@ -33,6 +33,6 @@ func SystemRouter(router *gin.Engine) {
 		panic(err)
 	}
 	systemCtlr := controllers.NewSystemController()
-	router.GET("/version", GetAPIVersion(strings.TrimSuffix(string(v), "\n") ))
+	router.GET("/version", GetAPIVersion(strings.TrimSuffix(string(v), "\n")))
 	router.GET("/ready", systemCtlr.CheckReadiness)
 }

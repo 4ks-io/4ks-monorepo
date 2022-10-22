@@ -17,9 +17,7 @@ export function RecipeDangerZone({}: RecipeDangerZoneProps) {
 
   const handleDelete = () => {
     if (rtx?.recipeId) {
-      ctx.api?.recipes
-        .deleteRecipes(rtx.recipeId)
-        .then(() => navigate(`/r`, { replace: true }));
+      ctx.api?.recipes.deleteRecipes(rtx.recipeId).then(() => navigate(`/r`));
     }
   };
 

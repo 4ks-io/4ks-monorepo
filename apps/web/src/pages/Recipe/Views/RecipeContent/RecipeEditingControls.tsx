@@ -33,9 +33,7 @@ export function RecipeEditingControls({
     if (create) {
       ctx?.api?.recipes
         .postRecipes(rtx?.recipe.currentRevision as dtos_UpdateRecipe)
-        .then((data: models_Recipe) =>
-          navigate(`/r/${data.id}`, { replace: true })
-        );
+        .then((data: models_Recipe) => navigate(`/r/${data.id}`));
     } else {
       ctx?.api?.recipes.patchRecipes(
         `${rtx?.recipeId}`,

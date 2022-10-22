@@ -10,7 +10,9 @@ const PageLayout = (props: React.PropsWithChildren<PageProps>) => {
   const location = useLocation();
 
   useEffect(() => {
-    localStorage.setItem('locationPathname', location.pathname);
+    if (!['/me'].includes(location.pathname)) {
+      localStorage.setItem('locationPathname', location.pathname);
+    }
   }, [location.pathname]);
 
   return (

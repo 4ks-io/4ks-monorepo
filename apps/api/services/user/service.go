@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 	"log"
+	"net/url"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -21,9 +23,10 @@ var storage, _ = firestore.NewClient(ctx, firstoreProjectId)
 var userCollection = storage.Collection("users")
 
 var (
-	ErrEmailInUse    = errors.New("a user with that email already exists")
-	ErrUsernameInUse = errors.New("a user with that username already exists")
-	ErrUserNotFound  = errors.New("a user with that email was not found")
+	ErrEmailInUse      = errors.New("a user with that email already exists")
+	ErrUsernameInUse   = errors.New("a user with that username already exists")
+	ErrInvalidUsername = errors.New("invalid username")
+	ErrUserNotFound    = errors.New("a user with that email was not found")
 )
 
 type UserService interface {
@@ -109,13 +112,37 @@ func (us userService) GetUserByEmail(emailAddress *string) (*models.User, error)
 	return user, nil
 }
 
+func isValidUsername(username string) bool {
+	/*
+		1. at least 4 characters
+		2. no longer than 16 characters
+		3. alphanumeric characters or hyphens
+		4. no consecutive hyphens
+		5. cannot begin or end with a hyphen
+	*/
+
+	if regexp.MustCompile("^[a-zA-Z0-9][a-zA-Z0-9-]{2,14}[a-zA-Z0-9]$").MatchString(username) {
+		if regexp.MustCompile("--").MatchString(username) {
+			return false
+		}
+		return true
+	}
+
+	return false
+}
+
 func (us userService) CreateUser(userId *string, userEmail *string, user *dtos.CreateUser) (*models.User, error) {
+	isValid := isValidUsername(user.Username)
+	if !isValid {
+		return nil, ErrInvalidUsername
+	}
+
 	existingUserId, _ := userCollection.Doc(*userId).Get(ctx)
 	if existingUserId.Exists() {
 		return nil, ErrEmailInUse
 	}
 
-	usersWithUsername, err := userCollection.Where("username", "==", strings.ToLower(user.Username)).Documents(ctx).GetAll()
+	usersWithUsername, err := userCollection.Where("usernameLower", "==", strings.ToLower(user.Username)).Documents(ctx).GetAll()
 
 	if len(usersWithUsername) > 0 {
 		return nil, ErrUsernameInUse
@@ -124,12 +151,13 @@ func (us userService) CreateUser(userId *string, userEmail *string, user *dtos.C
 	}
 
 	newUser := &models.User{
-		Id:           *userId,
-		Username:     strings.ToLower(user.Username),
-		DisplayName:  user.DisplayName,
-		EmailAddress: strings.ToLower(*userEmail),
-		CreatedDate:  time.Now().UTC(),
-		UpdatedDate:  time.Now().UTC(),
+		Id:            *userId,
+		Username:      user.Username,
+		UsernameLower: strings.ToLower(user.Username),
+		DisplayName:   user.DisplayName,
+		EmailAddress:  strings.ToLower(*userEmail),
+		CreatedDate:   time.Now().UTC(),
+		UpdatedDate:   time.Now().UTC(),
 	}
 
 	_, err = userCollection.Doc(*userId).Create(ctx, newUser)
@@ -155,14 +183,20 @@ func (us userService) DeleteUser(userId *string) error {
 	return nil
 }
 
-
 func (us userService) TestUsernameExist(username *string) (bool, error) {
-	usersWithUsername, err := userCollection.Where("username", "==", strings.ToLower(*username)).Documents(ctx).GetAll()
-
-	if err != nil  {
-		return false, ErrUserNotFound
+	u, err := url.PathUnescape(*username)
+	
+	isValid := isValidUsername(u)
+	if !isValid {
+		return false, ErrInvalidUsername
 	}
-	if  len(usersWithUsername) == 0 {
+
+	usersWithUsername, err := userCollection.Where("username", "==", strings.ToLower(u)).Documents(ctx).GetAll()
+
+	if err != nil {
+		return false, ErrUsernameInUse
+	}
+	if len(usersWithUsername) == 0 {
 		return false, nil
 	}
 	return true, nil

@@ -12,7 +12,6 @@ func GetStrEnvVar(key, fallback string) string {
 	return fallback
 }
 
-
 func GetBoolEnv(key string, fallback bool) bool {
 	val := GetStrEnvVar(key, strconv.FormatBool(fallback))
 	ret, err := strconv.ParseBool(val)

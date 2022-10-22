@@ -1,7 +1,7 @@
-import { IRecipeContext, initialState } from './recipe-context-init';
+import { IRecipeContext } from './recipe-context-init';
 
 interface IAction {
-  type: string;
+  type: RecipeContextAction;
   payload?: any;
 }
 

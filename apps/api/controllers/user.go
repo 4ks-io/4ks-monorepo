@@ -75,7 +75,6 @@ func (uc *userController) CreateUser(c *gin.Context) {
 // @Router 			/users/{userId}   [delete]
 // @Security 		ApiKeyAuth
 func (uc *userController) DeleteUser(c *gin.Context) {
-	fmt.Println("DeleteUser")
 	userId := c.Param("id")
 	err := uc.userService.DeleteUser(&userId)
 
@@ -176,7 +175,6 @@ func (uc *userController) UpdateUser(c *gin.Context) {
 
 }
 
-
 // TestUsername	godoc
 // @Summary 		Test if a username exists
 // @Description Test if a username exists
@@ -193,8 +191,11 @@ func (uc *userController) TestUsername(c *gin.Context) {
 
 	found, err := uc.userService.TestUsernameExist(&username)
 
-	if err == userService.ErrUserNotFound {
-		c.AbortWithError(http.StatusNotFound, err)
+	if err == userService.ErrInvalidUsername {
+		c.JSON(http.StatusBadRequest, found)
+		return
+	} else if err == userService.ErrUsernameInUse {
+		c.JSON(http.StatusConflict, found)
 		return
 	} else if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
@@ -202,6 +203,4 @@ func (uc *userController) TestUsername(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, found)
-
 }
-

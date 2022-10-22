@@ -1,27 +1,18 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useReducer } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { ApiClient } from '@4ks/api-fetch';
 import ApiServiceFactory from '../services';
-import { models_User } from '@4ks/api-fetch';
+import {
+  ISessionContext,
+  initialState,
+  createUserProps,
+} from './session-context-init';
+import {
+  sessionContextReducer,
+  SesionContextAction,
+} from './session-context-reducer';
 
-export interface ISessionContext {
-  user: models_User;
-  api: ApiClient;
-}
-
-export interface ISessionContextU {
-  user: models_User | undefined | null;
-  api: ApiClient | undefined | null;
-}
-
-const initialState = {
-  user: undefined,
-  api: undefined,
-};
-
-const SessionContext = React.createContext<ISessionContext | ISessionContextU>(
-  initialState
-);
+const SessionContext = React.createContext<ISessionContext>(initialState);
 
 type SessionContextProviderProps = { children: React.ReactNode };
 
@@ -29,47 +20,60 @@ export function SessionContextProvider({
   children,
 }: SessionContextProviderProps) {
   const { user, getAccessTokenSilently } = useAuth0();
-  const [state, dispatch] = useState<ISessionContext | ISessionContextU>(
-    initialState
-  );
+
+  const [state, dispatch] = useReducer(sessionContextReducer, initialState);
+
+  function createUser(a: ApiClient) {
+    return ({ username, displayName }: createUserProps) => {
+      a?.users
+        .postUsers({
+          displayName: displayName,
+          username: username.trim(),
+        })
+        .then((u) => {
+          dispatch({
+            type: SesionContextAction.SET_USER,
+            payload: u,
+          });
+        });
+    };
+  }
+
+  async function setUser(a: ApiClient) {
+    a.users
+      .getUsersProfile()
+      .then((u) => {
+        dispatch({
+          type: SesionContextAction.SET_USER,
+          payload: u,
+        });
+      })
+      .catch(() => {
+        dispatch({
+          type: SesionContextAction.SET_ACTIONS,
+          payload: { createUser: createUser(a) },
+        });
+      });
+  }
 
   useEffect(() => {
-    // console.log('useEffect');
+    // authenticated user
     if (user) {
-      // console.log('is user');
+      console.log('// authenticated user');
       getAccessTokenSilently().then(async (t) => {
-        // console.log('got token');
         let a = ApiServiceFactory(t);
-        let u: models_User;
-
-        try {
-          // console.log('trying getUsersProfile');
-          u = await a.users.getUsersProfile();
-          dispatch({
-            user: u,
-            api: a,
-          });
-        } catch {
-          // console.log('catching postUsers');
-          try {
-            u = await a.users.postUsers({
-              displayName: `${user.name}`,
-              username: `${user.name}`,
-            });
-            dispatch({
-              user: u,
-              api: a,
-            });
-          } catch {
-            // console.log(`failed to create user`);
-          }
-        }
+        dispatch({
+          type: SesionContextAction.SET_API,
+          payload: a,
+        });
+        setUser(a);
       });
     } else {
-      // console.log('dispatch undefined');
+      // anonymous user
+      console.log('// anonymous user');
       dispatch({
-        user: undefined,
-        api: ApiServiceFactory(undefined),
+        type: SesionContextAction.SET_API,
+        payload: ApiServiceFactory(undefined),
       });
     }
   }, [user]);
