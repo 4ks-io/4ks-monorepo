@@ -3,6 +3,7 @@ variable "development_ip_addresses" {
   default = [
     "71.191.48.46/32", # nic home
     "172.58.243.117/32", # nic mobile
+    "71.121.252.105", # hammad home
     "142.127.4.130" # renee trotter  (nic's cousin) - UX
   ]
 }
