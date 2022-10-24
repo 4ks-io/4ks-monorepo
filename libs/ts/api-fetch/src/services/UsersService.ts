@@ -2,7 +2,10 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { dtos_CreateUser } from '../models/dtos_CreateUser';
+import type { dtos_TestUserName } from '../models/dtos_TestUserName';
+import type { dtos_UpdateUser } from '../models/dtos_UpdateUser';
 import type { models_User } from '../models/models_User';
+import type { models_Username } from '../models/models_Username';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
@@ -57,19 +60,17 @@ export class UsersService {
     /**
      * Test if a username exists
      * Test if a username exists
-     * @param username UserName
-     * @returns boolean OK
+     * @param username Username Data
+     * @returns models_Username OK
      * @throws ApiError
      */
-    public getUsersUsername(
-        username: string,
-    ): CancelablePromise<Array<boolean>> {
+    public postUsersUsername(
+        username: dtos_TestUserName,
+    ): CancelablePromise<models_Username> {
         return this.httpRequest.request({
-            method: 'GET',
-            url: '/users/username/{username}',
-            path: {
-                'username': username,
-            },
+            method: 'POST',
+            url: '/users/username',
+            body: username,
         });
     }
 
@@ -115,18 +116,21 @@ export class UsersService {
      * Update User
      * Update User
      * @param userId User Id
+     * @param user User Data
      * @returns models_User OK
      * @throws ApiError
      */
     public patchUsers(
         userId: string,
-    ): CancelablePromise<Array<models_User>> {
+        user: dtos_UpdateUser,
+    ): CancelablePromise<models_User> {
         return this.httpRequest.request({
             method: 'PATCH',
             url: '/users/{userId}',
             path: {
                 'userId': userId,
             },
+            body: user,
         });
     }
 

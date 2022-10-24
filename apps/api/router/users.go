@@ -13,11 +13,11 @@ func UsersRouter(router *gin.Engine) {
 	users := router.Group("/users")
 	{
 		users.DELETE(":id", middleware.Authorize("/users/*", "delete"), uc.DeleteUser)
+		users.POST("username", uc.TestUsername)
 		users.POST("", uc.CreateUser)
 		users.GET("profile", uc.GetCurrentUser)
 		users.GET("", middleware.Authorize("/users/*", "list"), uc.GetUsers)
 		users.GET(":id", uc.GetUser)
 		users.PATCH(":id", uc.UpdateUser)
-		users.GET("username/:username", uc.TestUsername)
 	}
 }

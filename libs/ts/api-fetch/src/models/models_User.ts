@@ -9,4 +9,5 @@ export type models_User = {
     id?: string;
     updatedDate?: string;
     username?: string;
+    usernameLower?: string;
 };

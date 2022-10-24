@@ -5,6 +5,7 @@ import { PrimaryButton } from '@fluentui/react/lib/Button';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { usernameValidator } from '../../hooks/username-validator';
+import { dtos_UpdateUser } from '@4ks/api-fetch';
 
 const Settings = () => {
   const ctx = useSessionContext();
@@ -37,7 +38,15 @@ const Settings = () => {
     uValidator.setUsername(`${newValue}`);
   }
 
-  function handleUpdateUsername() {}
+  function handleUpdateUsername() {
+    if (uValidator.username) {
+      const data: dtos_UpdateUser = { username: uValidator.username };
+      ctx.api?.users.patchUsers(ctx.user.id, data);
+      // .then((r) => {
+      //   console.log(r);
+      // });
+    }
+  }
 
   const disableSave = !ctx.user || disableSaveUsername;
 

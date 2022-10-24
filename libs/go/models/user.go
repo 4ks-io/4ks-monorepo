@@ -19,3 +19,8 @@ type UserSummary struct {
 	Username    string `firestore:"username,omitempty" json:"username"`
 	DisplayName string `firestore:"displayName,omitempty" json:"displayName"`
 }
+
+type Username struct {
+	Valid bool   `json:"valid" binding:"required"`
+	Msg   string `json:"msg" binding:"required"`
+}

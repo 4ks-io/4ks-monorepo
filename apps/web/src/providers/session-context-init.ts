@@ -1,5 +1,4 @@
-import { models_User } from '@4ks/api-fetch';
-import { ApiClient } from '@4ks/api-fetch';
+import { ApiClient, models_User } from '@4ks/api-fetch';
 
 export interface createUserProps {
   username: string;

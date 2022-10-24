@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"log"
-	"net/url"
 	"os"
 	"regexp"
 	"strings"
@@ -34,7 +33,9 @@ type UserService interface {
 	GetUserById(id *string) (*models.User, error)
 	GetUserByEmail(emailAddress *string) (*models.User, error)
 	CreateUser(userId *string, userEmail *string, user *dtos.CreateUser) (*models.User, error)
+	UpdateUserById(userId *string, user *dtos.UpdateUser) (*models.User, error)
 	DeleteUser(id *string) error
+	TestUsernameValid(username *string) bool
 	TestUsernameExist(username *string) (bool, error)
 }
 
@@ -112,7 +113,7 @@ func (us userService) GetUserByEmail(emailAddress *string) (*models.User, error)
 	return user, nil
 }
 
-func isValidUsername(username string) bool {
+func (us userService) TestUsernameValid(username *string) bool {
 	/*
 		1. at least 8 characters
 		2. no longer than 24 characters
@@ -121,8 +122,9 @@ func isValidUsername(username string) bool {
 		5. cannot begin or end with a hyphen
 	*/
 
-	if regexp.MustCompile("^[a-zA-Z0-9][a-zA-Z0-9-]{6,22}[a-zA-Z0-9]$").MatchString(username) {
-		if regexp.MustCompile("--").MatchString(username) {
+	// todo: combine these 2 regex...
+	if regexp.MustCompile("^[a-zA-Z0-9][a-zA-Z0-9-]{6,22}[a-zA-Z0-9]$").MatchString(*username) {
+		if regexp.MustCompile("--").MatchString(*username) {
 			return false
 		}
 		return true
@@ -132,7 +134,7 @@ func isValidUsername(username string) bool {
 }
 
 func (us userService) CreateUser(userId *string, userEmail *string, user *dtos.CreateUser) (*models.User, error) {
-	isValid := isValidUsername(user.Username)
+	isValid := us.TestUsernameValid(&user.Username)
 	if !isValid {
 		return nil, ErrInvalidUsername
 	}
@@ -168,6 +170,37 @@ func (us userService) CreateUser(userId *string, userEmail *string, user *dtos.C
 	return newUser, nil
 }
 
+
+func (us userService) UpdateUserById(userId *string, user *dtos.UpdateUser) (*models.User, error) {
+	if user.Username != "" {
+		isValid := us.TestUsernameValid(&user.Username)
+		if !isValid {
+			return nil, ErrInvalidUsername
+		}
+	}
+
+	_, err := userCollection.Doc(*userId).Update(ctx, []firestore.Update{
+		{
+						Path:  "username",
+						Value: user.Username,
+		},
+		{
+			Path:  "usernameLower",
+			Value: strings.ToLower(user.Username),
+},
+	})
+	if err != nil {
+			log.Printf("An error has occurred: %s", err)
+	}
+
+	u, err := us.GetUserById(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
+}
+
 // todo: add with disableUser/enableUser as we never want to delete a recipe
 func (us userService) DeleteUser(userId *string) error {
 	existingUserId, _ := userCollection.Doc(*userId).Get(ctx)
@@ -184,16 +217,10 @@ func (us userService) DeleteUser(userId *string) error {
 }
 
 func (us userService) TestUsernameExist(username *string) (bool, error) {
-	u, err := url.PathUnescape(*username)
-	
-	isValid := isValidUsername(u)
-	if !isValid {
-		return false, ErrInvalidUsername
+	// u, err := url.PathUnescape(*username)
+	usersWithUsername, err := userCollection.Where("usernameLower", "==", strings.ToLower(*username)).Documents(ctx).GetAll()
+	if err != nil || len(usersWithUsername) > 0 {
+		return true, ErrUsernameInUse
 	}
-
-	usersWithUsername, err := userCollection.Where("usernameLower", "==", strings.ToLower(u)).Documents(ctx).GetAll()
-	if err != nil || len(usersWithUsername) > 0  {
-		return false, ErrUsernameInUse
-	}
-	return true, nil
+	return false, nil
 }

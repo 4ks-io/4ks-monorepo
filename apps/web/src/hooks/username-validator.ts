@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSessionContext } from '../providers/session-context';
 import { useAuth0 } from '@auth0/auth0-react';
+import { models_Username } from '@4ks/api-fetch';
 
 interface IValidUsername {
   setUsername: (username: string) => void;
@@ -29,26 +30,37 @@ export function usernameValidator(): IValidUsername {
   useEffect(() => {
     if (isAuthenticated && user && username) {
       const isValideUsername = testUsername(username);
+
       if (!isValideUsername) {
         setIsValid(false);
         setFeedbackMsg('Invalid username');
-      } else if (username == ctx.user?.username) {
+        return;
+      }
+
+      if (username == ctx.user?.username) {
         setIsValid(true);
         setFeedbackMsg('');
-      } else {
-        ctx.api?.users
-          .getUsersUsername(encodeURI(username))
-          .then((d) => {
-            if (!!d) {
-              setIsValid(true);
-              setFeedbackMsg('');
-            }
-          })
-          .catch((e) => {
-            setIsValid(false);
-            setFeedbackMsg('Username already in use');
-          });
+        return;
       }
+
+      ctx.api?.users
+        .postUsersUsername({ username })
+        .then((d: models_Username) => {
+          setIsValid(d.valid);
+          switch (d.msg) {
+            case '':
+              setFeedbackMsg('');
+              break;
+            case 'invalid':
+              setFeedbackMsg('Invalid username');
+              break;
+            case 'unavailable':
+              setFeedbackMsg('Username already in use');
+              break;
+            default:
+              setFeedbackMsg('');
+          }
+        });
     }
   }, [username]);
 

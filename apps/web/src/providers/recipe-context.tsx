@@ -1,13 +1,16 @@
 import React, { useEffect, useContext, useReducer } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { models_Ingredient, models_Instruction } from '@4ks/api-fetch';
+import {
+  models_Ingredient,
+  models_Instruction,
+  models_Recipe,
+} from '@4ks/api-fetch';
 import { useSessionContext } from './session-context';
 import { IRecipeContext, initialState } from './recipe-context-init';
 import {
   recipeContextReducer,
   RecipeContextAction,
 } from './recipe-context-reducer';
-import { models_Recipe } from '../../../../libs/ts/api-fetch/dist';
 import { useParams } from 'react-router-dom';
 
 const RecipeContext = React.createContext<IRecipeContext | undefined>(

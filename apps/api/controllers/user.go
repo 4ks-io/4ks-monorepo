@@ -4,6 +4,7 @@ import (
 	"4ks/apps/api/dtos"
 	userService "4ks/apps/api/services/user"
 	"4ks/apps/api/utils"
+	"4ks/libs/go/models"
 	"fmt"
 
 	"net/http"
@@ -161,18 +162,47 @@ func (uc *userController) GetUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-// UpdateUser	godoc
+// UpdateUser	  godoc
 // @Summary 		Update User
 // @Description Update User
 // @Tags 				Users
 // @Accept 			json
 // @Produce 		json
-// @Param       userId 	path      string  true  "User Id"
-// @Success 		200 		{array} 	models.User
+// @Param       userId 	 path      string           true  "User Id"
+// @Param       payload  body  	   dtos.UpdateUser  true  "User Data"
+// @Success 		200 		 {object}  models.User
 // @Router 			/users/{userId}   [patch]
 // @Security 		ApiKeyAuth
 func (uc *userController) UpdateUser(c *gin.Context) {
+	reqUserId := c.Param("id")
+	curUserId := c.Request.Context().Value(utils.UserId{}).(string)
 
+	fmt.Println(reqUserId)
+	fmt.Println(curUserId)
+
+	if reqUserId != curUserId {
+		c.AbortWithError(http.StatusForbidden, nil)
+		return
+	}
+
+	payload := dtos.UpdateUser{}
+	if err := c.BindJSON(&payload); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	fmt.Println(payload.Username)
+
+	u, err := uc.userService.UpdateUserById(&reqUserId, &payload)
+	if err == userService.ErrUserNotFound {
+		c.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, u)
 }
 
 // TestUsername	godoc
@@ -181,26 +211,37 @@ func (uc *userController) UpdateUser(c *gin.Context) {
 // @Tags 				Users
 // @Accept 			json
 // @Produce 		json
-// @Param       username 	path    string  true  "UserName"
-// @Success 		200 		{array} 	bool
-// @Router 			/users/username/{username}   [get]
+// @Param       username    body  	   dtos.TestUserName  true  "Username Data"
+// @Success 		200 		 		{object} 	 models.Username
+// @Router 			/users/username   [post]
 // @Security 		ApiKeyAuth
 func (uc *userController) TestUsername(c *gin.Context) {
-	username := c.Param("username")
-	fmt.Println("TestUsername: " + username)
+	payload := dtos.TestUserName{}
 
-	found, err := uc.userService.TestUsernameExist(&username)
+	if err := c.BindJSON(&payload); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
 
-	if err == userService.ErrInvalidUsername {
-		c.JSON(http.StatusBadRequest, found)
+	resp := models.Username{}
+
+	isValid := uc.userService.TestUsernameValid(&payload.Username)
+	if !isValid {
+		resp.Msg = "invalid"
+		resp.Valid = isValid
+		c.JSON(http.StatusOK, resp)
 		return
-	} else if err == userService.ErrUsernameInUse {
-		c.JSON(http.StatusConflict, found)
-		return
+	}
+
+	isFound, err := uc.userService.TestUsernameExist(&payload.Username)
+	resp.Valid = !isFound
+
+	if err == userService.ErrUsernameInUse {
+		resp.Msg = "unavailable"
 	} else if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, found)
+	c.JSON(http.StatusOK, resp)
 }

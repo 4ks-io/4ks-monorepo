@@ -469,8 +469,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/username/{username}": {
-            "get": {
+        "/users/username": {
+            "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -489,21 +489,20 @@ const docTemplate = `{
                 "summary": "Test if a username exists",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "UserName",
+                        "description": "Username Data",
                         "name": "username",
-                        "in": "path",
-                        "required": true
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.TestUserName"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "boolean"
-                            }
+                            "$ref": "#/definitions/models.Username"
                         }
                     }
                 }
@@ -601,16 +600,22 @@ const docTemplate = `{
                         "name": "userId",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "User Data",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.UpdateUser"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.User"
-                            }
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 }
@@ -682,6 +687,17 @@ const docTemplate = `{
                 }
             }
         },
+        "dtos.TestUserName": {
+            "type": "object",
+            "required": [
+                "username"
+            ],
+            "properties": {
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "dtos.UpdateRecipe": {
             "type": "object",
             "properties": {
@@ -704,6 +720,17 @@ const docTemplate = `{
                     }
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.UpdateUser": {
+            "type": "object",
+            "properties": {
+                "displayName": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }
@@ -857,6 +884,9 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                },
+                "usernameLower": {
+                    "type": "string"
                 }
             }
         },
@@ -871,6 +901,21 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "models.Username": {
+            "type": "object",
+            "required": [
+                "msg",
+                "valid"
+            ],
+            "properties": {
+                "msg": {
+                    "type": "string"
+                },
+                "valid": {
+                    "type": "boolean"
                 }
             }
         }

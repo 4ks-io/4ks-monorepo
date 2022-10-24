@@ -167,8 +167,8 @@ func (rc *recipeController) GetRecipes(c *gin.Context) {
 // @Tags 				Recipes
 // @Accept 			json
 // @Produce 		json
-// @Param       recipeId 			path      string  true  "Recipe Id"
-// @Param				recipeUpdate 	body			dtos.UpdateRecipe  true  "Recipe Update"
+// @Param       recipeId 			path      string             true  "Recipe Id"
+// @Param				payload   	  body			dtos.UpdateRecipe  true  "Recipe Data"
 // @Success 		200 					{object} 	models.Recipe
 // @Router 			/recipes/{recipeId} [patch]
 // @Security 		ApiKeyAuth
