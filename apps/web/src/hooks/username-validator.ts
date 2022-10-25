@@ -28,7 +28,11 @@ export function usernameValidator(): IValidUsername {
   }
 
   useEffect(() => {
-    if (isAuthenticated && user && username) {
+    if (!username || username == '') {
+      setIsValid(false);
+      setFeedbackMsg('Invalid username');
+    }
+    if (ctx.user?.username && username) {
       const isValideUsername = testUsername(username);
 
       if (!isValideUsername) {
