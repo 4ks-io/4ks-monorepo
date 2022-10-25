@@ -5,7 +5,6 @@ import (
 	userService "4ks/apps/api/services/user"
 	"4ks/apps/api/utils"
 	"4ks/libs/go/models"
-	"fmt"
 
 	"net/http"
 
@@ -177,9 +176,6 @@ func (uc *userController) UpdateUser(c *gin.Context) {
 	reqUserId := c.Param("id")
 	curUserId := c.Request.Context().Value(utils.UserId{}).(string)
 
-	fmt.Println(reqUserId)
-	fmt.Println(curUserId)
-
 	if reqUserId != curUserId {
 		c.AbortWithError(http.StatusForbidden, nil)
 		return
@@ -190,8 +186,6 @@ func (uc *userController) UpdateUser(c *gin.Context) {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
-
-	fmt.Println(payload.Username)
 
 	u, err := uc.userService.UpdateUserById(&reqUserId, &payload)
 	if err == userService.ErrUserNotFound {

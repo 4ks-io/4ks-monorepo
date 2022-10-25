@@ -3,7 +3,6 @@ package controllers
 import (
 	recipeService "4ks/apps/api/services/recipe"
 	userService "4ks/apps/api/services/user"
-	"fmt"
 
 	"net/http"
 
@@ -97,7 +96,7 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 // @Security 		ApiKeyAuth
 func (rc *recipeController) DeleteRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
-	fmt.Println(recipeId)
+	// fmt.Println(recipeId)
 	err := rc.recipeService.DeleteRecipe(&recipeId)
 
 	if err == recipeService.ErrRecipeNotFound {

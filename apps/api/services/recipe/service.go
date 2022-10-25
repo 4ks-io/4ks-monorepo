@@ -3,7 +3,6 @@ package recipe
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -110,7 +109,7 @@ func (rs recipeService) GetAllRecipes() ([]*models.Recipe, error) {
 			// break the loop or return.
 			return nil, err
 		}
-		fmt.Println(u.Id)
+		// fmt.Println(u.Id)
 		all = append(all, &u)
 	}
 

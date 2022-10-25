@@ -170,7 +170,6 @@ func (us userService) CreateUser(userId *string, userEmail *string, user *dtos.C
 	return newUser, nil
 }
 
-
 func (us userService) UpdateUserById(userId *string, user *dtos.UpdateUser) (*models.User, error) {
 	if user.Username != "" {
 		isValid := us.TestUsernameValid(&user.Username)
@@ -181,16 +180,16 @@ func (us userService) UpdateUserById(userId *string, user *dtos.UpdateUser) (*mo
 
 	_, err := userCollection.Doc(*userId).Update(ctx, []firestore.Update{
 		{
-						Path:  "username",
-						Value: user.Username,
+			Path:  "username",
+			Value: user.Username,
 		},
 		{
 			Path:  "usernameLower",
 			Value: strings.ToLower(user.Username),
-},
+		},
 	})
 	if err != nil {
-			log.Printf("An error has occurred: %s", err)
+		log.Printf("An error has occurred: %s", err)
 	}
 
 	u, err := us.GetUserById(userId)

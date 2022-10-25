@@ -21,10 +21,10 @@ const Settings = () => {
   );
 
   useEffect(() => {
+    const isCurrentUsername =
+      uValidator.username?.toLowerCase() == ctx.user?.username?.toLowerCase();
     setValidationErrorMsg(uValidator.feedbackMsg);
-    setDisableSaveUsername(
-      uValidator.username == ctx.user?.username || !uValidator.isValid
-    );
+    setDisableSaveUsername(isCurrentUsername || !uValidator.isValid);
   }, [uValidator]);
 
   if (!isAuthenticated) {
@@ -38,13 +38,10 @@ const Settings = () => {
     uValidator.setUsername(`${newValue}`);
   }
 
-  function handleUpdateUsername() {
-    if (uValidator.username) {
+  async function handleUpdateUsername() {
+    if (uValidator.username && ctx.actions.updateUser && ctx.user?.id) {
       const data: dtos_UpdateUser = { username: uValidator.username };
-      ctx.api?.users.patchUsers(ctx.user.id, data);
-      // .then((r) => {
-      //   console.log(r);
-      // });
+      ctx.actions.updateUser(ctx.user?.id, data);
     }
   }
 

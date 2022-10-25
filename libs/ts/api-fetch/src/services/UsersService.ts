@@ -116,13 +116,13 @@ export class UsersService {
      * Update User
      * Update User
      * @param userId User Id
-     * @param user User Data
+     * @param payload User Data
      * @returns models_User OK
      * @throws ApiError
      */
     public patchUsers(
         userId: string,
-        user: dtos_UpdateUser,
+        payload: dtos_UpdateUser,
     ): CancelablePromise<models_User> {
         return this.httpRequest.request({
             method: 'PATCH',
@@ -130,7 +130,7 @@ export class UsersService {
             path: {
                 'userId': userId,
             },
-            body: user,
+            body: payload,
         });
     }
 

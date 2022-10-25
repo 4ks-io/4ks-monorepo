@@ -104,13 +104,13 @@ export class RecipesService {
      * Update Recipe
      * Update Recipe
      * @param recipeId Recipe Id
-     * @param recipeUpdate Recipe Update
+     * @param payload Recipe Data
      * @returns models_Recipe OK
      * @throws ApiError
      */
     public patchRecipes(
         recipeId: string,
-        recipeUpdate: dtos_UpdateRecipe,
+        payload: dtos_UpdateRecipe,
     ): CancelablePromise<models_Recipe> {
         return this.httpRequest.request({
             method: 'PATCH',
@@ -118,7 +118,7 @@ export class RecipesService {
             path: {
                 'recipeId': recipeId,
             },
-            body: recipeUpdate,
+            body: payload,
         });
     }
 

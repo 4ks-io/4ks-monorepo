@@ -37,7 +37,10 @@ export function usernameValidator(): IValidUsername {
         return;
       }
 
-      if (username == ctx.user?.username) {
+      if (
+        ctx.user?.username &&
+        username.toLocaleLowerCase() == ctx.user?.username.toLocaleLowerCase()
+      ) {
         setIsValid(true);
         setFeedbackMsg('');
         return;

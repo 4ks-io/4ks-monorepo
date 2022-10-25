@@ -1,12 +1,13 @@
 import React, { useEffect, useContext, useState, useReducer } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { ApiClient } from '@4ks/api-fetch';
-import ApiServiceFactory from '../services/api';
 import {
-  ISessionContext,
-  initialState,
-  createUserProps,
-} from './session-context-init';
+  ApiClient,
+  dtos_CreateUser,
+  dtos_UpdateUser,
+  models_User,
+} from '@4ks/api-fetch';
+import ApiServiceFactory from '../services/api';
+import { ISessionContext, initialState } from './session-context-init';
 import {
   sessionContextReducer,
   SesionContextAction,
@@ -24,28 +25,52 @@ export function SessionContextProvider({
   const [state, dispatch] = useReducer(sessionContextReducer, initialState);
 
   function createUser(a: ApiClient) {
-    return ({ username, displayName }: createUserProps) => {
+    return ({ username, displayName }: dtos_CreateUser) => {
       a?.users
         .postUsers({
           displayName: displayName,
           username: username.trim(),
         })
-        .then((u) => {
+        .then((u: models_User) => {
           dispatch({
             type: SesionContextAction.SET_USER,
             payload: u,
+          });
+          dispatch({
+            type: SesionContextAction.SET_ACTIONS,
+            payload: { updateUser: updateUser(a) },
           });
         });
     };
   }
 
-  async function setUser(a: ApiClient) {
-    a.users
-      .getUsersProfile()
-      .then((u) => {
+  function updateUser(a: ApiClient) {
+    return async (id: string, data: dtos_UpdateUser) => {
+      if (data.username) {
+        // try {
+        const u = await a.users.patchUsers(id, data);
         dispatch({
           type: SesionContextAction.SET_USER,
           payload: u,
+        });
+        // } catch {
+        //   console.log('error updating user');
+        // }
+      }
+    };
+  }
+
+  async function getUser(a: ApiClient) {
+    a.users
+      .getUsersProfile()
+      .then((u: models_User) => {
+        dispatch({
+          type: SesionContextAction.SET_USER,
+          payload: u,
+        });
+        dispatch({
+          type: SesionContextAction.SET_ACTIONS,
+          payload: { updateUser: updateUser(a) },
         });
       })
       .catch(() => {
@@ -66,7 +91,7 @@ export function SessionContextProvider({
           type: SesionContextAction.SET_API,
           payload: a,
         });
-        setUser(a);
+        getUser(a);
       });
     } else {
       // anonymous user

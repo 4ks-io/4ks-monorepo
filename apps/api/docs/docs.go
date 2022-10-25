@@ -243,8 +243,8 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Recipe Update",
-                        "name": "recipeUpdate",
+                        "description": "Recipe Data",
+                        "name": "payload",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -603,7 +603,7 @@ const docTemplate = `{
                     },
                     {
                         "description": "User Data",
-                        "name": "user",
+                        "name": "payload",
                         "in": "body",
                         "required": true,
                         "schema": {

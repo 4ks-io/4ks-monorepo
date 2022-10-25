@@ -9,7 +9,7 @@ interface IAction {
 export enum SesionContextAction {
   SET_ACTIONS = 'setActions',
   SET_API = 'setApi',
-  SET_USER = 'setUser',
+  SET_USER = 'getUser',
 }
 
 export function sessionContextReducer(state: ISessionContext, action: IAction) {

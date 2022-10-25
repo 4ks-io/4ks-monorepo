@@ -296,9 +296,9 @@ paths:
         name: recipeId
         required: true
         type: string
-      - description: Recipe Update
+      - description: Recipe Data
         in: body
-        name: recipeUpdate
+        name: payload
         required: true
         schema:
           $ref: '#/definitions/dtos.UpdateRecipe'
@@ -503,7 +503,7 @@ paths:
         type: string
       - description: User Data
         in: body
-        name: user
+        name: payload
         required: true
         schema:
           $ref: '#/definitions/dtos.UpdateUser'

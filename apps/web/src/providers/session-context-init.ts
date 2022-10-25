@@ -1,29 +1,23 @@
-import { ApiClient, models_User } from '@4ks/api-fetch';
-
-export interface createUserProps {
-  username: string;
-  displayName: string;
-}
+import {
+  ApiClient,
+  models_User,
+  dtos_UpdateUser,
+  dtos_CreateUser,
+} from '@4ks/api-fetch';
 
 export interface ISessionContext {
   actions: {
-    createUser: ((props: createUserProps) => void) | undefined;
+    createUser: ((data: dtos_CreateUser) => void) | undefined;
+    updateUser: ((id: string, data: dtos_UpdateUser) => void) | undefined;
   };
   user: models_User | undefined;
   api: ApiClient | undefined;
 }
 
-// export interface ISessionContextU {
-//   actions: {
-//     createUser: undefined;
-//   };
-//   user: models_User | undefined | null;
-//   api: ApiClient | undefined | null;
-// }
-
 export const initialState: ISessionContext = {
   actions: {
     createUser: undefined,
+    updateUser: undefined,
   },
   user: undefined,
   api: undefined,
