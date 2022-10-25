@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useConst } from '@fluentui/react-hooks';
 import { ActionButton } from '@fluentui/react/lib/Button';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { TextField } from '@fluentui/react/lib/TextField';
@@ -36,31 +35,6 @@ const AppBar = () => {
   const [showSearchInput, setShowSearchInput] = useState(true);
   const [showRecipesLink, setShowRecipesLink] = useState(true);
 
-  const menuProps: IContextualMenuProps = useConst({
-    shouldFocusOnMount: true,
-    items: [
-      {
-        key: 'profile',
-        onClick: handleProfileClick,
-        iconProps: { iconName: 'contact' },
-        text: 'Profile',
-      },
-      {
-        key: 'settings',
-        onClick: handleSettingsClick,
-        iconProps: { iconName: 'settings' },
-        text: 'Settings',
-      },
-      { key: 'divider_1', itemType: ContextualMenuItemType.Divider },
-      {
-        key: 'logout',
-        onClick: handleLogoutOnClick,
-        iconProps: { iconName: 'StatusCircleErrorX' },
-        text: 'Logout',
-      },
-    ],
-  });
-
   useEffect(() => {
     if (location.pathname == '/') {
       setShowSearchInput(false);
@@ -92,8 +66,33 @@ const AppBar = () => {
   }
 
   function handleProfileClick() {
-    navigate(encodeURI(`/${ctx.user?.username}`));
+    navigate(`/${ctx.user?.username}`);
   }
+
+  const menuProps: IContextualMenuProps = {
+    shouldFocusOnMount: true,
+    items: [
+      {
+        key: 'profile',
+        onClick: handleProfileClick,
+        iconProps: { iconName: 'contact' },
+        text: 'Profile',
+      },
+      {
+        key: 'settings',
+        onClick: handleSettingsClick,
+        iconProps: { iconName: 'settings' },
+        text: 'Settings',
+      },
+      { key: 'divider_1', itemType: ContextualMenuItemType.Divider },
+      {
+        key: 'logout',
+        onClick: handleLogoutOnClick,
+        iconProps: { iconName: 'StatusCircleErrorX' },
+        text: 'Logout',
+      },
+    ],
+  };
 
   const stackStyles: IStackStyles = {
     root: {
