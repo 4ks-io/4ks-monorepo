@@ -60,7 +60,12 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   }
 
   function starThisRecipe() {
-    alert('Star!');
+    if (rtx?.recipeId) {
+      ctx.api?.recipes.postRecipesStar(rtx?.recipeId).then(() => {
+        navigate(`/r/${rtx.recipeId}`);
+        // todo => refresh recipe
+      });
+    }
   }
 
   function shareThisRecipe() {
@@ -82,6 +87,13 @@ export function RecipeHeader(props: RecipeHeaderProps) {
     key: 'title',
     isCurrentItem: true,
   };
+
+  function getCountLabel(c: number | undefined) {
+    return c && c > 0 ? ' (' + c + ')' : '';
+  }
+
+  const forksCountLabel = getCountLabel(rtx?.recipe.metadata?.forks);
+  const starsCountLabel = getCountLabel(rtx?.recipe.metadata?.stars);
 
   return (
     <Stack.Item align="stretch">
@@ -123,12 +135,12 @@ export function RecipeHeader(props: RecipeHeaderProps) {
         <Stack horizontal horizontalAlign="space-evenly">
           <DefaultButton
             iconProps={{ iconName: 'BranchFork2' }}
-            text="Fork"
+            text={`Fork${forksCountLabel}`}
             onClick={forkThisRecipe}
           />
           <DefaultButton
             iconProps={{ iconName: 'FavoriteStar' }}
-            text="Star"
+            text={`Star${starsCountLabel}`}
             onClick={starThisRecipe}
           />
           <DefaultButton
