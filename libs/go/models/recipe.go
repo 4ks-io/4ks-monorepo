@@ -13,7 +13,8 @@ type Recipe struct {
 	Contributors    []UserSummary  `firestore:"contributors" json:"contributors"`
 	CurrentRevision RecipeRevision `firestore:"currentRevision" json:"currentRevision"`
 	Metadata        RecipeMetada   `firestore:"metadata" json:"metadata"`
-	Source          string         `firestore:"source" json:"source"`
+	Root            string         `firestore:"root" json:"root"`
+	Branch          string         `firestore:"branch" json:"branch"`
 	CreatedDate     time.Time      `firestore:"createdDate" json:"createdDate"`
 	UpdatedDate     time.Time      `firestore:"updatedDate" json:"updatedDate"`
 }

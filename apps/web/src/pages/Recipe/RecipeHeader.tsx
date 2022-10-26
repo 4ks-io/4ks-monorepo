@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Stack } from '@fluentui/react';
 import { TextField } from '@fluentui/react/lib/TextField';
 import { DefaultButton } from '@fluentui/react/lib/Button';
@@ -9,11 +10,26 @@ import { IconButton } from '@fluentui/react/lib/Button';
 
 interface RecipeHeaderProps {}
 
+const GENERIC_TITLE = `INSERT TITLE HERE`;
+
 export function RecipeHeader(props: RecipeHeaderProps) {
   const rtx = useRecipeContext();
   const ctx = useSessionContext();
+  const navigate = useNavigate();
   const [isNew, setIsNew] = useState(false);
   const [title, setTitle] = useState('');
+
+  function handleTitleFocus() {
+    if (title == GENERIC_TITLE) {
+      setTitle(``);
+    }
+  }
+
+  function handleTitleBlur() {
+    if (title == '') {
+      setTitle(GENERIC_TITLE);
+    }
+  }
 
   function handleTitleChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -25,7 +41,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   useEffect(() => {
     if (rtx?.recipeId == '0') {
       setIsNew(true);
-      setTitle(`INSERT TITLE HERE`);
+      setTitle(GENERIC_TITLE);
     }
   }, [rtx?.recipeId]);
 
@@ -34,6 +50,22 @@ export function RecipeHeader(props: RecipeHeaderProps) {
       setTitle(rtx?.recipe?.currentRevision?.name);
     }
   }, [rtx?.recipe.currentRevision]);
+
+  function forkThisRecipe() {
+    if (rtx?.recipeId) {
+      ctx.api?.recipes.postRecipesFork(rtx?.recipeId).then((r) => {
+        navigate(`/r/${r.id}`);
+      });
+    }
+  }
+
+  function starThisRecipe() {
+    alert('Star!');
+  }
+
+  function shareThisRecipe() {
+    alert('Share!');
+  }
 
   function handleValidationComplete() {
     rtx?.setTitle(title);
@@ -48,12 +80,6 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   const titleBreadcrumb: IBreadcrumbItem = {
     text: title,
     key: 'title',
-    isCurrentItem: true,
-  };
-
-  const fakeBreadcrumb: IBreadcrumbItem = {
-    text: '',
-    key: 'fake',
     isCurrentItem: true,
   };
 
@@ -72,6 +98,8 @@ export function RecipeHeader(props: RecipeHeaderProps) {
                 aria-label="EditMirrored"
               />
               <TextField
+                onFocus={handleTitleFocus}
+                onBlur={handleTitleBlur}
                 onChange={handleTitleChange}
                 style={{ fontWeight: 600, fontSize: '18px' }}
                 borderless
@@ -93,41 +121,23 @@ export function RecipeHeader(props: RecipeHeaderProps) {
       </div>
       {isNew && (
         <Stack horizontal horizontalAlign="space-evenly">
-          {/* <Stack.Item align="end"> */}
           <DefaultButton
             iconProps={{ iconName: 'BranchFork2' }}
             text="Fork"
-            onClick={_alertFork}
+            onClick={forkThisRecipe}
           />
-          {/* </Stack.Item>
-          <Stack.Item align="end"> */}
           <DefaultButton
             iconProps={{ iconName: 'FavoriteStar' }}
             text="Star"
-            onClick={_alertStar}
+            onClick={starThisRecipe}
           />
-          {/* </Stack.Item>
-          <Stack.Item align="end"> */}
           <DefaultButton
             iconProps={{ iconName: 'SocialListeningLogo' }}
             text="Share"
-            onClick={_alertShare}
+            onClick={shareThisRecipe}
           />
-          {/* </Stack.Item> */}
         </Stack>
       )}
     </Stack.Item>
   );
-}
-
-function _alertFork() {
-  alert('Fork!');
-}
-
-function _alertStar() {
-  alert('Star!');
-}
-
-function _alertShare() {
-  alert('Share!');
 }
