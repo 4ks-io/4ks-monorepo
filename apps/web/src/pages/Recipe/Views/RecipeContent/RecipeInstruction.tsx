@@ -77,6 +77,7 @@ export function RecipeInstruction({
             style={{ paddingTop: '10px', paddingRight: '12px' }}
           />
         </Stack.Item>
+        <Stack.Item>{index}</Stack.Item>
         <Stack.Item grow={2}>
           <TextField
             className="contentResizer"

@@ -52,20 +52,16 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   }, [rtx?.recipe.currentRevision]);
 
   function forkThisRecipe() {
-    if (rtx?.recipeId) {
-      ctx.api?.recipes.postRecipesFork(rtx?.recipeId).then((r) => {
-        navigate(`/r/${r.id}`);
-      });
-    }
+    ctx.api?.recipes.postRecipesFork(`${rtx?.recipeId}`).then((r) => {
+      navigate(`/r/${r.id}`);
+    });
   }
 
   function starThisRecipe() {
-    if (rtx?.recipeId) {
-      ctx.api?.recipes.postRecipesStar(rtx?.recipeId).then(() => {
-        navigate(`/r/${rtx.recipeId}`);
-        // todo => refresh recipe
-      });
-    }
+    ctx.api?.recipes.postRecipesStar(`${rtx?.recipeId}`).then(() => {
+      navigate(`/r/${rtx?.recipeId}`);
+      // todo => refresh recipe
+    });
   }
 
   function shareThisRecipe() {

@@ -5,7 +5,11 @@ import { Stack } from '@fluentui/react/lib/Stack';
 import { Toggle } from '@fluentui/react/lib/Toggle';
 import { useRecipeContext } from '../../../../providers/recipe-context';
 import { useSessionContext } from '../../../../providers/session-context';
-import { models_Recipe, dtos_UpdateRecipe } from '@4ks/api-fetch';
+import {
+  models_Recipe,
+  dtos_UpdateRecipe,
+  models_UserSummary,
+} from '@4ks/api-fetch';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 
 interface RecipeEditingControlsProps {
@@ -35,10 +39,20 @@ export function RecipeEditingControls({
         .postRecipes(rtx?.recipe.currentRevision as dtos_UpdateRecipe)
         .then((data: models_Recipe) => navigate(`/r/${data.id}`));
     } else {
-      ctx?.api?.recipes.patchRecipes(
-        `${rtx?.recipeId}`,
-        rtx?.recipe.currentRevision as dtos_UpdateRecipe
-      );
+      const isContributor = (rtx?.recipe.contributors as models_UserSummary[])
+        .map((c) => c.id)
+        .includes(ctx.user?.id);
+
+      if (isContributor) {
+        ctx?.api?.recipes.patchRecipes(
+          `${rtx?.recipeId}`,
+          rtx?.recipe.currentRevision as dtos_UpdateRecipe
+        );
+      } else {
+        ctx.api?.recipes.postRecipesFork(`${rtx?.recipeId}`).then((r) => {
+          navigate(`/r/${r.id}`);
+        });
+      }
     }
   }
 
