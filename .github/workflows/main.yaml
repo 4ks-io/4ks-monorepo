@@ -5,7 +5,7 @@ on:
       - main
 
 jobs:
-  dev_build:
+  build:
     uses: ./.github/workflows/build-publish.yaml
     with:
       environment: dev
@@ -13,8 +13,8 @@ jobs:
     secrets:
       gcp_api_token: ${{ secrets.GOOGLE_CREDENTIALS }}
 
-  dev_tf:
-    needs: dev_build
+  dev:
+    needs: build
     uses: ./.github/workflows/run-terraform.yaml
     secrets:
       gcp_api_token: ${{ secrets.GOOGLE_CREDENTIALS }}

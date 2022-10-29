@@ -71,13 +71,13 @@ export function RecipeInstruction({
   return (
     <Stack.Item align="start" styles={dragItemStyles}>
       <Stack horizontal styles={stackStyles} tokens={stackTokens}>
+        <Stack.Item>{index + 1}</Stack.Item>
         <Stack.Item>
           <Icon
-            iconName="ToggleBorder"
+            iconName={editing ? 'DragObject' : 'ToggleBorder'}
             style={{ paddingTop: '10px', paddingRight: '12px' }}
           />
         </Stack.Item>
-        <Stack.Item>{index}</Stack.Item>
         <Stack.Item grow={2}>
           <TextField
             className="contentResizer"

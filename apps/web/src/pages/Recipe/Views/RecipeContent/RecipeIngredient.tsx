@@ -81,7 +81,7 @@ export function RecipeIngredient({
       <Stack horizontal styles={stackStyles} tokens={stackTokens}>
         <Stack.Item>
           <Icon
-            iconName="ToggleBorder"
+            iconName={editing ? 'DragObject' : 'ToggleBorder'}
             style={{ paddingTop: '10px', paddingRight: '12px' }}
           />
         </Stack.Item>

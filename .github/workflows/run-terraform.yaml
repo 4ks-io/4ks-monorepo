@@ -1,4 +1,4 @@
-name: Run Terraform
+name: tf
 
 on:
   workflow_call:
