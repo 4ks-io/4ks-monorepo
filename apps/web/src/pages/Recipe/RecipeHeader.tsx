@@ -7,6 +7,7 @@ import { Breadcrumb, IBreadcrumbItem } from '@fluentui/react/lib/Breadcrumb';
 import { useRecipeContext } from '../../providers/recipe-context';
 import { useSessionContext } from '../../providers/session-context';
 import { IconButton } from '@fluentui/react/lib/Button';
+import Skeleton from 'react-loading-skeleton';
 
 interface RecipeHeaderProps {}
 
@@ -119,12 +120,14 @@ export function RecipeHeader(props: RecipeHeaderProps) {
             </Stack>
           </Stack>
         ) : (
-          <Breadcrumb
-            items={[userBreadcrumb, titleBreadcrumb]}
-            maxDisplayedItems={2}
-            ariaLabel="Breadcrumb with items rendered as links"
-            overflowAriaLabel="More links"
-          />
+          (
+            <Breadcrumb
+              items={[userBreadcrumb, titleBreadcrumb]}
+              maxDisplayedItems={2}
+              ariaLabel="Breadcrumb with items rendered as links"
+              overflowAriaLabel="More links"
+            />
+          ) || <Skeleton />
         )}
       </div>
       {isNew && (

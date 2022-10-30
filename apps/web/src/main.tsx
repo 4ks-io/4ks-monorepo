@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { initializeIcons } from '@fluentui/react/lib/Icons';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 initializeIcons();
 

@@ -1,24 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-
-import {
-  Stack,
-  IStackStyles,
-  IStackTokens,
-  IStackItemStyles,
-} from '@fluentui/react/lib/Stack';
+import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { DefaultButton } from '@fluentui/react/lib/Button';
 import { useNavigate, Link } from 'react-router-dom';
-
 import { useSessionContext } from '../../providers/session-context';
 import { models_Recipe } from '@4ks/api-fetch';
-import { Text } from '@fluentui/react';
-
-const stackTokens: IStackTokens = {
-  childrenGap: 4,
-};
-
-const PLACEHOLDER_TAGS = ['vegan', 'beef', 'poultry', 'meat'];
+import Skeleton from 'react-loading-skeleton';
+import RecipeTile from './RecipeTile';
+import RecipeTileSkel from './RecipeTileSkel';
+import { stackStyles, itemAlignmentsStackTokens } from './styles';
 
 const Recipes = () => {
   const ctx = useSessionContext();
@@ -36,24 +26,15 @@ const Recipes = () => {
     navigate('/r/0');
   }
 
-  const stackStyles: IStackStyles = {
-    root: {
-      // background: DefaultPalette.themeTertiary,
-    },
-  };
-
-  const itemAlignmentsStackTokens: IStackTokens = {
-    childrenGap: 5,
-    padding: 10,
-  };
-
-  const stackItemStyles: IStackItemStyles = {
-    root: {
-      // background: DefaultPalette.themePrimary,
-      // color: DefaultPalette.white,
-      padding: 5,
-    },
-  };
+  if (!recipes) {
+    return (
+      <>
+        <RecipeTileSkel />
+        <RecipeTileSkel />
+        <RecipeTileSkel />
+      </>
+    );
+  }
 
   function newRecipeButton() {
     if (isAuthenticated) {
@@ -72,63 +53,7 @@ const Recipes = () => {
       {newRecipeButton()}
       {recipes &&
         recipes.map((r) => {
-          return (
-            <Stack.Item
-              key={r.id}
-              style={{
-                borderWidth: 1,
-                borderStyle: 'solid',
-                borderColor: 'gray',
-                padding: 8,
-              }}
-            >
-              <Stack styles={stackStyles} tokens={stackTokens}>
-                <Stack horizontal>
-                  <Stack.Item align="auto" styles={stackItemStyles}>
-                    <span>
-                      <Link to={`/r/${r.id}`}>
-                        <Text variant="xLarge" style={{ fontWeight: 'bold' }}>
-                          {r.currentRevision?.name || `missing title`}
-                        </Text>
-                      </Link>
-                    </span>
-                  </Stack.Item>
-                </Stack>
-                <Stack
-                  horizontal
-                  tokens={{
-                    childrenGap: 4,
-                  }}
-                >
-                  {PLACEHOLDER_TAGS.map((tag) => {
-                    return (
-                      <Stack.Item key={`${r.id}_${tag}`}>
-                        <Text
-                          style={{
-                            fontWeight: 'bold',
-                          }}
-                        >
-                          #{tag}
-                        </Text>
-                      </Stack.Item>
-                    );
-                  })}
-                </Stack>
-                <Stack horizontal tokens={{ childrenGap: 4 }}>
-                  <Stack.Item>Chefs:</Stack.Item>
-                  {r.contributors?.map((contributor, idx) => (
-                    <Stack.Item
-                      style={{ fontWeight: 'bold' }}
-                      key={`${r.id}_${contributor}`}
-                    >
-                      {contributor.username}
-                      {idx < (r.contributors?.length || 0) - 1 ? ',' : ''}
-                    </Stack.Item>
-                  ))}
-                </Stack>
-              </Stack>
-            </Stack.Item>
-          );
+          return <RecipeTile recipe={r} />;
         })}
     </Stack>
   );

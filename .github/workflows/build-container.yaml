@@ -29,7 +29,7 @@ on:
 
 jobs:
   build:
-    name: build container
+    name: container
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
