@@ -1,33 +1,29 @@
-# resource "google_service_account" "static" {
-#   account_id   = "static-sa"
-#   display_name = "Static SA"
-# }
 
-# resource "google_project_iam_custom_role" "static" {
-#   role_id     = "staticConsumer"
-#   title       = "Static Consumer SA Role"
-#   description = "Static Consumer SA Role"
-#   permissions = [  "storage.buckets.viewer" ]
-# }
+resource "google_storage_bucket" "media_static" {
+  name          = "s.dev.4ks.io"
+  location      = "us"
+  force_destroy = true
 
-# resource "google_service_account_iam_binding" "static" {
-#   service_account_id = google_service_account.static.id
-#   role               = "roles/iam.serviceAccountTokenCreator"
-#   members            = ["allUsers"]
-# }
+  uniform_bucket_level_access = true
+
+  # cors {
+  #   origin          = ["https://s.dev.4ks.io"]
+  #   method          = ["GET"]
+  #   response_header = ["*"]
+  #   max_age_seconds = 3600
+  # }
+}
 
 
-# resource "google_storage_bucket" "media-static" {
-#   name          = "static.dev.4ks.io"
-#   location      = "us"
-#   force_destroy = true
+resource "google_storage_bucket_iam_member" "member" {
+  bucket = google_storage_bucket.media_static.name
+  role   = "roles/storage.objectViewer"
+  member = "allUsers"
+}
 
-#   uniform_bucket_level_access = true
 
-#   cors {
-#     origin          = ["https://static.dev.4ks.io"]
-#     method          = ["GET"]
-#     response_header = ["*"]
-#     max_age_seconds = 3600
-#   }
-# }
+resource "google_storage_bucket_object" "logo" {
+  name   = "logo.svg"
+  source = "./static/logo.svg"
+  bucket = google_storage_bucket.media_static.name
+}

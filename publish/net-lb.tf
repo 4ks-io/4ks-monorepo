@@ -11,7 +11,6 @@ module "lb" {
   dns_record_ttl      = var.dns_record_ttl
   enable_http         = true
   enable_ssl          = true
-  # ssl_certificates    = [google_compute_ssl_certificate.default.id]
   ssl_certificates    = [google_compute_managed_ssl_certificate.default.id]
   #   custom_labels = var.custom_labels
 }

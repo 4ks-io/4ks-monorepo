@@ -23,21 +23,6 @@ resource "google_project_iam_custom_role" "media" {
 # }
 
 
-# resource "google_storage_bucket" "media-static" {
-#   name          = "static.dev.4ks.io"
-#   location      = "us"
-#   force_destroy = true
-
-#   uniform_bucket_level_access = true
-
-#   cors {
-#     origin          = ["https://static.dev.4ks.io"]
-#     method          = ["PUT"]
-#     response_header = ["*"]
-#     max_age_seconds = 3600
-#   }
-# }
-
 resource "google_storage_bucket" "media-write" {
   name          = "min.dev.4ks.io"
   location      = "us"
