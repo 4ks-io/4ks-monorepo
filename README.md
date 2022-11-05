@@ -131,3 +131,10 @@ go install github.com/swaggo/swag/cmd/swag@latest
 4. Access Swagger at: https://local.4ks.io/swagger/index.html
 
 5. Run `pnpm swag` to refresh the swagger specs, build @4ks/swag, and update the web app using tilt.
+
+# GCP Terraform Setup
+
+1. Create Service Account named terraform-sa (eg. terraform-sa@dev-4ks.iam.gserviceaccount.com)
+2. Grant following IAM roles:
+   - Owner
+   - BucketRole
