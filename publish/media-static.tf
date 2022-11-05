@@ -16,7 +16,7 @@ resource "google_storage_bucket" "media_static" {
 }
 
 
-resource "google_storage_bucket_iam_member" "member" {
+resource "google_storage_bucket_iam_member" "media_static_viewer" {
   bucket = google_storage_bucket.media_static.name
   role   = "roles/storage.objectViewer"
   member = "allUsers"

@@ -3,7 +3,7 @@ resource "google_storage_bucket" "media_read" {
   location      = "us"
   force_destroy = true
 
-  uniform_bucket_level_access = false
+  uniform_bucket_level_access = true
 
   cors {
     # origin          = ["https://media-read.${local.domain}", "https:/${local.domain}"]
@@ -12,4 +12,11 @@ resource "google_storage_bucket" "media_read" {
     response_header = ["*"]
     max_age_seconds = 3600
   }
+}
+
+
+resource "google_storage_bucket_iam_member" "media_read_viewer" {
+  bucket = google_storage_bucket.media_read.name
+  role   = "roles/storage.objectViewer"
+  member = "allUsers"
 }
