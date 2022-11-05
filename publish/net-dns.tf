@@ -14,8 +14,7 @@ resource "google_compute_managed_ssl_certificate" "default" {
 
   managed {
     domains = [
-      var.domain_env_mapping_main[terraform.workspace],
-      # var.domain_env_mapping_static[terraform.workspace],
+      "${local.domain}.",
     ]
   }
 }

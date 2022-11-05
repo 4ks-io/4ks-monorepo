@@ -1,13 +1,12 @@
 
 resource "google_storage_bucket" "media_static" {
-  name          = "s.dev.4ks.io"
+  name          = "s.${local.domain}"
   location      = "us"
   force_destroy = true
 
   uniform_bucket_level_access = true
-
   # cors {
-  #   origin          = ["https://s.dev.4ks.io"]
+  #   origin          = ["https://s.${local.domain}"]
   #   method          = ["GET"]
   #   response_header = ["*"]
   #   max_age_seconds = 3600

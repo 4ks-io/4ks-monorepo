@@ -20,27 +20,19 @@ variable "stage" {
   default = "dev"
 }
 
-
-variable "domain_env_mapping_main" {
-  type = map(string)
-  default = {
-    "app-dev-us-east" = "dev.4ks.io.",
-    "app-tst-us-east" = "tst.4ks.io."
-    "app-prd-us-east" = "www.4ks.io."
-  }
+variable "domain" {
+  default = "4ks.io"
 }
 
 
-variable "domain_env_mapping_static" {
+variable "subdomain_env_mapping" {
   type = map(string)
   default = {
-    "app-dev-us-east" = "s.dev.4ks.io.",
-    "app-tst-us-east" = "s.tst.4ks.io.",
-    "app-prd-us-east" = "s.4ks.io.",
+    "app-dev-us-east" = "dev.",
+    "app-tst-us-east" = "tst."
+    "app-prd-us-east" = ""
   }
 }
-
-
 
 variable "app_env_mapping" {
   type = map(string)
@@ -98,5 +90,5 @@ variable "web_build_number" {
 locals {
   organization = "4ks"
   project      = "${var.stage}-${local.organization}"
-  domain       = "${var.stage}.${local.organization}.io"
+  domain       = "${var.subdomain_env_mapping[terraform.workspace]}${local.organization}.io"
 }
