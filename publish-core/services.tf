@@ -20,9 +20,11 @@ variable "gcp_service_list" {
     # "servicemanagement.googleapis.com", # Service Management API
     # "sourcerepo.googleapis.com",        # Cloud Source Repositories API
     "sql-component.googleapis.com",     # Cloud SQL
-    # "storage-api.googleapis.com",       # Google Cloud Storage JSON API
+    "storage-api.googleapis.com",       # Google Cloud Storage JSON API
     # "storage-component.googleapis.com", # Cloud Storage
-    # "cloudfunctions.googleapis.com",
+    "cloudfunctions.googleapis.com",
+    "vision.googleapis.com",
+    "certificatemanager.googleapis.com",
     # "cloudbuild.googleapis.com",
   ]
 }

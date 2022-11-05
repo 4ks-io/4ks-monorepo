@@ -1,5 +1,12 @@
 terraform {
-  required_version = ">= 1.2.6"
+  required_version = ">= 1.3.3"
+  required_providers {
+    google = {
+      source  = "google"
+      version = "4.41.0"
+    }
+  }
+
   cloud {
     organization = "4ks"
     workspaces {

@@ -18,3 +18,13 @@ resource "google_compute_ssl_certificate" "default" {
   }
 }
 
+resource "google_compute_managed_ssl_certificate" "default" {
+  project = data.google_project.project.number
+  name    = "managed-certificate"
+
+  managed {
+    domains = [
+      var.domain_env_mapping_main[terraform.workspace],
+    ]
+  }
+}

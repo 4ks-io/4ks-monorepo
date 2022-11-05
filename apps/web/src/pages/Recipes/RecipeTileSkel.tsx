@@ -8,11 +8,17 @@ import {
   itemAlignmentsStackTokens,
 } from './styles';
 
-const RecipeTileSkel = () => {
+interface RecipeTileSkelProps {
+  key: number;
+}
+const RecipeTileSkel = ({ key }: RecipeTileSkelProps) => {
   return (
-    <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
+    <Stack
+      styles={stackStyles}
+      tokens={itemAlignmentsStackTokens}
+      key={'RecipeTileSkel_' + key}
+    >
       <Stack.Item
-        key={0}
         style={{
           borderWidth: 0,
           borderStyle: 'solid',

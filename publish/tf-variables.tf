@@ -1,10 +1,10 @@
 variable "development_ip_addresses" {
   type = list(string)
   default = [
-    "71.191.48.46/32", # nic home
-    "172.58.243.117/32", # nic mobile
-    "71.121.252.105", # hammad home
-    "142.127.4.130" # renee trotter  (nic's cousin) - UX
+    "71.191.48.46",      # nic home
+    "71.121.252.105",    # hammad home
+    "142.127.4.130",     # renee trotter  (nic's cousin) - UX
+    "14.100.38.23"       # marie-claire delorme (sister) - singapore
   ]
 }
 
@@ -20,10 +20,33 @@ variable "stage" {
   default = "dev"
 }
 
+
+variable "domain_env_mapping_main" {
+  type = map(string)
+  default = {
+    "app-dev-us-east" = "dev.4ks.io.",
+    "app-tst-us-east" = "tst.4ks.io."
+    "app-prd-us-east" = "www.4ks.io."
+  }
+}
+
+
+variable "domain_env_mapping_static" {
+  type = map(string)
+  default = {
+    "app-dev-us-east" = "static.dev.4ks.io.",
+    "app-tst-us-east" = "static.tst.4ks.io.",
+    "app-prd-us-east" = "static.4ks.io.",
+  }
+}
+
+
+
 variable "app_env_mapping" {
   type = map(string)
   default = {
     "app-dev-us-east" = "dev"
+    "app-tst-us-east" = "tst"
     "app-prd-us-east" = "prd"
   }
 }
