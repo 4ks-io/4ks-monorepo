@@ -32,7 +32,7 @@ export function usernameValidator(): IValidUsername {
       setIsValid(false);
       setFeedbackMsg('Invalid username');
     }
-    if (ctx.user?.username && username) {
+    if (username) {
       const isValideUsername = testUsername(username);
 
       if (!isValideUsername) {

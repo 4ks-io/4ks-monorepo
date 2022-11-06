@@ -32,37 +32,11 @@ const NewUser: React.FunctionComponent = () => {
     setDisplayName(`${newValue}`);
   }
 
-  // function handleCountryChange(
-  //   event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-  //   newValue: string | undefined
-  // ) {
-  //   setCountry(`${newValue}`);
-  // }
-
-  // function handleLocaleChange(
-  //   event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-  //   newValue: string | undefined
-  // ) {
-  //   setCountry(`${newValue}`);
-  // }
-
   function handleUsernameChange(
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue: string | undefined
   ) {
     uValidator.setUsername(`${newValue}`);
-
-    // ctx.api?.users
-    //   .getUsersUsername(encodeURI(`${newValue}`))
-    //   .then(() => setValidationErrorMsg(''))
-    //   .catch((e) => {
-    //     console.log(e);
-    //     // TODO
-    //     // if 400 invalid username
-    //     // if 409 user already in use
-    //     // other unknown error
-    //     setValidationErrorMsg('Username already in use');
-    //   });
   }
 
   useEffect(() => {
@@ -112,10 +86,10 @@ const NewUser: React.FunctionComponent = () => {
         onChange={handleLocaleChange}
       /> */}
       <TextField
-        errorMessage={validationErrorMsg}
         label="Username"
-        deferredValidationTime={1000}
         value={uValidator.username}
+        deferredValidationTime={1000}
+        errorMessage={validationErrorMsg}
         onChange={handleUsernameChange}
       />
       <ul>

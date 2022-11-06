@@ -43,6 +43,14 @@ variable "app_env_mapping" {
   }
 }
 
+variable "api_jaeger_enabled" {
+  type = map(string)
+  default = {
+    "app-dev-us-east" = false
+    "app-prd-us-east" = false
+  }
+}
+
 variable "api_swagger_enabled" {
   type = map(string)
   default = {
@@ -76,16 +84,6 @@ variable "api_build_number" {
 variable "web_build_number" {
   type = string
 }
-
-# variable "tls_key" {
-#   type        = string
-#   description = "TLS Key"
-# }
-
-# variable "tls_crt" {
-#   type        = string
-#   description = "TLS Cert"
-# }
 
 locals {
   organization = "4ks"

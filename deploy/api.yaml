@@ -32,6 +32,8 @@ spec:
           env:
             - name: PORT
               value: '5000'
+            - name: JAEGER_ENABLED
+              value: 'true'
             - name: SWAGGER_ENABLED
               value: 'true'
             - name: SWAGGER_URL_PREFIX

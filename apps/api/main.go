@@ -23,12 +23,16 @@ import (
 
 // @BasePath /api
 func main() {
-	tp := tracing.InitTracerProvider()
-	defer func() {
-		if err := tp.Shutdown(context.Background()); err != nil {
-			log.Printf("Error shutting down tracer provider: %v", err)
-		}
-	}()
+	if value := utils.GetBoolEnv("JAEGER_ENABLED", false); value {
+		log.Printf("Jaeger enabled: %t", value)
+
+		tp := tracing.InitTracerProvider()
+		defer func() {
+			if err := tp.Shutdown(context.Background()); err != nil {
+				log.Printf("Error shutting down tracer provider: %v", err)
+			}
+		}()
+	}
 
 	router := router.New()
 
