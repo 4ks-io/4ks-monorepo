@@ -8,6 +8,7 @@ import { useRecipeContext } from '../../providers/recipe-context';
 import { useSessionContext } from '../../providers/session-context';
 import { IconButton } from '@fluentui/react/lib/Button';
 import Skeleton from 'react-loading-skeleton';
+import { Label } from '@fluentui/react/lib/Label';
 
 interface RecipeHeaderProps {}
 
@@ -74,15 +75,9 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   }
 
   const userBreadcrumb: IBreadcrumbItem = {
-    text: rtx?.recipe?.author?.username || `${ctx.user?.username}`,
+    text: '@' + (rtx?.recipe?.author?.username || `${ctx.user?.username}`),
     key: 'UserName',
     href: encodeURI(`/${rtx?.recipe?.author?.username}`),
-  };
-
-  const titleBreadcrumb: IBreadcrumbItem = {
-    text: title,
-    key: 'title',
-    isCurrentItem: true,
   };
 
   function getCountLabel(c: number | undefined) {
@@ -111,6 +106,12 @@ export function RecipeHeader(props: RecipeHeaderProps) {
                 onBlur={handleTitleBlur}
                 onChange={handleTitleChange}
                 style={{ fontWeight: 600, fontSize: '18px' }}
+                styles={{
+                  field: {
+                    fontSize: 16,
+                    width: 400,
+                  },
+                }}
                 borderless
                 readOnly={false}
                 validateOnFocusOut={true}
@@ -120,14 +121,35 @@ export function RecipeHeader(props: RecipeHeaderProps) {
             </Stack>
           </Stack>
         ) : (
-          (
-            <Breadcrumb
-              items={[userBreadcrumb, titleBreadcrumb]}
-              maxDisplayedItems={2}
-              ariaLabel="Breadcrumb with items rendered as links"
-              overflowAriaLabel="More links"
-            />
-          ) || <Skeleton />
+          <>
+            {userBreadcrumb.text.length > 0 ? (
+              <Breadcrumb
+                items={[userBreadcrumb]}
+                maxDisplayedItems={1}
+                ariaLabel="headercrums"
+                // style={{ fontWeight: 400 }}
+                // overflowAriaLabel="More links"
+              />
+            ) : (
+              <Skeleton />
+            )}
+            {title.length > 0 ? (
+              <Label
+                styles={{
+                  root: {
+                    fontSize: 20,
+                    height: '40px',
+                    paddingLeft: 8,
+                    marginBottom: 40,
+                  },
+                }}
+              >
+                {title}
+              </Label>
+            ) : (
+              <Skeleton />
+            )}
+          </>
         )}
       </div>
       {isNew && (

@@ -26,7 +26,7 @@ const Recipes = () => {
     navigate('/r/0');
   }
 
-  if (!recipes) {
+  if (recipes && recipes.length == 0) {
     return (
       <>
         <RecipeTileSkel key={0} />
@@ -53,7 +53,7 @@ const Recipes = () => {
       {newRecipeButton()}
       {recipes &&
         recipes.map((r) => {
-          return <RecipeTile recipe={r} />;
+          return <RecipeTile key={r.id} recipe={r} />;
         })}
     </Stack>
   );
