@@ -12,7 +12,7 @@ resource "google_cloud_run_service" "web" {
   template {
     spec {
       containers {
-        image = "us-east4-docker.pkg.dev/dev-4ks/web/app:${var.web_build_number}"
+        image = "us-east4-docker.pkg.dev/${var.stage}-${local.org}/web/app:${var.web_build_number}"
         ports {
           container_port = 5000
         }
@@ -22,16 +22,16 @@ resource "google_cloud_run_service" "web" {
         }
         env {
           name  = "VITE_AUTH0_AUDIENCE"
-          value = "https://dev.4ks.io/api"
+          value = local.web_api_url
         }
         env {
           name  = "VITE_AUTH0_DOMAIN"
-          value = "4ks-dev.us.auth0.com"
+          value = "${local.org}-${var.stage}.us.auth0.com"
         }
 
         env {
           name  = "APP_ENV"
-          value = var.app_env_mapping[terraform.workspace]
+          value = var.app_env_map[terraform.workspace]
         }
       }
     }

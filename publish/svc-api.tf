@@ -13,22 +13,22 @@ resource "google_cloud_run_service" "api" {
     spec {
       # service_account_name = google_service_account.api.email
       containers {
-        image = "us-east4-docker.pkg.dev/dev-4ks/api/app:${var.api_build_number}"
+        image = "us-east4-docker.pkg.dev/${var.stage}-${local.org}/api/app:${var.api_build_number}"
         ports {
           container_port = 5000
         }
 
         env {
           name  = "FIRESTORE_PROJECT_ID"
-          value = "dev-4ks"
+          value = "${var.stage}-${local.org}"
         }
         env {
           name  = "AUTH0_DOMAIN"
-          value = "4ks-dev.us.auth0.com"
+          value = "${local.org}-${var.stage}.us.auth0.com"
         }
         env {
           name  = "AUTH0_AUDIENCE"
-          value = "https://dev.4ks.io/api"
+          value = local.web_api_url
         }
         env {
           name  = "EXPORTER_TYPE"
@@ -40,14 +40,12 @@ resource "google_cloud_run_service" "api" {
         }
         env {
           name  = "JAEGER_ENABLED"
-          value = var.api_jaeger_enabled[terraform.workspace]
+          value = var.feat_api_jaeger_enabled_map[terraform.workspace]
         }
-
         env {
           name  = "SWAGGER_ENABLED"
-          value = var.api_swagger_enabled[terraform.workspace]
+          value = var.feat_api_swagger_enabled_map[terraform.workspace]
         }
-
         env {
           name  = "SWAGGER_URL_PREFIX"
           value = "/api"

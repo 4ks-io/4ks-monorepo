@@ -1,13 +1,13 @@
 
 resource "google_storage_bucket" "media_static" {
-  name          = "static.${local.domain}"
+  name          = "static.${local.web_domain}"
   location      = "us"
   force_destroy = true
 
   uniform_bucket_level_access = true
 
   cors {
-    # origin          = ["https://static.${local.domain}"]
+    # origin          = ["https://static.${local.web_domain}"]
     origin          = ["*"]
     method          = ["GET"]
     response_header = ["*"]

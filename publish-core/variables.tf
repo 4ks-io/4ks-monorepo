@@ -10,8 +10,7 @@ variable "stage" {
   default = "dev"
 }
 
-
 locals {
-  organization = "4ks"
-  project      = "${var.stage}-${local.organization}"
+  org     = "4ks"
+  project = "${var.stage}-${local.org}"
 }

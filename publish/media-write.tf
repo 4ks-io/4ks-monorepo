@@ -1,12 +1,12 @@
 resource "google_storage_bucket" "media_write" {
-  name          = "media-write.${local.domain}"
+  name          = "media-write.${local.web_domain}"
   location      = "us"
   force_destroy = true
 
   uniform_bucket_level_access = false
 
   cors {
-    # origin          = ["https://media-write.${local.domain}", "https:/${local.domain}"]
+    # origin          = ["https://media-write.${local.web_domain}", "https:/${local.web_domain}"]
     origin          = ["*"]
     method          = ["PUT"]
     response_header = ["*"]

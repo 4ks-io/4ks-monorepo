@@ -15,12 +15,12 @@ variable "gcp_service_list" {
     "serviceusage.googleapis.com",
     "storage-component.googleapis.com",
     # "iamcredentials.googleapis.com",    # IAM Service Account Credentials API
-    "logging.googleapis.com",           # Stackdriver Logging API
+    "logging.googleapis.com", # Stackdriver Logging API
     # "monitoring.googleapis.com",        # Stackdriver Monitoring API
     # "servicemanagement.googleapis.com", # Service Management API
     # "sourcerepo.googleapis.com",        # Cloud Source Repositories API
-    "sql-component.googleapis.com",     # Cloud SQL
-    "storage-api.googleapis.com",       # Google Cloud Storage JSON API
+    "sql-component.googleapis.com", # Cloud SQL
+    "storage-api.googleapis.com",   # Google Cloud Storage JSON API
     # "storage-component.googleapis.com", # Cloud Storage
     "cloudfunctions.googleapis.com",
     "vision.googleapis.com",
@@ -34,5 +34,5 @@ resource "google_project_service" "gcp_services" {
   service = var.gcp_service_list[count.index]
 
   disable_dependent_services = false
-  disable_on_destroy = false
+  disable_on_destroy         = false
 }

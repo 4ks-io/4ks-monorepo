@@ -1,6 +1,7 @@
+// todo production change env name ?
 resource "google_dns_managed_zone" "dev_4ks_io" {
   name        = local.project
-  dns_name    = "${local.domain}."
+  dns_name    = "${local.web_domain}."
   description = local.project
   # labels = {
   #   foo = "bar"
@@ -14,7 +15,7 @@ resource "google_compute_managed_ssl_certificate" "default" {
 
   managed {
     domains = [
-      "${local.domain}.",
+      "${local.web_domain}.",
     ]
   }
 }
