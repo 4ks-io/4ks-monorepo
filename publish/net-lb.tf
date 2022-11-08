@@ -5,12 +5,12 @@ module "lb" {
   project               = data.google_project.project.number
   url_map               = google_compute_url_map.urlmap.self_link
   dns_managed_zone_name = local.dns_managed_zone_name
-  custom_domain_names = [local.web_domain]
-  create_dns_entries  = var.create_dns_entry
-  dns_record_ttl      = var.dns_record_ttl
-  enable_http         = true
-  enable_ssl          = true
-  ssl_certificates    = [google_compute_managed_ssl_certificate.default.id]
+  custom_domain_names   = [local.web_domain]
+  create_dns_entries    = var.create_dns_entry
+  dns_record_ttl        = var.dns_record_ttl
+  enable_http           = true
+  enable_ssl            = true
+  ssl_certificates      = [google_compute_managed_ssl_certificate.default.id]
   #   custom_labels = var.custom_labels
 }
 

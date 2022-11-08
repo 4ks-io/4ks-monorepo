@@ -11,7 +11,7 @@ resource "google_cloud_run_service" "api" {
 
   template {
     spec {
-      # service_account_name = google_service_account.api.email
+      service_account_name = google_service_account.api.email
       containers {
         image = "us-east4-docker.pkg.dev/${var.stage}-${local.org}/api/app:${var.api_build_number}"
         ports {
@@ -62,83 +62,30 @@ resource "google_cloud_run_service" "api" {
   }
 }
 
-# resource "google_service_account" "api" {
-#   account_id   = "cloud-run-api-runner"
-#   display_name = "Cloud Run API runner"
-#   # description  = "Identity used by the Cloud Run API service"
-# }
+resource "google_service_account" "api" {
+  account_id   = "cloud-run-api-sa"
+  display_name = "Cloud Run API"
+  description  = "Identity used by the Cloud Run API service"
+}
 
-# data "google_iam_policy" "api_invoker" {
-#   binding {
-#     # role = "roles/run.invoker"
-#     role = "roles/editor"
-#     members = [
-#       "serviceAccount:${google_service_account.api.email}",
-#     ]
-#   }
-# }
+resource "google_project_iam_custom_role" "api" {
+  role_id     = "cloudRunAPI"
+  title       = "Cloud Run API"
+  description = "Cloud Run API"
+  permissions = [
+    "iam.serviceAccounts.signBlob",
+  ]
+}
 
-# resource "google_cloud_run_service_iam_policy" "api_invoker" {
-#   location    = google_cloud_run_service.api.location
-#   project     = google_cloud_run_service.api.project
-#   service     = google_cloud_run_service.api.name
-#   policy_data = data.google_iam_policy.api_invoker.policy_data
-# }
+data "google_iam_policy" "api_invoker" {
+  binding {
+    role = google_project_iam_custom_role.api.id
+    members = [
+      "serviceAccount:${google_service_account.api.email}",
+    ]
+  }
+}
 
-
-# data "google_iam_policy" "api_firestore" {
-#   binding {
-#     role = "roles/firestore.serviceAgent"
-#     members = [
-#       "serviceAccount:${google_service_account.api.email}",
-#     ]
-#   }
-# }
-
-# resource "google_cloud_run_service_iam_policy" "api_firestore" {
-#   location    = google_cloud_run_service.api.location
-#   project     = google_cloud_run_service.api.project
-#   service     = google_cloud_run_service.api.name
-#   policy_data = data.google_iam_policy.api_firestore.policy_data
-# }
-
-
-# resource "google_service_account_iam_binding" "api_sa" {
-#   service_account_id = google_service_account.api_sa.name
-#   role               = "roles/editor"
-
-#   members = [
-#     "serviceAccount:${google_service_account.api_sa.email}"
-#   ]
-# }
-
-# resource "google_service_account_iam_binding" "api_agent" {
-#   service_account_id = google_service_account.api_sa.name
-#   role               = "roles/run.serviceAgent"
-
-#   members = [
-#     "serviceAccount:${google_service_account.api_sa.email}"
-#   ]
-# }
-
-// roles/iam.serviceAccountTokenCreator
-// roles/iam.serviceAccounts.signBlob
-
-# resource "google_service_account_iam_binding" "api_fire" {
-#   service_account_id = google_service_account.api_sa.name
-#   role               = "roles/firestore.serviceAgent"
-
-#   members = [
-#     "serviceAccount:${google_service_account.api_sa.email}"
-#   ]
-# }
-
-# data "google_app_engine_default_service_account" "default" {
-# }
-
-# output "default_account" {
-#   value = data.google_app_engine_default_service_account.default.email
-# }
 
 resource "google_cloud_run_service_iam_member" "api_anonymous_access" {
   service  = google_cloud_run_service.api.name
@@ -147,9 +94,6 @@ resource "google_cloud_run_service_iam_member" "api_anonymous_access" {
   member   = "allUsers"
 }
 
-output "api_service_url" {
-  value = google_cloud_run_service.api.status[0].url
-}
 
 
 resource "google_compute_region_network_endpoint_group" "api_neg" {
@@ -171,4 +115,8 @@ resource "google_compute_backend_service" "api" {
   backend {
     group = google_compute_region_network_endpoint_group.api_neg.id
   }
+}
+
+output "api_service_url" {
+  value = google_cloud_run_service.api.status[0].url
 }
