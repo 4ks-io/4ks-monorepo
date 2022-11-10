@@ -16,7 +16,7 @@ import (
 // @Tags 				API
 // @Accept 			json
 // @Produce 		json
-// @Success 		200 		 {string} data
+// @Success 		200 		 {string} value
 // @Router 			/version [get]
 func GetAPIVersion(version string) func(c *gin.Context) {
 	return func(c *gin.Context) {

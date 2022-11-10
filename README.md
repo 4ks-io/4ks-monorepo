@@ -33,14 +33,15 @@ https://local.4ks.io/ (must be added to host file)
 gcloud auth configure-docker us-east4-docker.pkg.dev
 
 # build
-export VERSION=0.0.0
-docker build . --build-arg VERSION=$VERSION -f ./apps/api/Dockerfile -t 4ks/api:latest
+export VERSION=0.0.1-next
+docker build . --build-arg VERSION=$VERSION -f ./apps/api/Dockerfile -t 4ks/api:next
 
 # publish
-LATEST=$(docker images | grep 4ks/api | grep latest | head -n1  | awk '{print $3}')
-docker tag $LATEST us-east4-docker.pkg.dev/dev-4ks/api/app:latest
-docker tag $LATEST us-east4-docker.pkg.dev/dev-4ks/api/app:$VERSION
-docker push us-east4-docker.pkg.dev/dev-4ks/api/app:latest
+NEXT=$(docker images | grep 4ks/api | grep next | head -n1  | awk '{print $3}')
+docker tag $NEXT us-east4-docker.pkg.dev/dev-4ks/api/app:next
+docker tag $NEXT us-east4-docker.pkg.dev/dev-4ks/api/app:$VERSION
+docker push us-east4-docker.pkg.dev/dev-4ks/api/app:next
+docker push us-east4-docker.pkg.dev/dev-4ks/api/app:$NEXT
 docker push us-east4-docker.pkg.dev/dev-4ks/api/app:$VERSION
 
 // this requires a slight tilt mod to disable web/api

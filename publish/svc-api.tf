@@ -19,6 +19,20 @@ resource "google_cloud_run_service" "api" {
         }
 
         env {
+          name = "SERVICE_ACCOUNT_EMAIL"
+          value = google_service_account.api.email
+        }
+        env {
+          name = "UPLOADABLE_BUCKET"
+          value = replace(google_storage_bucket.media_write.url, "gs://", "")
+          # value = "media-write.${local.web_domain}"
+        }
+        env {
+          name = "GOOGLE_CLOUD_PROJECT"
+          value = data.google_project.project.number
+        }
+
+        env {
           name  = "FIRESTORE_PROJECT_ID"
           value = "${var.stage}-${local.org}"
         }
@@ -73,11 +87,14 @@ resource "google_project_iam_custom_role" "api" {
   title       = "Cloud Run API"
   description = "Cloud Run API"
   permissions = [
-    "iam.serviceAccounts.signBlob",
+    "storage.buckets.get",
+    "storage.objects.create",
+    "storage.objects.delete"
   ]
 }
 
-data "google_iam_policy" "api_invoker" {
+
+data "google_iam_policy" "api_custom" {
   binding {
     role = google_project_iam_custom_role.api.id
     members = [
@@ -87,14 +104,21 @@ data "google_iam_policy" "api_invoker" {
 }
 
 
+data "google_iam_policy" "api_token_creator" {
+  binding {
+    role = "roles/iam.serviceAccountTokenCreator"
+    members = [
+      "serviceAccount:${google_service_account.api.email}",
+    ]
+  }
+}
+
 resource "google_cloud_run_service_iam_member" "api_anonymous_access" {
   service  = google_cloud_run_service.api.name
   location = google_cloud_run_service.api.location
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
-
-
 
 resource "google_compute_region_network_endpoint_group" "api_neg" {
   name                  = "${local.project}-api-neg"

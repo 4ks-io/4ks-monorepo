@@ -27,6 +27,16 @@ definitions:
     - displayName
     - username
     type: object
+  dtos.NewMedia:
+    properties:
+      contentType:
+        type: string
+      filename:
+        type: string
+    required:
+    - contentType
+    - filename
+    type: object
   dtos.TestUserName:
     properties:
       username:
@@ -91,6 +101,8 @@ definitions:
     properties:
       author:
         $ref: '#/definitions/models.UserSummary'
+      branch:
+        type: string
       contributors:
         items:
           $ref: '#/definitions/models.UserSummary'
@@ -103,7 +115,7 @@ definitions:
         type: string
       metadata:
         $ref: '#/definitions/models.RecipeMetada'
-      source:
+      root:
         type: string
       updatedDate:
         type: string
@@ -201,6 +213,30 @@ paths:
       summary: Test JWT Auth
       tags:
       - API
+  /media/token:
+    post:
+      consumes:
+      - application/json
+      description: Create a new Media
+      parameters:
+      - description: Payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.NewMedia'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new Media
+      tags:
+      - Media
   /recipes:
     get:
       consumes:

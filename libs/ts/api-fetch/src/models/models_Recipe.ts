@@ -8,11 +8,12 @@ import type { models_UserSummary } from './models_UserSummary';
 
 export type models_Recipe = {
     author?: models_UserSummary;
+    branch?: string;
     contributors?: Array<models_UserSummary>;
     createdDate?: string;
     currentRevision?: models_RecipeRevision;
     id?: string;
     metadata?: models_RecipeMetada;
-    source?: string;
+    root?: string;
     updatedDate?: string;
 };

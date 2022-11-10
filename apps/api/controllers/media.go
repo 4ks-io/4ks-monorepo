@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"4ks/apps/api/dtos"
 	mediaService "4ks/apps/api/services/media"
+	"fmt"
+	"path/filepath"
 
 	"net/http"
 
@@ -9,7 +12,7 @@ import (
 )
 
 type MediaController interface {
-	CreateMedia(c *gin.Context)
+	GetToken(c *gin.Context)
 }
 
 type mediaController struct {
@@ -22,34 +25,43 @@ func NewMediaController() MediaController {
 	}
 }
 
-// CreateMedia   godoc
+// GetToken   godoc
 // @Schemes
 // @Summary 		Create a new Media
 // @Description Create a new Media
-// @Tags 				Medias
+// @Tags 				Media
 // @Accept 			json
 // @Produce 		json
-// @Param       media     body  	   dtos.CreateMedia  true  "Media Data"
-// @Success 		200 		 {object} 	 models.Media
-// @Router		 	/medias   [post]
+// @Param       payload 	     body      	 dtos.NewMedia  true  "Payload"
+// @Success 		200 		       {string} 	 value
+// @Router		 	/media/token   [post]
 // @Security 		ApiKeyAuth
-func (uc *mediaController) CreateMedia(c *gin.Context) {
+func (uc *mediaController) GetToken(c *gin.Context) {
 	// userId := c.Request.Context().Value(utils.UserId{}).(string)
 	// mediaEmail := c.Request.Context().Value(utils.MediaEmail{}).(string)
 
-	// payload := dtos.CreateMedia{}
-	// if err := c.BindJSON(&payload); err != nil {
-	// 	c.AbortWithError(http.StatusBadRequest, err)
-	// 	return
-	// }
+	payload := dtos.NewMedia{}
+	if err := c.BindJSON(&payload); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
 
-	
+	// validate file extention
+	ext := filepath.Ext(payload.Filename);
+	if ext == "" {
+		c.AbortWithError(http.StatusBadRequest, fmt.Errorf("Invalid Filename"))
+		return
+	}
+
+	// validate content type against file extension?
+	ct := payload.ContentType
+
 	// &mediaId, &mediaEmail, &payload
-	createdToken, err := uc.mediaService.GetToken()
+	token, err := uc.mediaService.GetToken(&ext, &ct)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, createdToken)
+	c.JSON(http.StatusOK, token)
 }

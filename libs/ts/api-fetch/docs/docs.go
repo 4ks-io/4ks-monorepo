@@ -44,6 +44,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/media/token": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Create a new Media",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media"
+                ],
+                "summary": "Create a new Media",
+                "parameters": [
+                    {
+                        "description": "Payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.NewMedia"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/recipes": {
             "get": {
                 "security": [
@@ -687,6 +726,21 @@ const docTemplate = `{
                 }
             }
         },
+        "dtos.NewMedia": {
+            "type": "object",
+            "required": [
+                "contentType",
+                "filename"
+            ],
+            "properties": {
+                "contentType": {
+                    "type": "string"
+                },
+                "filename": {
+                    "type": "string"
+                }
+            }
+        },
         "dtos.TestUserName": {
             "type": "object",
             "required": [
@@ -786,6 +840,9 @@ const docTemplate = `{
                 "author": {
                     "$ref": "#/definitions/models.UserSummary"
                 },
+                "branch": {
+                    "type": "string"
+                },
                 "contributors": {
                     "type": "array",
                     "items": {
@@ -804,7 +861,7 @@ const docTemplate = `{
                 "metadata": {
                     "$ref": "#/definitions/models.RecipeMetada"
                 },
-                "source": {
+                "root": {
                     "type": "string"
                 },
                 "updatedDate": {
