@@ -113,11 +113,22 @@ definitions:
         $ref: '#/definitions/models.RecipeRevision'
       id:
         type: string
+      media:
+        items:
+          $ref: '#/definitions/models.RecipeMedia'
+        type: array
       metadata:
         $ref: '#/definitions/models.RecipeMetada'
       root:
         type: string
       updatedDate:
+        type: string
+    type: object
+  models.RecipeMedia:
+    properties:
+      id:
+        type: string
+      url:
         type: string
     type: object
   models.RecipeMetada:

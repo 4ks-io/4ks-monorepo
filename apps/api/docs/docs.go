@@ -858,6 +858,12 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "media": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.RecipeMedia"
+                    }
+                },
                 "metadata": {
                     "$ref": "#/definitions/models.RecipeMetada"
                 },
@@ -865,6 +871,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updatedDate": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.RecipeMedia": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }

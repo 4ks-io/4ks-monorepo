@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { DefaultButton } from '@fluentui/react/lib/Button';
+import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { useFilePicker } from 'use-file-picker';
 import { useRecipeContext } from '../../../../providers/recipe-context';
 import { useSessionContext } from '../../../../providers/session-context';
-import { models_UserSummary } from '@4ks/api-fetch';
-import { Image, IImageProps, ImageFit } from '@fluentui/react/lib/Image';
+import { models_UserSummary, dtos_NewMedia } from '@4ks/api-fetch';
+import { Image, ImageFit } from '@fluentui/react/lib/Image';
 
 const RecipeMediaView = () => {
   const { isAuthenticated } = useAuth0();
   const ctx = useSessionContext();
   const rtx = useRecipeContext();
+
+  const [uploadTokenUrl, setUploadTokenUrl] = useState('');
 
   const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
     readAs: 'DataURL',
@@ -21,6 +23,21 @@ const RecipeMediaView = () => {
     maxFileSize: 5, // in megabytes
   });
 
+  useEffect(() => {
+    // todo : multiple images
+    if (filesContent && filesContent.length == 1) {
+      ctx.api?.media
+        .postMediaToken({
+          contentType: 'image/jpeg',
+          filename: filesContent[0].name,
+        })
+        .then((url) => {
+          setUploadTokenUrl(url);
+          console.log(url);
+        });
+    }
+  }, [filesContent]);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -30,6 +47,23 @@ const RecipeMediaView = () => {
   }
 
   function handleUploadMedia() {
+    fetch(uploadTokenUrl, {
+      method: 'PUT',
+      // mode: 'cors', // no-cors, *cors, same-origin
+      headers: {
+        'Content-Type': 'image/jpeg',
+      },
+      // redirect: 'follow', // manual, *follow, error
+      // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(filesContent[0].content), // body data type must match "Content-Type" header
+    })
+      .then((r) => {
+        console.log(JSON.stringify(r.json()));
+      })
+      .catch((e) => console.log(e));
+  }
+
+  function handleSelectMedia() {
     openFileSelector();
   }
 
@@ -37,15 +71,46 @@ const RecipeMediaView = () => {
     .map((c) => c.id)
     .includes(ctx.user?.id);
 
+  function selectMediaButton() {
+    return (
+      <DefaultButton
+        text="Select Image"
+        onClick={handleSelectMedia}
+        allowDisabledFocus
+      />
+    );
+  }
+
   function uploadMediaButton() {
+    return (
+      <PrimaryButton
+        text="Upload Image"
+        onClick={handleUploadMedia}
+        allowDisabledFocus
+      />
+    );
+  }
+
+  function newMediaControls() {
     if (isAuthenticated) {
       if (isContributor) {
         return (
-          <DefaultButton
-            text="Upload Image"
-            onClick={handleUploadMedia}
-            allowDisabledFocus
-          />
+          <>
+            {filesContent.length == 0
+              ? selectMediaButton()
+              : uploadMediaButton()}
+
+            {filesContent.map((file, index) => {
+              return (
+                <Image
+                  key={index}
+                  src={file.content}
+                  imageFit={ImageFit.cover}
+                  alt={file.name}
+                />
+              );
+            })}
+          </>
         );
       } else {
         return <>Fork to upload image</>;
@@ -54,23 +119,7 @@ const RecipeMediaView = () => {
     return <>Login to upload images</>;
   }
 
-  return (
-    <>
-      {uploadMediaButton()}
-      {filesContent.map((file, index) => {
-        const imageProps: Partial<IImageProps> = {
-          imageFit: ImageFit.cover,
-          src: file.content,
-        };
-        return (
-          <div key={index}>
-            <Image src={file.content} {...imageProps} alt={file.name} />
-            <br />
-          </div>
-        );
-      })}
-    </>
-  );
+  return <>{newMediaControls()}</>;
 };
 
 export { RecipeMediaView };
