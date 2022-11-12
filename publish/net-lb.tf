@@ -13,8 +13,8 @@ module "lb" {
 
   # hack to prevent the resource from constantly changing
   # ssl_certificates      = [google_compute_managed_ssl_certificate.default.id]
-  ssl_certificates      = ["https://www.googleapis.com/compute/v1/projects/${var.stage}-${local.org}/global/sslCertificates/${local.google_compute_managed_ssl_certificate_name}"]
-  
+  ssl_certificates = ["https://www.googleapis.com/compute/v1/projects/${var.stage}-${local.org}/global/sslCertificates/${local.google_compute_managed_ssl_certificate_name}"]
+
   #   custom_labels = var.custom_labels
 }
 

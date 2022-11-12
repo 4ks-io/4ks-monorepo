@@ -10,7 +10,7 @@ resource "google_dns_managed_zone" "dev_4ks_io" {
 
 
 locals {
-  google_compute_managed_ssl_certificate_name                   = "managed-certificate"
+  google_compute_managed_ssl_certificate_name = "managed-certificate"
 }
 resource "google_compute_managed_ssl_certificate" "default" {
   project = data.google_project.project.number

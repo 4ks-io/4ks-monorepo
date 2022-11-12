@@ -15,7 +15,7 @@ resource "google_storage_bucket" "media_write" {
 
   lifecycle_rule {
     condition {
-      age = 3
+      age = 1
     }
     action {
       type = "Delete"

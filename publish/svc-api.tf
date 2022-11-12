@@ -19,16 +19,16 @@ resource "google_cloud_run_service" "api" {
         }
 
         env {
-          name = "SERVICE_ACCOUNT_EMAIL"
+          name  = "SERVICE_ACCOUNT_EMAIL"
           value = google_service_account.api.email
         }
         env {
-          name = "UPLOADABLE_BUCKET"
+          name  = "UPLOADABLE_BUCKET"
           value = replace(google_storage_bucket.media_write.url, "gs://", "")
           # value = "media-write.${local.web_domain}"
         }
         env {
-          name = "GOOGLE_CLOUD_PROJECT"
+          name  = "GOOGLE_CLOUD_PROJECT"
           value = data.google_project.project.number
         }
 

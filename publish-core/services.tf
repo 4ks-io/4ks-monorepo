@@ -25,7 +25,7 @@ variable "gcp_service_list" {
     "cloudfunctions.googleapis.com",
     "vision.googleapis.com",
     "certificatemanager.googleapis.com",
-    # "cloudbuild.googleapis.com",
+    "cloudbuild.googleapis.com",
   ]
 }
 

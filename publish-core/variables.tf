@@ -3,7 +3,7 @@ variable "region" {
 }
 
 variable "zone" {
-  default = "us-east1-b"
+  default = "us-east4-b"
 }
 
 variable "stage" {
