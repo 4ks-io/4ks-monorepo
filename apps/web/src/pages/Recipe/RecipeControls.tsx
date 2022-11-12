@@ -11,6 +11,7 @@ import { useSessionContext } from '../../providers/session-context';
 
 export enum RecipeViews {
   RecipeContent,
+  Media,
   Forks,
   Comments,
   Story,
@@ -49,6 +50,12 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
       text: 'Recipe',
       iconProps: { iconName: 'LocationCircle' },
       onClick: () => setSelectedView(RecipeViews.RecipeContent),
+    },
+    {
+      key: 'media',
+      text: 'Media',
+      iconProps: { iconName: 'PhotoCollection' },
+      onClick: () => setSelectedView(RecipeViews.Media),
     },
     {
       key: 'forks',

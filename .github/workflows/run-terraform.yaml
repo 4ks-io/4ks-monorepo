@@ -23,7 +23,7 @@ on:
 
 jobs:
   build:
-    name: Setup Terraform
+    name: terraform
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     defaults:
