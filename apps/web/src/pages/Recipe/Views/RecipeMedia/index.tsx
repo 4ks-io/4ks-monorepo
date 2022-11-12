@@ -47,16 +47,21 @@ const RecipeMediaView = () => {
   }
 
   function handleUploadMedia() {
-    fetch(uploadTokenUrl, {
+    const formData = new FormData();
+    formData.append('file', filesContent[0].content);
+
+    const options = {
       method: 'PUT',
       // mode: 'cors', // no-cors, *cors, same-origin
-      headers: {
-        'Content-Type': 'image/jpeg',
-      },
+      // headers: {
+      //   'Content-Type': 'image/jpeg',
+      // },
       // redirect: 'follow', // manual, *follow, error
       // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(filesContent[0].content), // body data type must match "Content-Type" header
-    })
+      body: formData,
+    };
+
+    fetch(uploadTokenUrl, options)
       .then((r) => {
         console.log(JSON.stringify(r.json()));
       })
