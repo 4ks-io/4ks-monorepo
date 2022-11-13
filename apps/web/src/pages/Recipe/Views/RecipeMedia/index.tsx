@@ -51,18 +51,28 @@ const RecipeMediaView = () => {
       // const formData = new FormData();
       // formData.append('file', filesContent[0].content);
 
-      const options = {
-        method: 'PUT',
-        // mode: 'cors', // no-cors, *cors, same-origin
-        headers: {
-          'Content-Type': 'image/jpeg',
-        },
-        // redirect: 'follow', // manual, *follow, error
-        // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        body: filesContent[0].content,
-      };
+      const body = new Blob([filesContent[0].content], {
+        type: 'image/jpeg',
+      });
 
-      let response = await fetch(signedUrl, options);
+      let response = await fetch(signedUrl, {
+        method: 'PUT',
+        headers: new Headers({ 'Content-Type': 'image/jpeg' }),
+        body,
+      });
+
+      // const options = {
+      //   method: 'PUT',
+      //   // mode: 'cors', // no-cors, *cors, same-origin
+      //   headers: {
+      //     'Content-Type': 'image/jpeg',
+      //   },
+      //   // redirect: 'follow', // manual, *follow, error
+      //   // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      //   body: filesContent[0].content,
+      // };
+
+      // let response = await fetch(signedUrl, options);
       let result = await response.json();
       console.log(result);
     }
