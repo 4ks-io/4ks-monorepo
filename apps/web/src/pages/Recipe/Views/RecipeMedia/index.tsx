@@ -65,18 +65,26 @@ const RecipeMediaView = () => {
   }
 
   async function putMedia(file: FileContent) {
-    const formData = new FormData();
-    formData.append('file', file.content);
+    const ct = getContentTypeFromFileExt(file.name);
+    if (!ct) {
+      return;
+    }
 
-    const options: RequestInit = {
-      method: 'PUT',
-      // redirect: 'follow',
-      body: formData,
-    };
+    // https://stackoverflow.com/questions/59836220/how-to-get-the-equivalent-data-format-of-curl-t-upload-data-option-from-inpu
+    fetch(file.content).then(async (response) => {
+      const blob = await response.blob();
+      // 'blob' is the image in blob form
+      const buf = await blob.arrayBuffer();
+      console.log(buf.byteLength);
 
-    let response = await fetch(signedUrl, options);
-    let result = await response.json();
-    console.log(result);
+      const options: RequestInit = {
+        method: 'PUT',
+        headers: new Headers({ 'Content-Type': ct }),
+        body: buf,
+      };
+
+      fetch(signedUrl, options);
+    });
   }
 
   function handleUploadMedia() {

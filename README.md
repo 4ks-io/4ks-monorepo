@@ -163,3 +163,10 @@ gcloud iam service-accounts keys create tf-sa.json \
 gcloud projects add-iam-policy-binding dev-4ks \
  --member=serviceAccount:cloud-run-api-runner@dev-4ks.iam.gserviceaccount.com \
  --role=projects/dev-4ks/roles/editor
+
+# Upload File with SignedUrl
+
+```
+curl -v -H "Content-Type: image/jpeg" --upload-file spaghetti.jpg \
+ "https://storage.googleapis.com/media-write.dev.4ks.io/e1e478ea-ebc2-4b18-b6c2-dd3dce14194f.jpeg?...=host"
+```
