@@ -23,12 +23,30 @@ const RecipeMediaView = () => {
     maxFileSize: 5, // in megabytes
   });
 
+  function getContentTypeFromFileExt(filename: string): string | undefined {
+    var ext = filename.split('.').pop() || '';
+    let ct = null;
+    if (ext == 'png') {
+      return 'image/png';
+    } else if (['jpeg', 'jpg'].includes(ext)) {
+      return 'image/jpeg';
+    } else {
+      console.error('invalid file type');
+    }
+    return undefined;
+  }
+
   useEffect(() => {
-    // todo : multiple images
+    // todo : multiple images?
     if (filesContent && filesContent.length == 1) {
+      const ct = getContentTypeFromFileExt(filesContent[0].name);
+      if (!ct) {
+        console.log('invalid file type');
+        return;
+      }
       ctx.api?.media
         .postMediaToken({
-          contentType: 'image/jpeg',
+          contentType: ct,
           filename: filesContent[0].name,
         })
         .then((url) => {
@@ -47,25 +65,13 @@ const RecipeMediaView = () => {
   }
 
   async function putMedia(file: FileContent) {
-    // const formData = new FormData();
-    // formData.append('file', file.content);
-
-    var ext = file.name.split('.').pop() || '';
-    let ct = null;
-    if (ext == 'png') {
-      ct = 'image/png';
-    } else if (['jpeg', 'jpg'].includes(ext)) {
-      ct = 'image/jpeg';
-    } else {
-      console.error('invalid file type');
-      return;
-    }
+    const formData = new FormData();
+    formData.append('file', file.content);
 
     const options: RequestInit = {
       method: 'PUT',
-      // headers: new Headers({ 'Content-Type': ct }),
-      redirect: 'follow',
-      body: file.content,
+      // redirect: 'follow',
+      body: formData,
     };
 
     let response = await fetch(signedUrl, options);
