@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
-import { useFilePicker } from 'use-file-picker';
+import { useFilePicker, FileContent } from 'use-file-picker';
 import { useRecipeContext } from '../../../../providers/recipe-context';
 import { useSessionContext } from '../../../../providers/session-context';
 import { models_UserSummary, dtos_NewMedia } from '@4ks/api-fetch';
@@ -46,49 +46,35 @@ const RecipeMediaView = () => {
     return <div>Error...</div>;
   }
 
-  function handleUploadMedia() {
-    async function putMedia() {
-      // const formData = new FormData();
-      // formData.append('file', filesContent[0].content);
-      var ext = filesContent[0].name.split('.').pop() || '';
+  async function putMedia(file: FileContent) {
+    // const formData = new FormData();
+    // formData.append('file', file.content);
 
-      let ct = null;
-      if (ext == 'png') {
-        ct = 'image/png';
-      } else if (['jpeg', 'jpg'].includes(ext)) {
-        ct = 'image/jpeg';
-      } else {
-        console.error('invalid file type');
-        return;
-      }
-
-      let response = await fetch(signedUrl, {
-        method: 'PUT',
-        // headers: new Headers({ 'Content-Type': 'image/jpeg' }),
-        headers: {
-          'Content-Type': ct,
-          'Content-Transfer-Encoding': 'base64',
-        },
-        body: btoa(filesContent[0].content),
-      });
-
-      // const options = {
-      //   method: 'PUT',
-      //   // mode: 'cors', // no-cors, *cors, same-origin
-      //   headers: {
-      //     'Content-Type': 'image/jpeg',
-      //   },
-      //   // redirect: 'follow', // manual, *follow, error
-      //   // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      //   body: filesContent[0].content,
-      // };
-
-      // let response = await fetch(signedUrl, options);
-      let result = await response.json();
-      console.log(result);
+    var ext = file.name.split('.').pop() || '';
+    let ct = null;
+    if (ext == 'png') {
+      ct = 'image/png';
+    } else if (['jpeg', 'jpg'].includes(ext)) {
+      ct = 'image/jpeg';
+    } else {
+      console.error('invalid file type');
+      return;
     }
 
-    putMedia();
+    const options: RequestInit = {
+      method: 'PUT',
+      // headers: new Headers({ 'Content-Type': ct }),
+      redirect: 'follow',
+      body: file.content,
+    };
+
+    let response = await fetch(signedUrl, options);
+    let result = await response.json();
+    console.log(result);
+  }
+
+  function handleUploadMedia() {
+    putMedia(filesContent[0]);
   }
 
   function handleSelectMedia() {
