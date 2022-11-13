@@ -50,15 +50,26 @@ const RecipeMediaView = () => {
     async function putMedia() {
       // const formData = new FormData();
       // formData.append('file', filesContent[0].content);
+      var ext = filesContent[0].name.split('.').pop() || '';
 
-      const body = new Blob([filesContent[0].content], {
-        type: 'image/jpeg',
-      });
+      let ct = null;
+      if (ext == 'png') {
+        ct = 'image/png';
+      } else if (['jpeg', 'jpg'].includes(ext)) {
+        ct = 'image/jpeg';
+      } else {
+        console.error('invalid file type');
+        return;
+      }
 
       let response = await fetch(signedUrl, {
         method: 'PUT',
-        headers: new Headers({ 'Content-Type': 'image/jpeg' }),
-        body,
+        // headers: new Headers({ 'Content-Type': 'image/jpeg' }),
+        headers: {
+          'Content-Type': ct,
+          'Content-Transfer-Encoding': 'base64',
+        },
+        body: btoa(filesContent[0].content),
       });
 
       // const options = {
