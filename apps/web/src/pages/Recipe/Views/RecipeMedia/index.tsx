@@ -12,7 +12,7 @@ const RecipeMediaView = () => {
   const ctx = useSessionContext();
   const rtx = useRecipeContext();
 
-  const [uploadTokenUrl, setUploadTokenUrl] = useState('');
+  const [signedUrl, setSignedUrl] = useState('');
 
   const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
     readAs: 'DataURL',
@@ -32,7 +32,7 @@ const RecipeMediaView = () => {
           filename: filesContent[0].name,
         })
         .then((url) => {
-          setUploadTokenUrl(url);
+          setSignedUrl(url);
           console.log(url);
         });
     }
@@ -47,25 +47,27 @@ const RecipeMediaView = () => {
   }
 
   function handleUploadMedia() {
-    const formData = new FormData();
-    formData.append('file', filesContent[0].content);
+    async function putMedia() {
+      // const formData = new FormData();
+      // formData.append('file', filesContent[0].content);
 
-    const options = {
-      method: 'PUT',
-      // mode: 'cors', // no-cors, *cors, same-origin
-      // headers: {
-      //   'Content-Type': 'image/jpeg',
-      // },
-      // redirect: 'follow', // manual, *follow, error
-      // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: formData,
-    };
+      const options = {
+        method: 'PUT',
+        // mode: 'cors', // no-cors, *cors, same-origin
+        headers: {
+          'Content-Type': 'image/jpeg',
+        },
+        // redirect: 'follow', // manual, *follow, error
+        // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: filesContent[0].content,
+      };
 
-    fetch(uploadTokenUrl, options)
-      .then((r) => {
-        console.log(JSON.stringify(r.json()));
-      })
-      .catch((e) => console.log(e));
+      let response = await fetch(signedUrl, options);
+      let result = await response.json();
+      console.log(result);
+    }
+
+    putMedia();
   }
 
   function handleSelectMedia() {
