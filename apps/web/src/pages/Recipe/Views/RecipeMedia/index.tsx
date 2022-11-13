@@ -51,7 +51,7 @@ const RecipeMediaView = () => {
         })
         .then((url) => {
           setSignedUrl(url);
-          console.log(url);
+          // console.log(url);
         });
     }
   }, [filesContent]);
@@ -73,9 +73,7 @@ const RecipeMediaView = () => {
     // https://stackoverflow.com/questions/59836220/how-to-get-the-equivalent-data-format-of-curl-t-upload-data-option-from-inpu
     fetch(file.content).then(async (response) => {
       const blob = await response.blob();
-      // 'blob' is the image in blob form
       const buf = await blob.arrayBuffer();
-      console.log(buf.byteLength);
 
       const options: RequestInit = {
         method: 'PUT',
