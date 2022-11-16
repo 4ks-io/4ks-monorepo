@@ -4,7 +4,7 @@ import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { useFilePicker, FileContent } from 'use-file-picker';
 import { useRecipeContext } from '../../../../providers/recipe-context';
 import { useSessionContext } from '../../../../providers/session-context';
-import { models_UserSummary, dtos_NewMedia } from '@4ks/api-fetch';
+import { models_UserSummary } from '@4ks/api-fetch';
 import { Image, ImageFit } from '@fluentui/react/lib/Image';
 
 const RecipeMediaView = () => {
@@ -37,21 +37,19 @@ const RecipeMediaView = () => {
   }
 
   useEffect(() => {
-    // todo : multiple images?
     if (filesContent && filesContent.length == 1) {
       const ct = getContentTypeFromFileExt(filesContent[0].name);
       if (!ct) {
         console.log('invalid file type');
         return;
       }
-      ctx.api?.media
-        .postMediaToken({
+      ctx.api?.recipes
+        .postRecipesMedia(`${rtx?.recipeId}`, {
           contentType: ct,
           filename: filesContent[0].name,
         })
         .then((url) => {
           setSignedUrl(url);
-          // console.log(url);
         });
     }
   }, [filesContent]);
@@ -71,17 +69,14 @@ const RecipeMediaView = () => {
     }
 
     // https://stackoverflow.com/questions/59836220/how-to-get-the-equivalent-data-format-of-curl-t-upload-data-option-from-inpu
-    fetch(file.content).then(async (response) => {
-      const blob = await response.blob();
-      const buf = await blob.arrayBuffer();
+    const r = await fetch(file.content);
+    const blob = await r.blob();
+    const buf = await blob.arrayBuffer();
 
-      const options: RequestInit = {
-        method: 'PUT',
-        headers: new Headers({ 'Content-Type': ct }),
-        body: buf,
-      };
-
-      fetch(signedUrl, options);
+    fetch(signedUrl, {
+      method: 'PUT',
+      headers: new Headers({ 'Content-Type': ct }),
+      body: buf,
     });
   }
 

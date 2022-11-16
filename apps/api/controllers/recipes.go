@@ -364,6 +364,7 @@ func (rc *recipeController) GetRecipeRevision(c *gin.Context) {
 func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 	// userId := c.Request.Context().Value(utils.UserId{}).(string)
 	// mediaEmail := c.Request.Context().Value(utils.MediaEmail{}).(string)
+	// recipeId := c.Param("id")
 
 	payload := dtos.CreateRecipeMedia{}
 	if err := c.BindJSON(&payload); err != nil {
