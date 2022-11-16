@@ -1,8 +1,7 @@
-package media
+package recipe
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -11,45 +10,12 @@ import (
 	"github.com/google/uuid"
 )
 
-var (
-	ErrTargetNotFound = errors.New("unable to get token")
-	ErrInvalidContentType = errors.New("invalid content-type")
-)
-
-
-type MediaService interface {
-	GetToken(ext *string, ct *string) (*string, error)
-}
-
-type mediaService struct {
-}
-
-func New() MediaService {
-	return &mediaService{}
-}
-
-const expirationMinutes = 5
-
-var (
-	ErrFailedToSign           = errors.New("failed to sign by internal server error")
-)
-
-func (ms mediaService) GetToken(ext *string, ct *string) (*string, error) {
+func (rs recipeService) GetRecipeMediaSignedUrl(ext *string, ct *string) (*string, error) {
 	// reading env var takes ~75ns. maybe better to read only once?
 	// but this keeps everything together and also won't blow up locally
 	// should we disable media route locally?
 	uploadableBucket := os.Getenv("UPLOADABLE_BUCKET")
 	serviceAccountName := os.Getenv("SERVICE_ACCOUNT_EMAIL")
-
-	// cred, err := google.DefaultClient(context.Background(), iam.CloudPlatformScope)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// iamService, err = iam.New(cred)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx)
@@ -60,12 +26,9 @@ func (ms mediaService) GetToken(ext *string, ct *string) (*string, error) {
 
 	object := uuid.New().String() + *ext
 
-	fmt.Println("object: "+object)
-	fmt.Println("contentType: "+ *ct)
-
 	// https://pkg.go.dev/cloud.google.com/go/storage#SignedURLOptions
 	opts := &storage.SignedURLOptions{
-		Scheme: storage.SigningSchemeV4,
+		Scheme:         storage.SigningSchemeV4,
 		GoogleAccessID: serviceAccountName,
 		Method:         "PUT",
 		Expires:        time.Now().Add(expirationMinutes * time.Minute),
@@ -76,11 +39,9 @@ func (ms mediaService) GetToken(ext *string, ct *string) (*string, error) {
 	}
 
 	url, err := client.Bucket(uploadableBucket).SignedURL(object, opts)
-
 	if err != nil {
 		return nil, fmt.Errorf("Bucket(%q). SignedURL: %v", uploadableBucket, err)
 	}
 
 	return &url, nil
 }
-

@@ -17,6 +17,16 @@ definitions:
       name:
         type: string
     type: object
+  dtos.CreateRecipeMedia:
+    properties:
+      contentType:
+        type: string
+      filename:
+        type: string
+    required:
+    - contentType
+    - filename
+    type: object
   dtos.CreateUser:
     properties:
       displayName:
@@ -26,16 +36,6 @@ definitions:
     required:
     - displayName
     - username
-    type: object
-  dtos.NewMedia:
-    properties:
-      contentType:
-        type: string
-      filename:
-        type: string
-    required:
-    - contentType
-    - filename
     type: object
   dtos.TestUserName:
     properties:
@@ -224,30 +224,6 @@ paths:
       summary: Test JWT Auth
       tags:
       - API
-  /media/token:
-    post:
-      consumes:
-      - application/json
-      description: Create a new Media
-      parameters:
-      - description: Payload
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.NewMedia'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Create a new Media
-      tags:
-      - Media
   /recipes:
     get:
       consumes:
@@ -382,6 +358,35 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Fork Recipe
+      tags:
+      - Recipes
+  /recipes/{recipeId}/media:
+    post:
+      consumes:
+      - application/json
+      description: Create a new Media SignedUrl
+      parameters:
+      - description: Recipe Id
+        in: path
+        name: recipeId
+        required: true
+        type: string
+      - description: Payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateRecipeMedia'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new Media SignedUrl
       tags:
       - Recipes
   /recipes/{recipeId}/revisions:

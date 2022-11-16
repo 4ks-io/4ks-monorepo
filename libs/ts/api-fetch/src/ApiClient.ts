@@ -6,7 +6,6 @@ import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
 
 import { ApiService } from './services/ApiService';
-import { MediaService } from './services/MediaService';
 import { RecipesService } from './services/RecipesService';
 import { UsersService } from './services/UsersService';
 
@@ -15,7 +14,6 @@ type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class ApiClient {
 
     public readonly api: ApiService;
-    public readonly media: MediaService;
     public readonly recipes: RecipesService;
     public readonly users: UsersService;
 
@@ -35,7 +33,6 @@ export class ApiClient {
         });
 
         this.api = new ApiService(this.request);
-        this.media = new MediaService(this.request);
         this.recipes = new RecipesService(this.request);
         this.users = new UsersService(this.request);
     }

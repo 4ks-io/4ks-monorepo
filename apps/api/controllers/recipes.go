@@ -3,6 +3,8 @@ package controllers
 import (
 	recipeService "4ks/apps/api/services/recipe"
 	userService "4ks/apps/api/services/user"
+	"fmt"
+	"path/filepath"
 
 	"net/http"
 
@@ -23,6 +25,7 @@ type RecipeController interface {
 	StarRecipe(c *gin.Context)
 	GetRecipeRevisions(c *gin.Context)
 	GetRecipeRevision(c *gin.Context)
+	CreateRecipeMedia(c *gin.Context)
 }
 
 type recipeController struct {
@@ -344,4 +347,46 @@ func (rc *recipeController) GetRecipeRevision(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, recipeRevision)
+}
+
+// GetMediaSignedUrl   godoc
+// @Schemes
+// @Summary 		Create a new Media SignedUrl
+// @Description Create a new Media SignedUrl
+// @Tags 				Recipes
+// @Accept 			json
+// @Produce 		json
+// @Param       recipeId 			 path      	 string  true  "Recipe Id"
+// @Param       payload 	     body      	 dtos.CreateRecipeMedia  true  "Payload"
+// @Success 		200 		       {string} 	 value
+// @Router		 	/recipes/{recipeId}/media  [post]
+// @Security 		ApiKeyAuth
+func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
+	// userId := c.Request.Context().Value(utils.UserId{}).(string)
+	// mediaEmail := c.Request.Context().Value(utils.MediaEmail{}).(string)
+
+	payload := dtos.CreateRecipeMedia{}
+	if err := c.BindJSON(&payload); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	// validate file extention
+	ext := filepath.Ext(payload.Filename)
+	if ext == "" {
+		c.AbortWithError(http.StatusBadRequest, fmt.Errorf("Invalid Filename"))
+		return
+	}
+
+	// validate content type against file extension?
+	ct := payload.ContentType
+
+	// &mediaId, &mediaEmail, &payload
+	token, err := rc.recipeService.GetRecipeMediaSignedUrl(&ext, &ct)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, token)
 }

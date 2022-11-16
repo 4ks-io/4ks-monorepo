@@ -15,6 +15,7 @@ func RecipesRouterAuth(router *gin.Engine) {
 		recipes.PATCH(":id", rc.UpdateRecipe)
 		recipes.POST(":id/star", rc.StarRecipe)
 		recipes.POST(":id/fork", rc.ForkRecipe)
+		recipes.POST(":id/media", rc.CreateRecipeMedia)
 		recipes.DELETE(":id", rc.DeleteRecipe)
 	}
 }

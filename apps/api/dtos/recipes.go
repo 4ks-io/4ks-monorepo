@@ -17,3 +17,8 @@ type UpdateRecipe struct {
 	Ingredients  []models.Ingredient  `json:"ingredients"`
 	Images       []models.Image       `json:"images"`
 }
+
+type CreateRecipeMedia struct {
+	Filename    string `json:"filename" binding:"required"`
+	ContentType string `json:"contentType" binding:"required"`
+}

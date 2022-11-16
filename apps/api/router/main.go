@@ -35,7 +35,6 @@ func New() *gin.Engine {
 	AuthRouter(router)
 	UsersRouter(router)
 	RecipesRouterAuth(router)
-	MediaRouter(router)
 
 	return router
 }

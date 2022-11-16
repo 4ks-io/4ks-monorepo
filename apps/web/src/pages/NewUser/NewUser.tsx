@@ -58,7 +58,7 @@ const NewUser: React.FunctionComponent = () => {
   }, [ctx.user]);
 
   function handleSave() {
-    console.log(ctx.actions);
+    // console.log(ctx.actions);
     if (ctx?.actions?.createUser && uValidator.username) {
       try {
         ctx?.actions?.createUser({

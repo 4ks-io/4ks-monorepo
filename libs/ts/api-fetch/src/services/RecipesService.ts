@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { dtos_CreateRecipe } from '../models/dtos_CreateRecipe';
+import type { dtos_CreateRecipeMedia } from '../models/dtos_CreateRecipeMedia';
 import type { dtos_UpdateRecipe } from '../models/dtos_UpdateRecipe';
 import type { models_Recipe } from '../models/models_Recipe';
 import type { models_RecipeRevision } from '../models/models_RecipeRevision';
@@ -138,6 +139,28 @@ export class RecipesService {
             path: {
                 'recipeId': recipeId,
             },
+        });
+    }
+
+    /**
+     * Create a new Media SignedUrl
+     * Create a new Media SignedUrl
+     * @param recipeId Recipe Id
+     * @param payload Payload
+     * @returns string OK
+     * @throws ApiError
+     */
+    public postRecipesMedia(
+        recipeId: string,
+        payload: dtos_CreateRecipeMedia,
+    ): CancelablePromise<string> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/recipes/{recipeId}/media',
+            path: {
+                'recipeId': recipeId,
+            },
+            body: payload,
         });
     }
 

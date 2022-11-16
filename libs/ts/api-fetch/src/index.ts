@@ -10,8 +10,8 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { dtos_CreateRecipe } from './models/dtos_CreateRecipe';
+export type { dtos_CreateRecipeMedia } from './models/dtos_CreateRecipeMedia';
 export type { dtos_CreateUser } from './models/dtos_CreateUser';
-export type { dtos_NewMedia } from './models/dtos_NewMedia';
 export type { dtos_TestUserName } from './models/dtos_TestUserName';
 export type { dtos_UpdateRecipe } from './models/dtos_UpdateRecipe';
 export type { dtos_UpdateUser } from './models/dtos_UpdateUser';
@@ -27,6 +27,5 @@ export type { models_Username } from './models/models_Username';
 export type { models_UserSummary } from './models/models_UserSummary';
 
 export { ApiService } from './services/ApiService';
-export { MediaService } from './services/MediaService';
 export { RecipesService } from './services/RecipesService';
 export { UsersService } from './services/UsersService';
