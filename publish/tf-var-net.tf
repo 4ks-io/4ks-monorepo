@@ -4,7 +4,8 @@ variable "development_ip_addresses" {
     "71.191.48.46",   # nic home
     "71.121.252.105", # hammad home
     "142.127.4.130",  # renee trotter  (nic's cousin) - UX
-    "14.100.38.23"    # marie-claire delorme (sister) - singapore
+    "14.100.38.23",   # marie-claire delorme (sister) - singapore
+    "71.191.49.198"  # cody home
   ]
 }
 
