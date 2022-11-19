@@ -8,7 +8,7 @@ docker_build(
     '4ks-api',
     context='.',
     dockerfile='./apps/api/Dockerfile.dev',
-    only=['./apps/api', './go.mod', './go.sum', './libs/go'],
+    only=['./apps/api', './go.mod', './go.sum', './libs/go', './deploy/sbx-4ks-google-app-creds.json'],
     live_update=[
         sync('./apps/api/', '/app/apps/api'),
         sync('./libs/go/', '/app/libs/go'),

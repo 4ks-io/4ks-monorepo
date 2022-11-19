@@ -25,7 +25,6 @@ resource "google_cloud_run_service" "api" {
         env {
           name  = "UPLOADABLE_BUCKET"
           value = replace(google_storage_bucket.media_write.url, "gs://", "")
-          # value = "media-write.${local.web_domain}"
         }
         env {
           name  = "GOOGLE_CLOUD_PROJECT"

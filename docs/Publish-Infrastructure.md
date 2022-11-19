@@ -2,6 +2,8 @@
 
 # GCP Terraform Service Account Setup
 
+0. create role -> create SA
+
 1. Create Service Account
 
 ```
@@ -23,7 +25,32 @@ gcloud iam service-accounts keys create tf-sa.json \
   --iam-account=terraform-sa@development-999999.iam.gserviceaccount.com
 ```
 
-4. Grant following IAM roles:
+4. Create custom BucketRole role with permissions:
+
+- storage.buckets.create
+- storage.buckets.createTagBinding
+- storage.buckets.delete
+- storage.buckets.deleteTagBinding
+- storage.buckets.get
+- storage.buckets.getIamPolicy
+- storage.buckets.list
+- storage.buckets.listEffectiveTags
+- storage.buckets.listTagBindings
+- storage.buckets.setIamPolicy
+- storage.buckets.update
+- storage.multipartUploads.abort
+- storage.multipartUploads.create
+- storage.multipartUploads.list
+- storage.multipartUploads.listParts
+- storage.objects.create
+- storage.objects.delete
+- storage.objects.get
+- storage.objects.getIamPolicy
+- storage.objects.list
+- storage.objects.setIamPolicy
+- storage.objects.update
+
+5. Grant following IAM roles:
 
 - Owner
 - BucketRole

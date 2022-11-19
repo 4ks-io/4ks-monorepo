@@ -50,6 +50,10 @@ spec:
               value: JAEGER
             - name: VERSION_FILE_PATH
               value: apps/api/VERSION
+            - name: UPLOADABLE_BUCKET
+              value: media.sbx.4ks.io
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /app/google-app-creds.json
           ports:
             - containerPort: 5000
           readinessProbe:
