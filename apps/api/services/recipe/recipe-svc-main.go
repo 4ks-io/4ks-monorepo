@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"os"
+	"sync"
 
 	firestore "cloud.google.com/go/firestore"
 
@@ -16,18 +17,20 @@ var firstoreProjectId = os.Getenv("FIRESTORE_PROJECT_ID")
 var ctx = context.Background()
 var s, _ = firestore.NewClient(ctx, firstoreProjectId)
 var recipeCollection = s.Collection("recipes")
+var recipeMediasCollection = s.Collection("recipe-medias")
 var recipeRevisionsCollection = s.Collection("recipe-revisions")
 var recipeStarsCollection = s.Collection("recipe-stars")
 
 var (
-	ErrUnauthorized           = errors.New("unauthorized user")
-	ErrUnableToUpdateRecipe   = errors.New("there was an error updating the recipe")
-	ErrUnableToForkRecipe     = errors.New("there was an error forking the recipe")
-	ErrUnableToCreateRecipe   = errors.New("there was an error creating the recipe")
-	ErrRecipeNotFound         = errors.New("recipe was not found")
-	ErrRecipeAlreadyStarred   = errors.New("recipe is already starred")
-	ErrRecipeRevisionNotFound = errors.New("recipe revision not found")
-	ErrFailedToSign           = errors.New("failed to sign by internal server error")
+	ErrUnauthorized              = errors.New("unauthorized user")
+	ErrUnableToUpdateRecipe      = errors.New("error updating recipe")
+	ErrUnableToCreateRecipeMedia = errors.New("error creating recipe media")
+	ErrUnableToForkRecipe        = errors.New("error forking recipe")
+	ErrUnableToCreateRecipe      = errors.New("error creating recipe")
+	ErrRecipeNotFound            = errors.New("recipe not found")
+	ErrRecipeAlreadyStarred      = errors.New("recipe already starred")
+	ErrRecipeRevisionNotFound    = errors.New("recipe revision not found")
+	// ErrFailedToSign              = errors.New("failed to sign url")
 )
 
 const expirationMinutes = 5
@@ -42,7 +45,9 @@ type RecipeService interface {
 	StarRecipeById(id *string, user models.UserSummary) (bool, error)
 	GetRecipeRevisions(recipeId *string) ([]*models.RecipeRevision, error)
 	GetRecipeRevisionById(revisionId *string) (*models.RecipeRevision, error)
-	GetRecipeMediaSignedUrl(ext *string, ct *string) (*string, error)
+	CreateRecipeMedia(filename *string, ct *string, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error)
+	CreateRecipeMediaSignedUrl(filename *string, ct *string, wg *sync.WaitGroup) (*string, error)
+	GetRecipeMedias(recipeId *string) ([]*models.RecipeMedia, error)
 }
 
 type recipeService struct {

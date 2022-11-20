@@ -51,6 +51,9 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
       iconProps: { iconName: 'LocationCircle' },
       onClick: () => setSelectedView(RecipeViews.RecipeContent),
     },
+  ];
+
+  const _items_more: ICommandBarItemProps[] = [
     {
       key: 'media',
       text: 'Media',
@@ -70,6 +73,7 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
       onClick: () => setSelectedView(RecipeViews.Versions),
     },
   ];
+
   const _items_owner: ICommandBarItemProps[] = [
     {
       key: 'settings',
@@ -93,6 +97,14 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
   //   },
   // ];
 
+  let items = _items_base;
+  if (rtx?.recipeId && rtx?.recipeId != '0') {
+    items = items.concat(_items_more);
+  }
+  if (rtx?.recipeId && rtx?.recipeId != '0' && isRecipeContributor) {
+    items = items.concat(_items_owner);
+  }
+
   return (
     <Stack.Item align="stretch" style={{ paddingTop: '24px' }}>
       <div
@@ -103,11 +115,7 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
       >
         <CommandBar
           styles={CommandBarStyles}
-          items={
-            rtx?.recipeId && rtx?.recipeId != '0' && isRecipeContributor
-              ? _items_base.concat(_items_owner)
-              : _items_base
-          }
+          items={items}
           ariaLabel="Page Navigation"
           primaryGroupAriaLabel="PageNavigation"
         />

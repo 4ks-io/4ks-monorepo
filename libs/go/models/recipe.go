@@ -17,15 +17,9 @@ type Recipe struct {
 	Branch          string         `firestore:"branch" json:"branch"`
 	CreatedDate     time.Time      `firestore:"createdDate" json:"createdDate"`
 	UpdatedDate     time.Time      `firestore:"updatedDate" json:"updatedDate"`
-	Media				  	[]RecipeMedia	 `firestore:"media" json:"media"`
 }
 
 type RecipeSummary struct {
 	Id   string `firestore:"id" json:"id"`
 	Name string `firestore:"name" json:"name"`
-}
-
-type RecipeMedia struct {
-	Id  string `firestore:"id" json:"id"`
-	Url string `firestore:"url" json:"url"`
 }

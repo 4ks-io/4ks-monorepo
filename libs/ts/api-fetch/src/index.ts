@@ -15,6 +15,7 @@ export type { dtos_CreateUser } from './models/dtos_CreateUser';
 export type { dtos_TestUserName } from './models/dtos_TestUserName';
 export type { dtos_UpdateRecipe } from './models/dtos_UpdateRecipe';
 export type { dtos_UpdateUser } from './models/dtos_UpdateUser';
+export type { models_CreateRecipeMedia } from './models/models_CreateRecipeMedia';
 export type { models_Image } from './models/models_Image';
 export type { models_Ingredient } from './models/models_Ingredient';
 export type { models_Instruction } from './models/models_Instruction';

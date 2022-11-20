@@ -19,6 +19,5 @@ type UpdateRecipe struct {
 }
 
 type CreateRecipeMedia struct {
-	Filename    string `json:"filename" binding:"required"`
-	ContentType string `json:"contentType" binding:"required"`
+	Filename string `json:"filename" binding:"required"`
 }

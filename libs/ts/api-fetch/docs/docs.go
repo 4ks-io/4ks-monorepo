@@ -300,6 +300,44 @@ const docTemplate = `{
             }
         },
         "/recipes/{recipeId}/media": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get all medias for a Recipe",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "Get all medias for a Recipe",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Recipe Id",
+                        "name": "recipeId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.RecipeMedia"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -339,7 +377,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.CreateRecipeMedia"
                         }
                     }
                 }
@@ -721,13 +759,9 @@ const docTemplate = `{
         "dtos.CreateRecipeMedia": {
             "type": "object",
             "required": [
-                "contentType",
                 "filename"
             ],
             "properties": {
-                "contentType": {
-                    "type": "string"
-                },
                 "filename": {
                     "type": "string"
                 }
@@ -792,6 +826,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.CreateRecipeMedia": {
+            "type": "object",
+            "properties": {
+                "recipeMedia": {
+                    "$ref": "#/definitions/models.RecipeMedia"
+                },
+                "signedUrl": {
                     "type": "string"
                 }
             }
@@ -865,12 +910,6 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "media": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.RecipeMedia"
-                    }
-                },
                 "metadata": {
                     "$ref": "#/definitions/models.RecipeMetada"
                 },
@@ -885,10 +924,37 @@ const docTemplate = `{
         "models.RecipeMedia": {
             "type": "object",
             "properties": {
+                "bestUse": {
+                    "type": "integer"
+                },
+                "contentType": {
+                    "type": "string"
+                },
+                "createdDate": {
+                    "type": "string"
+                },
+                "filename": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
-                "url": {
+                "ownerId": {
+                    "type": "string"
+                },
+                "recipeId": {
+                    "type": "string"
+                },
+                "rootRecipeId": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "updatedDate": {
+                    "type": "string"
+                },
+                "uri": {
                     "type": "string"
                 }
             }

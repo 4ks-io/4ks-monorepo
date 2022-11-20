@@ -19,12 +19,9 @@ definitions:
     type: object
   dtos.CreateRecipeMedia:
     properties:
-      contentType:
-        type: string
       filename:
         type: string
     required:
-    - contentType
     - filename
     type: object
   dtos.CreateUser:
@@ -66,6 +63,13 @@ definitions:
       displayName:
         type: string
       username:
+        type: string
+    type: object
+  models.CreateRecipeMedia:
+    properties:
+      recipeMedia:
+        $ref: '#/definitions/models.RecipeMedia'
+      signedUrl:
         type: string
     type: object
   models.Image:
@@ -113,10 +117,6 @@ definitions:
         $ref: '#/definitions/models.RecipeRevision'
       id:
         type: string
-      media:
-        items:
-          $ref: '#/definitions/models.RecipeMedia'
-        type: array
       metadata:
         $ref: '#/definitions/models.RecipeMetada'
       root:
@@ -126,9 +126,27 @@ definitions:
     type: object
   models.RecipeMedia:
     properties:
+      bestUse:
+        type: integer
+      contentType:
+        type: string
+      createdDate:
+        type: string
+      filename:
+        type: string
       id:
         type: string
-      url:
+      ownerId:
+        type: string
+      recipeId:
+        type: string
+      rootRecipeId:
+        type: string
+      status:
+        type: integer
+      updatedDate:
+        type: string
+      uri:
         type: string
     type: object
   models.RecipeMetada:
@@ -361,6 +379,30 @@ paths:
       tags:
       - Recipes
   /recipes/{recipeId}/media:
+    get:
+      consumes:
+      - application/json
+      description: Get all medias for a Recipe
+      parameters:
+      - description: Recipe Id
+        in: path
+        name: recipeId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.RecipeMedia'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get all medias for a Recipe
+      tags:
+      - Recipes
     post:
       consumes:
       - application/json
@@ -383,7 +425,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/models.CreateRecipeMedia'
       security:
       - ApiKeyAuth: []
       summary: Create a new Media SignedUrl

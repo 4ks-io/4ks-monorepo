@@ -4,7 +4,9 @@
 import type { dtos_CreateRecipe } from '../models/dtos_CreateRecipe';
 import type { dtos_CreateRecipeMedia } from '../models/dtos_CreateRecipeMedia';
 import type { dtos_UpdateRecipe } from '../models/dtos_UpdateRecipe';
+import type { models_CreateRecipeMedia } from '../models/models_CreateRecipeMedia';
 import type { models_Recipe } from '../models/models_Recipe';
+import type { models_RecipeMedia } from '../models/models_RecipeMedia';
 import type { models_RecipeRevision } from '../models/models_RecipeRevision';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -143,17 +145,36 @@ export class RecipesService {
     }
 
     /**
+     * Get all medias for a Recipe
+     * Get all medias for a Recipe
+     * @param recipeId Recipe Id
+     * @returns models_RecipeMedia OK
+     * @throws ApiError
+     */
+    public getRecipesMedia(
+        recipeId: string,
+    ): CancelablePromise<Array<models_RecipeMedia>> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/recipes/{recipeId}/media',
+            path: {
+                'recipeId': recipeId,
+            },
+        });
+    }
+
+    /**
      * Create a new Media SignedUrl
      * Create a new Media SignedUrl
      * @param recipeId Recipe Id
      * @param payload Payload
-     * @returns string OK
+     * @returns models_CreateRecipeMedia OK
      * @throws ApiError
      */
     public postRecipesMedia(
         recipeId: string,
         payload: dtos_CreateRecipeMedia,
-    ): CancelablePromise<string> {
+    ): CancelablePromise<models_CreateRecipeMedia> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/recipes/{recipeId}/media',
