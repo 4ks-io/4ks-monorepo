@@ -7,7 +7,8 @@ resource "google_storage_bucket" "media_write" {
 
   cors {
     # origin          = ["https://media-write.${local.web_domain}", "https:/${local.web_domain}"]
-    origin          = ["https:/${local.web_domain}"]
+    # origin          = ["https:/${local.web_domain}/"]
+    origin          = ["*"]
     method          = ["PUT"]
     response_header = ["*"]
     max_age_seconds = 3600
