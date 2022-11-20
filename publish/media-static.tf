@@ -8,7 +8,8 @@ resource "google_storage_bucket" "media_static" {
 
   cors {
     # origin          = ["https://static.${local.web_domain}"]
-    origin          = ["https:/${local.web_domain}"]
+    origin          = ["https:/${local.web_domain}/"]
+    # origin          = ["*"]
     method          = ["GET"]
     response_header = ["*"]
     max_age_seconds = 3600
