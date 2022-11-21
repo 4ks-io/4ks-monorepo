@@ -19,7 +19,7 @@ export const RecipeMediaView = () => {
     const medias = await ctx.api?.recipes.getRecipesMedia(
       `${rtx?.recipe?.root}`
     );
-    setMedias(medias);
+    medias && setMedias(medias);
   }
 
   useEffect(() => {

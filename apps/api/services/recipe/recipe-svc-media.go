@@ -97,7 +97,8 @@ func (rs recipeService) GetRecipeMedias(recipeId *string) ([]*models.RecipeMedia
 
 	numberOfMedias := len(recipeMediasDocs)
 	if numberOfMedias == 0 {
-		return nil, nil
+		recipeMedias := make([]*models.RecipeMedia,0)
+		return recipeMedias, nil
 	}
 
 	recipeMedias := make([]*models.RecipeMedia, numberOfMedias)
