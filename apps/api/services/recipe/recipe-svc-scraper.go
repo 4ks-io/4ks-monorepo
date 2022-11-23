@@ -44,6 +44,7 @@ func (rs recipeService) CreateRecipeFromWebpage(url *string) (*models.Recipe, er
   if jsonLd := doc.Find("script[type='application/ld+json']").First(); jsonLd != nil {
     content := jsonLd.Text()
     // Parse the JSON-LD, which is just a JSON array
+    var result map[string]any
     parsed := make([]interface{}, 0)
     if err := json.Unmarshal([]byte(content), &parsed); err != nil {
       return nil, err
@@ -53,77 +54,41 @@ func (rs recipeService) CreateRecipeFromWebpage(url *string) (*models.Recipe, er
 	return nil, nil // TODO
 }
 
-type pageScraper struct {
-	stack []string
-	z     *html.Tokenizer
-}
+func parseJsonLD(json map[string]any) (*models.Recipe, error) {
 
-// Create a new scraper instance from a URL
-func NewPageScraper(url *string) (*pageScraper, error) {
-	// Fetch page from URL
-	webpage, err := http.Get(*url)
-	if err != nil {
-		return nil, err
-	}
+  // Assert that '@context' is 'https://schema.org'
+  if context, ok := json["@context"]; !ok || context != "https://schema.org" {
+    return nil, errors.New("JSON-LD is not a schema.org object")
+  }
 
-	// Create tokenizer from page
-	z := html.NewTokenizer(webpage.Body)
-	stack := make([]string, 0, 10) // stack of open tags
+  // "@graph" contains a list of entities, which may include a recipe
+  graph, ok := json["@graph"]
+  if !ok || len(graph) == 0 {
+    return nil, errors.New("JSON-LD does not contain a @graph")
+  }
 
-	return &pageScraper{z: z, stack: stack}, nil
-}
+  // Find recipe types in the graph
+  recipes := make([]interface{}, 0)
+  for _, item := range graph {
+    if item["@type"] == "Recipe" {
+      recipes = append(recipes, item)
+    }
+  }
 
-func (ps *pageScraper) ScrapeRecipe() (*models.Recipe, error) {
-	// Iterate over each token
-	for {
-		// Match token type
-		tt := ps.z.Next()
+  // If there are no recipes, return an error
+  if len(recipes) == 0 {
+    return nil, errors.New("JSON-LD does not contain any recipes")
+  }
 
-		switch tt {
-		case html.ErrorToken:
-			// Return nil, nil if we've reached the end of the document, otherwise return the error
-			err := ps.z.Err()
-			if err == io.EOF {
-				return nil, nil
-			} else {
-				return nil, err
-			}
+  // For now, only pick the first recipe. Later we should find the best one
+  // or just grab them all
+  r := recipes[0]
 
-		case html.StartTagToken: // Start of tag
-			// Add the new tag to the stack. append should grow the stack if necessary
-			ps.stack = append(ps.stack, ps.z.Token().Data)
+  // Map Schema.org recipes to our own recipe model
+  // Reference: https://schema.org/Recipe
+  recipe := models.Recipe{}
+  recipe.Author = models.UserSummary{}
 
-		case html.EndTagToken: // End of tag
-			// Sanity check: make sure the stack isn't empty
-			if len(ps.stack) == 0 {
-				return nil, errors.New("error tokenizing webpage: Encountered end tag token but stack is empty")
-			}
-			// Sanity check: make sure the tag we're closing matches the top of the
-			// stack.
-			td := ps.z.Token().Data
-			if td != ps.stack[len(ps.stack)-1] && td != "" {
-				return nil, errors.New("error tokenizing webpage: Encountered end tag token but tag doesn't match top of stack")
-			}
-			// Pop the top of the stack
-			ps.stack = ps.stack[:len(ps.stack)-1]
 
-		case html.SelfClosingTagToken: // Self-closing tag
-			// No need to add to the stack.
-			continue
 
-		case html.TextToken: // Text
-		}
-
-	}
-
-}
-
-// Returns true if the provided tag is self-closing
-func isSelfClosing(tag string) bool {
-	switch tag {
-	case "area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr":
-		return true
-	default:
-		return false
-	}
 }
