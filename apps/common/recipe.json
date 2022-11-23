@@ -1,0 +1,54 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$comment": "This schema should be updated to use https://json-schema.org/draft/2020-12/schema",
+    "title": "Recipe",
+    "description": "A recipe. This schema is based on the Schema.org Recipe (https://schema.org/Recipe).",
+    "markdownDescription": "A recipe. This schema is based on the [Schema.org Recipe](https://schema.org/Recipe).",
+    "type": "object",
+    "properties": {
+        "cookTime": {
+            "$ref": "common.json#/definitions/Duration",
+            "description": "The time it takes to actually cook the dish"
+        },
+        "cookingMethod": {
+            "type": "string",
+            "description": "The method of cooking, such as Frying, Steaming."
+        },
+        "nutrition": {
+            "$ref": "https://schema.org/NutritionInformation"
+        },
+        "recipeCategory": {
+            "type": "string",
+            "description": "The category of the recipe—for example, appetizer, entree, etc."
+        },
+        "recipeCuisine": {
+            "type": "string",
+            "description": "The cuisine of the recipe (for example, French or Ethiopian)."
+        },
+        "recipeIngredient": {
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/RecipeIngredient"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/RecipeIngredient"
+                    }
+                }
+            ]
+        }
+    },
+    "definitions": {
+        "RecipeIngredient": {
+            "type": "string",
+            "$comment": "I think we should support a json object containing { ingredientName, quanitity, unit }",
+            "description": "A single ingredient used in the recipe, e.g. sugar, flour or garlic.",
+            "examples": [
+                "1 cup sugar",
+                "1/2 cup flour",
+                "1/2 teaspoon garlic"
+            ]
+        }
+    }
+}

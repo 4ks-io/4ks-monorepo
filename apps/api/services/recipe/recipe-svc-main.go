@@ -37,6 +37,8 @@ type RecipeService interface {
 	DeleteRecipe(id *string) error
 	GetAllRecipes() ([]*models.Recipe, error)
 	CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe, error)
+	// Scrape a recipe off a cooking website
+	CreateRecipeFromWebpage(url *string) (*models.Recipe, error)
 	UpdateRecipeById(id *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error)
 	ForkRecipeById(id *string, forkAuthor models.UserSummary) (*models.Recipe, error)
 	StarRecipeById(id *string, user models.UserSummary) (bool, error)

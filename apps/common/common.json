@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$vocabulary": {
+        "https://json-schema.org/draft/2020-12/vocab/core": true,
+        "https://json-schema.org/draft/2020-12/vocab/validation": true
+    },
+    "type": "object",
+    "additionalProperties": false,
+    "definitions": {
+        "Duration": {
+            "title": "Duration",
+            "description": "A duration of time. Uses the ISO 8601 Durations format.",
+            "type": "string",
+            "format": "duration"
+        }
+    }
+}
