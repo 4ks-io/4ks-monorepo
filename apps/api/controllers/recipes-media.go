@@ -15,7 +15,6 @@ import (
 	"4ks/apps/api/utils"
 )
 
-
 func getMediaContentType(ext *string) (string, error) {
 	switch *ext {
 	case ".png":
@@ -80,7 +79,6 @@ func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 		"signedUrl":   signedUrl,
 	})
 }
-
 
 // GetRecipeMedias godoc
 // @Summary 		Get all medias for a Recipe

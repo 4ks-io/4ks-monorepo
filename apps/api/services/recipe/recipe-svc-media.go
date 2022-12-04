@@ -87,7 +87,6 @@ func (rs recipeService) CreateRecipeMediaSignedUrl(filename *string, ct *string,
 	return &url, nil
 }
 
-
 func (rs recipeService) GetRecipeMedias(recipeId *string) ([]*models.RecipeMedia, error) {
 	recipeMediasDocs, err := recipeMediasCollection.Where("rootRecipeId", "==", recipeId).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
 
@@ -97,7 +96,7 @@ func (rs recipeService) GetRecipeMedias(recipeId *string) ([]*models.RecipeMedia
 
 	numberOfMedias := len(recipeMediasDocs)
 	if numberOfMedias == 0 {
-		recipeMedias := make([]*models.RecipeMedia,0)
+		recipeMedias := make([]*models.RecipeMedia, 0)
 		return recipeMedias, nil
 	}
 

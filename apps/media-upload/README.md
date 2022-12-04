@@ -1,0 +1,51 @@
+# tests
+
+https://cloud.google.com/functions/docs/testing/test-event
+
+# local dev
+
+https://cloud.google.com/functions/docs/running/overview
+https://cloud.google.com/functions/docs/running/function-frameworks
+https://github.com/GoogleCloudPlatform//functions-framework-go#quickstart-hello-world-on-your-local-machine
+
+# background functions
+
+https://cloud.google.com/functions/docs/writing/write-event-driven-functions#background-functions
+https://cloud.google.com/functions/docs/writing/write-event-driven-functions
+
+# v2
+
+gcloud auth application-default login
+
+https://cloud.google.com/functions/docs/tutorials/storage
+
+export DISTRIBUTION_BUCKET="media-read.dev.4ks.io"
+export FUNCTION_TARGET=UploadImage
+
+go run cmd/main.go
+
+```
+curl localhost:8080 \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -H "ce-id: 123451234512345" \
+  -H "ce-specversion: 1.0" \
+  -H "ce-time: 2020-01-02T12:34:56.789Z" \
+  -H "ce-type: google.cloud.storage.object.v1.finalized" \
+  -H "ce-source: //storage.googleapis.com/projects/_/buckets/media-write.dev.4ks.io" \
+  -H "ce-subject: objects/egg.jpg" \
+  -d '{
+        "bucket": "media-write.dev.4ks.io",
+        "contentType": "image/png",
+        "kind": "storage#object",
+        "name": "egg.jpg",
+        "storageClass": "Standard",
+        "timeCreated": "2020-04-23T07:38:57.230Z",
+        "timeStorageClassUpdated": "2020-04-23T07:38:57.230Z",
+        "updated": "2020-04-23T07:38:57.230Z"
+      }'
+```
+
+gcloud config set project sbx-4ks
+gcloud storage ls
+gcloud storage ls --recursive gs://media.sbx.4ks.io/\*\*
