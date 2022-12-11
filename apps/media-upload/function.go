@@ -109,7 +109,7 @@ func uploadImage(ctx context.Context, e event.Event) error {
 	if err := src.Delete(ctx); err != nil {
 		return fmt.Errorf("Object(%q).Delete: %v", data.Name, err)
 	}
-	
+
 	// terminate ctx
 	if err := client.Close(); err != nil {
 		fmt.Errorf("client.Close: %v", err)
