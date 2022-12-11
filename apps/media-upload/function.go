@@ -8,7 +8,7 @@ import (
 	"io"
 	"log"
 	"os"
-	"time"
+	"sync"
 
 	"cloud.google.com/go/storage"
 	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
@@ -95,20 +95,21 @@ func uploadImage(ctx context.Context, e event.Event) error {
 
 	// create variants
 	variants := []int{256, 800}
-	// todo: consider making concurrent? faster, but might require more memory?
+	var wg sync.WaitGroup
+	wg.Add(len(variants))
 	for _, s := range variants {
-		o, err := createVariant(ctx, dstbkt, i, ifmt, f, s)
+		o, err := createVariant(ctx, dstbkt, i, ifmt, f, s, &wg)
 		if err != nil {
 			fmt.Errorf("failed to create %s variant %d: %v", o, s, err)
 		}
 	}
 
-	// delete src file
-	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
-	defer cancel()
-	if err := src.Delete(ctx); err != nil {
-		return fmt.Errorf("Object(%q).Delete: %v", data.Name, err)
-	}
+	// // delete src file
+	// ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+	// defer cancel()
+	// if err := src.Delete(ctx); err != nil {
+	// 	return fmt.Errorf("Object(%q).Delete: %v", data.Name, err)
+	// }
 
 	// terminate ctx
 	if err := client.Close(); err != nil {

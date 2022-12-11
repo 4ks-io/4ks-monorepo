@@ -75,7 +75,7 @@ resource "google_cloudfunctions2_function" "media_upload" {
   service_config {
     # max_instance_count = 3
     # min_instance_count = 1
-    available_memory               = "128Mi"
+    available_memory               = "256Mi"
     timeout_seconds                = 30
     ingress_settings               = "ALLOW_INTERNAL_ONLY"
     all_traffic_on_latest_revision = true

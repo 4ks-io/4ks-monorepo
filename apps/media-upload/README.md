@@ -33,12 +33,12 @@ curl localhost:8080 \
   -H "ce-time: 2020-01-02T12:34:56.789Z" \
   -H "ce-type: google.cloud.storage.object.v1.finalized" \
   -H "ce-source: //storage.googleapis.com/projects/_/buckets/media-write.dev.4ks.io" \
-  -H "ce-subject: objects/egg.jpg" \
+  -H "ce-subject: objects/f2791b01-101a-460b-887d-b396e9fb51b5.jpg" \
   -d '{
         "bucket": "media-write.dev.4ks.io",
-        "contentType": "image/png",
+        "contentType": "image/jpeg",
         "kind": "storage#object",
-        "name": "egg.jpg",
+        "name": "f2791b01-101a-460b-887d-b396e9fb51b5.jpg",
         "storageClass": "Standard",
         "timeCreated": "2020-04-23T07:38:57.230Z",
         "timeStorageClassUpdated": "2020-04-23T07:38:57.230Z",
