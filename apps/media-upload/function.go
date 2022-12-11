@@ -68,7 +68,7 @@ func uploadImage(ctx context.Context, e event.Event) error {
 
 	// verify and validate src content-type and content (image vision)
 	if err := validate(ctx, src); err != nil {
-		fmt.Errorf("validation error, error = %v", err)
+		// log.Printf("ERROR: validation error -> ", err)
 		if xerrors.Is(err, retryableError) {
 			return err
 		}

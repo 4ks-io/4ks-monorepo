@@ -72,11 +72,12 @@ resource "google_cloudfunctions2_function" "media_upload" {
     }
   }
 
+  // https://cloud.google.com/functions/pricing
   service_config {
     # max_instance_count = 3
     # min_instance_count = 1
-    available_memory               = "256Mi"
-    timeout_seconds                = 30
+    available_memory               = "1024Mi"
+    timeout_seconds                = 45
     ingress_settings               = "ALLOW_INTERNAL_ONLY"
     all_traffic_on_latest_revision = true
     service_account_email          = google_service_account.media_upload.email
