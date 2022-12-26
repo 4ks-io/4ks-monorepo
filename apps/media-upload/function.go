@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"sync"
+	"time"
 
 	"cloud.google.com/go/storage"
 	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
@@ -39,7 +40,7 @@ func uploadImage(ctx context.Context, e event.Event) error {
 	// log.Printf("Updated: %s", data.Updated)
 
 	log.Printf("Processing gs://%s/%s", data.Bucket, data.Name)
-	f := getFilenameDetails(data.Name)
+	f := getFilenameDetails(&data.Name)
 
 	// new client
 	client, err := storage.NewClient(ctx)
@@ -100,16 +101,16 @@ func uploadImage(ctx context.Context, e event.Event) error {
 	for _, s := range variants {
 		o, err := createVariant(ctx, dstbkt, i, ifmt, f, s, &wg)
 		if err != nil {
-			fmt.Errorf("failed to create %s variant %d: %v", o, s, err)
+			log.Printf("failed to create %s variant %d: %v", o, s, err)
 		}
 	}
 
-	// // delete src file
-	// ctx, cancel := context.WithTimeout(ctx, time.Second*10)
-	// defer cancel()
-	// if err := src.Delete(ctx); err != nil {
-	// 	return fmt.Errorf("Object(%q).Delete: %v", data.Name, err)
-	// }
+	// delete src file
+	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+	defer cancel()
+	if err := src.Delete(ctx); err != nil {
+		return fmt.Errorf("Object(%q).Delete: %v", data.Name, err)
+	}
 
 	// terminate ctx
 	if err := client.Close(); err != nil {

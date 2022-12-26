@@ -8,6 +8,7 @@ require (
 )
 
 require (
+	cloud.google.com/go/firestore v1.9.0
 	cloud.google.com/go/vision v1.2.0
 	github.com/GoogleCloudPlatform/functions-framework-go v1.6.1
 	github.com/cloudevents/sdk-go/v2 v2.12.0

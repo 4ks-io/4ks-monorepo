@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	"github.com/rs/xid"
 
 	"4ks/apps/api/dtos"
 	recipeService "4ks/apps/api/services/recipe"
@@ -57,14 +57,18 @@ func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 		return
 	}
 
-	filename := uuid.New().String() + ext
+	mp := utils.MediaProps{
+		ContentType: ct,
+		Extension:   ext,
+		Basename:    xid.New().String(),
+	}
 
 	var wg sync.WaitGroup
 	wg.Add(2)
 
 	// &mediaId, &mediaEmail, &payload
-	signedUrl, err1 := rc.recipeService.CreateRecipeMediaSignedUrl(&filename, &ct, &wg)
-	recipeMedia, err2 := rc.recipeService.CreateRecipeMedia(&filename, &ct, &recipeId, &userId, &wg)
+	signedUrl, err1 := rc.recipeService.CreateRecipeMediaSignedUrl(&mp, &wg)
+	recipeMedia, err2 := rc.recipeService.CreateRecipeMedia(&mp, &recipeId, &userId, &wg)
 
 	if err1 != nil {
 		c.AbortWithError(http.StatusInternalServerError, err1)

@@ -2,6 +2,7 @@ package recipe
 
 import (
 	"4ks/apps/api/middleware"
+	"4ks/apps/api/utils"
 	models "4ks/libs/go/models"
 	"context"
 	"fmt"
@@ -13,7 +14,11 @@ import (
 	"cloud.google.com/go/storage"
 )
 
-func (rs recipeService) CreateRecipeMedia(filename *string, ct *string, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
+var distributionBucket = os.Getenv("DISTRIBUTION_BUCKET")
+var uploadableBucket = os.Getenv("UPLOADABLE_BUCKET")
+var serviceAccountEmail = os.Getenv("SERVICE_ACCOUNT_EMAIL")
+
+func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
 	recipeDoc, err := recipeCollection.Doc(*recipeId).Get(ctx)
 	if err != nil {
 		return nil, ErrRecipeNotFound
@@ -29,16 +34,14 @@ func (rs recipeService) CreateRecipeMedia(filename *string, ct *string, recipeId
 		return nil, ErrUnauthorized
 	}
 
-	newRecipeMediaDoc := recipeMediasCollection.NewDoc()
 	timestamp := time.Now().UTC()
-
-	bucket := os.Getenv("DISTRIBUTION_BUCKET")
+	filename := mp.Basename + mp.Extension
 
 	recipeMedia := &models.RecipeMedia{
-		Id:           newRecipeMediaDoc.ID,
-		Uri:          fmt.Sprintf("https://storage.cloud.google.com/%s/%s", bucket, *filename),
-		Filename:     *filename,
-		ContentType:  *ct,
+		Id:           mp.Basename,
+		Uri:          fmt.Sprintf("https://storage.cloud.google.com/%s/%s", distributionBucket, filename),
+		Filename:     filename,
+		ContentType:  mp.ContentType,
 		RecipeId:     recipe.Id,
 		RootRecipeId: recipe.Root,
 		OwnerId:      *userId,
@@ -48,7 +51,7 @@ func (rs recipeService) CreateRecipeMedia(filename *string, ct *string, recipeId
 		UpdatedDate:  timestamp,
 	}
 
-	_, err = recipeMediasCollection.Doc(newRecipeMediaDoc.ID).Create(ctx, recipeMedia)
+	_, err = recipeMediasCollection.Doc(mp.Basename).Create(ctx, recipeMedia)
 	if err != nil {
 		return nil, err
 	}
@@ -56,13 +59,7 @@ func (rs recipeService) CreateRecipeMedia(filename *string, ct *string, recipeId
 	return recipeMedia, nil
 }
 
-func (rs recipeService) CreateRecipeMediaSignedUrl(filename *string, ct *string, wg *sync.WaitGroup) (*string, error) {
-	// reading env var takes ~75ns. maybe better to read only once?
-	// but this keeps everything together and also won't blow up locally
-	// should we disable media route locally?
-	uploadableBucket := os.Getenv("UPLOADABLE_BUCKET")
-	serviceAccountName := os.Getenv("SERVICE_ACCOUNT_EMAIL")
-
+func (rs recipeService) CreateRecipeMediaSignedUrl(mp *utils.MediaProps, wg *sync.WaitGroup) (*string, error) {
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx)
 	if err != nil {
@@ -73,13 +70,15 @@ func (rs recipeService) CreateRecipeMediaSignedUrl(filename *string, ct *string,
 	// https://pkg.go.dev/cloud.google.com/go/storage#SignedURLOptions
 	opts := &storage.SignedURLOptions{
 		Scheme:         storage.SigningSchemeV4,
-		GoogleAccessID: serviceAccountName,
+		GoogleAccessID: serviceAccountEmail,
 		Method:         "PUT",
 		Expires:        time.Now().Add(expirationMinutes * time.Minute),
 		// ContentType:    *ct,
 	}
 
-	url, err := client.Bucket(uploadableBucket).SignedURL(*filename, opts)
+	filename := mp.Basename + mp.Extension
+
+	url, err := client.Bucket(uploadableBucket).SignedURL(filename, opts)
 	if err != nil {
 		return nil, fmt.Errorf("Bucket(%q). SignedURL: %v", uploadableBucket, err)
 	}
@@ -89,7 +88,6 @@ func (rs recipeService) CreateRecipeMediaSignedUrl(filename *string, ct *string,
 
 func (rs recipeService) GetRecipeMedias(recipeId *string) ([]*models.RecipeMedia, error) {
 	recipeMediasDocs, err := recipeMediasCollection.Where("rootRecipeId", "==", recipeId).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
-
 	if err != nil {
 		return nil, err
 	}
