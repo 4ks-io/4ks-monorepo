@@ -7,6 +7,8 @@ export type models_RecipeMedia = {
     contentType?: string;
     createdDate?: string;
     filename?: string;
+    filenameMd?: string;
+    filenameSm?: string;
     id?: string;
     ownerId?: string;
     recipeId?: string;

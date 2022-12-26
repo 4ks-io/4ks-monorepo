@@ -936,6 +936,12 @@ const docTemplate = `{
                 "filename": {
                     "type": "string"
                 },
+                "filenameMd": {
+                    "type": "string"
+                },
+                "filenameSm": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },

@@ -10,6 +10,7 @@ import (
 	firestore "cloud.google.com/go/firestore"
 
 	"4ks/apps/api/dtos"
+	"4ks/apps/api/utils"
 	models "4ks/libs/go/models"
 )
 
@@ -45,8 +46,8 @@ type RecipeService interface {
 	StarRecipeById(id *string, user models.UserSummary) (bool, error)
 	GetRecipeRevisions(recipeId *string) ([]*models.RecipeRevision, error)
 	GetRecipeRevisionById(revisionId *string) (*models.RecipeRevision, error)
-	CreateRecipeMedia(filename *string, ct *string, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error)
-	CreateRecipeMediaSignedUrl(filename *string, ct *string, wg *sync.WaitGroup) (*string, error)
+	CreateRecipeMedia(mp *utils.MediaProps, ct *string, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error)
+	CreateRecipeMediaSignedUrl(mp *utils.MediaProps, ct *string, wg *sync.WaitGroup) (*string, error)
 	GetRecipeMedias(recipeId *string) ([]*models.RecipeMedia, error)
 }
 

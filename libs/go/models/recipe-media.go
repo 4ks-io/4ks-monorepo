@@ -21,6 +21,8 @@ const (
 type RecipeMedia struct {
 	Id           string       `firestore:"id" json:"id"`
 	Uri          string       `firestore:"uri" json:"uri"`
+	FilenameSm   string       `firestore:"filenameSm" json:"filenameSm"`
+	FilenameMd   string       `firestore:"filenameMd" json:"filenameMd"`
 	Filename     string       `firestore:"filename" json:"filename"`
 	ContentType  string       `firestore:"contentType" json:"contentType"`
 	RecipeId     string       `firestore:"recipeId" json:"recipeId"`

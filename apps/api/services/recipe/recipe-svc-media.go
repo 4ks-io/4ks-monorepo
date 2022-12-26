@@ -2,6 +2,7 @@ package recipe
 
 import (
 	"4ks/apps/api/middleware"
+	"4ks/apps/api/utils"
 	models "4ks/libs/go/models"
 	"context"
 	"fmt"
@@ -13,7 +14,7 @@ import (
 	"cloud.google.com/go/storage"
 )
 
-func (rs recipeService) CreateRecipeMedia(filename *string, ct *string, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
+func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, ct *string, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
 	recipeDoc, err := recipeCollection.Doc(*recipeId).Get(ctx)
 	if err != nil {
 		return nil, ErrRecipeNotFound
@@ -34,10 +35,13 @@ func (rs recipeService) CreateRecipeMedia(filename *string, ct *string, recipeId
 
 	bucket := os.Getenv("DISTRIBUTION_BUCKET")
 
+	// https://github.com/4ks-io/4ks-monorepo/blob/f4f12c2f7eb4c6dc671b6b58dcafbeaf5702eeb8/apps/media-upload/function.go
 	recipeMedia := &models.RecipeMedia{
 		Id:           newRecipeMediaDoc.ID,
-		Uri:          fmt.Sprintf("https://storage.cloud.google.com/%s/%s", bucket, *filename),
-		Filename:     *filename,
+		Uri:          fmt.Sprintf("https://storage.cloud.google.com/%s/", bucket),
+		Filename:     mp.Basename + mp.Extension,
+		FilenameSm:   mp.Basename + "_256" + mp.Extension,
+		FilenameMd:   mp.Basename + "_800" + mp.Extension,
 		ContentType:  *ct,
 		RecipeId:     recipe.Id,
 		RootRecipeId: recipe.Root,
@@ -48,7 +52,7 @@ func (rs recipeService) CreateRecipeMedia(filename *string, ct *string, recipeId
 		UpdatedDate:  timestamp,
 	}
 
-	_, err = recipeMediasCollection.Doc(newRecipeMediaDoc.ID).Create(ctx, recipeMedia)
+	_, err = recipeMediasCollection.Doc(mp.Basename).Create(ctx, recipeMedia)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +60,7 @@ func (rs recipeService) CreateRecipeMedia(filename *string, ct *string, recipeId
 	return recipeMedia, nil
 }
 
-func (rs recipeService) CreateRecipeMediaSignedUrl(filename *string, ct *string, wg *sync.WaitGroup) (*string, error) {
+func (rs recipeService) CreateRecipeMediaSignedUrl(mp *utils.MediaProps, ct *string, wg *sync.WaitGroup) (*string, error) {
 	// reading env var takes ~75ns. maybe better to read only once?
 	// but this keeps everything together and also won't blow up locally
 	// should we disable media route locally?
@@ -79,7 +83,8 @@ func (rs recipeService) CreateRecipeMediaSignedUrl(filename *string, ct *string,
 		// ContentType:    *ct,
 	}
 
-	url, err := client.Bucket(uploadableBucket).SignedURL(*filename, opts)
+	filename := mp.Basename + mp.Extension
+	url, err := client.Bucket(uploadableBucket).SignedURL(filename, opts)
 	if err != nil {
 		return nil, fmt.Errorf("Bucket(%q). SignedURL: %v", uploadableBucket, err)
 	}

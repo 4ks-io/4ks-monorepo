@@ -134,6 +134,10 @@ definitions:
         type: string
       filename:
         type: string
+      filenameMd:
+        type: string
+      filenameSm:
+        type: string
       id:
         type: string
       ownerId:
