@@ -103,7 +103,6 @@ func (rs recipeService) UpdateRecipeById(recipeId *string, recipeUpdate *dtos.Up
 	recipe.UpdatedDate = recipeUpdatedDate
 
 	_, err = s.Batch().Create(newRevisionDocRef, newRevision).Set(recipeDoc.Ref, recipe).Commit(ctx)
-
 	if err != nil {
 		return nil, ErrUnableToUpdateRecipe
 	}
