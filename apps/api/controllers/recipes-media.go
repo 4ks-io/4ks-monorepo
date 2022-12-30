@@ -68,8 +68,8 @@ func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 	wg.Add(2)
 
 	// &mediaId, &mediaEmail, &payload
-	signedUrl, err1 := rc.recipeService.CreateRecipeMediaSignedUrl(&mp, &ct, &wg)
-	recipeMedia, err2 := rc.recipeService.CreateRecipeMedia(&mp, &ct, &recipeId, &userId, &wg)
+	signedUrl, err1 := rc.recipeService.CreateRecipeMediaSignedUrl(&mp, &wg)
+	recipeMedia, err2 := rc.recipeService.CreateRecipeMedia(&mp, &recipeId, &userId, &wg)
 
 	if err1 != nil {
 		c.AbortWithError(http.StatusInternalServerError, err1)

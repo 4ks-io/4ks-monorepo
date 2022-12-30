@@ -132,12 +132,6 @@ definitions:
         type: string
       createdDate:
         type: string
-      filename:
-        type: string
-      filenameMd:
-        type: string
-      filenameSm:
-        type: string
       id:
         type: string
       ownerId:
@@ -150,8 +144,21 @@ definitions:
         type: integer
       updatedDate:
         type: string
-      uri:
+      variants:
+        items:
+          $ref: '#/definitions/models.RecipeMediaVariant'
+        type: array
+    type: object
+  models.RecipeMediaVariant:
+    properties:
+      alias:
         type: string
+      baseUrl:
+        type: string
+      filenameSm:
+        type: string
+      maxWidth:
+        type: integer
     type: object
   models.RecipeMetada:
     properties:

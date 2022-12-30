@@ -14,7 +14,14 @@ import (
 	"cloud.google.com/go/storage"
 )
 
-func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, ct *string, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
+var bucket = os.Getenv("DISTRIBUTION_BUCKET")
+var uploadableBucket = os.Getenv("UPLOADABLE_BUCKET")
+var serviceAccountName = os.Getenv("SERVICE_ACCOUNT_EMAIL")
+
+var cgpStorageUrl = "https://storage.cloud.google.com"
+var baseReadUrl = fmt.Sprintf("%s/%s", cgpStorageUrl, bucket)
+
+func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
 	recipeDoc, err := recipeCollection.Doc(*recipeId).Get(ctx)
 	if err != nil {
 		return nil, ErrRecipeNotFound
@@ -33,16 +40,31 @@ func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, ct *string, reci
 	newRecipeMediaDoc := recipeMediasCollection.NewDoc()
 	timestamp := time.Now().UTC()
 
-	bucket := os.Getenv("DISTRIBUTION_BUCKET")
+	a := []models.RecipeMediaVariant{}
+	a = append(a, models.RecipeMediaVariant{
+		MaxWidth: 0,
+		Url:      fmt.Sprintf("%s/%s", baseReadUrl, mp.Basename+mp.Extension),
+		Filename: mp.Basename + mp.Extension,
+		Alias:    "orig",
+	})
+	a = append(a, models.RecipeMediaVariant{
+		MaxWidth: 256,
+		Url:      fmt.Sprintf("%s/%s", baseReadUrl, mp.Basename+"_256"+mp.Extension),
+		Filename: mp.Basename + "_256" + mp.Extension,
+		Alias:    "sm",
+	})
+	a = append(a, models.RecipeMediaVariant{
+		MaxWidth: 800,
+		Url:      fmt.Sprintf("%s/%s", baseReadUrl, mp.Basename+"_800"+mp.Extension),
+		Filename: mp.Basename + "_800" + mp.Extension,
+		Alias:    "md",
+	})
 
 	// https://github.com/4ks-io/4ks-monorepo/blob/f4f12c2f7eb4c6dc671b6b58dcafbeaf5702eeb8/apps/media-upload/function.go
 	recipeMedia := &models.RecipeMedia{
 		Id:           newRecipeMediaDoc.ID,
-		Uri:          fmt.Sprintf("https://storage.cloud.google.com/%s/", bucket),
-		Filename:     mp.Basename + mp.Extension,
-		FilenameSm:   mp.Basename + "_256" + mp.Extension,
-		FilenameMd:   mp.Basename + "_800" + mp.Extension,
-		ContentType:  *ct,
+		Variants:     a,
+		ContentType:  mp.ContentType,
 		RecipeId:     recipe.Id,
 		RootRecipeId: recipe.Root,
 		OwnerId:      *userId,
@@ -60,13 +82,7 @@ func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, ct *string, reci
 	return recipeMedia, nil
 }
 
-func (rs recipeService) CreateRecipeMediaSignedUrl(mp *utils.MediaProps, ct *string, wg *sync.WaitGroup) (*string, error) {
-	// reading env var takes ~75ns. maybe better to read only once?
-	// but this keeps everything together and also won't blow up locally
-	// should we disable media route locally?
-	uploadableBucket := os.Getenv("UPLOADABLE_BUCKET")
-	serviceAccountName := os.Getenv("SERVICE_ACCOUNT_EMAIL")
-
+func (rs recipeService) CreateRecipeMediaSignedUrl(mp *utils.MediaProps, wg *sync.WaitGroup) (*string, error) {
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx)
 	if err != nil {
@@ -80,7 +96,7 @@ func (rs recipeService) CreateRecipeMediaSignedUrl(mp *utils.MediaProps, ct *str
 		GoogleAccessID: serviceAccountName,
 		Method:         "PUT",
 		Expires:        time.Now().Add(expirationMinutes * time.Minute),
-		// ContentType:    *ct,
+		// ContentType:    mp.ct,
 	}
 
 	filename := mp.Basename + mp.Extension

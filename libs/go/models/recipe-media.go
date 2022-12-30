@@ -18,20 +18,24 @@ const (
 	MediaStatusReady      MediaStatus = 2
 )
 
+type RecipeMediaVariant struct {
+	MaxWidth int    `firestore:"maxWidth" json:"maxWidth"`
+	Url      string `firestore:"url" json:"url"`
+	Filename string `firestore:"filename" json:"filename"`
+	Alias    string `firestore:"alias" json:"alias"`
+}
+
 type RecipeMedia struct {
-	Id           string       `firestore:"id" json:"id"`
-	Uri          string       `firestore:"uri" json:"uri"`
-	FilenameSm   string       `firestore:"filenameSm" json:"filenameSm"`
-	FilenameMd   string       `firestore:"filenameMd" json:"filenameMd"`
-	Filename     string       `firestore:"filename" json:"filename"`
-	ContentType  string       `firestore:"contentType" json:"contentType"`
-	RecipeId     string       `firestore:"recipeId" json:"recipeId"`
-	RootRecipeId string       `firestore:"rootRecipeId" json:"rootRecipeId"`
-	OwnerId      string       `firestore:"ownerId" json:"ownerId"`
-	Status       MediaStatus  `firestore:"status" json:"status"`
-	BestUse      MediaBestUse `firestore:"bestUse" json:"bestUse"`
-	CreatedDate  time.Time    `firestore:"createdDate" json:"createdDate"`
-	UpdatedDate  time.Time    `firestore:"updatedDate" json:"updatedDate"`
+	Id           string               `firestore:"id" json:"id"`
+	Variants     []RecipeMediaVariant `firestore:"variants" json:"variants"`
+	ContentType  string               `firestore:"contentType" json:"contentType"`
+	RecipeId     string               `firestore:"recipeId" json:"recipeId"`
+	RootRecipeId string               `firestore:"rootRecipeId" json:"rootRecipeId"`
+	OwnerId      string               `firestore:"ownerId" json:"ownerId"`
+	Status       MediaStatus          `firestore:"status" json:"status"`
+	BestUse      MediaBestUse         `firestore:"bestUse" json:"bestUse"`
+	CreatedDate  time.Time            `firestore:"createdDate" json:"createdDate"`
+	UpdatedDate  time.Time            `firestore:"updatedDate" json:"updatedDate"`
 }
 
 type CreateRecipeMedia struct {

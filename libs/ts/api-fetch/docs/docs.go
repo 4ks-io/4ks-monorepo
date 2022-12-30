@@ -933,15 +933,6 @@ const docTemplate = `{
                 "createdDate": {
                     "type": "string"
                 },
-                "filename": {
-                    "type": "string"
-                },
-                "filenameMd": {
-                    "type": "string"
-                },
-                "filenameSm": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "string"
                 },
@@ -960,8 +951,28 @@ const docTemplate = `{
                 "updatedDate": {
                     "type": "string"
                 },
-                "uri": {
+                "variants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.RecipeMediaVariant"
+                    }
+                }
+            }
+        },
+        "models.RecipeMediaVariant": {
+            "type": "object",
+            "properties": {
+                "alias": {
                     "type": "string"
+                },
+                "baseUrl": {
+                    "type": "string"
+                },
+                "filenameSm": {
+                    "type": "string"
+                },
+                "maxWidth": {
+                    "type": "integer"
                 }
             }
         },

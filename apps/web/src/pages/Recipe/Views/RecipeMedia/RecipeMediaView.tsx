@@ -154,14 +154,17 @@ export const RecipeMediaView = () => {
   return (
     <>
       {newMediaControls()}
-      {medias.map((m) => (
-        <Image
-          key={m.id}
-          src={m.uri}
-          imageFit={ImageFit.cover}
-          alt={m.filename}
-        />
-      ))}
+      {medias.map((m) => {
+        let sm = m.variants.filter((v) => v.alias == 'sm')[0];
+        return (
+          <Image
+            key={m.id}
+            src={sm.url}
+            imageFit={ImageFit.cover}
+            alt={sm.filename}
+          />
+        );
+      })}
     </>
   );
 };

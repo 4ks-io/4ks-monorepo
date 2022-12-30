@@ -7,8 +7,6 @@ resource "google_storage_bucket" "media_static" {
   uniform_bucket_level_access = true
 
   cors {
-    # origin          = ["https://static.${local.web_domain}"]
-    # origin          = ["https:/${local.web_domain}/"]
     origin          = ["*"]
     method          = ["GET"]
     response_header = ["*"]
