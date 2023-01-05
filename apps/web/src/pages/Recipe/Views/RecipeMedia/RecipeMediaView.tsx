@@ -162,6 +162,7 @@ export const RecipeMediaView = () => {
             src={sm.url}
             imageFit={ImageFit.cover}
             alt={sm.filename}
+            width={256}
           />
         );
       })}

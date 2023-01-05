@@ -60,9 +60,9 @@ resource "google_project_iam_member" "bucket" {
 
 resource "google_cloudfunctions2_function" "media_upload" {
   depends_on = [
+    google_project_iam_member.bucket,
     google_project_iam_member.event_receiving,
     google_project_iam_member.artifactregistry_reader,
-    google_project_iam_member.bucket,
   ]
 
   name        = "media-upload"
@@ -95,8 +95,8 @@ resource "google_cloudfunctions2_function" "media_upload" {
   }
 
   event_trigger {
-    trigger_region        = "us"
-    event_type            = "google.cloud.storage.object.v1.finalized"
+    trigger_region = var.region
+    event_type     = "google.cloud.storage.object.v1.finalized"
     # https://cloud.google.com/functions/docs/bestpractices/retries
     # retry_policy          = "RETRY_POLICY_RETRY"
     retry_policy          = "RETRY_POLICY_DO_NOT_RETRY"

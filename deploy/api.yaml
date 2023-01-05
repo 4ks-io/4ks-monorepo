@@ -51,9 +51,9 @@ spec:
             - name: VERSION_FILE_PATH
               value: apps/api/VERSION
             - name: UPLOADABLE_BUCKET
-              value: media.sbx.4ks.io
+              value: media-write.sbx.4ks.io
             - name: DISTRIBUTION_BUCKET
-              value: media.sbx.4ks.io
+              value: media-read.sbx.4ks.io
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /app/google-app-creds.json
           ports:

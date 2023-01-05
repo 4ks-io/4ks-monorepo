@@ -25,8 +25,9 @@ gcloud iam service-accounts keys create tf-sa.json \
   --iam-account=terraform-sa@development-999999.iam.gserviceaccount.com
 ```
 
-4. Create custom BucketRole role with permissions:
+4. Create custom BucketRole role with permissions (created using TF later):
 
+```
 - storage.buckets.create
 - storage.buckets.createTagBinding
 - storage.buckets.delete
@@ -49,6 +50,7 @@ gcloud iam service-accounts keys create tf-sa.json \
 - storage.objects.list
 - storage.objects.setIamPolicy
 - storage.objects.update
+```
 
 5. Grant following IAM roles:
 

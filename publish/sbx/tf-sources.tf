@@ -29,8 +29,11 @@ variable "web_subdomain_env_map" {
 }
 
 locals {
-  org                   = "4ks"
-  domain                = "4ks.io"
-  project               = "${var.stage}-4ks"
-  web_domain            = "${var.web_subdomain_env_map[terraform.workspace]}${local.org}.io"
+  org        = "4ks"
+  domain     = "4ks.io"
+  project    = "${var.stage}-4ks"
+  web_domain = "${var.web_subdomain_env_map[terraform.workspace]}${local.org}.io"
+}
+
+data "google_storage_project_service_account" "gcs_account" {
 }
