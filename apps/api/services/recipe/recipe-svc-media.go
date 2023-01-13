@@ -14,12 +14,12 @@ import (
 	"cloud.google.com/go/storage"
 )
 
-var bucket = os.Getenv("DISTRIBUTION_BUCKET")
+var distributionBucket = os.Getenv("DISTRIBUTION_BUCKET")
 var uploadableBucket = os.Getenv("UPLOADABLE_BUCKET")
 var serviceAccountName = os.Getenv("SERVICE_ACCOUNT_EMAIL")
 
 var cgpStorageUrl = "https://storage.cloud.google.com"
-var baseReadUrl = fmt.Sprintf("%s/%s", cgpStorageUrl, bucket)
+var baseReadUrl = fmt.Sprintf("%s/%s", cgpStorageUrl, distributionBucket)
 
 func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
 	recipeDoc, err := recipeCollection.Doc(*recipeId).Get(ctx)
