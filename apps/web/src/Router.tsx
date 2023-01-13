@@ -12,6 +12,14 @@ import {
   Recipe,
   Settings,
 } from './pages';
+import { RecipeViews } from './pages/Recipe/RecipeControls';
+import { RecipeContentView } from './pages/Recipe/Views/RecipeContent';
+import { RecipeCommentsView } from './pages/Recipe/Views/RecipeComments';
+import { RecipeVersionsView } from './pages/Recipe/Views/RecipeVersions';
+import { RecipeMediaView } from './pages/Recipe/Views/RecipeMedia';
+import { RecipeStoryView } from './pages/Recipe/Views/RecipeStory';
+import { RecipeSettingsView } from './pages/Recipe/Views/RecipeSettings';
+import { RecipeForksView } from './pages/Recipe/Views/RecipeForks';
 
 function Router() {
   return (
@@ -23,30 +31,16 @@ function Router() {
       <Route path="/me" element={<Settings />} />
       <Route path="/:userName" element={<Profile />} />
       <Route path="/r" element={<Recipes />} />
-      <Route
-        path="/:userName/:recipeTitle"
-        element={
-          <RecipeContextProvider>
-            <Recipe create={false} />
-          </RecipeContextProvider>
-        }
-      />
-      <Route
-        path="/r/0"
-        element={
-          <RecipeContextProvider>
-            <Recipe create />
-          </RecipeContextProvider>
-        }
-      />
-      <Route
-        path="/r/:recipeId"
-        element={
-          <RecipeContextProvider>
-            <Recipe create={false} />
-          </RecipeContextProvider>
-        }
-      />
+      <Route path="/r/0" element={<Recipe />}>
+        <Route index element={<RecipeContentView create />} />
+      </Route>
+      <Route path="/r/:recipeId" element={<Recipe />}>
+        <Route index element={<RecipeContentView />} />
+        <Route path="m" element={<RecipeMediaView />} />
+        <Route path="f" element={<RecipeForksView />} />
+        <Route path="s" element={<RecipeSettingsView />} />
+        <Route path="v" element={<RecipeVersionsView />} />
+      </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

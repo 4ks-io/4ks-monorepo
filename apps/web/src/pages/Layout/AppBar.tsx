@@ -41,7 +41,7 @@ const AppBar = () => {
       setShowRecipesLink(true);
     } else if (location.pathname == '/r') {
       setShowSearchInput(true);
-      setShowRecipesLink(false);
+      // setShowRecipesLink(false);
     }
   }, [location.pathname]);
 

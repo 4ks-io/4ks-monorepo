@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { useAuth0 } from '@auth0/auth0-react';
 import {
@@ -8,19 +9,15 @@ import {
 } from '@fluentui/react/lib/CommandBar';
 import { useRecipeContext } from '../../providers/recipe-context';
 import { useSessionContext } from '../../providers/session-context';
+import { models_UserSummary } from '@4ks/api-fetch';
 
 export enum RecipeViews {
-  RecipeContent,
-  Media,
-  Forks,
-  Comments,
-  Story,
-  Versions,
-  Settings,
-}
-
-interface RecipeControlsProps {
-  setSelectedView: (view: RecipeViews) => void;
+  Media = '/m',
+  Forks = '/f',
+  Comments = '/c',
+  // Story = "/s",
+  Versions = '/v',
+  Settings = '/s',
 }
 
 const CommandBarStyles: ICommandBarStyles = {
@@ -29,8 +26,9 @@ const CommandBarStyles: ICommandBarStyles = {
   },
 };
 
-export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
+export function RecipeControls() {
   const { isAuthenticated } = useAuth0();
+  const navigate = useNavigate();
   const ctx = useSessionContext();
   const rtx = useRecipeContext();
 
@@ -39,7 +37,9 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
   useEffect(() => {
     setIsRecipeContributor(
       (isAuthenticated &&
-        rtx?.recipe.contributors?.map((c) => c.id).includes(ctx.user?.id)) ||
+        rtx?.recipe.contributors
+          ?.map((c: models_UserSummary) => c.id)
+          .includes(ctx.user?.id)) ||
         false
     );
   }, [rtx, ctx.user]);
@@ -49,7 +49,7 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
       key: 'recipe',
       text: 'Recipe',
       iconProps: { iconName: 'LocationCircle' },
-      onClick: () => setSelectedView(RecipeViews.RecipeContent),
+      onClick: () => navigate(`/r/${rtx?.recipeId}`),
     },
   ];
 
@@ -58,19 +58,19 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
       key: 'media',
       text: 'Media',
       iconProps: { iconName: 'PhotoCollection' },
-      onClick: () => setSelectedView(RecipeViews.Media),
+      onClick: () => navigate(`/r/${rtx?.recipeId}` + RecipeViews.Media),
     },
     {
       key: 'forks',
       text: 'Forks',
       iconProps: { iconName: 'BranchFork' },
-      onClick: () => setSelectedView(RecipeViews.Forks),
+      onClick: () => navigate(`/r/${rtx?.recipeId}` + RecipeViews.Forks),
     },
     {
       key: 'versions',
       text: 'Versions',
       iconProps: { iconName: 'WebAppBuilderFragment' },
-      onClick: () => setSelectedView(RecipeViews.Versions),
+      onClick: () => navigate(`/r/${rtx?.recipeId}` + RecipeViews.Versions),
     },
   ];
 
@@ -79,7 +79,7 @@ export function RecipeControls({ setSelectedView }: RecipeControlsProps) {
       key: 'settings',
       text: 'Settings',
       iconProps: { iconName: 'Settings' },
-      onClick: () => setSelectedView(RecipeViews.Settings),
+      onClick: () => navigate(`/r/${rtx?.recipeId}` + RecipeViews.Settings),
     },
   ];
   // const _items_disabled: ICommandBarItemProps[] = [
