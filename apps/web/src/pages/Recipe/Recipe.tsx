@@ -6,11 +6,7 @@ import { RecipeControls } from './RecipeControls';
 import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { RecipeContextProvider } from '../../providers/recipe-context';
 
-type RecipeProps = {
-  create?: boolean;
-};
-
-const Recipe = ({ create = false }: RecipeProps) => {
+const Recipe = () => {
   return (
     <RecipeContextProvider>
       <Stack

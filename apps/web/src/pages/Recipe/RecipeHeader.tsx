@@ -90,6 +90,17 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   return (
     <Stack.Item align="stretch">
       <div style={{ marginBottom: '12px' }}>
+        {userBreadcrumb.text.length > 0 ? (
+          <Breadcrumb
+            items={[userBreadcrumb]}
+            maxDisplayedItems={1}
+            ariaLabel="headercrums"
+            // style={{ fontWeight: 400 }}
+            // overflowAriaLabel="More links"
+          />
+        ) : (
+          <Skeleton />
+        )}
         {rtx?.editing ? (
           <Stack horizontal horizontalAlign="start">
             <Stack
@@ -122,17 +133,6 @@ export function RecipeHeader(props: RecipeHeaderProps) {
           </Stack>
         ) : (
           <>
-            {userBreadcrumb.text.length > 0 ? (
-              <Breadcrumb
-                items={[userBreadcrumb]}
-                maxDisplayedItems={1}
-                ariaLabel="headercrums"
-                // style={{ fontWeight: 400 }}
-                // overflowAriaLabel="More links"
-              />
-            ) : (
-              <Skeleton />
-            )}
             {title.length > 0 ? (
               <Label
                 styles={{
