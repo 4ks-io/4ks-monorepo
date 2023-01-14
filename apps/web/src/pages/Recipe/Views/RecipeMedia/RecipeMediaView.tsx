@@ -6,6 +6,7 @@ import { useRecipeContext } from '../../../../providers/recipe-context';
 import { useSessionContext } from '../../../../providers/session-context';
 import { models_RecipeMedia, models_UserSummary } from '@4ks/api-fetch';
 import { Image, ImageFit } from '@fluentui/react/lib/Image';
+import { Stack } from '@fluentui/react';
 
 export const RecipeMediaView = () => {
   const { isAuthenticated } = useAuth0();
@@ -154,18 +155,21 @@ export const RecipeMediaView = () => {
   return (
     <>
       {newMediaControls()}
-      {medias.map((m) => {
-        let sm = m.variants.filter((v) => v.alias == 'sm')[0];
-        return (
-          <Image
-            key={m.id}
-            src={sm.url}
-            imageFit={ImageFit.cover}
-            alt={sm.filename}
-            width={256}
-          />
-        );
-      })}
+      <Stack horizontal wrap tokens={{ childrenGap: 30 }}>
+        {medias.map((m) => {
+          let sm = m.variants.filter((v) => v.alias == 'sm')[0];
+          return (
+            <Image
+              key={m.id}
+              src={sm.url}
+              imageFit={ImageFit.cover}
+              alt={sm.filename}
+              width={256}
+              height={160}
+            />
+          );
+        })}
+      </Stack>
     </>
   );
 };
