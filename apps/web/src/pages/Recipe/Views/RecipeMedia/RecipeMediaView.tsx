@@ -140,6 +140,8 @@ export const RecipeMediaView = () => {
                   src={file.content}
                   imageFit={ImageFit.cover}
                   alt={file.name}
+                  width={512}
+                  height={320}
                 />
               );
             })}

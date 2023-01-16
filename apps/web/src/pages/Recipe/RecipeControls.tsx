@@ -28,6 +28,7 @@ const CommandBarStyles: ICommandBarStyles = {
 
 export function RecipeControls() {
   const { isAuthenticated } = useAuth0();
+  const location = useLocation();
   const navigate = useNavigate();
   const ctx = useSessionContext();
   const rtx = useRecipeContext();
@@ -49,7 +50,11 @@ export function RecipeControls() {
       key: 'recipe',
       text: 'Recipe',
       iconProps: { iconName: 'LocationCircle' },
-      onClick: () => navigate(`/r/${rtx?.recipeId}`),
+      onClick: () => {
+        if (location.pathname != '/r/0') {
+          navigate(`/r/${rtx?.recipeId}`);
+        }
+      },
     },
   ];
 

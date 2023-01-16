@@ -28,7 +28,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   const ctx = useSessionContext();
   const navigate = useNavigate();
   const [isNew, setIsNew] = useState(false);
-  const [hideBannerSelectDialog, setHideBannerSelectDialog] = useState(true);
+  const [hideBannerSelectModal, setHideBannerSelectModal] = useState(true);
   const [title, setTitle] = useState('');
   const [medias, setMedias] = useState<models_RecipeMedia[]>([]);
   const [bannerImgSrc, setBannerImgSrc] = useState(
@@ -89,7 +89,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   }
 
   const userBreadcrumb: IBreadcrumbItem = {
-    text: '@' + (rtx?.recipe?.author?.username || undefined),
+    text: '@' + (rtx?.recipe?.author?.username || ctx.user?.username),
     key: 'UserName',
     href: encodeURI(`/${rtx?.recipe?.author?.username}`),
   };
@@ -98,8 +98,8 @@ export function RecipeHeader(props: RecipeHeaderProps) {
     return c && c > 0 ? ' (' + c + ')' : '';
   }
 
-  const showBannerDialog = () => setHideBannerSelectDialog(false);
-  const hideBannerDialog = () => setHideBannerSelectDialog(true);
+  const showBannerModal = () => setHideBannerSelectModal(false);
+  const hideBannerModal = () => setHideBannerSelectModal(true);
 
   const forksCountLabel = getCountLabel(rtx?.recipe.metadata?.forks);
   const starsCountLabel = getCountLabel(rtx?.recipe.metadata?.stars);
@@ -118,16 +118,16 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   }, [medias]);
 
   useEffect(() => {
-    hideBannerSelectDialog && getMedia();
-  }, [hideBannerSelectDialog]);
+    hideBannerSelectModal && getMedia();
+  }, [hideBannerSelectModal]);
 
   return (
     <Stack.Item align="stretch">
-      <div style={{ height: '200px' }}>
+      <div style={{ height: '256px' }}>
         <Modal
           // titleAriaId={titleId}
-          isOpen={!hideBannerSelectDialog}
-          onDismiss={hideBannerDialog}
+          isOpen={!hideBannerSelectModal}
+          onDismiss={hideBannerModal}
           isBlocking={false}
           // containerClassName={contentStyles.container}
           // dragOptions={isDraggable ? dragOptions : undefined}
@@ -140,7 +140,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
               styles={iconButtonStyles}
               iconProps={cancelIcon}
               ariaLabel="Close"
-              onClick={hideBannerDialog}
+              onClick={hideBannerModal}
             />
           </div>
           <div className={contentStyles.body}>
@@ -161,16 +161,16 @@ export function RecipeHeader(props: RecipeHeaderProps) {
             </Stack>
             <Stack>
               <Stack.Item align="end">
-                <PrimaryButton onClick={hideBannerDialog} text="Select" />
+                <PrimaryButton onClick={hideBannerModal} text="Select" />
                 <span style={{ marginLeft: '8px' }}></span>
-                <DefaultButton onClick={hideBannerDialog} text="Cancel" />
+                <DefaultButton onClick={hideBannerModal} text="Cancel" />
               </Stack.Item>
             </Stack>
           </div>
         </Modal>
 
         <Image
-          onClick={showBannerDialog}
+          onClick={showBannerModal}
           maximizeFrame={true}
           imageFit={ImageFit.cover}
           alt="banner image"
