@@ -9,14 +9,14 @@ import {
 } from './styles';
 
 interface RecipeTileSkelProps {
-  key: number;
+  id: number;
 }
-const RecipeTileSkel = ({ key }: RecipeTileSkelProps) => {
+const RecipeTileSkel = ({ id }: RecipeTileSkelProps) => {
   return (
     <Stack
       styles={stackStyles}
       tokens={itemAlignmentsStackTokens}
-      key={'RecipeTileSkel_' + key}
+      key={'RecipeTileSkel_' + id}
     >
       <Stack.Item
         style={{

@@ -86,6 +86,7 @@ const RecipeTile = ({ recipe }: RecipeTileProps) => {
       style={{
         minHeight: 96,
         width: '100%',
+        maxWidth: 512,
       }}
     >
       <Stack styles={stackStyles} tokens={stackTokens}>

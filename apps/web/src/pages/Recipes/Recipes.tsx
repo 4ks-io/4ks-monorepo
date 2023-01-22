@@ -28,9 +28,9 @@ const Recipes = () => {
   if (!recipes) {
     return (
       <>
-        <RecipeTileSkel key={0} />
-        <RecipeTileSkel key={1} />
-        <RecipeTileSkel key={2} />
+        <RecipeTileSkel id={0} />
+        <RecipeTileSkel id={1} />
+        <RecipeTileSkel id={2} />
       </>
     );
   }
