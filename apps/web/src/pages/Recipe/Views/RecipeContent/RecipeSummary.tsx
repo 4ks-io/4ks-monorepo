@@ -13,6 +13,27 @@ import { stackStyles } from './../../styles';
 
 interface RecipeSummaryProps {}
 
+const RecipeTags = () => {
+  const wrapStackTokens: IStackTokens = { childrenGap: 30 };
+
+  return (
+    <Stack horizontal wrap styles={stackStyles} tokens={wrapStackTokens}>
+      <Label>#vegan</Label>
+      <Label>#beef</Label>
+      <Label>#poutry</Label>
+      <Label>#meat</Label>
+      <Label>
+        <Icon
+          iconName="Add"
+          onClick={() => {
+            console.log('add some tag');
+          }}
+        />
+      </Label>
+    </Stack>
+  );
+};
+
 export function RecipeSummary(props: RecipeSummaryProps) {
   const rtx = useRecipeContext();
 
@@ -23,7 +44,6 @@ export function RecipeSummary(props: RecipeSummaryProps) {
       padding: 5,
     },
   };
-  const wrapStackTokens: IStackTokens = { childrenGap: 30 };
 
   const stackTokens: IStackTokens = {
     childrenGap: 1,
@@ -42,20 +62,7 @@ export function RecipeSummary(props: RecipeSummaryProps) {
 
   return (
     <Stack.Item align="stretch" styles={stackItemStyles}>
-      <Stack horizontal wrap styles={stackStyles} tokens={wrapStackTokens}>
-        <Label>#vegan</Label>
-        <Label>#beef</Label>
-        <Label>#poutry</Label>
-        <Label>#meat</Label>
-        <Label>
-          <Icon
-            iconName="Add"
-            onClick={() => {
-              console.log('add some tag');
-            }}
-          />
-        </Label>
-      </Stack>
+      <RecipeTags />
       <Stack horizontal styles={stackStyles} tokens={stackTokens}>
         <Stack.Item grow styles={stackItemStyles}>
           <span style={spanStyle}>prep time: 10 mins</span>

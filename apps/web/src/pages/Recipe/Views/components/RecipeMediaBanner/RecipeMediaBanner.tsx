@@ -10,13 +10,7 @@ import { useRecipeContext } from '../../../../../providers/recipe-context';
 import { useSessionContext } from '../../../../../providers/session-context';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { Modal } from '@fluentui/react/lib/Modal';
-import {
-  models_RecipeMedia,
-  models_RecipeMediaVariant,
-  dtos_UpdateRecipe,
-  models_UserSummary,
-  models_Recipe,
-} from '@4ks/api-fetch';
+import { models_RecipeMedia, models_RecipeMediaVariant } from '@4ks/api-fetch';
 import {
   getTheme,
   mergeStyleSets,
@@ -49,24 +43,31 @@ const RecipeMediaBanner = () => {
     medias && setMedias(medias);
   }
 
+  enum RecipeMediaSize {
+    SM = 'sm',
+    MD = 'md',
+    ORIG = 'orig',
+  }
+
   function getBannerVariantUrl(
-    variants: models_RecipeMediaVariant[] | undefined
+    variants: models_RecipeMediaVariant[] | undefined,
+    size: RecipeMediaSize = RecipeMediaSize.MD
   ): models_RecipeMediaVariant {
-    return variants && variants.filter((v) => v.alias == 'md')[0];
+    return variants && variants.filter((v) => v.alias == size)[0];
   }
 
   useEffect(() => {
     const md = getBannerVariantUrl(rtx.recipe.currentRevision.banner);
-    md && setBannerImgSrc(md?.url);
+    md && setBannerImgSrc(md.url);
   }, [rtx]);
 
   useEffect(() => {
-    const md = getBannerVariantUrl(rtx.recipe.currentRevision.banner);
+    const bannerImg = getBannerVariantUrl(rtx.recipe.currentRevision.banner);
     if (showBannerSelectModal) {
-      const newMd = getBannerVariantUrl(selectingMedia);
-      setBannerImgSrc(newMd?.url || md?.url);
+      const newBannerImg = getBannerVariantUrl(selectingMedia);
+      setBannerImgSrc(newBannerImg?.url || bannerImg?.url);
     } else {
-      setBannerImgSrc(md?.url || undefined);
+      setBannerImgSrc(bannerImg?.url || undefined);
     }
   }, [showBannerSelectModal, selectingMedia, selectedMedia]);
 
@@ -109,7 +110,7 @@ const RecipeMediaBanner = () => {
         <div className={contentStyles.body}>
           <Stack horizontal wrap tokens={{ childrenGap: 30 }}>
             {medias.map((m) => {
-              let sm = m?.variants.filter((v) => v.alias == 'sm')[0];
+              let sm = getBannerVariantUrl(m?.variants, RecipeMediaSize.SM);
               const isSelectedStyle =
                 m.id == selectingMediaId
                   ? {

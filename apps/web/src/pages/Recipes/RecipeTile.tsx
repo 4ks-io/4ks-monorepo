@@ -1,71 +1,122 @@
 import React from 'react';
 import { Stack } from '@fluentui/react/lib/Stack';
-import { models_Recipe } from '@4ks/api-fetch';
+import { models_Recipe, models_RecipeMediaVariant } from '@4ks/api-fetch';
 import { Text } from '@fluentui/react';
 import Skeleton from 'react-loading-skeleton';
 import { Link } from 'react-router-dom';
 import { stackStyles, stackTokens, stackItemStyles } from './styles';
+import { Image, ImageFit } from '@fluentui/react/lib/Image';
 
 const PLACEHOLDER_TAGS = ['vegan', 'beef', 'poultry', 'meat'];
+
+function RecipeTags(recipe: models_Recipe) {
+  return (
+    <Stack
+      horizontal
+      tokens={{
+        childrenGap: 4,
+      }}
+    >
+      {PLACEHOLDER_TAGS.map((tag) => {
+        return (
+          <Stack.Item key={`${recipe.id}_${tag}`}>
+            <Text
+              style={{
+                color: '#FFF',
+                fontWeight: 'bold',
+              }}
+            >
+              #{tag}
+            </Text>
+          </Stack.Item>
+        );
+      })}
+    </Stack>
+  );
+}
+
+function RecipeContributors(recipe: models_Recipe) {
+  return (
+    <Stack horizontal tokens={{ childrenGap: 4 }}>
+      <Stack.Item style={{ color: '#FFF' }}>Chefs:</Stack.Item>
+      {recipe.contributors?.map((contributor, idx) => (
+        <Stack.Item
+          style={{ fontWeight: 'bold', color: '#FFF' }}
+          key={`${recipe.id}_${contributor}`}
+        >
+          {contributor.username}
+          {idx < (recipe.contributors?.length || 0) - 1 ? ',' : ''}
+        </Stack.Item>
+      ))}
+    </Stack>
+  );
+}
+
+function getBannerVariantUrl(
+  variants: models_RecipeMediaVariant[] | undefined
+): models_RecipeMediaVariant {
+  return variants && variants.filter((v) => v.alias == 'md')[0].url;
+}
 
 interface RecipeTileProps {
   recipe: models_Recipe;
 }
+
+const containerStyles = {
+  maxHeight: '256',
+  position: 'relative',
+};
+
+const nestedStyles = {
+  fontWeight: 'bold',
+  zIndex: 2,
+  width: '100%',
+  float: 'left',
+  position: 'absolute',
+  background: 'rgba(0, 0, 0, 0.2)',
+  boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+  backdropFilter: 'blur(5px)',
+};
+
 const RecipeTile = ({ recipe }: RecipeTileProps) => {
+  const imgUrl = getBannerVariantUrl(recipe.currentRevision.banner);
   return (
     <Stack.Item
       key={recipe.id}
       style={{
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderColor: 'gray',
-        padding: 8,
+        minHeight: 96,
+        width: '100%',
       }}
     >
       <Stack styles={stackStyles} tokens={stackTokens}>
-        <Stack horizontal>
-          <Stack.Item align="auto" styles={stackItemStyles}>
-            <span>
-              <Link to={`/r/${recipe.id}`}>
-                <Text variant="xLarge" style={{ fontWeight: 'bold' }}>
-                  {recipe.currentRevision?.name || `missing title`}
-                </Text>
-              </Link>
-            </span>
-          </Stack.Item>
-        </Stack>
-        <Stack
-          horizontal
-          tokens={{
-            childrenGap: 4,
-          }}
-        >
-          {PLACEHOLDER_TAGS.map((tag) => {
-            return (
-              <Stack.Item key={`${recipe.id}_${tag}`}>
-                <Text
-                  style={{
-                    fontWeight: 'bold',
-                  }}
-                >
-                  #{tag}
-                </Text>
+        <div style={containerStyles}>
+          <div style={nestedStyles}>
+            <Stack horizontal>
+              <Stack.Item align="auto" styles={stackItemStyles}>
+                <span>
+                  <Link to={`/r/${recipe.id}`}>
+                    <Text
+                      variant="xLarge"
+                      style={{ fontWeight: 'bold', color: '#FFF' }}
+                    >
+                      {recipe.currentRevision?.name || `missing title`}
+                    </Text>
+                  </Link>
+                </span>
               </Stack.Item>
-            );
-          })}
-        </Stack>
-        <Stack horizontal tokens={{ childrenGap: 4 }}>
-          <Stack.Item>Chefs:</Stack.Item>
-          {recipe.contributors?.map((contributor, idx) => (
-            <Stack.Item
-              style={{ fontWeight: 'bold' }}
-              key={`${recipe.id}_${contributor}`}
-            >
-              {contributor.username}
-              {idx < (recipe.contributors?.length || 0) - 1 ? ',' : ''}
-            </Stack.Item>
-          ))}
-        </Stack>
+            </Stack>
+            <RecipeTags {...recipe} />
+            <RecipeContributors {...recipe} />
+          </div>
+          <Link to={`/r/${recipe.id}`}>
+            <Image
+              maximizeFrame={true}
+              imageFit={ImageFit.cover}
+              alt="banner image"
+              src={imgUrl}
+            />
+          </Link>
+        </div>
       </Stack>
     </Stack.Item>
   );

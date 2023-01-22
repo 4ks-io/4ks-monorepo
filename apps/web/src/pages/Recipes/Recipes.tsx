@@ -5,7 +5,6 @@ import { DefaultButton } from '@fluentui/react/lib/Button';
 import { useNavigate, Link } from 'react-router-dom';
 import { useSessionContext } from '../../providers/session-context';
 import { models_Recipe } from '@4ks/api-fetch';
-import Skeleton from 'react-loading-skeleton';
 import RecipeTile from './RecipeTile';
 import RecipeTileSkel from './RecipeTileSkel';
 import { stackStyles, itemAlignmentsStackTokens } from './styles';
@@ -26,7 +25,7 @@ const Recipes = () => {
     navigate('/r/0');
   }
 
-  if (recipes && recipes.length == 0) {
+  if (!recipes) {
     return (
       <>
         <RecipeTileSkel key={0} />
@@ -36,26 +35,36 @@ const Recipes = () => {
     );
   }
 
-  function newRecipeButton() {
-    if (isAuthenticated) {
-      return (
-        <DefaultButton
-          text="New Recipe"
-          onClick={navigateNewRecipe}
-          allowDisabledFocus
-        />
-      );
-    }
+  function NewRecipeButton() {
+    return (
+      isAuthenticated && (
+        <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
+          <DefaultButton
+            text="New Recipe"
+            onClick={navigateNewRecipe}
+            allowDisabledFocus
+          />
+        </Stack>
+      )
+    );
   }
 
   return (
-    <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
-      {newRecipeButton()}
-      {recipes &&
-        recipes.map((r) => {
-          return <RecipeTile key={r.id} recipe={r} />;
-        })}
-    </Stack>
+    <>
+      <NewRecipeButton />
+      <Stack
+        horizontal
+        horizontalAlign="space-between"
+        wrap
+        styles={stackStyles}
+        tokens={itemAlignmentsStackTokens}
+      >
+        {recipes &&
+          recipes.map((r) => {
+            return <RecipeTile key={r.id} recipe={r} />;
+          })}
+      </Stack>
+    </>
   );
 };
 
