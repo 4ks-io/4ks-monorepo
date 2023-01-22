@@ -1,11 +1,11 @@
 import {
-  Stack,
-  IStackProps,
+  // Stack,
+  // IStackProps,
   IStackStyles,
   IStackTokens,
   IStackItemStyles,
 } from '@fluentui/react/lib/Stack';
-import { DefaultPalette } from '@fluentui/react';
+// import { DefaultPalette } from '@fluentui/react';
 
 export const stackTokens: IStackTokens = {
   childrenGap: 4,

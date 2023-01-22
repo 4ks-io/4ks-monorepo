@@ -36,9 +36,9 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 		Name:         recipe.Name,
 		RecipeId:     newRecipeDoc.ID,
 		Author:       recipe.Author,
-		Images:       recipe.Images,
 		Instructions: recipe.Instructions,
 		Ingredients:  recipe.Ingredients,
+		Banner:       recipe.Banner,
 		CreatedDate:  recipeCreatedDate,
 		UpdatedDate:  recipeCreatedDate,
 	}
@@ -47,7 +47,7 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 		Root:         newRecipeDoc.ID,
 		Author:       recipe.Author,
 		Contributors: []models.UserSummary{recipe.Author},
-		Metadata: models.RecipeMetada{
+		Metadata: models.RecipeMetadata{
 			Stars: 0,
 			Forks: 0,
 		},
@@ -84,7 +84,6 @@ func (rs recipeService) UpdateRecipeById(recipeId *string, recipeUpdate *dtos.Up
 	}
 
 	recipeUpdatedDate := time.Now().UTC()
-
 	newRevisionDocRef := recipeRevisionsCollection.NewDoc()
 	newRevision := &models.RecipeRevision{}
 

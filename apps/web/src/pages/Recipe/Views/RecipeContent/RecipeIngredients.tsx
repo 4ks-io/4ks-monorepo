@@ -6,7 +6,7 @@ import { stackStyles, itemAlignmentsStackTokens } from './../../styles';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useRecipeContext } from '../../../../providers/recipe-context';
 import { RecipeIngredient } from './RecipeIngredient';
-import { SectionTitle } from '../components/SectionTitle';
+import { SectionTitle } from '../components';
 import {
   handleListAdd,
   handleListChange,

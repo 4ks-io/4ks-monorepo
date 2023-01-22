@@ -4,7 +4,7 @@
 
 export type models_RecipeMediaVariant = {
     alias?: string;
-    baseUrl?: string;
-    filenameSm?: string;
+    filename?: string;
     maxWidth?: number;
+    url?: string;
 };

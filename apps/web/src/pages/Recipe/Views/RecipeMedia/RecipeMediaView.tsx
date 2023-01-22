@@ -6,7 +6,7 @@ import { useRecipeContext } from '../../../../providers/recipe-context';
 import { useSessionContext } from '../../../../providers/session-context';
 import { models_RecipeMedia, models_UserSummary } from '@4ks/api-fetch';
 import { Image, ImageFit } from '@fluentui/react/lib/Image';
-import { Stack } from '@fluentui/react';
+import { Stack } from '@fluentui/react/lib/Stack';
 
 export const RecipeMediaView = () => {
   const { isAuthenticated } = useAuth0();

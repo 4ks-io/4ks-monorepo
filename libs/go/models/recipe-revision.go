@@ -22,13 +22,13 @@ type Ingredient struct {
 }
 
 type RecipeRevision struct {
-	Id           string        `firestore:"id" json:"id"`
-	Name         string        `firestore:"name" json:"name"`
-	RecipeId     string        `firestore:"recipeId" json:"recipeId"`
-	Instructions []Instruction `firestore:"instructions" json:"instructions"`
-	Ingredients  []Ingredient  `firestore:"ingredients" json:"ingredients"`
-	Author       UserSummary   `firestore:"author" json:"author"`
-	Images       []Image       `firestore:"images" json:"images"`
-	CreatedDate  time.Time     `firestore:"createdDate" json:"createdDate"`
-	UpdatedDate  time.Time     `firestore:"updatedDate" json:"updatedDate"`
+	Id           string               `firestore:"id" json:"id"`
+	Name         string               `firestore:"name" json:"name"`
+	RecipeId     string               `firestore:"recipeId" json:"recipeId"`
+	Author       UserSummary          `firestore:"author" json:"author"`
+	Instructions []Instruction        `firestore:"instructions" json:"instructions"`
+	Ingredients  []Ingredient         `firestore:"ingredients" json:"ingredients"`
+	Banner       []RecipeMediaVariant `firestore:"banner" json:"banner"`
+	CreatedDate  time.Time            `firestore:"createdDate" json:"createdDate"`
+	UpdatedDate  time.Time            `firestore:"updatedDate" json:"updatedDate"`
 }

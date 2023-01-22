@@ -2,12 +2,12 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { models_Image } from './models_Image';
 import type { models_Ingredient } from './models_Ingredient';
 import type { models_Instruction } from './models_Instruction';
+import type { models_RecipeMediaVariant } from './models_RecipeMediaVariant';
 
 export type dtos_CreateRecipe = {
-    images?: Array<models_Image>;
+    banner?: Array<models_RecipeMediaVariant>;
     ingredients?: Array<models_Ingredient>;
     instructions?: Array<models_Instruction>;
     name?: string;

@@ -4,6 +4,7 @@ import {
   models_Ingredient,
   models_Instruction,
   models_Recipe,
+  models_RecipeMediaVariant,
 } from '@4ks/api-fetch';
 import { useSessionContext } from './session-context';
 import { IRecipeContext, initialState } from './recipe-context-init';
@@ -13,9 +14,7 @@ import {
 } from './recipe-context-reducer';
 import { useParams } from 'react-router-dom';
 
-const RecipeContext = React.createContext<IRecipeContext | undefined>(
-  undefined
-);
+const RecipeContext = React.createContext<IRecipeContext>(initialState);
 
 type RecipeContextProviderProps = { children: React.ReactNode };
 
@@ -33,6 +32,13 @@ export function RecipeContextProvider({
     dispatch({
       type: RecipeContextAction.SET_EDIT_MODE,
       payload: editing,
+    });
+  }
+
+  function setBanner(banner: Array<models_RecipeMediaVariant>) {
+    dispatch({
+      type: RecipeContextAction.SET_BANNER,
+      payload: banner,
     });
   }
 
@@ -101,6 +107,7 @@ export function RecipeContextProvider({
           setTitle,
           setIngredients,
           setInstructions,
+          setBanner,
         },
       });
     } else {
@@ -110,6 +117,7 @@ export function RecipeContextProvider({
           payload: {
             resetRecipe,
             setEditing,
+            setBanner: () => {},
             setTitle: () => {},
             setIngredients: () => {},
             setInstructions: () => {},

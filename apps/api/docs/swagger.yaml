@@ -2,9 +2,9 @@ basePath: /api
 definitions:
   dtos.CreateRecipe:
     properties:
-      images:
+      banner:
         items:
-          $ref: '#/definitions/models.Image'
+          $ref: '#/definitions/models.RecipeMediaVariant'
         type: array
       ingredients:
         items:
@@ -43,9 +43,9 @@ definitions:
     type: object
   dtos.UpdateRecipe:
     properties:
-      images:
+      banner:
         items:
-          $ref: '#/definitions/models.Image'
+          $ref: '#/definitions/models.RecipeMediaVariant'
         type: array
       ingredients:
         items:
@@ -70,13 +70,6 @@ definitions:
       recipeMedia:
         $ref: '#/definitions/models.RecipeMedia'
       signedUrl:
-        type: string
-    type: object
-  models.Image:
-    properties:
-      id:
-        type: string
-      url:
         type: string
     type: object
   models.Ingredient:
@@ -118,7 +111,7 @@ definitions:
       id:
         type: string
       metadata:
-        $ref: '#/definitions/models.RecipeMetada'
+        $ref: '#/definitions/models.RecipeMetadata'
       root:
         type: string
       updatedDate:
@@ -153,14 +146,14 @@ definitions:
     properties:
       alias:
         type: string
-      baseUrl:
-        type: string
-      filenameSm:
+      filename:
         type: string
       maxWidth:
         type: integer
+      url:
+        type: string
     type: object
-  models.RecipeMetada:
+  models.RecipeMetadata:
     properties:
       forks:
         type: integer
@@ -171,14 +164,14 @@ definitions:
     properties:
       author:
         $ref: '#/definitions/models.UserSummary'
+      banner:
+        items:
+          $ref: '#/definitions/models.RecipeMediaVariant'
+        type: array
       createdDate:
         type: string
       id:
         type: string
-      images:
-        items:
-          $ref: '#/definitions/models.Image'
-        type: array
       ingredients:
         items:
           $ref: '#/definitions/models.Ingredient'

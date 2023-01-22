@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Stack } from '@fluentui/react/lib/Stack';
-import { RecipeHeader } from './RecipeHeader';
-import { RecipeControls } from './RecipeControls';
+import { RecipeHeader } from './Views/RecipeHeader';
+import { RecipeControls } from './Views/RecipeControls';
 import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { RecipeContextProvider } from '../../providers/recipe-context';
 

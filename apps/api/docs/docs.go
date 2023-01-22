@@ -733,10 +733,10 @@ const docTemplate = `{
         "dtos.CreateRecipe": {
             "type": "object",
             "properties": {
-                "images": {
+                "banner": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Image"
+                        "$ref": "#/definitions/models.RecipeMediaVariant"
                     }
                 },
                 "ingredients": {
@@ -796,10 +796,10 @@ const docTemplate = `{
         "dtos.UpdateRecipe": {
             "type": "object",
             "properties": {
-                "images": {
+                "banner": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Image"
+                        "$ref": "#/definitions/models.RecipeMediaVariant"
                     }
                 },
                 "ingredients": {
@@ -837,17 +837,6 @@ const docTemplate = `{
                     "$ref": "#/definitions/models.RecipeMedia"
                 },
                 "signedUrl": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Image": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "url": {
                     "type": "string"
                 }
             }
@@ -911,7 +900,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "metadata": {
-                    "$ref": "#/definitions/models.RecipeMetada"
+                    "$ref": "#/definitions/models.RecipeMetadata"
                 },
                 "root": {
                     "type": "string"
@@ -965,18 +954,18 @@ const docTemplate = `{
                 "alias": {
                     "type": "string"
                 },
-                "baseUrl": {
-                    "type": "string"
-                },
-                "filenameSm": {
+                "filename": {
                     "type": "string"
                 },
                 "maxWidth": {
                     "type": "integer"
+                },
+                "url": {
+                    "type": "string"
                 }
             }
         },
-        "models.RecipeMetada": {
+        "models.RecipeMetadata": {
             "type": "object",
             "properties": {
                 "forks": {
@@ -993,17 +982,17 @@ const docTemplate = `{
                 "author": {
                     "$ref": "#/definitions/models.UserSummary"
                 },
+                "banner": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.RecipeMediaVariant"
+                    }
+                },
                 "createdDate": {
                     "type": "string"
                 },
                 "id": {
                     "type": "string"
-                },
-                "images": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Image"
-                    }
                 },
                 "ingredients": {
                     "type": "array",

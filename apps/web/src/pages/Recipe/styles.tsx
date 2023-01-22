@@ -5,7 +5,7 @@ import {
   IStackTokens,
   IStackItemStyles,
 } from '@fluentui/react/lib/Stack';
-import { DefaultPalette } from '@fluentui/react';
+// import { DefaultPalette } from '@fluentui/react';
 
 export const stackStyles: IStackStyles = {
   root: {

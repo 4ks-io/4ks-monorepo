@@ -3,19 +3,19 @@ package dtos
 import "4ks/libs/go/models"
 
 type CreateRecipe struct {
-	Name         string               `json:"name"`
-	Author       models.UserSummary   `json:"-"` // We populate the author using the request context and hence dont want this sent in the api
-	Images       []models.Image       `json:"images"`
-	Instructions []models.Instruction `json:"instructions"`
-	Ingredients  []models.Ingredient  `json:"ingredients"`
+	Name         string                      `json:"name"`
+	Author       models.UserSummary          `json:"-"` // We populate the author using the request context and hence dont want this sent in the api
+	Instructions []models.Instruction        `json:"instructions"`
+	Ingredients  []models.Ingredient         `json:"ingredients"`
+	Banner       []models.RecipeMediaVariant `json:"banner"`
 }
 
 type UpdateRecipe struct {
-	Name         string               `json:"name"`
-	Author       models.UserSummary   `json:"-"` // We populate the author using the request context and hence dont want this sent in the api
-	Instructions []models.Instruction `json:"instructions"`
-	Ingredients  []models.Ingredient  `json:"ingredients"`
-	Images       []models.Image       `json:"images"`
+	Name         string                      `json:"name"`
+	Author       models.UserSummary          `json:"-"` // We populate the author using the request context and hence dont want this sent in the api
+	Instructions []models.Instruction        `json:"instructions"`
+	Ingredients  []models.Ingredient         `json:"ingredients"`
+	Banner       []models.RecipeMediaVariant `json:"banner"`
 }
 
 type CreateRecipeMedia struct {

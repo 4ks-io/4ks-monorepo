@@ -13,6 +13,7 @@ export enum RecipeContextAction {
   SET_INSTRUCTIONS = 'setRecipeInstructions',
   SET_TITLE = 'setRecipeTitle',
   SET_EDIT_MODE = 'setEditMode',
+  SET_BANNER = 'setBanner',
 }
 
 export function recipeContextReducer(state: IRecipeContext, action: IAction) {
@@ -34,6 +35,7 @@ export function recipeContextReducer(state: IRecipeContext, action: IAction) {
         setIngredients,
         setInstructions,
         setTitle,
+        setBanner,
       } = action.payload;
 
       return {
@@ -43,6 +45,7 @@ export function recipeContextReducer(state: IRecipeContext, action: IAction) {
         setIngredients,
         setInstructions,
         setTitle,
+        setBanner,
       };
     //
     case RecipeContextAction.SET_INGREDIENTS:
@@ -53,6 +56,18 @@ export function recipeContextReducer(state: IRecipeContext, action: IAction) {
           currentRevision: {
             ...state.recipe.currentRevision,
             ingredients: action.payload,
+          },
+        },
+      };
+    //
+    case RecipeContextAction.SET_BANNER:
+      return {
+        ...state,
+        recipe: {
+          ...state.recipe,
+          currentRevision: {
+            ...state.recipe.currentRevision,
+            banner: action.payload,
           },
         },
       };
