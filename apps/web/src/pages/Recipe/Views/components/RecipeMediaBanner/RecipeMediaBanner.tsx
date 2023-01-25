@@ -7,10 +7,9 @@ import {
   IButtonStyles,
 } from '@fluentui/react/lib/Button';
 import { useRecipeContext } from '../../../../../providers/recipe-context';
-import { useSessionContext } from '../../../../../providers/session-context';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { Modal } from '@fluentui/react/lib/Modal';
-import { models_RecipeMedia, models_RecipeMediaVariant } from '@4ks/api-fetch';
+import { models_RecipeMediaVariant } from '@4ks/api-fetch';
 import {
   getTheme,
   mergeStyleSets,
@@ -20,9 +19,7 @@ import {
 
 const RecipeMediaBanner = () => {
   const rtx = useRecipeContext();
-  const ctx = useSessionContext();
   const [bannerImgSrc, setBannerImgSrc] = useState();
-  const [medias, setMedias] = useState<models_RecipeMedia[]>([]);
 
   const [showBannerSelectModal, setShowBannerSelectModal] = useState(false);
 
@@ -35,13 +32,6 @@ const RecipeMediaBanner = () => {
   const [selectingMediaId, setSelectingMediaId] = useState<string>();
   const [selectingMedia, setSelectingMedia] =
     useState<models_RecipeMediaVariant[]>();
-
-  async function getMedia() {
-    const medias = await ctx.api?.recipes.getRecipesMedia(
-      `${rtx?.recipe?.root}`
-    );
-    medias && setMedias(medias);
-  }
 
   enum RecipeMediaSize {
     SM = 'sm',
@@ -70,11 +60,6 @@ const RecipeMediaBanner = () => {
       setBannerImgSrc(bannerImg?.url || undefined);
     }
   }, [showBannerSelectModal, selectingMedia, selectedMedia]);
-
-  // todo: this is firing too often. optimize
-  useEffect(() => {
-    rtx.recipeId && rtx.recipeId != '0' && getMedia();
-  }, [rtx]);
 
   // todo: save currently happens in RecipeControls. Fix flow.
   function confirmImageSelection() {
@@ -109,7 +94,7 @@ const RecipeMediaBanner = () => {
         </div>
         <div className={contentStyles.body}>
           <Stack horizontal wrap tokens={{ childrenGap: 30 }}>
-            {medias.map((m) => {
+            {rtx.media.map((m) => {
               let sm = getBannerVariantUrl(m?.variants, RecipeMediaSize.SM);
               const isSelectedStyle =
                 m.id == selectingMediaId

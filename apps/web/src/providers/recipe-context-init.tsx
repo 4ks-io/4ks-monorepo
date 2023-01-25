@@ -4,11 +4,14 @@ import {
   models_Instruction,
   models_RecipeMediaVariant,
 } from '@4ks/api-fetch';
+import { models_RecipeMedia } from '../../../../libs/ts/api-fetch/dist';
 
 export interface IRecipeContext {
   recipeId: string;
   editing: boolean;
   recipe: models_Recipe;
+  media: Array<models_RecipeMedia>;
+  resetMedia: () => void;
   resetRecipe: () => void;
   setEditing: (editing: boolean) => void;
   setTitle: (title: string) => void;
@@ -19,6 +22,7 @@ export interface IRecipeContext {
 
 export const initialState: IRecipeContext = {
   resetRecipe: () => {},
+  resetMedia: () => {},
   setEditing: () => {},
   setTitle: () => {},
   setIngredients: () => {},
@@ -26,6 +30,7 @@ export const initialState: IRecipeContext = {
   setBanner: () => {},
   recipeId: '0',
   editing: false,
+  media: [],
   recipe: {
     author: {
       displayName: '',

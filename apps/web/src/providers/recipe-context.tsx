@@ -63,12 +63,17 @@ export function RecipeContextProvider({
     });
   }
 
-  function resetRecipe() {
-    ctx?.api?.recipes
-      .getRecipes1(`${state.recipeId}`)
-      .then((recipe: models_Recipe) => {
-        dispatch({ type: RecipeContextAction.SET_CONTENT, payload: recipe });
-      });
+  async function setRecipe() {
+    const recipe: models_Recipe = await ctx?.api?.recipes.getRecipes1(
+      `${state.recipeId}`
+    );
+    dispatch({ type: RecipeContextAction.SET_CONTENT, payload: recipe });
+  }
+
+  async function setMedia() {
+    const media = await ctx.api?.recipes.getRecipesMedia(state.recipeId);
+    console.log('setMedia');
+    dispatch({ type: RecipeContextAction.SET_MEDIA, payload: media });
   }
 
   useEffect(() => {
@@ -85,14 +90,8 @@ export function RecipeContextProvider({
         setEditing(true);
       } else {
         setEditing(false);
-        ctx?.api?.recipes
-          .getRecipes1(`${state.recipeId}`)
-          .then((recipe: models_Recipe) => {
-            dispatch({
-              type: RecipeContextAction.SET_CONTENT,
-              payload: recipe,
-            });
-          });
+        setRecipe();
+        setMedia();
       }
     }
   }, [state.recipeId]);
@@ -102,7 +101,8 @@ export function RecipeContextProvider({
       dispatch({
         type: RecipeContextAction.SET_CONTROLS,
         payload: {
-          resetRecipe,
+          resetMedia: setMedia,
+          resetRecipe: setRecipe,
           setEditing,
           setTitle,
           setIngredients,
@@ -115,7 +115,8 @@ export function RecipeContextProvider({
         dispatch({
           type: RecipeContextAction.SET_CONTROLS,
           payload: {
-            resetRecipe,
+            resetMedia: setMedia,
+            resetRecipe: setRecipe,
             setEditing,
             setBanner: () => {},
             setTitle: () => {},

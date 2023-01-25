@@ -14,6 +14,7 @@ export enum RecipeContextAction {
   SET_TITLE = 'setRecipeTitle',
   SET_EDIT_MODE = 'setEditMode',
   SET_BANNER = 'setBanner',
+  SET_MEDIA = 'setMedia',
 }
 
 export function recipeContextReducer(state: IRecipeContext, action: IAction) {
@@ -28,8 +29,12 @@ export function recipeContextReducer(state: IRecipeContext, action: IAction) {
     case RecipeContextAction.SET_CONTENT:
       return { ...state, recipe: action.payload };
     //
+    case RecipeContextAction.SET_MEDIA:
+      return { ...state, media: action.payload };
+    //
     case RecipeContextAction.SET_CONTROLS:
       const {
+        resetMedia,
         resetRecipe,
         setEditing,
         setIngredients,
@@ -40,6 +45,7 @@ export function recipeContextReducer(state: IRecipeContext, action: IAction) {
 
       return {
         ...state,
+        resetMedia,
         resetRecipe,
         setEditing,
         setIngredients,
