@@ -65,13 +65,13 @@ export function RecipeContextProvider({
 
   async function setRecipe() {
     const recipe: models_Recipe = await ctx?.api?.recipes.getRecipes1(
-      `${state.recipeId}`
+      state.recipeId
     );
     dispatch({ type: RecipeContextAction.SET_CONTENT, payload: recipe });
   }
 
   async function setMedia() {
-    const media = await ctx.api?.recipes.getRecipesMedia(state.recipeId);
+    const media = await ctx.api?.recipes.getRecipesMedia(state.recipe.root);
     dispatch({ type: RecipeContextAction.SET_MEDIA, payload: media });
   }
 
@@ -90,10 +90,15 @@ export function RecipeContextProvider({
       } else {
         setEditing(false);
         setRecipe();
-        setMedia();
       }
     }
   }, [state.recipeId]);
+
+  useEffect(() => {
+    if (state.recipe.root) {
+      setMedia();
+    }
+  }, [state.recipe.root]);
 
   useEffect(() => {
     if (isAuthenticated && state.recipe.id != NO_RECIPE_ID) {

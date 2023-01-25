@@ -20,6 +20,36 @@ export interface IRecipeContext {
   setInstructions: (instructions: models_Instruction[]) => void;
 }
 
+const initialRecipe: models_Recipe = {
+  author: {
+    displayName: '',
+    id: '',
+    username: '',
+  },
+  contributors: [],
+  createdDate: '',
+  currentRevision: {
+    author: {
+      displayName: '',
+      id: '',
+      username: '',
+    },
+    createdDate: '',
+    id: '',
+    ingredients: [],
+    instructions: [],
+    banner: [],
+    name: '',
+    recipeId: '',
+    updatedDate: '',
+  },
+  id: '',
+  metadata: { forks: 0, stars: 0 },
+  root: '',
+  branch: '',
+  updatedDate: '',
+};
+
 export const initialState: IRecipeContext = {
   resetRecipe: () => {},
   resetMedia: () => {},
@@ -31,33 +61,5 @@ export const initialState: IRecipeContext = {
   recipeId: '0',
   editing: false,
   media: [],
-  recipe: {
-    author: {
-      displayName: '',
-      id: '',
-      username: '',
-    },
-    contributors: [],
-    createdDate: '',
-    currentRevision: {
-      author: {
-        displayName: '',
-        id: '',
-        username: '',
-      },
-      createdDate: '',
-      id: '',
-      images: [],
-      ingredients: [],
-      instructions: [],
-      banner: [],
-      name: '',
-      recipeId: '',
-      updatedDate: '',
-    },
-    id: '',
-    metadata: { forks: 0, stars: 0 },
-    source: '',
-    updatedDate: '',
-  },
+  recipe: initialRecipe,
 };
