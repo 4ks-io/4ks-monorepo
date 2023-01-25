@@ -14,10 +14,12 @@ const Recipes = () => {
   const { isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState<models_Recipe[] | undefined>();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     ctx.api?.recipes.getRecipes().then((r: models_Recipe[]) => {
       setRecipes(r);
+      setIsLoading(false);
     });
   }, [ctx]);
 
@@ -25,7 +27,7 @@ const Recipes = () => {
     navigate('/r/0');
   }
 
-  if (!recipes) {
+  if (isLoading) {
     return (
       <>
         <RecipeTileSkel id={0} />
