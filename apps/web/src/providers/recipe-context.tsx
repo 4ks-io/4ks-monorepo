@@ -72,7 +72,6 @@ export function RecipeContextProvider({
 
   async function setMedia() {
     const media = await ctx.api?.recipes.getRecipesMedia(state.recipeId);
-    console.log('setMedia');
     dispatch({ type: RecipeContextAction.SET_MEDIA, payload: media });
   }
 
