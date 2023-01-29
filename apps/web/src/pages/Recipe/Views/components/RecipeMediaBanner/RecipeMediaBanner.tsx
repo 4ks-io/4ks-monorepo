@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, ImageFit } from '@fluentui/react/lib/Image';
+import { Image, ImageFit, ImageLoadState } from '@fluentui/react/lib/Image';
 import { Stack, IStackProps } from '@fluentui/react/lib/Stack';
 import {
   PrimaryButton,
@@ -19,7 +19,7 @@ import {
 
 const RecipeMediaBanner = () => {
   const rtx = useRecipeContext();
-  const [bannerImgSrc, setBannerImgSrc] = useState();
+  const [bannerImgSrc, setBannerImgSrc] = useState<string>();
 
   const [showBannerSelectModal, setShowBannerSelectModal] = useState(false);
 
@@ -42,22 +42,26 @@ const RecipeMediaBanner = () => {
   function getBannerVariantUrl(
     variants: models_RecipeMediaVariant[] | undefined,
     size: RecipeMediaSize = RecipeMediaSize.MD
-  ): models_RecipeMediaVariant {
+  ): models_RecipeMediaVariant | undefined {
     return variants && variants.filter((v) => v.alias == size)[0];
   }
 
   useEffect(() => {
-    const md = getBannerVariantUrl(rtx.recipe.currentRevision.banner);
-    md && setBannerImgSrc(md.url);
+    if (rtx?.recipe?.currentRevision?.banner) {
+      const md = getBannerVariantUrl(rtx.recipe.currentRevision.banner);
+      md?.url && typeof md.url == 'string' && setBannerImgSrc(md.url);
+    }
   }, [rtx]);
 
   useEffect(() => {
-    const bannerImg = getBannerVariantUrl(rtx.recipe.currentRevision.banner);
-    if (showBannerSelectModal) {
-      const newBannerImg = getBannerVariantUrl(selectingMedia);
-      setBannerImgSrc(newBannerImg?.url || bannerImg?.url);
-    } else {
-      setBannerImgSrc(bannerImg?.url || undefined);
+    if (rtx?.recipe?.currentRevision?.banner) {
+      const bannerImg = getBannerVariantUrl(rtx.recipe.currentRevision.banner);
+      if (showBannerSelectModal) {
+        const newBannerImg = getBannerVariantUrl(selectingMedia);
+        setBannerImgSrc(newBannerImg?.url || bannerImg?.url);
+      } else {
+        setBannerImgSrc(bannerImg?.url || undefined);
+      }
     }
   }, [showBannerSelectModal, selectingMedia, selectedMedia]);
 
@@ -107,6 +111,9 @@ const RecipeMediaBanner = () => {
                 <div key={m.id} style={isSelectedStyle}>
                   <Image
                     src={sm.url}
+                    onLoadingStateChange={(loadState: ImageLoadState) => {
+                      console.log(loadState);
+                    }}
                     imageFit={ImageFit.cover}
                     alt={sm.filename}
                     width={256}

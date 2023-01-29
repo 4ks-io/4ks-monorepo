@@ -5,8 +5,9 @@ import { useFilePicker, FileContent } from 'use-file-picker';
 import { useRecipeContext } from '../../../../providers/recipe-context';
 import { useSessionContext } from '../../../../providers/session-context';
 import { models_UserSummary } from '@4ks/api-fetch';
-import { Image, ImageFit } from '@fluentui/react/lib/Image';
+import { Image, ImageFit, ImageLoadState } from '@fluentui/react/lib/Image';
 import { Stack } from '@fluentui/react/lib/Stack';
+import { RecipeMediaViewImage } from './RecipeMediaViewImage';
 
 export const RecipeMediaView = () => {
   const { isAuthenticated } = useAuth0();
@@ -95,7 +96,7 @@ export const RecipeMediaView = () => {
     .map((c) => c.id)
     .includes(ctx.user?.id);
 
-  function selectMediaButton() {
+  function SelectMediaButton() {
     return (
       <DefaultButton
         text="Select Image to Upload"
@@ -105,7 +106,7 @@ export const RecipeMediaView = () => {
     );
   }
 
-  function uploadMediaButton() {
+  function UploadMediaButton() {
     return (
       <PrimaryButton
         text="Upload Image"
@@ -120,20 +121,30 @@ export const RecipeMediaView = () => {
       if (isContributor) {
         return (
           <>
-            {filesContent.length == 0
-              ? selectMediaButton()
-              : uploadMediaButton()}
+            {filesContent.length == 0 ? (
+              <SelectMediaButton />
+            ) : (
+              <UploadMediaButton />
+            )}
 
             {filesContent.map((file, index) => {
               return (
-                <Image
-                  key={index}
-                  src={file.content}
-                  imageFit={ImageFit.cover}
-                  alt={file.name}
-                  width={512}
-                  height={320}
-                />
+                <div
+                  style={{
+                    width: 256,
+                    borderStyle: 'solid',
+                    border: '2px solid rgb(0, 120, 212)',
+                  }}
+                >
+                  <Image
+                    key={index}
+                    src={file.content}
+                    imageFit={ImageFit.cover}
+                    alt={file.name}
+                    width={256}
+                    height={160}
+                  />
+                </div>
               );
             })}
           </>
@@ -149,19 +160,9 @@ export const RecipeMediaView = () => {
     <>
       {newMediaControls()}
       <Stack horizontal wrap tokens={{ childrenGap: 30 }}>
-        {rtx.media.map((m) => {
-          let sm = m.variants.filter((v) => v.alias == 'sm')[0];
-          return (
-            <Image
-              key={m.id}
-              src={sm.url}
-              imageFit={ImageFit.cover}
-              alt={sm.filename}
-              width={256}
-              height={160}
-            />
-          );
-        })}
+        {rtx.media.map((m) => (
+          <RecipeMediaViewImage key={m.id} media={m} />
+        ))}
       </Stack>
     </>
   );

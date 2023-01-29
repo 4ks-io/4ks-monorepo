@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { models_Recipe, models_RecipeMediaVariant } from '@4ks/api-fetch';
 import { Text } from '@fluentui/react';
@@ -54,8 +54,8 @@ function RecipeContributors(recipe: models_Recipe) {
 
 function getBannerVariantUrl(
   variants: models_RecipeMediaVariant[] | undefined
-): models_RecipeMediaVariant {
-  return variants && variants.filter((v) => v.alias == 'md')[0].url;
+): models_RecipeMediaVariant | undefined {
+  return variants && variants.filter((v) => v.alias == 'md')[0];
 }
 
 interface RecipeTileProps {
@@ -79,7 +79,25 @@ const nestedStyles = {
 };
 
 const RecipeTile = ({ recipe }: RecipeTileProps) => {
-  const imgUrl = getBannerVariantUrl(recipe.currentRevision.banner);
+  const [imageSrc, setImageSrc] = useState<string>();
+
+  function setRandomImage() {
+    const colors = ['green', 'orange', 'red', 'yellow'];
+    const random = Math.floor(Math.random() * colors.length);
+    setImageSrc(
+      `https://storage.googleapis.com/static.dev.4ks.io/fallback/${colors[random]}.jpg`
+    );
+  }
+
+  useEffect(() => {
+    if (recipe?.currentRevision?.banner) {
+      const i = getBannerVariantUrl(recipe.currentRevision.banner)?.url;
+      setImageSrc(i);
+    } else {
+      setRandomImage();
+    }
+  }, []);
+
   return (
     <Stack.Item
       key={recipe.id}
@@ -114,7 +132,7 @@ const RecipeTile = ({ recipe }: RecipeTileProps) => {
               maximizeFrame={true}
               imageFit={ImageFit.cover}
               alt="banner image"
-              src={imgUrl}
+              src={imageSrc}
             />
           </Link>
         </div>
