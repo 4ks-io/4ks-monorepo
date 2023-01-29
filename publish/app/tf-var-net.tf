@@ -8,7 +8,7 @@ variable "development_ip_addresses" {
     "71.191.49.198",  # cody home
     "71.191.135.199", # donald home
     "24.201.254.203", # nic bob
-    "184.161.82.99"   # nic canada
+    "108.44.159.57"   # shafqat
   ]
 }
 
