@@ -13,7 +13,6 @@ export const RecipeMediaView = () => {
   const { isAuthenticated } = useAuth0();
   const ctx = useSessionContext();
   const rtx = useRecipeContext();
-  const [signedUrl, setSignedUrl] = useState('');
 
   useEffect(() => {
     rtx.resetMedia();
@@ -40,24 +39,6 @@ export const RecipeMediaView = () => {
     return undefined;
   }
 
-  useEffect(() => {
-    if (filesContent && filesContent.length == 1) {
-      const ct = getContentTypeFromFileExt(filesContent[0].name);
-      if (!ct) {
-        console.log('invalid file type');
-        return;
-      }
-      ctx.api?.recipes
-        .postRecipesMedia(`${rtx?.recipeId}`, {
-          contentType: ct,
-          filename: filesContent[0].name,
-        })
-        .then((r) => {
-          setSignedUrl(r.signedUrl);
-        });
-    }
-  }, [filesContent]);
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -67,21 +48,32 @@ export const RecipeMediaView = () => {
   }
 
   async function putMedia(file: FileContent) {
-    const ct = getContentTypeFromFileExt(file.name);
-    if (!ct) {
-      return;
+    if (filesContent && filesContent.length == 1) {
+      const ct = getContentTypeFromFileExt(filesContent[0].name);
+      if (!ct) {
+        alert('invalid file type!');
+        return;
+      }
+      const m = await ctx.api?.recipes.postRecipesMedia(`${rtx?.recipeId}`, {
+        contentType: ct,
+        filename: filesContent[0].name,
+      });
+
+      if (!m?.signedUrl) {
+        alert('unexpected error. reload image');
+      }
+
+      // https://stackoverflow.com/questions/59836220/how-to-get-the-equivalent-data-format-of-curl-t-upload-data-option-from-inpu
+      const r = await fetch(file.content);
+      const blob = await r.blob();
+      const buf = await blob.arrayBuffer();
+
+      fetch(m.signedUrl, {
+        method: 'PUT',
+        headers: new Headers({ 'Content-Type': ct }),
+        body: buf,
+      });
     }
-
-    // https://stackoverflow.com/questions/59836220/how-to-get-the-equivalent-data-format-of-curl-t-upload-data-option-from-inpu
-    const r = await fetch(file.content);
-    const blob = await r.blob();
-    const buf = await blob.arrayBuffer();
-
-    fetch(signedUrl, {
-      method: 'PUT',
-      headers: new Headers({ 'Content-Type': ct }),
-      body: buf,
-    });
   }
 
   function handleUploadMedia() {
