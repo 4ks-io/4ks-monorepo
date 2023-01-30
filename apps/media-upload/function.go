@@ -72,7 +72,7 @@ func uploadImage(ctx context.Context, e event.Event) error {
 		if xerrors.Is(err, retryableError) {
 			return err
 		}
-		return nil
+		return err
 	}
 
 	// return error if the copy failed
@@ -94,7 +94,7 @@ func uploadImage(ctx context.Context, e event.Event) error {
 	i, ifmt, _ := image.Decode(bytes.NewReader(slurp))
 
 	// create variants
-	variants := []int{256, 800}
+	variants := []int{256, 800, 2048}
 	var wg sync.WaitGroup
 	wg.Add(len(variants))
 	for _, s := range variants {

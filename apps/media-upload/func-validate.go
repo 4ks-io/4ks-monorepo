@@ -24,7 +24,7 @@ func validate(ctx context.Context, obj *storage.ObjectHandle) error {
 			obj.ObjectName(), retryableError)
 	}
 	// max 5MB
-	if attrs.Size >= 1024*1024*5 {
+	if attrs.Size >= 1024*1024*6 {
 		return fmt.Errorf("upload: image file is too large, got = %d", attrs.Size)
 	}
 	// Validates obj and returns true if it conforms supported image formats.
