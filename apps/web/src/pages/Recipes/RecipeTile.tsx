@@ -6,6 +6,7 @@ import Skeleton from 'react-loading-skeleton';
 import { Link } from 'react-router-dom';
 import { stackStyles, stackTokens, stackItemStyles } from './styles';
 import { Image, ImageFit } from '@fluentui/react/lib/Image';
+import { RecipeMediaSize } from '../../types';
 
 const PLACEHOLDER_TAGS = ['vegan', 'beef', 'poultry', 'meat'];
 
@@ -55,7 +56,7 @@ function RecipeContributors(recipe: models_Recipe) {
 function getBannerVariantUrl(
   variants: models_RecipeMediaVariant[] | undefined
 ): models_RecipeMediaVariant | undefined {
-  return variants && variants.filter((v) => v.alias == 'md')[0];
+  return variants && variants.filter((v) => v.alias == RecipeMediaSize.MD)[0];
 }
 
 interface RecipeTileProps {

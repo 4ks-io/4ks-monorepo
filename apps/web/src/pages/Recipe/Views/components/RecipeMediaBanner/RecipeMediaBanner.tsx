@@ -10,6 +10,7 @@ import { useRecipeContext } from '../../../../../providers/recipe-context';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { Modal } from '@fluentui/react/lib/Modal';
 import { models_RecipeMediaVariant } from '@4ks/api-fetch';
+import { RecipeMediaSize } from '../../../../../types';
 import {
   getTheme,
   mergeStyleSets,
@@ -19,24 +20,19 @@ import {
 
 const RecipeMediaBanner = () => {
   const rtx = useRecipeContext();
-  const [bannerImgSrc, setBannerImgSrc] = useState<string>();
-
+  const [imageSrc, setImageSrc] = useState<string>();
   const [showBannerSelectModal, setShowBannerSelectModal] = useState(false);
-
-  // const bannerPlaceholder =
-  //   'https://fabricweb.azureedge.net/fabric-website/placeholders/500x500.png';
-
-  const [selectedMedia, setSelectedMedia] =
-    useState<models_RecipeMediaVariant[]>();
 
   const [selectingMediaId, setSelectingMediaId] = useState<string>();
   const [selectingMedia, setSelectingMedia] =
     useState<models_RecipeMediaVariant[]>();
 
-  enum RecipeMediaSize {
-    SM = 'sm',
-    MD = 'md',
-    ORIG = 'orig',
+  function setRandomImage() {
+    const colors = ['green', 'orange', 'red', 'yellow'];
+    const random = Math.floor(Math.random() * colors.length);
+    setImageSrc(
+      `https://storage.googleapis.com/static.dev.4ks.io/fallback/${colors[random]}.jpg`
+    );
   }
 
   function getBannerVariantUrl(
@@ -49,7 +45,9 @@ const RecipeMediaBanner = () => {
   useEffect(() => {
     if (rtx?.recipe?.currentRevision?.banner) {
       const md = getBannerVariantUrl(rtx.recipe.currentRevision.banner);
-      md?.url && typeof md.url == 'string' && setBannerImgSrc(md.url);
+      md?.url && typeof md.url == 'string' && setImageSrc(md.url);
+    } else {
+      setRandomImage();
     }
   }, [rtx]);
 
@@ -58,17 +56,16 @@ const RecipeMediaBanner = () => {
       const bannerImg = getBannerVariantUrl(rtx.recipe.currentRevision.banner);
       if (showBannerSelectModal) {
         const newBannerImg = getBannerVariantUrl(selectingMedia);
-        setBannerImgSrc(newBannerImg?.url || bannerImg?.url);
+        setImageSrc(newBannerImg?.url || bannerImg?.url);
       } else {
-        setBannerImgSrc(bannerImg?.url || undefined);
+        setImageSrc(bannerImg?.url || undefined);
       }
     }
-  }, [showBannerSelectModal, selectingMedia, selectedMedia]);
+  }, [showBannerSelectModal, selectingMedia]);
 
   // todo: save currently happens in RecipeControls. Fix flow.
   function confirmImageSelection() {
-    setSelectedMedia(selectingMedia);
-    selectingMedia && rtx?.setBanner(selectingMedia);
+    selectingMedia && rtx.setBanner(selectingMedia);
     setShowBannerSelectModal(false);
   }
 
@@ -78,12 +75,19 @@ const RecipeMediaBanner = () => {
     setShowBannerSelectModal(false);
   }
 
+  function handleOpenBannerSelectModal() {
+    if (rtx.media && rtx.media.length > 0) {
+      setShowBannerSelectModal(true);
+    }
+  }
+
   return (
     <div style={{ height: '256px' }}>
       <Modal
         isOpen={showBannerSelectModal}
         onDismiss={discardImageSelection}
         isBlocking={false}
+        allowTouchBodyScroll={true}
       >
         <div className={contentStyles.header}>
           <h2 className={contentStyles.heading} id={'someId'}>
@@ -111,9 +115,6 @@ const RecipeMediaBanner = () => {
                 <div key={m.id} style={isSelectedStyle}>
                   <Image
                     src={sm.url}
-                    onLoadingStateChange={(loadState: ImageLoadState) => {
-                      console.log(loadState);
-                    }}
                     imageFit={ImageFit.cover}
                     alt={sm.filename}
                     width={256}
@@ -138,11 +139,11 @@ const RecipeMediaBanner = () => {
       </Modal>
 
       <Image
-        onClick={() => setShowBannerSelectModal(true)}
+        onClick={handleOpenBannerSelectModal}
         maximizeFrame={true}
         imageFit={ImageFit.cover}
         alt="banner image"
-        src={bannerImgSrc}
+        src={imageSrc}
       />
     </div>
   );

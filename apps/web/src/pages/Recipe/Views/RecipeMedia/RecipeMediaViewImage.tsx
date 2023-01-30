@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { models_RecipeMedia } from '@4ks/api-fetch';
 import { Image, ImageFit, ImageLoadState } from '@fluentui/react/lib/Image';
+import { RecipeMediaSize } from '../../../../types';
 
 interface RecipeMediaViewImageProps {
   media: models_RecipeMedia;
@@ -12,7 +13,7 @@ export function RecipeMediaViewImage({ media }: RecipeMediaViewImageProps) {
 
   useEffect(() => {
     if (media.variants) {
-      let sm = media.variants.filter((v) => v.alias == 'sm')[0];
+      let sm = media.variants.filter((v) => v.alias == RecipeMediaSize.SM)[0];
       setImageSrc(sm.url);
       setFilename(`${sm.filename}`);
     } else {

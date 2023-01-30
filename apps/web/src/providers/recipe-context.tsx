@@ -122,7 +122,7 @@ export function RecipeContextProvider({
             resetMedia: setMedia,
             resetRecipe: setRecipe,
             setEditing,
-            setBanner: () => {},
+            setBanner,
             setTitle: () => {},
             setIngredients: () => {},
             setInstructions: () => {},

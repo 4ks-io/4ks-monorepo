@@ -33,6 +33,7 @@ const Recipes = () => {
         <RecipeTileSkel id={0} />
         <RecipeTileSkel id={1} />
         <RecipeTileSkel id={2} />
+        <RecipeTileSkel id={3} />
       </>
     );
   }
