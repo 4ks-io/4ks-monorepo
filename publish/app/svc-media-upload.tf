@@ -51,11 +51,18 @@ resource "google_project_iam_member" "artifactregistry_reader" {
   depends_on = [google_project_iam_member.event_receiving]
 }
 
+resource "google_project_iam_member" "datastore_reader" {
+  project    = local.project
+  role       = "roles/datastore.user"
+  member     = "serviceAccount:${google_service_account.media_upload.email}"
+  depends_on = [google_project_iam_member.artifactregistry_reader]
+}
+
 resource "google_project_iam_member" "bucket" {
   project    = local.project
   role       = google_project_iam_custom_role.bucket.name
   member     = "serviceAccount:${google_service_account.media_upload.email}"
-  depends_on = [google_project_iam_member.artifactregistry_reader]
+  depends_on = [google_project_iam_member.datastore_reader]
 }
 
 resource "google_cloudfunctions2_function" "media_upload" {

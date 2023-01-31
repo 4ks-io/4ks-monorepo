@@ -54,17 +54,17 @@ func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeId *string
 		Alias:    "sm",
 	})
 	a = append(a, models.RecipeMediaVariant{
-		MaxWidth: 800,
-		Url:      fmt.Sprintf("%s/%s", baseReadUrl, mp.Basename+"_800"+mp.Extension),
-		Filename: mp.Basename + "_800" + mp.Extension,
+		MaxWidth: 1024,
+		Url:      fmt.Sprintf("%s/%s", baseReadUrl, mp.Basename+"_1024"+mp.Extension),
+		Filename: mp.Basename + "_1024" + mp.Extension,
 		Alias:    "md",
 	})
-	a = append(a, models.RecipeMediaVariant{
-		MaxWidth: 2048,
-		Url:      fmt.Sprintf("%s/%s", baseReadUrl, mp.Basename+"_2048"+mp.Extension),
-		Filename: mp.Basename + "_2048" + mp.Extension,
-		Alias:    "lg",
-	})
+	// a = append(a, models.RecipeMediaVariant{
+	// 	MaxWidth: 2048,
+	// 	Url:      fmt.Sprintf("%s/%s", baseReadUrl, mp.Basename+"_2048"+mp.Extension),
+	// 	Filename: mp.Basename + "_2048" + mp.Extension,
+	// 	Alias:    "lg",
+	// })
 
 	// https://github.com/4ks-io/4ks-monorepo/blob/f4f12c2f7eb4c6dc671b6b58dcafbeaf5702eeb8/apps/media-upload/function.go
 	recipeMedia := &models.RecipeMedia{

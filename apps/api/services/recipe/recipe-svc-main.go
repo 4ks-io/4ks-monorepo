@@ -34,7 +34,7 @@ var (
 	// ErrFailedToSign              = errors.New("failed to sign url")
 )
 
-const expirationMinutes = 5
+const expirationMinutes = 2
 
 type RecipeService interface {
 	GetRecipeById(id *string) (*models.Recipe, error)

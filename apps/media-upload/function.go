@@ -26,7 +26,7 @@ func init() {
 
 func updateRecipeMedia(c *firestore.CollectionRef, ctx context.Context, id string) func(MediaStatus) {
 	return func(s MediaStatus) {
-		log.Printf("Update status: %s", s)
+		log.Printf("Update status %s (%s): %s", id, int(s), firstoreProjectId)
 		_, err := c.Doc(id).Update(ctx, []firestore.Update{
 			{
 				Path:  "updatedDate",
@@ -73,19 +73,20 @@ func uploadImage(ctx context.Context, e event.Event) error {
 	// dst BucketHandle
 	dstbkt := client.Bucket(distributionBucket)
 	// dst ObjectHandle
-	dst := dstbkt.Object(data.Name)
+	// dst := dstbkt.Object(data.Name)
 
-	// terminate if the object exists in destination
-	_, err = dst.Attrs(ctx)
-	if err == nil {
-		log.Printf("upload: %s has already been copied to destination\n", data.Name)
-		up(MediaStatusErrorUnknown)
-		return nil
-	}
-	// return retryable error as there is a possibility that object does not temporarily exist
-	if err != storage.ErrObjectNotExist {
-		return err
-	}
+	// // terminate if the object exists in destination
+	// // enable if copying original file to destination (below)
+	// _, err = dst.Attrs(ctx)
+	// if err == nil {
+	// 	log.Printf("upload: %s has already been copied to destination\n", data.Name)
+	// 	up(MediaStatusErrorUnknown)
+	// 	return nil
+	// }
+	// // return retryable error as there is a possibility that object does not temporarily exist
+	// if err != storage.ErrObjectNotExist {
+	// 	return err
+	// }
 
 	// verify and validate src content-type and content (image vision)
 	if err, status := validate(ctx, src); err != nil {
@@ -97,11 +98,11 @@ func uploadImage(ctx context.Context, e event.Event) error {
 		return err
 	}
 
-	// return error if the copy failed
-	if _, err := dst.CopierFrom(src).Run(ctx); err != nil {
-		up(MediaStatusErrorFailedCopy)
-		return err
-	}
+	// copy original file to destination
+	// if _, err := dst.CopierFrom(src).Run(ctx); err != nil {
+	// 	up(MediaStatusErrorFailedCopy)
+	// 	return err
+	// }
 
 	// read and decode src image
 	rc, err := src.NewReader(ctx)
@@ -121,7 +122,7 @@ func uploadImage(ctx context.Context, e event.Event) error {
 	i, ifmt, _ := image.Decode(bytes.NewReader(slurp))
 
 	// create variants
-	variants := []int{256, 800, 2048}
+	variants := []int{256, 1024}
 	var wg sync.WaitGroup
 	wg.Add(len(variants))
 	for _, s := range variants {
