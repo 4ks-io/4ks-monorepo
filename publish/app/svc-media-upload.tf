@@ -91,6 +91,7 @@ resource "google_cloudfunctions2_function" "media_upload" {
     service_account_email          = google_service_account.media_upload.email
     environment_variables = {
       DISTRIBUTION_BUCKET = replace(google_storage_bucket.media_read.url, "gs://", "")
+      FIRESTORE_PROJECT_ID = "${local.org}-${var.stage}"
     }
   }
 

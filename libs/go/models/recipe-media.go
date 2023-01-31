@@ -10,14 +10,6 @@ const (
 	MediaBestUseInstruction MediaBestUse = 2
 )
 
-type MediaStatus int
-
-const (
-	MediaStatusRequested  MediaStatus = 0
-	MediaStatusProcessing MediaStatus = 1
-	MediaStatusReady      MediaStatus = 2
-)
-
 type RecipeMediaVariant struct {
 	MaxWidth int    `firestore:"maxWidth" json:"maxWidth"`
 	Url      string `firestore:"url" json:"url"`

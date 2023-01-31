@@ -17,19 +17,19 @@ import (
 
 var retryableError = xerrors.New("upload: retryable error")
 
-func validate(ctx context.Context, obj *storage.ObjectHandle) error {
+func validate(ctx context.Context, obj *storage.ObjectHandle) (error, MediaStatus) {
 	attrs, err := obj.Attrs(ctx)
 	if err != nil {
 		return xerrors.Errorf("upload: failed to get object attributes %q : %w",
-			obj.ObjectName(), retryableError)
+			obj.ObjectName(), retryableError), MediaStatusErrorMissingAttr
 	}
 	// max 5MB
 	if attrs.Size >= 1024*1024*6 {
-		return fmt.Errorf("upload: image file is too large, got = %d", attrs.Size)
+		return fmt.Errorf("upload: image file is too large, got = %d", attrs.Size), MediaStatusErrorSize
 	}
 	// Validates obj and returns true if it conforms supported image formats.
 	if err := validateMIMEType(ctx, attrs, obj); err != nil {
-		return err
+		return err, MediaStatusErrorInvalidMIMEType
 	}
 	// Validates obj by calling Vision API.
 	return validateByVisionAPI(ctx, obj)
@@ -61,14 +61,14 @@ func validateMIMEType(ctx context.Context, attrs *storage.ObjectAttrs, obj *stor
 
 // validateByVisionAPI uses Safe Search Detection provided by Cloud Vision API.
 // See more details: https://cloud.google.com/vision/docs/detecting-safe-search
-func validateByVisionAPI(ctx context.Context, obj *storage.ObjectHandle) error {
+func validateByVisionAPI(ctx context.Context, obj *storage.ObjectHandle) (error, MediaStatus) {
 	client, err := vision.NewImageAnnotatorClient(ctx)
 	if err != nil {
 		return xerrors.Errorf(
 			"upload: failed to create a ImageAnnotator client, error = %v : %w",
 			err,
 			retryableError,
-		)
+		), MediaStatusErrorVision
 	}
 	ssa, err := client.DetectSafeSearch(
 		ctx,
@@ -80,16 +80,22 @@ func validateByVisionAPI(ctx context.Context, obj *storage.ObjectHandle) error {
 			"upload: failed to detect safe search, error = %v : %w",
 			err,
 			retryableError,
-		)
+		), MediaStatusErrorSafeSearch
 	}
 	// Returns an unretryable error if there is any possibility of inappropriate image.
 	// Likelihood has been defined in the following:
 	// https://github.com/google/go-genproto/blob/5fe7a883aa19554f42890211544aa549836af7b7/googleapis/cloud/vision/v1/image_annotator.pb.go#L37-L50
-	if ssa.Adult >= pb.Likelihood_POSSIBLE ||
-		ssa.Medical >= pb.Likelihood_POSSIBLE ||
-		ssa.Violence >= pb.Likelihood_POSSIBLE ||
-		ssa.Racy >= pb.Likelihood_POSSIBLE {
-		return errors.New("upload: exceeds the prescribed likelihood")
+	if ssa.Adult >= pb.Likelihood_POSSIBLE {
+		return errors.New("upload: exceeds the prescribed likelihood (adult)"), MediaStatusErrorInappropriateAdult
 	}
-	return nil
+	if ssa.Medical >= pb.Likelihood_POSSIBLE {
+		return errors.New("upload: exceeds the prescribed likelihood (medical)"), MediaStatusErrorInappropriateMedical
+	}
+	if ssa.Violence >= pb.Likelihood_POSSIBLE {
+		return errors.New("upload: exceeds the prescribed likelihood (violence)"), MediaStatusErrorInappropriateViolence
+	}
+	if ssa.Racy >= pb.Likelihood_POSSIBLE {
+		return errors.New("upload: exceeds the prescribed likelihood"), MediaStatusErrorInappropriateRacy
+	}
+	return nil, MediaStatusProcessing
 }
