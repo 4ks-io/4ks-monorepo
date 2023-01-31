@@ -19,32 +19,35 @@ import (
 
 var distributionBucket = os.Getenv("DISTRIBUTION_BUCKET")
 var firstoreProjectId = os.Getenv("FIRESTORE_PROJECT_ID")
-var ftx = context.Background()
-var s, _ = firestore.NewClient(ftx, firstoreProjectId)
-var recipeMediasCollection = s.Collection("recipe-medias")
 
 func init() {
 	functions.CloudEvent("UploadImage", uploadImage)
 }
 
-func updateRecipeMedia(id string, status MediaStatus) {
-	_, err := recipeMediasCollection.Doc(id).Update(ftx, []firestore.Update{
-		{
-			Path:  "updatedDate",
-			Value: time.Now().UTC(),
-		},
-		{
-			Path:  "status",
-			Value: status,
-		},
-	})
-	if err != nil {
-		fmt.Errorf("error updating recipe-media: %s", err)
+func updateRecipeMedia(c *firestore.CollectionRef, ctx context.Context, id string) func(MediaStatus) {
+	return func(s MediaStatus) {
+		log.Printf("Update status: %s", s)
+		_, err := c.Doc(id).Update(ctx, []firestore.Update{
+			{
+				Path:  "updatedDate",
+				Value: time.Now().UTC(),
+			},
+			{
+				Path:  "status",
+				Value: s,
+			},
+		})
+		if err != nil {
+			fmt.Errorf("error updating recipe-media: %s", err)
+		}
 	}
 }
 
 // creates size variants of an uploaded image
 func uploadImage(ctx context.Context, e event.Event) error {
+
+	var s, _ = firestore.NewClient(ctx, firstoreProjectId)
+	var c = s.Collection("recipe-medias")
 
 	// init
 	var data StorageObjectData
@@ -53,9 +56,10 @@ func uploadImage(ctx context.Context, e event.Event) error {
 	}
 	log.Printf("Processing gs://%s/%s", data.Bucket, data.Name)
 	f := getFilenameDetails(data.Name)
-	docId := f.Basename
 
-	updateRecipeMedia(docId, MediaStatusProcessing)
+	// update status
+	var up = updateRecipeMedia(c, ctx, f.Basename)
+	up(MediaStatusProcessing)
 
 	// storage client
 	client, err := storage.NewClient(ctx)
@@ -75,7 +79,7 @@ func uploadImage(ctx context.Context, e event.Event) error {
 	_, err = dst.Attrs(ctx)
 	if err == nil {
 		log.Printf("upload: %s has already been copied to destination\n", data.Name)
-		updateRecipeMedia(docId, MediaStatusErrorUnknown)
+		up(MediaStatusErrorUnknown)
 		return nil
 	}
 	// return retryable error as there is a possibility that object does not temporarily exist
@@ -89,20 +93,20 @@ func uploadImage(ctx context.Context, e event.Event) error {
 		// if xerrors.Is(err, retryableError) {
 		// 	return err
 		// }
-		updateRecipeMedia(docId, status)
+		up(status)
 		return err
 	}
 
 	// return error if the copy failed
 	if _, err := dst.CopierFrom(src).Run(ctx); err != nil {
-		updateRecipeMedia(docId, MediaStatusErrorFailedCopy)
+		up(MediaStatusErrorFailedCopy)
 		return err
 	}
 
 	// read and decode src image
 	rc, err := src.NewReader(ctx)
 	if err != nil {
-		updateRecipeMedia(docId, MediaStatusErrorFailedResize)
+		up(MediaStatusErrorFailedResize)
 		fmt.Errorf("unable to read file %s in %s (%v)", data.Name, distributionBucket, err)
 		return err
 	}
@@ -110,7 +114,7 @@ func uploadImage(ctx context.Context, e event.Event) error {
 	slurp, err := io.ReadAll(rc)
 	rc.Close()
 	if err != nil {
-		updateRecipeMedia(docId, MediaStatusErrorFailedResize)
+		up(MediaStatusErrorFailedResize)
 		fmt.Errorf("unable to slurp: %v", err)
 		return err
 	}
@@ -123,13 +127,13 @@ func uploadImage(ctx context.Context, e event.Event) error {
 	for _, s := range variants {
 		o, err := createVariant(ctx, dstbkt, i, ifmt, f, s, &wg)
 		if err != nil {
-			updateRecipeMedia(docId, MediaStatusErrorFailedVariant)
+			up(MediaStatusErrorFailedVariant)
 			fmt.Errorf("failed to create %s variant %d: %v", o, s, err)
 			return err
 		}
 	}
 
-	updateRecipeMedia(docId, MediaStatusReady)
+	up(MediaStatusReady)
 
 	// delete src file
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
