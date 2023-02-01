@@ -26,7 +26,6 @@ func init() {
 
 func updateRecipeMedia(c *firestore.CollectionRef, ctx context.Context, id string) func(MediaStatus) {
 	return func(s MediaStatus) {
-		log.Printf("Update status %s (%s): %s", id, int(s), firstoreProjectId)
 		_, err := c.Doc(id).Update(ctx, []firestore.Update{
 			{
 				Path:  "updatedDate",
@@ -38,8 +37,9 @@ func updateRecipeMedia(c *firestore.CollectionRef, ctx context.Context, id strin
 			},
 		})
 		if err != nil {
-			fmt.Errorf("error updating recipe-media: %s", err)
+			log.Fatal("error updating recipe-media %s", err)
 		}
+		log.Printf("Update status %s (%s): %s", id, s, firstoreProjectId)
 	}
 }
 
