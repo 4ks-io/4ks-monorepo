@@ -24,6 +24,7 @@ export type { models_RecipeMediaVariant } from './models/models_RecipeMediaVaria
 export type { models_RecipeMetadata } from './models/models_RecipeMetadata';
 export type { models_RecipeRevision } from './models/models_RecipeRevision';
 export type { models_User } from './models/models_User';
+export type { models_UserExist } from './models/models_UserExist';
 export type { models_Username } from './models/models_Username';
 export type { models_UserSummary } from './models/models_UserSummary';
 

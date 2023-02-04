@@ -204,6 +204,13 @@ definitions:
       usernameLower:
         type: string
     type: object
+  models.UserExist:
+    properties:
+      exist:
+        type: boolean
+    required:
+    - exist
+    type: object
   models.UserSummary:
     properties:
       displayName:
@@ -615,6 +622,21 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Update User
+      tags:
+      - Users
+  /users/exist:
+    get:
+      description: Get Current User Exist
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.UserExist'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Current User Exist
       tags:
       - Users
   /users/profile:

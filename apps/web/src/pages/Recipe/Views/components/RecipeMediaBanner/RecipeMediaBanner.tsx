@@ -89,9 +89,7 @@ const RecipeMediaBanner = () => {
         allowTouchBodyScroll={true}
       >
         <div className={contentStyles.header}>
-          <h2 className={contentStyles.heading} id={'someId'}>
-            Select Banner Image
-          </h2>
+          <h2 className={contentStyles.heading}>Select Banner Image</h2>
           <IconButton
             styles={iconButtonStyles}
             iconProps={cancelIcon}

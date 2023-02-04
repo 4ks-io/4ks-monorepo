@@ -13,6 +13,7 @@ import (
 
 type UserController interface {
 	CreateUser(c *gin.Context)
+	GetCurrentUserExist(c *gin.Context)
 	GetCurrentUser(c *gin.Context)
 	GetUser(c *gin.Context)
 	GetUsers(c *gin.Context)
@@ -138,6 +139,34 @@ func (uc *userController) GetCurrentUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, user)
+}
+
+// GetCurrentUserExist godoc
+// @Schemes
+// @Summary 	  Get Current User Exist
+// @Description Get Current User Exist
+// @Tags 		    Users
+// @Produce   	json
+// @Success 		200 		{object} 	models.UserExist
+// @Router 			/users/exist [get]
+// @Security 		ApiKeyAuth
+func (uc *userController) GetCurrentUserExist(c *gin.Context) {
+	userId := c.Request.Context().Value(utils.UserId{}).(string)
+	_, err := uc.userService.GetUserById(&userId)
+
+	data := models.UserExist{}
+
+	if err == userService.ErrUserNotFound {
+		data.Exist = false
+		c.JSON(http.StatusOK, data)
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	data.Exist = true
+	c.JSON(http.StatusOK, data)
 }
 
 // GetUsers	godoc

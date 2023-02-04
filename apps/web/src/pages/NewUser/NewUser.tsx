@@ -5,6 +5,12 @@ import { useSessionContext } from '../../providers';
 import { PrimaryButton } from '@fluentui/react/lib/Button';
 import { useNavigate } from 'react-router-dom';
 import { usernameValidator } from '../../hooks/username-validator';
+import {
+  getTheme,
+  mergeStyleSets,
+  FontWeights,
+  IIconProps,
+} from '@fluentui/react';
 
 const NewUser: React.FunctionComponent = () => {
   const { user, isAuthenticated, logout } = useAuth0();
@@ -57,11 +63,10 @@ const NewUser: React.FunctionComponent = () => {
     }
   }, [ctx.user]);
 
-  function handleSave() {
-    // console.log(ctx.actions);
+  async function handleSave() {
     if (ctx?.actions?.createUser && uValidator.username) {
       try {
-        ctx?.actions?.createUser({
+        await ctx?.actions?.createUser({
           username: uValidator.username,
           displayName,
         });
@@ -72,8 +77,11 @@ const NewUser: React.FunctionComponent = () => {
     }
   }
 
+  const theme = getTheme();
+
   return (
     <>
+      <h2 className={contentStyles.heading}>Choose a username to login.</h2>
       <TextField label="Name" value={displayName} onChange={handleNameChange} />
       {/* <TextField
         label="Country"
@@ -108,3 +116,13 @@ const NewUser: React.FunctionComponent = () => {
 };
 
 export default NewUser;
+
+const theme = getTheme();
+const contentStyles = mergeStyleSets({
+  heading: {
+    color: theme.palette.neutralPrimary,
+    fontWeight: FontWeights.semibold,
+    // fontSize: 'inherit',
+    margin: '0',
+  },
+});

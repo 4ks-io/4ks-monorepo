@@ -12,6 +12,7 @@ import {
   sessionContextReducer,
   SessionContextAction,
 } from './session-context-reducer';
+import { useNavigate } from 'react-router-dom';
 
 const SessionContext = React.createContext<ISessionContext>(initialState);
 
@@ -20,9 +21,10 @@ type SessionContextProviderProps = { children: React.ReactNode };
 export function SessionContextProvider({
   children,
 }: SessionContextProviderProps) {
-  const { user, getAccessTokenSilently } = useAuth0();
-
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [state, dispatch] = useReducer(sessionContextReducer, initialState);
+  const navigate = useNavigate();
+  const p = localStorage.getItem('locationPathname') || '/';
 
   function createUser(a: ApiClient) {
     return ({ username, displayName }: dtos_CreateUser) => {
@@ -47,47 +49,44 @@ export function SessionContextProvider({
   function updateUser(a: ApiClient) {
     return async (id: string, data: dtos_UpdateUser) => {
       if (data.username) {
-        // try {
         const u = await a.users.patchUsers(id, data);
         dispatch({
           type: SessionContextAction.SET_USER,
           payload: u,
         });
-        // } catch {
-        //   console.log('error updating user');
-        // }
       }
     };
   }
 
   async function getUser(a: ApiClient) {
-    a.users
-      .getUsersProfile()
-      .then((u: models_User) => {
-        dispatch({
-          type: SessionContextAction.SET_USER,
-          payload: u,
-        });
-        dispatch({
-          type: SessionContextAction.SET_ACTIONS,
-          payload: { updateUser: updateUser(a) },
-        });
-      })
-      .catch(() => {
-        dispatch({
-          type: SessionContextAction.SET_ACTIONS,
-          payload: { createUser: createUser(a) },
-        });
+    const e = await a.users.getUsersExist();
+    if (e?.exist) {
+      const u = await a.users.getUsersProfile();
+      await dispatch({
+        type: SessionContextAction.SET_USER,
+        payload: u,
       });
+      await dispatch({
+        type: SessionContextAction.SET_ACTIONS,
+        payload: { updateUser: updateUser(a) },
+      });
+      navigate(p);
+    } else {
+      await dispatch({
+        type: SessionContextAction.SET_ACTIONS,
+        payload: { createUser: createUser(a) },
+      });
+      navigate('/new', { replace: true });
+    }
   }
 
   useEffect(() => {
     // authenticated user
     if (user) {
-      console.log('// authenticated user');
+      console.log('// authenticated2');
       getAccessTokenSilently().then(async (t) => {
         let a = ApiServiceFactory(t);
-        dispatch({
+        await dispatch({
           type: SessionContextAction.SET_API,
           payload: a,
         });
@@ -95,13 +94,13 @@ export function SessionContextProvider({
       });
     } else {
       // anonymous user
-      console.log('// anonymous user');
+      console.log('// anonymous');
       dispatch({
         type: SessionContextAction.SET_API,
         payload: ApiServiceFactory(undefined),
       });
     }
-  }, [user]);
+  }, [user, isAuthenticated]);
 
   return (
     <SessionContext.Provider value={state}>{children}</SessionContext.Provider>

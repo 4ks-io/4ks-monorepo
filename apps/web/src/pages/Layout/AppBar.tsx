@@ -11,6 +11,7 @@ import { IconButton } from '@fluentui/react/lib/Button';
 import {
   ContextualMenuItemType,
   IContextualMenuProps,
+  IContextualMenuItem,
 } from '@fluentui/react/lib/ContextualMenu';
 import { useSessionContext } from '../../providers';
 
@@ -31,22 +32,36 @@ const AppBar = () => {
   const navigate = useNavigate();
   const ctx = useSessionContext();
   const location = useLocation();
+  const [isTransition, setIsTransition] = useState(false);
 
+  const [showLogo, setShowLogo] = useState(true);
   const [showSearchInput, setShowSearchInput] = useState(true);
   const [showRecipesLink, setShowRecipesLink] = useState(true);
 
   useEffect(() => {
     if (location.pathname == '/') {
+      setShowLogo(false);
       setShowSearchInput(false);
       setShowRecipesLink(true);
     } else if (location.pathname == '/r') {
+      setShowLogo(true);
       setShowSearchInput(true);
-      // setShowRecipesLink(false);
+    }
+    if (['/new', '/login', '/logout'].includes(location.pathname)) {
+      setIsTransition(true);
+      setShowRecipesLink(false);
+      setShowSearchInput(false);
+    } else {
+      setIsTransition(false);
+      setShowRecipesLink(true);
+      setShowSearchInput(true);
     }
   }, [location.pathname]);
 
   function handleLandingClick() {
-    navigate('/');
+    if (!isTransition) {
+      navigate('/');
+    }
   }
 
   function handleRecipesClick() {
@@ -69,6 +84,18 @@ const AppBar = () => {
     navigate(`/${ctx.user?.username}`);
   }
 
+  const logoutMenuItem: IContextualMenuItem = {
+    key: 'logout',
+    onClick: handleLogoutOnClick,
+    iconProps: { iconName: 'StatusCircleErrorX' },
+    text: 'Logout',
+  };
+
+  const transitionMenuProps: IContextualMenuProps = {
+    shouldFocusOnMount: true,
+    items: [logoutMenuItem],
+  };
+
   const menuProps: IContextualMenuProps = {
     shouldFocusOnMount: true,
     items: [
@@ -85,12 +112,7 @@ const AppBar = () => {
         text: 'Settings',
       },
       { key: 'divider_1', itemType: ContextualMenuItemType.Divider },
-      {
-        key: 'logout',
-        onClick: handleLogoutOnClick,
-        iconProps: { iconName: 'StatusCircleErrorX' },
-        text: 'Logout',
-      },
+      logoutMenuItem,
     ],
   };
 
@@ -111,17 +133,15 @@ const AppBar = () => {
   return (
     <Stack horizontal horizontalAlign="space-between" styles={stackStyles}>
       <span style={itemStyles}>
-        {showSearchInput && (
-          <>
-            <Image
-              {...imageProps}
-              alt="4ks.io"
-              height={36}
-              onClick={handleLandingClick}
-            />
-            <TextField placeholder="Search" />
-          </>
+        {showLogo && (
+          <Image
+            {...imageProps}
+            alt="4ks.io"
+            height={36}
+            onClick={handleLandingClick}
+          />
         )}
+        {showSearchInput && <TextField placeholder="Search" />}
       </span>
       <span style={itemStyles}>
         {showRecipesLink && (
@@ -129,7 +149,7 @@ const AppBar = () => {
         )}
         {isAuthenticated ? (
           <IconButton
-            menuProps={menuProps}
+            menuProps={isTransition ? transitionMenuProps : menuProps}
             iconProps={{ iconName: 'Contact' }}
             title="Options"
             ariaLabel="Options"

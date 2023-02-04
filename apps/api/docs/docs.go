@@ -525,6 +525,31 @@ const docTemplate = `{
                 }
             }
         },
+        "/users/exist": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get Current User Exist",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get Current User Exist",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.UserExist"
+                        }
+                    }
+                }
+            }
+        },
         "/users/profile": {
             "get": {
                 "security": [
@@ -1040,6 +1065,17 @@ const docTemplate = `{
                 },
                 "usernameLower": {
                     "type": "string"
+                }
+            }
+        },
+        "models.UserExist": {
+            "type": "object",
+            "required": [
+                "exist"
+            ],
+            "properties": {
+                "exist": {
+                    "type": "boolean"
                 }
             }
         },

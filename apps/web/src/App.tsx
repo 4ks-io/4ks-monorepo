@@ -11,6 +11,7 @@ import { useAppConfigContext } from './providers';
 function AppLayout() {
   const location = useLocation();
 
+  // disable a few paths from saving to localstorage for post-auth routing
   useEffect(() => {
     if (!['/me', '/new', '/login', '/logout'].includes(location.pathname)) {
       localStorage.setItem('locationPathname', location.pathname);
@@ -35,11 +36,11 @@ function App() {
       redirectUri={window.location.origin + `/login`}
       cacheLocation={'localstorage'}
     >
-      <SessionContextProvider>
-        <BrowserRouter>
+      <BrowserRouter>
+        <SessionContextProvider>
           <AppLayout />
-        </BrowserRouter>
-      </SessionContextProvider>
+        </SessionContextProvider>
+      </BrowserRouter>
     </Auth0Provider>
   );
 }

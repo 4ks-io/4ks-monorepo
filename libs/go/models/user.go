@@ -2,6 +2,10 @@ package models
 
 import "time"
 
+type UserExist struct {
+	Exist bool `json:"exist" binding:"required"`
+}
+
 type User struct {
 	Id            string    `firestore:"id" json:"id"`
 	Username      string    `firestore:"username,omitempty" json:"username"`

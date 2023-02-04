@@ -5,6 +5,7 @@ import type { dtos_CreateUser } from '../models/dtos_CreateUser';
 import type { dtos_TestUserName } from '../models/dtos_TestUserName';
 import type { dtos_UpdateUser } from '../models/dtos_UpdateUser';
 import type { models_User } from '../models/models_User';
+import type { models_UserExist } from '../models/models_UserExist';
 import type { models_Username } from '../models/models_Username';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -41,6 +42,19 @@ export class UsersService {
             method: 'POST',
             url: '/users',
             body: user,
+        });
+    }
+
+    /**
+     * Get Current User Exist
+     * Get Current User Exist
+     * @returns models_UserExist OK
+     * @throws ApiError
+     */
+    public getUsersExist(): CancelablePromise<models_UserExist> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/users/exist',
         });
     }
 

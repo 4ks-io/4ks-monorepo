@@ -16,6 +16,7 @@ func UsersRouter(router *gin.Engine) {
 		users.POST("username", uc.TestUsername)
 		users.POST("", uc.CreateUser)
 		users.GET("profile", uc.GetCurrentUser)
+		users.GET("exist", uc.GetCurrentUserExist)
 		users.GET("", middleware.Authorize("/users/*", "list"), uc.GetUsers)
 		users.GET(":id", uc.GetUser)
 		users.PATCH(":id", uc.UpdateUser)
