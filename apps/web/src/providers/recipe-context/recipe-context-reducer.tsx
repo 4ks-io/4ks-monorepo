@@ -17,7 +17,10 @@ export enum RecipeContextAction {
   SET_MEDIA = 'setMedia',
 }
 
-export function recipeContextReducer(state: IRecipeContext, action: IAction) {
+export function recipeContextReducer(
+  state: IRecipeContext,
+  action: IAction
+): IRecipeContext {
   switch (action.type) {
     //
     case RecipeContextAction.SET_EDIT_MODE:

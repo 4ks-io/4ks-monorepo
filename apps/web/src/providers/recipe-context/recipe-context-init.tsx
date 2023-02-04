@@ -3,8 +3,8 @@ import {
   models_Ingredient,
   models_Instruction,
   models_RecipeMediaVariant,
+  models_RecipeMedia,
 } from '@4ks/api-fetch';
-import { models_RecipeMedia } from '../../../../libs/ts/api-fetch/dist';
 
 export interface IRecipeContext {
   recipeId: string;

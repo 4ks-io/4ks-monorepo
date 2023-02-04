@@ -68,11 +68,13 @@ export const RecipeMediaView = () => {
       const blob = await r.blob();
       const buf = await blob.arrayBuffer();
 
-      fetch(m.signedUrl, {
-        method: 'PUT',
-        headers: new Headers({ 'Content-Type': ct }),
-        body: buf,
-      });
+      if (m?.signedUrl) {
+        fetch(m.signedUrl, {
+          method: 'PUT',
+          headers: new Headers({ 'Content-Type': ct }),
+          body: buf,
+        });
+      }
     }
   }
 
@@ -122,6 +124,7 @@ export const RecipeMediaView = () => {
             {filesContent.map((file, index) => {
               return (
                 <div
+                  key={index}
                   style={{
                     width: 256,
                     borderStyle: 'solid',
@@ -129,7 +132,6 @@ export const RecipeMediaView = () => {
                   }}
                 >
                   <Image
-                    key={index}
                     src={file.content}
                     imageFit={ImageFit.cover}
                     alt={file.name}

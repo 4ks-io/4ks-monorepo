@@ -12,7 +12,10 @@ export enum SessionContextAction {
   SET_USER = 'getUser',
 }
 
-export function sessionContextReducer(state: ISessionContext, action: IAction) {
+export function sessionContextReducer(
+  state: ISessionContext,
+  action: IAction
+): ISessionContext {
   switch (action.type) {
     //
     case SessionContextAction.SET_ACTIONS:

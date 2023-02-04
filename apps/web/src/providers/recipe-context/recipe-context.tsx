@@ -64,15 +64,15 @@ export function RecipeContextProvider({
   }
 
   async function setRecipe() {
-    const recipe: models_Recipe = await ctx?.api?.recipes.getRecipes1(
-      state.recipeId
-    );
+    const recipe = await ctx?.api?.recipes.getRecipes1(state.recipeId);
     dispatch({ type: RecipeContextAction.SET_CONTENT, payload: recipe });
   }
 
   async function setMedia() {
-    const media = await ctx.api?.recipes.getRecipesMedia(state.recipe.root);
-    dispatch({ type: RecipeContextAction.SET_MEDIA, payload: media });
+    if (state.recipe.root) {
+      const media = await ctx.api?.recipes.getRecipesMedia(state.recipe.root);
+      dispatch({ type: RecipeContextAction.SET_MEDIA, payload: media });
+    }
   }
 
   useEffect(() => {
