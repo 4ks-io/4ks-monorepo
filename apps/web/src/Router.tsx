@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { RecipeContextProvider } from './providers/recipe-context';
+import { RecipeContextProvider } from './providers';
 import {
   Landing,
   Login,

@@ -6,7 +6,7 @@ import {
   dtos_UpdateUser,
   models_User,
 } from '@4ks/api-fetch';
-import ApiServiceFactory from '../services/api';
+import ApiServiceFactory from '../../services/api';
 import { ISessionContext, initialState } from './session-context-init';
 import {
   sessionContextReducer,

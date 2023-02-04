@@ -7,8 +7,8 @@ import {
   ICommandBarItemProps,
   ICommandBarStyles,
 } from '@fluentui/react/lib/CommandBar';
-import { useRecipeContext } from '../../../providers/recipe-context';
-import { useSessionContext } from '../../../providers/session-context';
+import { useRecipeContext } from '../../../providers';
+import { useSessionContext } from '../../../providers';
 import { models_UserSummary } from '@4ks/api-fetch';
 
 export enum RecipeViews {

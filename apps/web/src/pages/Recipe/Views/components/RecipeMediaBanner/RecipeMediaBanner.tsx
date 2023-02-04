@@ -6,7 +6,7 @@ import {
   DefaultButton,
   IButtonStyles,
 } from '@fluentui/react/lib/Button';
-import { useRecipeContext } from '../../../../../providers/recipe-context';
+import { useRecipeContext } from '../../../../../providers';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { Modal } from '@fluentui/react/lib/Modal';
 import { models_RecipeMediaVariant } from '@4ks/api-fetch';

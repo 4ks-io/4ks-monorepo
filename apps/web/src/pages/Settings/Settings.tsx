@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useSessionContext } from '../../providers/session-context';
+import { useSessionContext } from '../../providers';
 import { TextField } from '@fluentui/react/lib/TextField';
 import { PrimaryButton } from '@fluentui/react/lib/Button';
 import { useNavigate } from 'react-router-dom';

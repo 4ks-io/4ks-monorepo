@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
-import { useSessionContext } from '../../providers/session-context';
+import { useSessionContext } from '../../providers';
 import { Spinner, SpinnerSize } from '@fluentui/react/lib/Spinner';
 
 const Login = () => {

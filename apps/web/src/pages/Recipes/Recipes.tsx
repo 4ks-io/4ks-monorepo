@@ -3,7 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { DefaultButton } from '@fluentui/react/lib/Button';
 import { useNavigate, Link } from 'react-router-dom';
-import { useSessionContext } from '../../providers/session-context';
+import { useSessionContext } from '../../providers';
 import { models_Recipe } from '@4ks/api-fetch';
 import RecipeTile from './RecipeTile';
 import RecipeTileSkel from './RecipeTileSkel';

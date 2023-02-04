@@ -3,8 +3,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { Toggle } from '@fluentui/react/lib/Toggle';
-import { useRecipeContext } from '../../../../providers/recipe-context';
-import { useSessionContext } from '../../../../providers/session-context';
+import { useRecipeContext } from '../../../../providers';
+import { useSessionContext } from '../../../../providers';
 import {
   models_Recipe,
   dtos_UpdateRecipe,

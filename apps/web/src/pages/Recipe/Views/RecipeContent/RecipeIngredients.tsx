@@ -4,7 +4,7 @@ import { DefaultButton } from '@fluentui/react/lib/Button';
 import { models_Ingredient } from '@4ks/api-fetch';
 import { stackStyles, itemAlignmentsStackTokens } from './../../styles';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { useRecipeContext } from '../../../../providers/recipe-context';
+import { useRecipeContext } from '../../../../providers';
 import { RecipeIngredient } from './RecipeIngredient';
 import { SectionTitle } from '../components';
 import {

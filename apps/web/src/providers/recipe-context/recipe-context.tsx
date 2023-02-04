@@ -6,7 +6,7 @@ import {
   models_Recipe,
   models_RecipeMediaVariant,
 } from '@4ks/api-fetch';
-import { useSessionContext } from './session-context';
+import { useSessionContext } from '..';
 import { IRecipeContext, initialState } from './recipe-context-init';
 import {
   recipeContextReducer,

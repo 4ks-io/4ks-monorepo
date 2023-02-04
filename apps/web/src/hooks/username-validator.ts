@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSessionContext } from '../providers/session-context';
+import { useSessionContext } from '../providers';
 import { useAuth0 } from '@auth0/auth0-react';
 import { models_Username } from '@4ks/api-fetch';
 

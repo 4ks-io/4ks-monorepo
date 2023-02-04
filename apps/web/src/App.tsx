@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SessionContextProvider } from './providers/session-context';
+import { SessionContextProvider } from './providers';
 import Router from './Router';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { useLocation } from 'react-router-dom';

@@ -5,7 +5,7 @@ import { RecipeSocial } from './RecipeSocial';
 import { RecipeEditingControls } from './RecipeEditingControls';
 import { RecipeFontControls } from './RecipeFontControls';
 import RecipeLoading from './RecipeLoading';
-import { useRecipeContext } from '../../../../providers/recipe-context';
+import { useRecipeContext } from '../../../../providers';
 
 type RecipeProps = {
   create?: boolean;

@@ -4,7 +4,7 @@ import { Stack } from '@fluentui/react/lib/Stack';
 import { RecipeHeader } from './Views/RecipeHeader';
 import { RecipeControls } from './Views/RecipeControls';
 import { stackStyles, itemAlignmentsStackTokens } from './styles';
-import { RecipeContextProvider } from '../../providers/recipe-context';
+import { RecipeContextProvider } from '../../providers';
 
 const Recipe = () => {
   return (

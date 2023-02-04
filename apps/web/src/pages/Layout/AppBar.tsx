@@ -12,7 +12,7 @@ import {
   ContextualMenuItemType,
   IContextualMenuProps,
 } from '@fluentui/react/lib/ContextualMenu';
-import { useSessionContext } from '../../providers/session-context';
+import { useSessionContext } from '../../providers';
 
 const imageProps: Partial<IImageProps> = {
   src: logo,
