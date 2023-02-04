@@ -6,12 +6,7 @@ import { useLocation } from 'react-router-dom';
 import { Stack } from '@fluentui/react/lib/Stack';
 import AppBar from './pages/Layout/AppBar';
 import { BrowserRouter } from 'react-router-dom';
-
-type AppConfig = {
-  AUTH0_AUDIENCE: string;
-  AUTH0_DOMAIN: string;
-  AUTH0_CLIENT_ID: string;
-};
+import { useAppConfigContext } from './providers';
 
 function AppLayout() {
   const location = useLocation();
@@ -30,12 +25,13 @@ function AppLayout() {
   );
 }
 
-function App({ appConfig }: { appConfig: AppConfig }) {
+function App() {
+  const atx = useAppConfigContext();
   return (
     <Auth0Provider
-      audience={appConfig.AUTH0_AUDIENCE}
-      domain={appConfig.AUTH0_DOMAIN}
-      clientId={appConfig.AUTH0_CLIENT_ID}
+      audience={atx.AUTH0_AUDIENCE}
+      domain={atx.AUTH0_DOMAIN}
+      clientId={atx.AUTH0_CLIENT_ID}
       redirectUri={window.location.origin + `/login`}
       cacheLocation={'localstorage'}
     >

@@ -2,5 +2,6 @@
   "AUTH0_AUDIENCE": "https://dev.4ks.io/api",
   "AUTH0_DOMAIN": "4ks-dev.us.auth0.com",
   "AUTH0_CLIENT_ID": "eM5Zyyfp6coLg3zORMFsZEnQmpqxBjHd",
-  "VERSION": "0.0.0"
+  "VERSION": "0.0.0",
+  "MEDIA_FALLBACK_URL": "https://storage.googleapis.com/static.dev.4ks.io/fallback"
 }

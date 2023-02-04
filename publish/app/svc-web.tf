@@ -17,6 +17,10 @@ resource "google_cloud_run_service" "web" {
           container_port = 5000
         }
         env {
+          name  = "VITE_MEDIA_FALLBACK_URL"
+          value = "https://storage.googleapis.com/${replace(google_storage_bucket.media_static.url, "gs://", "")}/fallback"
+        }
+        env {
           name  = "VITE_AUTH0_CLIENT_ID"
           value = "eM5Zyyfp6coLg3zORMFsZEnQmpqxBjHd"
         }

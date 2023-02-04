@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { stackStyles, stackTokens, stackItemStyles } from './styles';
 import { Image, ImageFit } from '@fluentui/react/lib/Image';
 import { RecipeMediaSize } from '../../types';
+import { useAppConfigContext } from '../../providers';
 
 const PLACEHOLDER_TAGS = ['vegan', 'beef', 'poultry', 'meat'];
 
@@ -80,14 +81,12 @@ const nestedStyles = {
 };
 
 const RecipeTile = ({ recipe }: RecipeTileProps) => {
+  const atx = useAppConfigContext();
   const [imageSrc, setImageSrc] = useState<string>();
 
   function setRandomImage() {
-    const colors = ['green', 'orange', 'red', 'yellow'];
-    const random = Math.floor(Math.random() * colors.length);
-    setImageSrc(
-      `https://storage.googleapis.com/static.dev.4ks.io/fallback/${colors[random]}.jpg`
-    );
+    const random = Math.floor(Math.random() * 27);
+    setImageSrc(`${atx.MEDIA_FALLBACK_URL}/f${random}.jpg`);
   }
 
   useEffect(() => {

@@ -30,6 +30,8 @@ spec:
         - name: 4ks-web
           image: 4ks-web
           env:
+            - name: VITE_MEDIA_FALLBACK_URL
+              value: https://storage.googleapis.com/static.dev.4ks.io/fallback
             - name: VITE_AUTH0_AUDIENCE
               value: 'https://local.4ks.io/api'
             - name: VITE_CLIENT_PORT

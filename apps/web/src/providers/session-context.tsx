@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState, useReducer } from 'react';
+import React, { useEffect, useContext, useReducer } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import {
   ApiClient,
@@ -10,7 +10,7 @@ import ApiServiceFactory from '../services/api';
 import { ISessionContext, initialState } from './session-context-init';
 import {
   sessionContextReducer,
-  SesionContextAction,
+  SessionContextAction,
 } from './session-context-reducer';
 
 const SessionContext = React.createContext<ISessionContext>(initialState);
@@ -33,11 +33,11 @@ export function SessionContextProvider({
         })
         .then((u: models_User) => {
           dispatch({
-            type: SesionContextAction.SET_USER,
+            type: SessionContextAction.SET_USER,
             payload: u,
           });
           dispatch({
-            type: SesionContextAction.SET_ACTIONS,
+            type: SessionContextAction.SET_ACTIONS,
             payload: { updateUser: updateUser(a) },
           });
         });
@@ -50,7 +50,7 @@ export function SessionContextProvider({
         // try {
         const u = await a.users.patchUsers(id, data);
         dispatch({
-          type: SesionContextAction.SET_USER,
+          type: SessionContextAction.SET_USER,
           payload: u,
         });
         // } catch {
@@ -65,17 +65,17 @@ export function SessionContextProvider({
       .getUsersProfile()
       .then((u: models_User) => {
         dispatch({
-          type: SesionContextAction.SET_USER,
+          type: SessionContextAction.SET_USER,
           payload: u,
         });
         dispatch({
-          type: SesionContextAction.SET_ACTIONS,
+          type: SessionContextAction.SET_ACTIONS,
           payload: { updateUser: updateUser(a) },
         });
       })
       .catch(() => {
         dispatch({
-          type: SesionContextAction.SET_ACTIONS,
+          type: SessionContextAction.SET_ACTIONS,
           payload: { createUser: createUser(a) },
         });
       });
@@ -88,7 +88,7 @@ export function SessionContextProvider({
       getAccessTokenSilently().then(async (t) => {
         let a = ApiServiceFactory(t);
         dispatch({
-          type: SesionContextAction.SET_API,
+          type: SessionContextAction.SET_API,
           payload: a,
         });
         getUser(a);
@@ -97,7 +97,7 @@ export function SessionContextProvider({
       // anonymous user
       console.log('// anonymous user');
       dispatch({
-        type: SesionContextAction.SET_API,
+        type: SessionContextAction.SET_API,
         payload: ApiServiceFactory(undefined),
       });
     }

@@ -97,14 +97,14 @@ resource "google_cloudfunctions2_function" "media_upload" {
     all_traffic_on_latest_revision = true
     service_account_email          = google_service_account.media_upload.email
     environment_variables = {
-      DISTRIBUTION_BUCKET = replace(google_storage_bucket.media_read.url, "gs://", "")
+      DISTRIBUTION_BUCKET  = replace(google_storage_bucket.media_read.url, "gs://", "")
       FIRESTORE_PROJECT_ID = "${var.stage}-${local.org}"
     }
   }
 
   event_trigger {
-    trigger_region        = "us"
-    event_type            = "google.cloud.storage.object.v1.finalized"
+    trigger_region = "us"
+    event_type     = "google.cloud.storage.object.v1.finalized"
     # https://cloud.google.com/functions/docs/bestpractices/retries
     # retry_policy          = "RETRY_POLICY_RETRY"
     retry_policy          = "RETRY_POLICY_DO_NOT_RETRY"

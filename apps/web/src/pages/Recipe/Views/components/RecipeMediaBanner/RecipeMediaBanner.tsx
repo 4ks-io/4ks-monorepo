@@ -11,6 +11,7 @@ import { IconButton } from '@fluentui/react/lib/Button';
 import { Modal } from '@fluentui/react/lib/Modal';
 import { models_RecipeMediaVariant } from '@4ks/api-fetch';
 import { RecipeMediaSize } from '../../../../../types';
+import { useAppConfigContext } from '../../../../../providers';
 import {
   getTheme,
   mergeStyleSets,
@@ -19,6 +20,7 @@ import {
 } from '@fluentui/react';
 
 const RecipeMediaBanner = () => {
+  const atx = useAppConfigContext();
   const rtx = useRecipeContext();
   const [imageSrc, setImageSrc] = useState<string>();
   const [showBannerSelectModal, setShowBannerSelectModal] = useState(false);
@@ -28,11 +30,8 @@ const RecipeMediaBanner = () => {
     useState<models_RecipeMediaVariant[]>();
 
   function setRandomImage() {
-    const colors = ['green', 'orange', 'red', 'yellow'];
-    const random = Math.floor(Math.random() * colors.length);
-    setImageSrc(
-      `https://storage.googleapis.com/static.dev.4ks.io/fallback/${colors[random]}.jpg`
-    );
+    const random = Math.floor(Math.random() * 27);
+    setImageSrc(`${atx.MEDIA_FALLBACK_URL}/f${random}.jpg`);
   }
 
   function getBannerVariantUrl(

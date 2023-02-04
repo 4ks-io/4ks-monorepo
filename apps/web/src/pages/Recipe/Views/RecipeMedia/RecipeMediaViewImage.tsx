@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { models_RecipeMedia } from '@4ks/api-fetch';
 import { Image, ImageFit, ImageLoadState } from '@fluentui/react/lib/Image';
 import { RecipeMediaSize } from '../../../../types';
+import { useAppConfigContext } from '../../../../providers';
 
 interface RecipeMediaViewImageProps {
   media: models_RecipeMedia;
 }
 
 export function RecipeMediaViewImage({ media }: RecipeMediaViewImageProps) {
+  const atx = useAppConfigContext();
   const [imageSrc, setImageSrc] = useState<string>();
   const [filename, setFilename] = useState('unknown');
 
@@ -22,11 +24,8 @@ export function RecipeMediaViewImage({ media }: RecipeMediaViewImageProps) {
   }, []);
 
   function setRandomImage() {
-    const colors = ['green', 'orange', 'red', 'yellow'];
-    const random = Math.floor(Math.random() * colors.length);
-    setImageSrc(
-      `https://storage.googleapis.com/static.dev.4ks.io/fallback/${colors[random]}.jpg`
-    );
+    const random = Math.floor(Math.random() * 27);
+    setImageSrc(`${atx.MEDIA_FALLBACK_URL}/f${random}.jpg`);
   }
 
   function handleError(loadState: ImageLoadState) {
