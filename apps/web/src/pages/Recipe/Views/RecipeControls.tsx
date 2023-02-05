@@ -38,7 +38,7 @@ export function RecipeControls() {
   useEffect(() => {
     setIsRecipeContributor(
       (isAuthenticated &&
-        rtx?.recipe.contributors
+        rtx?.recipe?.contributors
           ?.map((c: models_UserSummary) => c.id)
           .includes(ctx.user?.id)) ||
         false

@@ -21,7 +21,8 @@ type SessionContextProviderProps = { children: React.ReactNode };
 export function SessionContextProvider({
   children,
 }: SessionContextProviderProps) {
-  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { user, isLoading, isAuthenticated, getAccessTokenSilently } =
+    useAuth0();
   const [state, dispatch] = useReducer(sessionContextReducer, initialState);
   const navigate = useNavigate();
   const p = localStorage.getItem('locationPathname') || '/';
@@ -81,26 +82,28 @@ export function SessionContextProvider({
   }
 
   useEffect(() => {
-    // authenticated user
-    if (user) {
-      console.log('// authenticated2');
-      getAccessTokenSilently().then(async (t) => {
-        let a = ApiServiceFactory(t);
-        await dispatch({
-          type: SessionContextAction.SET_API,
-          payload: a,
+    if (!isLoading) {
+      if (user) {
+        // authenticated user
+        // console.log('// authenticated2');
+        getAccessTokenSilently().then(async (t) => {
+          let a = ApiServiceFactory(t);
+          await dispatch({
+            type: SessionContextAction.SET_API,
+            payload: a,
+          });
+          getUser(a);
         });
-        getUser(a);
-      });
-    } else {
-      // anonymous user
-      console.log('// anonymous');
-      dispatch({
-        type: SessionContextAction.SET_API,
-        payload: ApiServiceFactory(undefined),
-      });
+      } else {
+        // anonymous user
+        // console.log('// anonymous');
+        dispatch({
+          type: SessionContextAction.SET_API,
+          payload: ApiServiceFactory(undefined),
+        });
+      }
     }
-  }, [user, isAuthenticated]);
+  }, [isLoading, user, isAuthenticated]);
 
   return (
     <SessionContext.Provider value={state}>{children}</SessionContext.Provider>

@@ -35,7 +35,8 @@ const RecipeTileSkel = ({ id }: RecipeTileSkelProps) => {
             </Stack.Item>
           </Stack>
         </Stack>
-        <Skeleton count={3} />
+        <Skeleton count={2} />
+        <Skeleton height={160} />
       </Stack.Item>
     </Stack>
   );

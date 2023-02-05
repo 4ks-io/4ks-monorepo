@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Image, ImageFit, ImageLoadState } from '@fluentui/react/lib/Image';
 import { Stack, IStackProps } from '@fluentui/react/lib/Stack';
 import {
@@ -29,8 +29,9 @@ const RecipeMediaBanner = () => {
   const [selectingMedia, setSelectingMedia] =
     useState<models_RecipeMediaVariant[]>();
 
+  const random = useMemo(() => Math.floor(Math.random() * 27), []);
+
   function setRandomImage() {
-    const random = Math.floor(Math.random() * 27);
     setImageSrc(`${atx.MEDIA_FALLBACK_URL}/f${random}.jpg`);
   }
 

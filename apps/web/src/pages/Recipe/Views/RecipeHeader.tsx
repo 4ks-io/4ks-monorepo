@@ -49,10 +49,14 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   }, [rtx?.recipeId]);
 
   useEffect(() => {
-    if (rtx?.recipe?.currentRevision?.name) {
+    if (rtx?.recipe?.currentRevision?.name != '') {
       setTitle(rtx?.recipe?.currentRevision?.name);
     }
-  }, [rtx?.recipe.currentRevision]);
+  }, [rtx?.recipe?.currentRevision]);
+
+  if (!rtx.recipe || rtx.recipe.id == '' || rtx.recipeId == '0') {
+    return <Skeleton height={256} />;
+  }
 
   function forkThisRecipe() {
     ctx.api?.recipes.postRecipesFork(`${rtx?.recipeId}`).then((r) => {
@@ -85,8 +89,8 @@ export function RecipeHeader(props: RecipeHeaderProps) {
     return c && c > 0 ? ' (' + c + ')' : '';
   }
 
-  const forksCountLabel = getCountLabel(rtx?.recipe.metadata?.forks);
-  const starsCountLabel = getCountLabel(rtx?.recipe.metadata?.stars);
+  const forksCountLabel = getCountLabel(rtx?.recipe?.metadata?.forks);
+  const starsCountLabel = getCountLabel(rtx?.recipe?.metadata?.stars);
 
   return (
     <Stack.Item align="stretch">
@@ -136,7 +140,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
           </Stack>
         ) : (
           <>
-            {title.length > 0 ? (
+            {title?.length > 0 ? (
               <Label
                 styles={{
                   root: {

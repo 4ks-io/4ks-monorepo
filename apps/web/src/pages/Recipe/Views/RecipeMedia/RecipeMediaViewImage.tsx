@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { models_RecipeMedia } from '@4ks/api-fetch';
 import { Image, ImageFit, ImageLoadState } from '@fluentui/react/lib/Image';
 import { RecipeMediaSize } from '../../../../types';
@@ -23,8 +23,9 @@ export function RecipeMediaViewImage({ media }: RecipeMediaViewImageProps) {
     }
   }, []);
 
+  const random = useMemo(() => Math.floor(Math.random() * 27), []);
+
   function setRandomImage() {
-    const random = Math.floor(Math.random() * 27);
     setImageSrc(`${atx.MEDIA_FALLBACK_URL}/f${random}.jpg`);
   }
 

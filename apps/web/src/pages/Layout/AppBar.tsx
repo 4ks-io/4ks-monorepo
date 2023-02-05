@@ -43,15 +43,13 @@ const AppBar = () => {
       setShowLogo(false);
       setShowSearchInput(false);
       setShowRecipesLink(true);
-    } else if (location.pathname == '/r') {
+    } else if (['/new', '/login', '/logout'].includes(location.pathname)) {
       setShowLogo(true);
-      setShowSearchInput(true);
-    }
-    if (['/new', '/login', '/logout'].includes(location.pathname)) {
       setIsTransition(true);
       setShowRecipesLink(false);
       setShowSearchInput(false);
     } else {
+      setShowLogo(true);
       setIsTransition(false);
       setShowRecipesLink(true);
       setShowSearchInput(true);

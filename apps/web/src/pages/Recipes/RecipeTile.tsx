@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { models_Recipe, models_RecipeMediaVariant } from '@4ks/api-fetch';
 import { Text } from '@fluentui/react';
@@ -84,8 +84,9 @@ const RecipeTile = ({ recipe }: RecipeTileProps) => {
   const atx = useAppConfigContext();
   const [imageSrc, setImageSrc] = useState<string>();
 
+  const random = useMemo(() => Math.floor(Math.random() * 27), []);
+
   function setRandomImage() {
-    const random = Math.floor(Math.random() * 27);
     setImageSrc(`${atx.MEDIA_FALLBACK_URL}/f${random}.jpg`);
   }
 

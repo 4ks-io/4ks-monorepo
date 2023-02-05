@@ -64,23 +64,26 @@ export function RecipeContextProvider({
   }
 
   async function setRecipe() {
-    const recipe = await ctx?.api?.recipes.getRecipes1(state.recipeId);
-    dispatch({ type: RecipeContextAction.SET_CONTENT, payload: recipe });
+    const recipe: models_Recipe = await ctx?.api?.recipes.getRecipes1(
+      state.recipeId
+    );
+    await dispatch({ type: RecipeContextAction.SET_CONTENT, payload: recipe });
   }
 
   async function setMedia() {
-    if (state.recipe.root) {
+    if (ctx?.api && state?.recipe?.root) {
       const media = await ctx.api?.recipes.getRecipesMedia(state.recipe.root);
       dispatch({ type: RecipeContextAction.SET_MEDIA, payload: media });
     }
   }
 
   useEffect(() => {
-    recipeId != NO_RECIPE_ID &&
+    if (recipeId != NO_RECIPE_ID) {
       dispatch({
         type: RecipeContextAction.SET_ID,
         payload: recipeId,
       });
+    }
   }, [recipeId]);
 
   useEffect(() => {
@@ -92,16 +95,16 @@ export function RecipeContextProvider({
         setRecipe();
       }
     }
-  }, [state.recipeId]);
+  }, [ctx?.api, state.recipeId]);
 
   useEffect(() => {
-    if (state.recipe.root) {
+    if (state?.recipe?.id != NO_RECIPE_ID && state?.recipe?.root != '') {
       setMedia();
     }
-  }, [state.recipe.root]);
+  }, [state?.recipe?.root]);
 
   useEffect(() => {
-    if (isAuthenticated && state.recipe.id != NO_RECIPE_ID) {
+    if (isAuthenticated && state?.recipe?.id != NO_RECIPE_ID) {
       dispatch({
         type: RecipeContextAction.SET_CONTROLS,
         payload: {
@@ -115,7 +118,7 @@ export function RecipeContextProvider({
         },
       });
     } else {
-      if (state.recipe.id != NO_RECIPE_ID) {
+      if (state?.recipe?.id != NO_RECIPE_ID) {
         dispatch({
           type: RecipeContextAction.SET_CONTROLS,
           payload: {
@@ -130,7 +133,7 @@ export function RecipeContextProvider({
         });
       }
     }
-  }, [state.recipe.id]);
+  }, [state?.recipe?.id]);
 
   return (
     <RecipeContext.Provider value={state}>{children}</RecipeContext.Provider>
