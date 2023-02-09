@@ -2,7 +2,6 @@ package controllers
 
 import (
 	recipeService "4ks/apps/api/services/recipe"
-	userService "4ks/apps/api/services/user"
 
 	"net/http"
 
@@ -33,14 +32,6 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 
 	userId := c.Request.Context().Value(utils.UserId{}).(string)
 	author, err := rc.userService.GetUserById(&userId)
-
-	if err == userService.ErrUserNotFound {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
-	}
 
 	payload.Author = models.UserSummary{
 		Id:          userId,
@@ -158,14 +149,6 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 
 	userId := c.Request.Context().Value(utils.UserId{}).(string)
 	author, err := rc.userService.GetUserById(&userId)
-
-	if err == userService.ErrUserNotFound {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
-	}
 
 	payload.Author = models.UserSummary{
 		Id:          userId,

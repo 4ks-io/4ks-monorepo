@@ -10,5 +10,6 @@ export type dtos_CreateRecipe = {
     banner?: Array<models_RecipeMediaVariant>;
     ingredients?: Array<models_Ingredient>;
     instructions?: Array<models_Instruction>;
+    link?: string;
     name?: string;
 };

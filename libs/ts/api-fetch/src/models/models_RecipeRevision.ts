@@ -14,6 +14,7 @@ export type models_RecipeRevision = {
     id?: string;
     ingredients?: Array<models_Ingredient>;
     instructions?: Array<models_Instruction>;
+    link?: string;
     name?: string;
     recipeId?: string;
     updatedDate?: string;

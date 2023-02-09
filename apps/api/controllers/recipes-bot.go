@@ -1,0 +1,48 @@
+package controllers
+
+import (
+	recipeService "4ks/apps/api/services/recipe"
+
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+
+	"4ks/apps/api/dtos"
+	models "4ks/libs/go/models"
+)
+
+// BotCreateRecipe godoc
+// @Schemes
+// @Summary 		Bot Create a new Recipe
+// @Description Bot Create a new Recipe
+// @Tags 				Recipes
+// @Accept 			json
+// @Produce 		json
+// @Param       recipe   body  	   	dtos.CreateRecipe  true  "Recipe Data"
+// @Success 		200 		 {object}		models.Recipe
+// @Router		 	/bot/recipes [post]
+// @Security 		ApiKeyAuth
+func (rc *recipeController) BotCreateRecipe(c *gin.Context) {
+	payload := dtos.CreateRecipe{}
+	if err := c.BindJSON(&payload); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	payload.Author = models.UserSummary{
+		Id:          "bot",
+		Username:    "4ks-bot",
+		DisplayName: "4ks bot",
+	}
+
+	createdRecipe, err := rc.recipeService.CreateRecipe(&payload)
+	if err == recipeService.ErrUnableToCreateRecipe {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, createdRecipe)
+}

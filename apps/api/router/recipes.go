@@ -4,10 +4,16 @@ import (
 	"github.com/gin-gonic/gin"
 
 	controllers "4ks/apps/api/controllers"
+	"4ks/apps/api/middleware"
 )
 
 func RecipesRouterAuth(router *gin.Engine) {
 	rc := controllers.NewRecipeController()
+
+	bot := router.Group("/bot")
+	{
+		bot.POST("/recipes", middleware.Authorize("/bot/*", "write"), rc.BotCreateRecipe)
+	}
 
 	recipes := router.Group("/recipes")
 	{
@@ -17,7 +23,6 @@ func RecipesRouterAuth(router *gin.Engine) {
 		recipes.POST(":id/fork", rc.ForkRecipe)
 		// create recipeMedia in init status + return signedUrl
 		recipes.POST(":id/media", rc.CreateRecipeMedia)
-		// recipes.PUT("/media/:mediaId", rc.UpdateRecipeMedia)
 		recipes.DELETE(":id", rc.DeleteRecipe)
 	}
 }

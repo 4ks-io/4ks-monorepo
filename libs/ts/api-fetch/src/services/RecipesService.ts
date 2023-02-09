@@ -17,6 +17,23 @@ export class RecipesService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
+     * Bot Create a new Recipe
+     * Bot Create a new Recipe
+     * @param recipe Recipe Data
+     * @returns models_Recipe OK
+     * @throws ApiError
+     */
+    public postBotRecipes(
+        recipe: dtos_CreateRecipe,
+    ): CancelablePromise<models_Recipe> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/bot/recipes',
+            body: recipe,
+        });
+    }
+
+    /**
      * Get All Recipes
      * Get All Recipes
      * @returns models_Recipe OK

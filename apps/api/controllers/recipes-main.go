@@ -8,6 +8,7 @@ import (
 )
 
 type RecipeController interface {
+	BotCreateRecipe(c *gin.Context)
 	CreateRecipe(c *gin.Context)
 	DeleteRecipe(c *gin.Context)
 	GetRecipe(c *gin.Context)

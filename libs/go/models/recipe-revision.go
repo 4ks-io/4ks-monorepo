@@ -24,6 +24,7 @@ type Ingredient struct {
 type RecipeRevision struct {
 	Id           string               `firestore:"id" json:"id"`
 	Name         string               `firestore:"name" json:"name"`
+	Link         string               `firestore:"link" json:"link"`
 	RecipeId     string               `firestore:"recipeId" json:"recipeId"`
 	Author       UserSummary          `firestore:"author" json:"author"`
 	Instructions []Instruction        `firestore:"instructions" json:"instructions"`

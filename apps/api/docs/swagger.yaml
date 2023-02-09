@@ -14,6 +14,8 @@ definitions:
         items:
           $ref: '#/definitions/models.Instruction'
         type: array
+      link:
+        type: string
       name:
         type: string
     type: object
@@ -55,6 +57,8 @@ definitions:
         items:
           $ref: '#/definitions/models.Instruction'
         type: array
+      link:
+        type: string
       name:
         type: string
     type: object
@@ -180,6 +184,8 @@ definitions:
         items:
           $ref: '#/definitions/models.Instruction'
         type: array
+      link:
+        type: string
       name:
         type: string
       recipeId:
@@ -253,6 +259,30 @@ paths:
       summary: Test JWT Auth
       tags:
       - API
+  /bot/recipes:
+    post:
+      consumes:
+      - application/json
+      description: Bot Create a new Recipe
+      parameters:
+      - description: Recipe Data
+        in: body
+        name: recipe
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateRecipe'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Recipe'
+      security:
+      - ApiKeyAuth: []
+      summary: Bot Create a new Recipe
+      tags:
+      - Recipes
   /recipes:
     get:
       consumes:

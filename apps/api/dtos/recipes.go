@@ -4,7 +4,8 @@ import "4ks/libs/go/models"
 
 type CreateRecipe struct {
 	Name         string                      `json:"name"`
-	Author       models.UserSummary          `json:"-"` // We populate the author using the request context and hence dont want this sent in the api
+	Link         string                      `json:"link"`
+	Author       models.UserSummary          `json:"-"` // Author is auto-populated using the request context
 	Instructions []models.Instruction        `json:"instructions"`
 	Ingredients  []models.Ingredient         `json:"ingredients"`
 	Banner       []models.RecipeMediaVariant `json:"banner"`
@@ -12,7 +13,8 @@ type CreateRecipe struct {
 
 type UpdateRecipe struct {
 	Name         string                      `json:"name"`
-	Author       models.UserSummary          `json:"-"` // We populate the author using the request context and hence dont want this sent in the api
+	Link         string                      `json:"link"`
+	Author       models.UserSummary          `json:"-"` // Author is auto-populated using the request context
 	Instructions []models.Instruction        `json:"instructions"`
 	Ingredients  []models.Ingredient         `json:"ingredients"`
 	Banner       []models.RecipeMediaVariant `json:"banner"`

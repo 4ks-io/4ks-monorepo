@@ -44,6 +44,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/bot/recipes": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Bot Create a new Recipe",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "Bot Create a new Recipe",
+                "parameters": [
+                    {
+                        "description": "Recipe Data",
+                        "name": "recipe",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.CreateRecipe"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Recipe"
+                        }
+                    }
+                }
+            }
+        },
         "/recipes": {
             "get": {
                 "security": [
@@ -776,6 +815,9 @@ const docTemplate = `{
                         "$ref": "#/definitions/models.Instruction"
                     }
                 },
+                "link": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 }
@@ -838,6 +880,9 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.Instruction"
                     }
+                },
+                "link": {
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
@@ -1030,6 +1075,9 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.Instruction"
                     }
+                },
+                "link": {
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
