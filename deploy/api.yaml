@@ -41,7 +41,7 @@ spec:
             - name: FIRESTORE_EMULATOR_HOST
               value: firestore:8200
             - name: FIRESTORE_PROJECT_ID
-              value: dev-4ks
+              value: local-4ks
             - name: AUTH0_DOMAIN
               value: 4ks-dev.us.auth0.com
             - name: AUTH0_AUDIENCE

@@ -11,13 +11,11 @@ const Profile = () => {
   async function fetchUserRecipes() {
     if (userName && ctx.api?.recipes) {
       const r = await ctx.api.recipes.getRecipesAuthor(userName);
-      console.log(r);
       setRecipes(r);
     }
   }
 
   useEffect(() => {
-    console.log(ctx.api);
     fetchUserRecipes();
   }, [ctx.api, userName]);
 

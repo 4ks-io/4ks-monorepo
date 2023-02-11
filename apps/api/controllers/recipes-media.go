@@ -85,7 +85,7 @@ func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 	})
 }
 
-// GetRecipeMedias godoc
+// GetRecipeMedia godoc
 // @Summary 		Get all medias for a Recipe
 // @Description Get all medias for a Recipe
 // @Tags 				Recipes
@@ -95,9 +95,9 @@ func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 // @Success 		200 		  {array} 	  models.RecipeMedia
 // @Router 			/recipes/{recipeId}/media [get]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) GetRecipeMedias(c *gin.Context) {
+func (rc *recipeController) GetRecipeMedia(c *gin.Context) {
 	recipeId := c.Param("id")
-	recipeMedias, err := rc.recipeService.GetRecipeMedias(&recipeId)
+	recipeMedias, err := rc.recipeService.GetRecipeMedia(&recipeId)
 
 	if err == recipeService.ErrRecipeNotFound {
 		c.AbortWithError(http.StatusNotFound, err)
@@ -123,7 +123,7 @@ func (rc *recipeController) GetRecipeMedias(c *gin.Context) {
 // @Security 		ApiKeyAuth
 func (rc *recipeController) GetAdminRecipeMedias(c *gin.Context) {
 	recipeId := c.Param("id")
-	recipeMedias, err := rc.recipeService.GetRecipeMedias(&recipeId)
+	recipeMedias, err := rc.recipeService.GetRecipeMedia(&recipeId)
 
 	if err == recipeService.ErrRecipeNotFound {
 		c.AbortWithError(http.StatusNotFound, err)

@@ -57,7 +57,7 @@ type RecipeService interface {
 	GetRecipeRevisionById(revisionId *string) (*models.RecipeRevision, error)
 	CreateRecipeMedia(mp *utils.MediaProps, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error)
 	CreateRecipeMediaSignedUrl(mp *utils.MediaProps, wg *sync.WaitGroup) (*string, error)
-	GetRecipeMedias(recipeId *string) ([]*models.RecipeMedia, error)
+	GetRecipeMedia(recipeId *string) ([]*models.RecipeMedia, error)
 	GetAdminRecipeMedias(recipeId *string) ([]*models.RecipeMedia, error)
 }
 

@@ -72,6 +72,8 @@ func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeId *string
 		UpdatedDate:  timestamp,
 	}
 
+	fmt.Println(recipeMedia)
+
 	_, err = recipeMediasCollection.Doc(mp.Basename).Create(ctx, recipeMedia)
 	if err != nil {
 		return nil, err
@@ -106,11 +108,12 @@ func (rs recipeService) CreateRecipeMediaSignedUrl(mp *utils.MediaProps, wg *syn
 	return &url, nil
 }
 
-func (rs recipeService) GetRecipeMedias(recipeId *string) ([]*models.RecipeMedia, error) {
-	status := [][]models.MediaStatus{{models.MediaStatusReady}}
+func (rs recipeService) GetRecipeMedia(recipeId *string) ([]*models.RecipeMedia, error) {
+	var status [2]int
+	status[0] = int(models.MediaStatusReady)
 	// workaround to see images locally; upload-media status update callback only works in hosted firestore
 	if (firstoreProjectId == "local-4ks") {
-		status = append(status, []models.MediaStatus{models.MediaStatusRequested})
+		status[1] = int(models.MediaStatusRequested)
 	}
 	recipeMediasDocs, err := recipeMediasCollection.Where("rootRecipeId", "==", recipeId).Where("status", "in", status).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
 

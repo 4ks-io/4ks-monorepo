@@ -20,7 +20,7 @@ type RecipeController interface {
 	GetRecipeRevisions(c *gin.Context)
 	GetRecipeRevision(c *gin.Context)
 	CreateRecipeMedia(c *gin.Context)
-	GetRecipeMedias(c *gin.Context)
+	GetRecipeMedia(c *gin.Context)
 	GetAdminRecipeMedias(c *gin.Context)
 }
 
