@@ -40,7 +40,7 @@ function RecipeTags(recipe: models_Recipe) {
 function RecipeContributors(recipe: models_Recipe) {
   return (
     <Stack horizontal tokens={{ childrenGap: 4 }}>
-      <Stack.Item style={{ color: '#FFF' }}>Chefs:</Stack.Item>
+      <Stack.Item style={{ paddingLeft: 4, color: '#FFF' }}>Chefs:</Stack.Item>
       {recipe.contributors?.map((contributor, idx) => (
         <Stack.Item
           style={{ fontWeight: 'bold', color: '#FFF' }}

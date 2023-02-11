@@ -1,10 +1,41 @@
-import React from 'react';
+import { models_Recipe } from '@4ks/api-fetch';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSessionContext } from '../../providers';
 
 const Profile = () => {
+  const ctx = useSessionContext();
   let { userName } = useParams();
+  const [recipes, setRecipes] = useState<models_Recipe[]>();
 
-  return <h2>Profile for {userName}</h2>;
+  async function fetchUserRecipes() {
+    if (userName && ctx.api?.recipes) {
+      const r = await ctx.api.recipes.getRecipesAuthor(userName);
+      console.log(r);
+      setRecipes(r);
+    }
+  }
+
+  useEffect(() => {
+    console.log(ctx.api);
+    fetchUserRecipes();
+  }, [ctx.api, userName]);
+
+  return (
+    <>
+      <h2>@{userName}</h2>
+      <h3>Recipes</h3>
+      <ul>
+        {recipes?.map((r) => {
+          return (
+            <li key={r.id}>
+              <a href={`r/${r.id}`}>{r.currentRevision?.name}</a>
+            </li>
+          );
+        })}
+      </ul>
+    </>
+  );
 };
 
 export default Profile;

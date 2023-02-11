@@ -15,12 +15,12 @@ import (
 // @Schemes
 // @Summary 		Bot Create a new Recipe
 // @Description Bot Create a new Recipe
-// @Tags 				Recipes
+// @Tags 				Admin
 // @Accept 			json
 // @Produce 		json
 // @Param       recipe   body  	   	dtos.CreateRecipe  true  "Recipe Data"
 // @Success 		200 		 {object}		models.Recipe
-// @Router		 	/bot/recipes [post]
+// @Router		 	/_admin/recipes [post]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) BotCreateRecipe(c *gin.Context) {
 	payload := dtos.CreateRecipe{}

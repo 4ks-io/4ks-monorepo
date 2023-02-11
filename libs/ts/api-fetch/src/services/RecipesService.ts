@@ -17,23 +17,6 @@ export class RecipesService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
-     * Bot Create a new Recipe
-     * Bot Create a new Recipe
-     * @param recipe Recipe Data
-     * @returns models_Recipe OK
-     * @throws ApiError
-     */
-    public postBotRecipes(
-        recipe: dtos_CreateRecipe,
-    ): CancelablePromise<models_Recipe> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/bot/recipes',
-            body: recipe,
-        });
-    }
-
-    /**
      * Get All Recipes
      * Get All Recipes
      * @returns models_Recipe OK
@@ -60,6 +43,25 @@ export class RecipesService {
             method: 'POST',
             url: '/recipes',
             body: recipe,
+        });
+    }
+
+    /**
+     * Get All Recipes by Author
+     * Get All Recipes by Author
+     * @param username Username
+     * @returns models_Recipe OK
+     * @throws ApiError
+     */
+    public getRecipesAuthor(
+        username: string,
+    ): CancelablePromise<Array<models_Recipe>> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/recipes/author/{username}',
+            path: {
+                'username': username,
+            },
         });
     }
 

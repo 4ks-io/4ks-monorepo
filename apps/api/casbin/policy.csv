@@ -1,12 +1,11 @@
 p, 1, admin_group, /users/*, list, allow
 p, 1, admin_group, /users/*, delete, allow
-
-p, 5, bot_group, /bot/*, write, allow
+p, 1, admin_group, /recipes/*, list, allow
+p, 1, admin_group, /recipes/*, create, allow
 
 p, 10, resource_users_group, /users/*, read, allow
 p, 10, resource_users_group, /users/*, write, allow
 
 g, aa0afb0ac37b1c1e2e8da0fb79b9a7ddfd0fde9075e9db0b478daa42eca500ea, resource_users_group
 g, aa0afb0ac37b1c1e2e8da0fb79b9a7ddfd0fde9075e9db0b478daa42eca500ea, admin_group
-g, aa0afb0ac37b1c1e2e8da0fb79b9a7ddfd0fde9075e9db0b478daa42eca500ea, bot_group
 

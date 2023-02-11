@@ -242,24 +242,7 @@ info:
   title: 4ks API
   version: "1.0"
 paths:
-  /auth-test:
-    get:
-      consumes:
-      - application/json
-      description: Test JWT Auth
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Test JWT Auth
-      tags:
-      - API
-  /bot/recipes:
+  /_admin/recipes:
     post:
       consumes:
       - application/json
@@ -282,7 +265,49 @@ paths:
       - ApiKeyAuth: []
       summary: Bot Create a new Recipe
       tags:
-      - Recipes
+      - Admin
+  /_admin/recipes/{recipeId}/media:
+    get:
+      consumes:
+      - application/json
+      description: Get all medias for a Recipe
+      parameters:
+      - description: Recipe Id
+        in: path
+        name: recipeId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.RecipeMedia'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get all medias for a Recipe
+      tags:
+      - Admin
+  /auth-test:
+    get:
+      consumes:
+      - application/json
+      description: Test JWT Auth
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Test JWT Auth
+      tags:
+      - API
   /recipes:
     get:
       consumes:
@@ -516,6 +541,31 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Star Recipe
+      tags:
+      - Recipes
+  /recipes/author/{username}:
+    get:
+      consumes:
+      - application/json
+      description: Get All Recipes by Author
+      parameters:
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Recipe'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Recipes by Author
       tags:
       - Recipes
   /recipes/revisions/{revisionId}:

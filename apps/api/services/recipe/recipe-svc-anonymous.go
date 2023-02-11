@@ -25,9 +25,40 @@ func (rs recipeService) GetRecipeById(id *string) (*models.Recipe, error) {
 	return recipe, nil
 }
 
-func (rs recipeService) GetAllRecipes() ([]*models.Recipe, error) {
+func (rs recipeService) GetRecipes(limit int) ([]*models.Recipe, error) {
 	var all []*models.Recipe
-	iter := recipeCollection.Documents(ctx)
+	iter := recipeCollection.Limit(limit).Documents(ctx)
+	defer iter.Stop()
+
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			// Handle error, possibly by returning the error
+			// to the caller. Break the loop or return.
+			return nil, err
+		}
+		var u models.Recipe
+		if err := doc.DataTo(&u); err != nil {
+			// Handle error, possibly by returning the error
+			// to the caller. Continue the loop,
+			// break the loop or return.
+			return nil, err
+		}
+		// fmt.Println(u.Id)
+		all = append(all, &u)
+	}
+
+	return all, nil
+}
+
+
+func (rs recipeService) GetRecipesByUsername(username *string, limit int) ([]*models.Recipe, error) {
+	var all []*models.Recipe
+	iter := recipeCollection.Where("author.username", "==", &username).Limit(limit).Documents(ctx)
+	
 	defer iter.Stop()
 
 	for {

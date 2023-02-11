@@ -28,6 +28,7 @@ export type { models_UserExist } from './models/models_UserExist';
 export type { models_Username } from './models/models_Username';
 export type { models_UserSummary } from './models/models_UserSummary';
 
+export { AdminService } from './services/AdminService';
 export { ApiService } from './services/ApiService';
 export { RecipesService } from './services/RecipesService';
 export { UsersService } from './services/UsersService';

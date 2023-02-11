@@ -13,6 +13,7 @@ type RecipeController interface {
 	DeleteRecipe(c *gin.Context)
 	GetRecipe(c *gin.Context)
 	GetRecipes(c *gin.Context)
+	GetRecipesByUsername(c *gin.Context)
 	UpdateRecipe(c *gin.Context)
 	ForkRecipe(c *gin.Context)
 	StarRecipe(c *gin.Context)
@@ -20,6 +21,7 @@ type RecipeController interface {
 	GetRecipeRevision(c *gin.Context)
 	CreateRecipeMedia(c *gin.Context)
 	GetRecipeMedias(c *gin.Context)
+	GetAdminRecipeMedias(c *gin.Context)
 }
 
 type recipeController struct {

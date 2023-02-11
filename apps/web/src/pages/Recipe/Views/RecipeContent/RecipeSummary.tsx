@@ -17,19 +17,21 @@ const RecipeTags = () => {
   const wrapStackTokens: IStackTokens = { childrenGap: 30 };
 
   return (
-    <Stack horizontal wrap styles={stackStyles} tokens={wrapStackTokens}>
-      <Label>#vegan</Label>
-      <Label>#beef</Label>
-      <Label>#poutry</Label>
-      <Label>#meat</Label>
-      <Label>
-        <Icon
-          iconName="Add"
-          onClick={() => {
-            console.log('add some tag');
-          }}
-        />
-      </Label>
+    <Stack horizontal wrap tokens={wrapStackTokens}>
+      <div style={{ paddingLeft: 4 }}>
+        <Label>#vegan</Label>
+        <Label>#beef</Label>
+        <Label>#poutry</Label>
+        <Label>#meat</Label>
+        <Label>
+          <Icon
+            iconName="Add"
+            onClick={() => {
+              console.log('add some tag');
+            }}
+          />
+        </Label>
+      </div>
     </Stack>
   );
 };

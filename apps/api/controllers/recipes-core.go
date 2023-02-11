@@ -103,6 +103,36 @@ func (rc *recipeController) GetRecipe(c *gin.Context) {
 	c.JSON(http.StatusOK, recipe)
 }
 
+
+// GetRecipesByUsername		godoc
+// @Schemes
+// @Summary 	  Get All Recipes by Author
+// @Description Get All Recipes by Author
+// @Tags 		    Recipes
+// @Accept 	   	json
+// @Produce   	json
+// @Param       username 			path      string             true  "Username"
+// @Success 		200 			{array} 		models.Recipe
+// @Router 			/recipes/author/{username}   [get]
+// @Security 		ApiKeyAuth
+func (rc *recipeController) GetRecipesByUsername(c *gin.Context) {
+	username := c.Param("username")
+
+	// hardcode limit for now
+	limit := 20
+	recipes, err := rc.recipeService.GetRecipesByUsername(&username, limit)
+
+	if err == recipeService.ErrRecipeNotFound {
+		c.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, recipes)
+}
+
 // GetRecipes		godoc
 // @Schemes
 // @Summary 	  Get All Recipes
@@ -114,7 +144,9 @@ func (rc *recipeController) GetRecipe(c *gin.Context) {
 // @Router 			/recipes 	[get]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) GetRecipes(c *gin.Context) {
-	recipes, err := rc.recipeService.GetAllRecipes()
+	// hardcode limit for now
+	limit := 20
+	recipes, err := rc.recipeService.GetRecipes(limit)
 
 	if err == recipeService.ErrRecipeNotFound {
 		c.AbortWithError(http.StatusNotFound, err)

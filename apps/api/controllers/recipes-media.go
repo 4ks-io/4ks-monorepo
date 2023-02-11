@@ -109,3 +109,29 @@ func (rc *recipeController) GetRecipeMedias(c *gin.Context) {
 
 	c.JSON(http.StatusOK, recipeMedias)
 }
+
+
+// GetAdminRecipeMedias godoc
+// @Summary 		Get all medias for a Recipe
+// @Description Get all medias for a Recipe
+// @Tags 				Admin
+// @Accept 			json
+// @Produce 		json
+// @Param       recipeId 	path      	string  true  "Recipe Id"
+// @Success 		200 		  {array} 	  models.RecipeMedia
+// @Router 			/_admin/recipes/{recipeId}/media [get]
+// @Security 		ApiKeyAuth
+func (rc *recipeController) GetAdminRecipeMedias(c *gin.Context) {
+	recipeId := c.Param("id")
+	recipeMedias, err := rc.recipeService.GetRecipeMedias(&recipeId)
+
+	if err == recipeService.ErrRecipeNotFound {
+		c.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, recipeMedias)
+}

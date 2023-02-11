@@ -16,26 +16,38 @@ import (
 	"time"
 )
 
-var url = "https://local.4ks.io/api/bot/recipes"
+var tokenVarName = "IO_4KS_API_TOKEN"
+var hostVarName = "IO_4KS_API_HOSTNAME"
+
+
 var index = 0
 
-func parseArgs() (string, string) {
-	var filename string
-	flag.StringVar(&filename, "f", "", "input filename")
+func parseArgs() (string, string, string) {
+	var f string
+	flag.StringVar(&f, "f", "", "input filename")
 	flag.Parse()
-	if filename == "" {
+	if f == "" {
 		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("No input filename provided. Use flag -f"))
 		os.Exit(1)
 	}
 
-	tokenVar := "IO_4KS_API_TOKEN"
-	token := os.Getenv(tokenVar)
-	if token == "" {
-		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("Bearer API Token must be proided. Set env var %s", tokenVar))
+	t := os.Getenv(tokenVarName)
+	h := os.Getenv(hostVarName)
+	
+
+	if h == "" {
+		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("API hostname must be provided. Set env var %s", hostVarName))
 		os.Exit(1)
 	}
 
-	return filename, token
+	u := "https://"+h+"/api/_admin/recipes"
+
+	if t == "" {
+		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("Bearer API Token must be provided. Set env var %s", tokenVarName))
+		os.Exit(1)
+	}
+
+	return f, t, u
 }
 
 func check(e error) {
@@ -120,12 +132,12 @@ func getRecipeFromLine(line string) dtos.CreateRecipe {
 	return r
 }
 
-func postRecipe(t string, r dtos.CreateRecipe) {
+func postRecipe(u string, t string, r dtos.CreateRecipe) {
 	fmt.Println(index, " => ", r.Name)
 	index += 1
 	data, err := json.Marshal(r)
 	
-	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
+	req, err := http.NewRequest(http.MethodPost, u, bytes.NewBuffer(data))
 
 	if err != nil {
 		fmt.Printf("client: could not create request: %s\n", err)
@@ -147,7 +159,7 @@ func postRecipe(t string, r dtos.CreateRecipe) {
 }
 
 func main() {
-	filename, token := parseArgs()
+	filename, t, u := parseArgs()
 	fmt.Println("Uploading:", filename)
 
 	file, err := os.Open(filename)
@@ -167,7 +179,7 @@ func main() {
 		}
 
 		r := getRecipeFromLine(scanner.Text())
-		postRecipe(token, r)
+		postRecipe(u, t, r)
 
 	}
 

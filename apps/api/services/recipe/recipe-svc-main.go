@@ -3,6 +3,7 @@ package recipe
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"sync"
@@ -22,6 +23,13 @@ var recipeMediasCollection = s.Collection("recipe-medias")
 var recipeRevisionsCollection = s.Collection("recipe-revisions")
 var recipeStarsCollection = s.Collection("recipe-stars")
 
+var distributionBucket = os.Getenv("DISTRIBUTION_BUCKET")
+var uploadableBucket = os.Getenv("UPLOADABLE_BUCKET")
+var serviceAccountName = os.Getenv("SERVICE_ACCOUNT_EMAIL")
+
+var cgpStorageUrl = "https://storage.cloud.google.com"
+var baseReadUrl = fmt.Sprintf("%s/%s", cgpStorageUrl, distributionBucket)
+
 var (
 	ErrUnauthorized              = errors.New("unauthorized user")
 	ErrUnableToUpdateRecipe      = errors.New("error updating recipe")
@@ -39,7 +47,8 @@ const expirationMinutes = 2
 type RecipeService interface {
 	GetRecipeById(id *string) (*models.Recipe, error)
 	DeleteRecipe(id *string) error
-	GetAllRecipes() ([]*models.Recipe, error)
+	GetRecipes(limit int) ([]*models.Recipe, error)
+	GetRecipesByUsername(username *string, limit int) ([]*models.Recipe, error)
 	CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe, error)
 	UpdateRecipeById(id *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error)
 	ForkRecipeById(id *string, forkAuthor models.UserSummary) (*models.Recipe, error)
@@ -49,6 +58,7 @@ type RecipeService interface {
 	CreateRecipeMedia(mp *utils.MediaProps, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error)
 	CreateRecipeMediaSignedUrl(mp *utils.MediaProps, wg *sync.WaitGroup) (*string, error)
 	GetRecipeMedias(recipeId *string) ([]*models.RecipeMedia, error)
+	GetAdminRecipeMedias(recipeId *string) ([]*models.RecipeMedia, error)
 }
 
 type recipeService struct {

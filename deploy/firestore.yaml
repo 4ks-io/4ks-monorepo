@@ -31,7 +31,7 @@ spec:
           image: mtlynch/firestore-emulator
           env:
             - name: FIRESTORE_PROJECT_ID
-              value: '4ks-dev'
+              value: 'dev-4ks'
             - name: PORT
               value: '8200'
           ports:

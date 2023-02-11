@@ -10,33 +10,34 @@ import (
 func RecipesRouterAuth(router *gin.Engine) {
 	rc := controllers.NewRecipeController()
 
-	bot := router.Group("/bot")
+	a := router.Group("/_admin")
 	{
-		bot.POST("/recipes", middleware.Authorize("/bot/*", "write"), rc.BotCreateRecipe)
+		a.POST("recipes", middleware.Authorize("/recipes/*", "create"), rc.BotCreateRecipe)
+		a.GET("recipes/media", middleware.Authorize("/recipes/*", "list"),rc.GetAdminRecipeMedias)
 	}
 
-	recipes := router.Group("/recipes")
+	r := router.Group("/recipes")
 	{
-		recipes.POST("", rc.CreateRecipe)
-		recipes.PATCH(":id", rc.UpdateRecipe)
-		recipes.POST(":id/star", rc.StarRecipe)
-		recipes.POST(":id/fork", rc.ForkRecipe)
+		r.POST("", rc.CreateRecipe)
+		r.PATCH(":id", rc.UpdateRecipe)
+		r.POST(":id/star", rc.StarRecipe)
+		r.POST(":id/fork", rc.ForkRecipe)
 		// create recipeMedia in init status + return signedUrl
-		recipes.POST(":id/media", rc.CreateRecipeMedia)
-		recipes.DELETE(":id", rc.DeleteRecipe)
+		r.POST(":id/media", rc.CreateRecipeMedia)
+		r.DELETE(":id", rc.DeleteRecipe)
 	}
 }
 
 func RecipesRouterUnauth(router *gin.Engine) {
 	rc := controllers.NewRecipeController()
 
-	recipes := router.Group("/recipes")
+	r := router.Group("/recipes")
 	{
-		recipes.GET(":id", rc.GetRecipe)
-		recipes.GET("", rc.GetRecipes)
-		recipes.GET(":id/revisions", rc.GetRecipeRevisions)
-		recipes.GET("/revisions/:revisionId", rc.GetRecipeRevision)
-		recipes.GET(":id/media", rc.GetRecipeMedias)
-		// recipes.GET("/media/:mediaId", rc.GetRecipeMedia)
+		r.GET(":id", rc.GetRecipe)
+		r.GET("", rc.GetRecipes)
+		r.GET(":id/revisions", rc.GetRecipeRevisions)
+		r.GET("revisions/:revisionId", rc.GetRecipeRevision)
+		r.GET(":id/media", rc.GetRecipeMedias)
+		r.GET("author/:username", rc.GetRecipesByUsername)
 	}
 }
