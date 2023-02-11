@@ -1,3 +1,10 @@
+# Typesense
+
+http://localhost:8108/stats.json
+x-typesense-api-key: local-4ks
+
+# Upload seed data
+
 To be grant yourself membership to the bot_group in `apps/api/casbin/policy.csv`
 
 The value is your `customClaims.Id`. See `apps/api/middleware/casbin.go`

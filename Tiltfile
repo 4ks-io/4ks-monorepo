@@ -38,7 +38,13 @@ docker_build(
 )
 
 # https://docs.tilt.dev/api.html#api.k8s_yaml
-k8s_yaml(['./deploy/api.yaml', './deploy/web.yaml', './deploy/firestore.yaml', './deploy/jaeger.yaml'])
+k8s_yaml([
+    './deploy/api.yaml',
+    './deploy/web.yaml',
+    './deploy/firestore.yaml',
+    './deploy/typesense.yaml',
+    './deploy/jaeger.yaml'
+])
 
 # https://docs.tilt.dev/api.html#api.k8s_resource
 k8s_resource(
@@ -51,6 +57,12 @@ k8s_resource(
     'web',
     port_forwards='0.0.0.0:5735:3000',
     labels=['web']
+)
+
+k8s_resource(
+    'typesense',
+    port_forwards='8108:8108',
+    labels=['typesense','database']
 )
 
 k8s_resource(
