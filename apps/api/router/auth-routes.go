@@ -3,6 +3,7 @@ package router
 import (
 	"context"
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	adapter "github.com/gwatts/gin-adapter"
@@ -34,7 +35,7 @@ func TestJWTAuth(c *gin.Context) {
 	claims := utils.ExtractClaimsFromRequest(c.Request)
 	// customClaims := utils.ExtractCustomClaimsFromClaims(&claims)
 
-	c.JSON(200, claims)
+	c.JSON(http.StatusOK, claims)
 }
 
 func AuthRouter(router *gin.Engine) {

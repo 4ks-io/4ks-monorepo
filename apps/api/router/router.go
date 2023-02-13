@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	ginprometheus "github.com/zsais/go-gin-prometheus"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 
 	_ "4ks/apps/api/docs"
@@ -17,6 +18,9 @@ func New() *gin.Engine {
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.Use(middleware.CorsMiddleware())
+
+	prom := ginprometheus.NewPrometheus("gin")
+	prom.Use(router)
 
 	if value := utils.GetBoolEnv("SWAGGER_ENABLED", false); value {
 		log.Printf("Swagger enabled: %t", value)
@@ -30,11 +34,11 @@ func New() *gin.Engine {
 
 	SystemRouter(router)
 	router.Use(otelgin.Middleware("4ks-api"))
-
 	RecipesRouterUnauth(router)
 	AuthRouter(router)
 	UsersRouter(router)
 	RecipesRouterAuth(router)
+	SearchRouter(router)
 
 	return router
 }

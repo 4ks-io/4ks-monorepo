@@ -13,7 +13,7 @@ func RecipesRouterAuth(router *gin.Engine) {
 	a := router.Group("/_admin")
 	{
 		a.POST("recipes", middleware.Authorize("/recipes/*", "create"), rc.BotCreateRecipe)
-		a.GET("recipes/:id/media", middleware.Authorize("/recipes/*", "list"),rc.GetAdminRecipeMedias)
+		a.GET("recipes/:id/media", middleware.Authorize("/recipes/*", "list"), rc.GetAdminRecipeMedias)
 	}
 
 	r := router.Group("/recipes")

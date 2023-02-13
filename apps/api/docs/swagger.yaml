@@ -591,6 +591,23 @@ paths:
       summary: Get a Recipe Revision
       tags:
       - Recipes
+  /search/init/recipe-collection:
+    post:
+      consumes:
+      - application/json
+      description: Initialize Search Recipe Collection
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Initialize Search Recipe Collection
+      tags:
+      - Search
   /users:
     get:
       consumes:

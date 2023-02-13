@@ -110,7 +110,6 @@ func (rc *recipeController) GetRecipeMedia(c *gin.Context) {
 	c.JSON(http.StatusOK, recipeMedias)
 }
 
-
 // GetAdminRecipeMedias godoc
 // @Summary 		Get all medias for a Recipe
 // @Description Get all medias for a Recipe

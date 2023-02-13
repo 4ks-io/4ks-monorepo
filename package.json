@@ -51,9 +51,11 @@
     "react-beautiful-dnd": "^13.1.0",
     "react-dom": "^17.0.2",
     "react-font-size-changer": "^0.2.0",
+    "react-instantsearch-hooks-web": "^6.39.3",
     "react-loading-skeleton": "^3.1.0",
     "react-router-dom": "6.3.0",
     "tabler-icons-react": "^1.47.0",
+    "typesense-instantsearch-adapter": "^2.5.0",
     "use-file-picker": "^1.5.1"
   }
 }

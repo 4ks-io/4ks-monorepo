@@ -1,6 +1,7 @@
 package router
 
 import (
+	"net/http"
 	"os"
 	"strings"
 
@@ -20,7 +21,7 @@ import (
 // @Router 			/version [get]
 func GetAPIVersion(version string) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		c.JSON(200, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"data": version,
 		})
 	}

@@ -19,7 +19,6 @@ import (
 var tokenVarName = "IO_4KS_API_TOKEN"
 var hostVarName = "IO_4KS_API_HOSTNAME"
 
-
 var index = 0
 
 func parseArgs() (string, string, string) {
@@ -33,14 +32,13 @@ func parseArgs() (string, string, string) {
 
 	t := os.Getenv(tokenVarName)
 	h := os.Getenv(hostVarName)
-	
 
 	if h == "" {
 		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("API hostname must be provided. Set env var %s", hostVarName))
 		os.Exit(1)
 	}
 
-	u := "https://"+h+"/api/_admin/recipes"
+	u := "https://" + h + "/api/_admin/recipes"
 
 	if t == "" {
 		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("Bearer API Token must be provided. Set env var %s", tokenVarName))
@@ -84,7 +82,7 @@ func getIngredients(data string) []models.Ingredient {
 			})
 		} else {
 			o = append(o, models.Ingredient{
-				Name:     p[0],
+				Name: p[0],
 			})
 		}
 	}
@@ -136,7 +134,7 @@ func postRecipe(u string, t string, r dtos.CreateRecipe) {
 	fmt.Println(index, " => ", r.Name)
 	index += 1
 	data, err := json.Marshal(r)
-	
+
 	req, err := http.NewRequest(http.MethodPost, u, bytes.NewBuffer(data))
 
 	if err != nil {

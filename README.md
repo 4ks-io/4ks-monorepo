@@ -38,3 +38,11 @@
 ## Serving
 
 1. Tilt syncs most code changes into the running containers on kubernmetes. libs/ts/api-fetch needs to be refreshed "manually".Simply run `pnpm swag` on your local and tilt will work its magic.
+
+## System
+
+[nic]
+linux 6.1.10-200.fc37.x86_64
+docker ce 23.0.1
+k3d v5.4.7
+tilt v0.31.2
