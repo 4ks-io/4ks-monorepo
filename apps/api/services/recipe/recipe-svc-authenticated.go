@@ -1,7 +1,6 @@
 package recipe
 
 import (
-	"fmt"
 	"time"
 
 	firestore "cloud.google.com/go/firestore"
@@ -62,38 +61,6 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 
 	if err != nil {
 		return nil, ErrUnableToCreateRecipe
-	}
-
-
-	type RecipeTs struct {
-		Id					 string   `json:"recipeId"`
-		Author       string   `json:"author"`
-		Name         string   `json:"name"`
-		Instructions []string `json:"instructions"`
-		Ingredients  []string `json:"ingredients"`
-	}
-
-	var ing []string
-	for _, v := range newRecipe.CurrentRevision.Ingredients {
-		ing = append(ing, v.Name)
-	}
-
-	var ins []string
-	for _, v := range newRecipe.CurrentRevision.Instructions {
-		ins = append(ins, v.Text)
-	}
-
-	document := RecipeTs{
-		Id:						newRecipe.Id,
-		Author:       newRecipe.Author.Username,
-		Name:         newRecipe.CurrentRevision.Name,
-		Ingredients:  ing,
-		Instructions: ins,
-	}
-
-	_, err = tsc.Collection("recipes").Documents().Create(document)
-	if err != nil {
-		fmt.Println(err)
 	}
 
 	return newRecipe, nil

@@ -4,13 +4,14 @@ import (
 	"github.com/gin-gonic/gin"
 
 	controllers "4ks/apps/api/controllers"
+	"4ks/apps/api/middleware"
 )
 
 func SearchRouter(router *gin.Engine) {
 	sc := controllers.NewSearchController()
 
-	search := router.Group("/search")
+	a := router.Group("/_admin/search")
 	{
-		search.POST("init/recipe-collection", sc.CreateRecipeCollection)
+		a.POST("collection-init-recipe", middleware.Authorize("/_admin/search/*", "create"), sc.CreateSearchRecipeCollection)
 	}
 }

@@ -9,7 +9,6 @@ import (
 	"sync"
 
 	firestore "cloud.google.com/go/firestore"
-	"github.com/typesense/typesense-go/typesense"
 
 	"4ks/apps/api/dtos"
 	"4ks/apps/api/utils"
@@ -30,11 +29,6 @@ var serviceAccountName = os.Getenv("SERVICE_ACCOUNT_EMAIL")
 
 var cgpStorageUrl = "https://storage.cloud.google.com"
 var baseReadUrl = fmt.Sprintf("%s/%s", cgpStorageUrl, distributionBucket)
-
-// typesense client
-var tsUrl = "http://typesense.default.svc.cluster.local:8108"
-var tsKey = "local-4ks-api-key"
-var tsc = typesense.NewClient(typesense.WithServer(tsUrl), typesense.WithAPIKey(tsKey))
 
 const expirationMinutes = 2
 
