@@ -37,7 +37,9 @@ function CustomHits() {
         return (
           <li key={h.objectID}>
             {' '}
-            <a href={`r/${h['recipeId']}`}>{h['name'] as string}</a>
+            <a href={`r/${h['recipeId']}`}>
+              @{h['author'] as string} / {h['name'] as string}
+            </a>
           </li>
         );
       })}

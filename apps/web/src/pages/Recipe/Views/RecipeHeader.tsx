@@ -54,10 +54,6 @@ export function RecipeHeader(props: RecipeHeaderProps) {
     }
   }, [rtx?.recipe?.currentRevision]);
 
-  if (!rtx.recipe || rtx.recipe.id == '' || rtx.recipeId == '0') {
-    return <Skeleton height={256} />;
-  }
-
   function forkThisRecipe() {
     ctx.api?.recipes.postRecipesFork(`${rtx?.recipeId}`).then((r) => {
       navigate(`/r/${r.id}`);
@@ -94,7 +90,11 @@ export function RecipeHeader(props: RecipeHeaderProps) {
 
   return (
     <Stack.Item align="stretch">
-      <RecipeMediaBanner />
+      {!rtx.recipe || rtx.recipe.id == '' || rtx.recipeId == '0' ? (
+        <Skeleton height={256} />
+      ) : (
+        <RecipeMediaBanner />
+      )}
 
       <div style={{ marginBottom: '12px' }}>
         {userBreadcrumb.text.length > 0 ? (

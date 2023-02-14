@@ -206,5 +206,11 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 		return
 	}
 
+	err = rc.searchService.UpdateSearchRecipeDocument(createdRecipe)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
 	c.JSON(http.StatusOK, createdRecipe)
 }

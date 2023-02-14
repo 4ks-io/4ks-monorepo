@@ -27,7 +27,7 @@ const Profile = () => {
         {recipes?.map((r) => {
           return (
             <li key={r.id}>
-              <a href={`r/${r.id}`}>{r.currentRevision?.name}</a>
+              <a href={`r/${r.id}`}>{r.currentRevision?.name || r.id}</a>
             </li>
           );
         })}

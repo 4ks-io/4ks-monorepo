@@ -13,6 +13,7 @@ import (
 type SearchService interface {
 	CreateSearchRecipeCollection() error
 	CreateSearchRecipeDocument(r *models.Recipe) error
+	UpdateSearchRecipeDocument(r *models.Recipe) error
 }
 
 type searchService struct {
@@ -26,6 +27,34 @@ var tsUrl = os.Getenv("TYPESENSE_URL")
 var tsKey = os.Getenv("TYPESENSE_API_KEY")
 var tsc = typesense.NewClient(typesense.WithServer(tsUrl), typesense.WithAPIKey(tsKey))
 
+
+func (us searchService) UpdateSearchRecipeDocument(r *models.Recipe) error {
+
+	var ing []string
+	for _, v := range r.CurrentRevision.Ingredients {
+		ing = append(ing, v.Name)
+	}
+
+	var ins []string
+	for _, v := range r.CurrentRevision.Instructions {
+		ins = append(ins, v.Text)
+	}
+
+	document := dtos.CreateSearchRecipe{
+		Id:           r.Id,
+		Author:       r.Author.Username,
+		Name:         r.CurrentRevision.Name,
+		Ingredients:  ing,
+		Instructions: ins,
+	}
+
+	_, err := tsc.Collection("recipes").Documents().Upsert(document)
+	if err != nil {
+		return errors.New("failed to update search document")
+	}
+
+	return nil
+}
 
 func (us searchService) CreateSearchRecipeDocument(r *models.Recipe) error {
 
