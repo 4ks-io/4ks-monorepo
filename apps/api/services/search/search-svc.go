@@ -30,12 +30,12 @@ var tsc = typesense.NewClient(typesense.WithServer(tsUrl), typesense.WithAPIKey(
 
 func (us searchService) UpdateSearchRecipeDocument(r *models.Recipe) error {
 
-	var ing []string
+	ing := []string{}
 	for _, v := range r.CurrentRevision.Ingredients {
 		ing = append(ing, v.Name)
 	}
 
-	var ins []string
+	ins := []string{}
 	for _, v := range r.CurrentRevision.Instructions {
 		ins = append(ins, v.Text)
 	}
@@ -58,12 +58,12 @@ func (us searchService) UpdateSearchRecipeDocument(r *models.Recipe) error {
 
 func (us searchService) CreateSearchRecipeDocument(r *models.Recipe) error {
 
-	var ing []string
+	ing := []string{}
 	for _, v := range r.CurrentRevision.Ingredients {
 		ing = append(ing, v.Name)
 	}
 
-	var ins []string
+	ins := []string{}
 	for _, v := range r.CurrentRevision.Instructions {
 		ins = append(ins, v.Text)
 	}

@@ -112,7 +112,8 @@ func EnforceContributor(sub *string, obj *[]models.UserSummary) (bool, error) {
 
 // convert array of UserSummary models into string array of ids
 func getIds(data *[]models.UserSummary) []interface{} {
-	var list []string
+	// var list []string
+	list := []string{}
 	for _, user := range *data {
 		list = append(list, user.Id)
 	}
