@@ -1,6 +1,10 @@
 import React from 'react';
 import { Stack, Image, ImageFit, TextField } from '@fluentui/react';
-import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-hooks-web';
+import {
+  InstantSearch,
+  SearchBox,
+  useHits,
+} from 'react-instantsearch-hooks-web';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import Logo from '../../logo.svg';
 
@@ -11,7 +15,7 @@ const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
       {
         host: 'local.4ks.io',
         port: 443,
-        path: '/search', // Optional. Example: If you have your typesense mounted in localhost:8108/typesense, path should be equal to '/typesense'
+        path: '/search',
         protocol: 'https',
       },
     ],
@@ -23,6 +27,23 @@ const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
   },
 });
 const searchClient = typesenseInstantsearchAdapter.searchClient;
+
+function CustomHits() {
+  const { hits, results, sendEvent } = useHits();
+
+  return (
+    <ul>
+      {hits.map((h) => {
+        return (
+          <li key={h.objectID}>
+            {' '}
+            <a href={`r/${h['recipeId']}`}>{h['name'] as string}</a>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
 
 // https://www.algolia.com/doc/guides/building-search-ui/widgets/create-your-own-widgets/react-hooks/
 const Landing = () => {
@@ -43,20 +64,7 @@ const Landing = () => {
         <Image src={Logo} width={100} imageFit={ImageFit.contain}></Image>
         <InstantSearch indexName="recipes" searchClient={searchClient}>
           <SearchBox placeholder="Search . . ." />
-          {/* <TextField
-          placeholder="Search . . ."
-          styles={{
-            fieldGroup: {
-              height: '40px',
-              borderColor: 'lightgray',
-            },
-            field: {
-              fontSize: 16,
-              height: '40px',
-            },
-          }}
-        /> */}
-          <Hits />
+          <CustomHits />
         </InstantSearch>
         {/* <TextField
           placeholder="Search . . ."
