@@ -48,7 +48,7 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 		return
 	}
 
-	err = rc.searchService.CreateSearchRecipeDocument(createdRecipe)
+	err = rc.searchService.UpsertSearchRecipeDocument(createdRecipe)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
@@ -69,13 +69,18 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 // @Security 		ApiKeyAuth
 func (rc *recipeController) DeleteRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
-	// fmt.Println(recipeId)
 	err := rc.recipeService.DeleteRecipe(&recipeId)
 
 	if err == recipeService.ErrRecipeNotFound {
 		c.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	err = rc.searchService.RemoveSearchRecipeDocument(&recipeId)
+	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
@@ -206,7 +211,7 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 		return
 	}
 
-	err = rc.searchService.UpdateSearchRecipeDocument(createdRecipe)
+	err = rc.searchService.UpsertSearchRecipeDocument(createdRecipe)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return

@@ -12,8 +12,8 @@ import (
 
 type SearchService interface {
 	CreateSearchRecipeCollection() error
-	CreateSearchRecipeDocument(r *models.Recipe) error
-	UpdateSearchRecipeDocument(r *models.Recipe) error
+	RemoveSearchRecipeDocument(id *string) error
+	UpsertSearchRecipeDocument(r *models.Recipe) error
 }
 
 type searchService struct {
@@ -28,7 +28,7 @@ var tsKey = os.Getenv("TYPESENSE_API_KEY")
 var tsc = typesense.NewClient(typesense.WithServer(tsUrl), typesense.WithAPIKey(tsKey))
 
 
-func (us searchService) UpdateSearchRecipeDocument(r *models.Recipe) error {
+func (us searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
 
 	ing := []string{}
 	for _, v := range r.CurrentRevision.Ingredients {
@@ -50,33 +50,15 @@ func (us searchService) UpdateSearchRecipeDocument(r *models.Recipe) error {
 
 	_, err := tsc.Collection("recipes").Documents().Upsert(document)
 	if err != nil {
-		return errors.New("failed to update search document")
+		return errors.New("failed to create search document")
 	}
 
 	return nil
 }
 
-func (us searchService) CreateSearchRecipeDocument(r *models.Recipe) error {
 
-	ing := []string{}
-	for _, v := range r.CurrentRevision.Ingredients {
-		ing = append(ing, v.Name)
-	}
-
-	ins := []string{}
-	for _, v := range r.CurrentRevision.Instructions {
-		ins = append(ins, v.Text)
-	}
-
-	document := dtos.CreateSearchRecipe{
-		Id:           r.Id,
-		Author:       r.Author.Username,
-		Name:         r.CurrentRevision.Name,
-		Ingredients:  ing,
-		Instructions: ins,
-	}
-
-	_, err := tsc.Collection("recipes").Documents().Create(document)
+func (us searchService) RemoveSearchRecipeDocument(id *string) error {
+	_, err := tsc.Collection("recipes").Document(*id).Delete()
 	if err != nil {
 		return errors.New("failed to create search document")
 	}
@@ -89,10 +71,6 @@ func (us searchService) CreateSearchRecipeCollection() error {
 	schema := &api.CollectionSchema{
 		Name: "recipes",
 		Fields: []api.Field{
-			{
-				Name: "recipeId",
-				Type: "string",
-			},
 			{
 				Name: "author",
 				Type: "string",

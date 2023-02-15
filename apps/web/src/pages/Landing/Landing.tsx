@@ -13,7 +13,7 @@ const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
     apiKey: 'local-4ks-api-key', // Be sure to use an API key that only allows search operations
     nodes: [
       {
-        host: 'local.4ks.io',
+        host: window.location.origin.replace('https://', ''),
         port: 443,
         path: '/search',
         protocol: 'https',
@@ -37,7 +37,7 @@ function CustomHits() {
         return (
           <li key={h.objectID}>
             {' '}
-            <a href={`r/${h['recipeId']}`}>
+            <a href={`r/${h['id']}`}>
               @{h['author'] as string} / {h['name'] as string}
             </a>
           </li>
