@@ -9,6 +9,12 @@ resource "google_cloud_run_service" "web" {
   name     = "web"
   location = var.region
 
+  metadata {
+    annotations = {
+      "autoscaling.knative.dev/maxScale" = 2
+    }
+  }
+
   template {
     spec {
       containers {
@@ -16,6 +22,16 @@ resource "google_cloud_run_service" "web" {
         ports {
           container_port = 5000
         }
+        resources {
+          requests = {
+            cpu    = "50m"
+            memory = "100Mi"
+          }
+          limits = {
+            memory = "100Mi"
+          }
+        }
+
         env {
           name  = "VITE_MEDIA_FALLBACK_URL"
           value = "https://storage.googleapis.com/${replace(google_storage_bucket.media_static.url, "gs://", "")}/fallback"
@@ -32,7 +48,6 @@ resource "google_cloud_run_service" "web" {
           name  = "VITE_AUTH0_DOMAIN"
           value = "${local.org}-${var.stage}.us.auth0.com"
         }
-
         env {
           name  = "APP_ENV"
           value = var.app_env_map[terraform.workspace]

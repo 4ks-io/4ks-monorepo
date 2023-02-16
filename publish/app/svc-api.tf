@@ -17,6 +17,14 @@ resource "google_cloud_run_service" "api" {
         ports {
           container_port = 5000
         }
+        resources {
+          requests = {
+            cpu    = "50m"
+            memory = "100Mi"
+          }
+          limits = {
+            memory = "100Mi"
+          }
 
         env {
           name  = "SERVICE_ACCOUNT_EMAIL"
@@ -34,7 +42,6 @@ resource "google_cloud_run_service" "api" {
           name  = "GOOGLE_CLOUD_PROJECT"
           value = data.google_project.project.number
         }
-
         env {
           name  = "FIRESTORE_PROJECT_ID"
           value = "${var.stage}-${local.org}"
