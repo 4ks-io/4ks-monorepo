@@ -1,54 +1,41 @@
 import React from 'react';
-import { Stack, Image, ImageFit, TextField } from '@fluentui/react';
+import { Stack, Image, ImageFit, TextField, Spinner } from '@fluentui/react';
 import {
   InstantSearch,
   SearchBox,
   useHits,
+  Hits,
 } from 'react-instantsearch-hooks-web';
-import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import Logo from '../../logo.svg';
+import { useSearchContext } from '../../providers';
 
-const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
-  server: {
-    apiKey: 'local-4ks-api-key', // Be sure to use an API key that only allows search operations
-    nodes: [
-      {
-        host: window.location.origin.replace('https://', ''),
-        port: 443,
-        path: '/search',
-        protocol: 'https',
-      },
-    ],
-    // Cache search results from server. Defaults to 2 minutes. Set to 0 to disable caching.
-    cacheSearchResultsForSeconds: 2 * 60,
-  },
-  additionalSearchParameters: {
-    query_by: 'name,author,ingredients,instructions',
-  },
-});
-const searchClient = typesenseInstantsearchAdapter.searchClient;
+// function CustomHits() {
+//   const { hits, results, sendEvent } = useHits();
 
-function CustomHits() {
-  const { hits, results, sendEvent } = useHits();
-
-  return (
-    <ul>
-      {hits.map((h) => {
-        return (
-          <li key={h.objectID}>
-            {' '}
-            <a href={`r/${h['id']}`}>
-              @{h['author'] as string} / {h['name'] as string}
-            </a>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
+//   return (
+//     <ul>
+//       {hits.map((h) => {
+//         return (
+//           <li key={h.objectID}>
+//             {' '}
+//             <a href={`r/${h['id']}`}>
+//               @{h['author'] as string} / {h['name'] as string}
+//             </a>
+//           </li>
+//         );
+//       })}
+//     </ul>
+//   );
+// }
 
 // https://www.algolia.com/doc/guides/building-search-ui/widgets/create-your-own-widgets/react-hooks/
 const Landing = () => {
+  const search = useSearchContext();
+
+  if (!search.client) {
+    return <Spinner />;
+  }
+
   return (
     <div
       style={{
@@ -64,10 +51,8 @@ const Landing = () => {
         style={{ width: '100%', rowGap: 10 }}
       >
         <Image src={Logo} width={100} imageFit={ImageFit.contain}></Image>
-        <InstantSearch indexName="recipes" searchClient={searchClient}>
-          <SearchBox placeholder="Search . . ." />
-          <CustomHits />
-        </InstantSearch>
+        <SearchBox placeholder="Search . . ." />
+        {/* <CustomHits /> */}
         {/* <TextField
           placeholder="Search . . ."
           styles={{

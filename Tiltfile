@@ -51,7 +51,7 @@ k8s_yaml([
     './deploy/web.yaml',
     './deploy/firestore.yaml',
     './deploy/typesense.yaml',
-    # './deploy/jaeger.yaml'
+    './deploy/jaeger.yaml'
 ])
 
 # https://docs.tilt.dev/api.html#api.k8s_resource
@@ -79,15 +79,16 @@ k8s_resource(
     labels=['firestore','database']
 )
 
-# k8s_resource(
-#     'jaeger',
-#     port_forwards=['9411:9411','5775:5775','6831:6831','6832:6832','5778:5778','16686:16686','14250:14250','14268:14268','14269:14269'],
-#     labels=['jaeger']
-# )
-
-v1alpha1.pod_log_stream_template_spec(
-    ignore_containers=['typesense']
+k8s_resource(
+    'jaeger',
+    port_forwards=['9411:9411','5775:5775','6831:6831','6832:6832','5778:5778','16686:16686','14250:14250','14268:14268','14269:14269'],
+    labels=['jaeger']
 )
+
+# v1alpha1.pod_log_stream_template_spec(
+#     ignore_containers=[
+#         'typesense*']
+# )
 
 # config.main_path is the absolute path to the Tiltfile being run
 # https://docs.tilt.dev/api.html#modules.config.main_path

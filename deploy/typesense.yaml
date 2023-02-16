@@ -1,18 +1,18 @@
 # https://dev.to/ndrean/rails-on-kubernetes-with-minikube-and-tilt-25ka
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: typesense-pv
-  labels:
-    app: typesense
-spec:
-  storageClassName: standard
-  capacity:
-    storage: 5Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /tmp/4ks-typesense-pv
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: typesense-pv
+#   labels:
+#     app: typesense
+# spec:
+#   storageClassName: standard
+#   capacity:
+#     storage: 5Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: /tmp/4ks-typesense-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

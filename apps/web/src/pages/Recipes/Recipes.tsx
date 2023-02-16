@@ -5,9 +5,10 @@ import { DefaultButton } from '@fluentui/react/lib/Button';
 import { useNavigate, Link } from 'react-router-dom';
 import { useSessionContext } from '../../providers';
 import { models_Recipe } from '@4ks/api-fetch';
-import RecipeTile from './RecipeTile';
+import RecipeSearchTile from './RecipeSearchTile';
 import RecipeTileSkel from './RecipeTileSkel';
 import { stackStyles, itemAlignmentsStackTokens } from './styles';
+import { useHits } from 'react-instantsearch-hooks-web';
 
 const Recipes = () => {
   const ctx = useSessionContext();
@@ -15,6 +16,7 @@ const Recipes = () => {
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState<models_Recipe[] | undefined>();
   const [isLoading, setIsLoading] = useState(true);
+  const { hits } = useHits();
 
   useEffect(() => {
     ctx.api?.recipes.getRecipes().then((r: models_Recipe[]) => {
@@ -39,17 +41,15 @@ const Recipes = () => {
   }
 
   function NewRecipeButton() {
-    return (
-      isAuthenticated && (
-        <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
-          <DefaultButton
-            text="New Recipe"
-            onClick={navigateNewRecipe}
-            allowDisabledFocus
-          />
-        </Stack>
-      )
-    );
+    return isAuthenticated ? (
+      <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
+        <DefaultButton
+          text="New Recipe"
+          onClick={navigateNewRecipe}
+          allowDisabledFocus
+        />
+      </Stack>
+    ) : null;
   }
 
   return (
@@ -62,10 +62,9 @@ const Recipes = () => {
         styles={stackStyles}
         tokens={itemAlignmentsStackTokens}
       >
-        {recipes &&
-          recipes.map((r) => {
-            return <RecipeTile key={r.id} recipe={r} />;
-          })}
+        {hits.map((h) => (
+          <RecipeSearchTile key={h.objectID} id={h.objectID} />
+        ))}
       </Stack>
     </>
   );

@@ -14,6 +14,11 @@ import {
   IContextualMenuItem,
 } from '@fluentui/react/lib/ContextualMenu';
 import { useSessionContext } from '../../providers';
+import {
+  InstantSearch,
+  SearchBox,
+  useHits,
+} from 'react-instantsearch-hooks-web';
 
 const imageProps: Partial<IImageProps> = {
   src: logo,
@@ -31,12 +36,14 @@ const AppBar = () => {
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   const ctx = useSessionContext();
+
   const location = useLocation();
   const [isTransition, setIsTransition] = useState(false);
 
   const [showLogo, setShowLogo] = useState(true);
   const [showSearchInput, setShowSearchInput] = useState(true);
   const [showRecipesLink, setShowRecipesLink] = useState(true);
+  const [searchHits, setSearchHits] = useState<any>();
 
   useEffect(() => {
     if (location.pathname == '/') {
@@ -139,7 +146,7 @@ const AppBar = () => {
             onClick={handleLandingClick}
           />
         )}
-        {showSearchInput && <TextField placeholder="Search" />}
+        {showSearchInput && <SearchBox placeholder="Search . . ." />}
       </span>
       <span style={itemStyles}>
         {showRecipesLink && (
