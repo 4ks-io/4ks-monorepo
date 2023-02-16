@@ -24,11 +24,11 @@ resource "google_cloud_run_service" "web" {
         }
         resources {
           requests = {
-            cpu    = "50m"
-            memory = "100Mi"
+            # cpu    = "50m" # impacts no of reqs per instance
+            memory = "128Mi"
           }
           limits = {
-            memory = "100Mi"
+            memory = "128Mi"
           }
         }
 
