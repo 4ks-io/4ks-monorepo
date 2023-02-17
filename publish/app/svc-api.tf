@@ -25,6 +25,7 @@ resource "google_cloud_run_service" "api" {
           limits = {
             memory = "128Mi"
           }
+        }
 
         env {
           name  = "SERVICE_ACCOUNT_EMAIL"
