@@ -9,11 +9,11 @@ resource "google_cloud_run_service" "web" {
   name     = "web"
   location = var.region
 
-  metadata {
-    annotations = {
-      "autoscaling.knative.dev/maxScale" = 2
-    }
-  }
+  # metadata {
+  #   annotations = {
+  #     "autoscaling.knative.dev/maxScale" = 2
+  #   }
+  # }
 
   template {
     spec {
