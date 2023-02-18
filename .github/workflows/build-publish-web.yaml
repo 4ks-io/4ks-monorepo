@@ -1,0 +1,79 @@
+name: Build and Publish Container
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        description: 'api | web'
+        required: true
+        type: string
+      environment:
+        description: 'dev | tst | prd'
+        required: true
+        type: string
+      gcp_project_name:
+        description: 'dev-4ks | tst-4ks | prd-4ks'
+        required: true
+        type: string
+      gcp_registry:
+        description: 'container registry url'
+        required: true
+        type: string
+      build_number:
+        description: 'build number'
+        required: true
+        type: string
+    secrets:
+      gcp_api_token:
+        required: true
+
+jobs:
+  build:
+    name: container
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      # checkout
+      - uses: actions/checkout@v3
+      # package.json hack
+      - name: PACKAGE_JSON hack
+        run: |
+          ./tools/package_json.sh
+      # cloud auth
+      - name: GCP Auth
+        uses: google-github-actions/auth@v0
+        with:
+          project_id: ${{ inputs.gcp_project_name }}
+          credentials_json: ${{ secrets.gcp_api_token }}
+      # cloud sdk
+      - name: GCP Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+      # cloud config
+      - name: GCP Config
+        run: |
+          # gcloud auth configure-docker -q
+          gcloud auth configure-docker ${{ inputs.gcp_registry }} --quiet
+      # build
+      - name: Build
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            VERSION=${{ inputs.build_number }}
+          file: ./apps/${{ inputs.app_name }}/Dockerfile
+          push: true
+          tags: |
+            ${{ inputs.gcp_registry }}/${{ inputs.gcp_project_name }}/${{ inputs.app_name }}/app:${{ inputs.build_number }}
+            ${{ inputs.gcp_registry }}/${{ inputs.gcp_project_name }}/${{ inputs.app_name }}/app:latest
+          # cache-from: type=registry,ref=4ks/${{APP}}-ci:buildcache
+          # cache-to: type=registry,ref=4ks/${{APP}}-ci:buildcache,mode=max
+      - uses: shrink/actions-docker-extract@v2
+        id: extract
+        with:
+          image: ${{ inputs.gcp_registry }}/${{ inputs.gcp_project_name }}/${{ inputs.app_name }}/app:${{ inputs.build_number }}
+          path: /app/.
+      - id: 'upload-folder'
+        uses: 'google-github-actions/upload-cloud-storage@v1'
+        with:
+          path: ${{ steps.extract.outputs.destination }}
+          destination: web.dev.4ks.io/${{ inputs.build_number }}

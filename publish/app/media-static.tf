@@ -14,16 +14,15 @@ resource "google_storage_bucket" "media_static" {
   }
 }
 
-
 resource "google_storage_bucket_iam_member" "media_static_viewer" {
   bucket = google_storage_bucket.media_static.name
   role   = "roles/storage.objectViewer"
   member = "allUsers"
 }
 
-
 resource "google_storage_bucket_object" "logo" {
   name   = "logo.svg"
   source = "./static/logo.svg"
   bucket = google_storage_bucket.media_static.name
 }
+
