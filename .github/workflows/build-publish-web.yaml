@@ -88,4 +88,4 @@ jobs:
       #     path: ${{ steps.extract.outputs.destination }}/assets
       #     destination: web.dev.4ks.io/${{ inputs.build_number }}
       - name: upload
-        run: 'gsutil -m rsync -R -d ${{ steps.extract.outputs.destination }}/assets gs://web.dev.4ks.io/assets
+        run: gsutil -m rsync -R -d ${{ steps.extract.outputs.destination }}/assets gs://web.dev.4ks.io/assets
