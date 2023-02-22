@@ -24,11 +24,11 @@ resource "google_cloud_run_service" "api" {
         }
         env {
           name  = "UPLOADABLE_BUCKET"
-          value = replace(google_storage_bucket.media_write.url, "gs://", "")
+          value = google_storage_bucket.media_write.name
         }
         env {
           name  = "DISTRIBUTION_BUCKET"
-          value = replace(google_storage_bucket.media_read.url, "gs://", "")
+          value = google_storage_bucket.media_read.name
         }
         env {
           name  = "GOOGLE_CLOUD_PROJECT"
