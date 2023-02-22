@@ -25,8 +25,7 @@ resource "google_compute_url_map" "urlmap" {
   name        = "${local.project}-url-map"
   description = "URL map for ${local.project}"
 
-  # default_service = google_compute_backend_service.web.id
-  default_service = google_compute_backend_bucket.web.self_link
+  default_service = google_compute_backend_service.web.id
 
   host_rule {
     hosts        = ["*"]
@@ -35,8 +34,7 @@ resource "google_compute_url_map" "urlmap" {
 
   path_matcher {
     name            = "all"
-    # default_service = google_compute_backend_service.web.id
-    default_service = google_compute_backend_bucket.web.self_link
+    default_service = google_compute_backend_service.web.id
 
     path_rule {
       paths   = ["/api/*"]
