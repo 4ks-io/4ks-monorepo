@@ -90,7 +90,7 @@ resource "google_cloudfunctions2_function" "media_upload" {
     all_traffic_on_latest_revision = true
     service_account_email          = google_service_account.media_upload.email
     environment_variables = {
-      DISTRIBUTION_BUCKET  = google_storage_bucket.media_read.name
+      DISTRIBUTION_BUCKET  = replace(google_storage_bucket.media_read.url, "gs://", "")
       FIRESTORE_PROJECT_ID = "${var.stage}-${local.org}"
     }
   }
@@ -104,7 +104,7 @@ resource "google_cloudfunctions2_function" "media_upload" {
     service_account_email = google_service_account.media_upload.email
     event_filters {
       attribute = "bucket"
-      value     = google_storage_bucket.media_write.name
+      value     = replace(google_storage_bucket.media_write.url, "gs://", "")
     }
   }
 }

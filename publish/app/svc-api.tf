@@ -17,15 +17,6 @@ resource "google_cloud_run_service" "api" {
         ports {
           container_port = 5000
         }
-        resources {
-          requests = {
-            memory = "128Mi"
-          }
-          limits = {
-            cpu    = "1000m" # impacts max reqs per instance
-            memory = "128Mi"
-          }
-        }
 
         env {
           name  = "SERVICE_ACCOUNT_EMAIL"
@@ -33,16 +24,17 @@ resource "google_cloud_run_service" "api" {
         }
         env {
           name  = "UPLOADABLE_BUCKET"
-          value = google_storage_bucket.media_write.name
+          value = replace(google_storage_bucket.media_write.url, "gs://", "")
         }
         env {
           name  = "DISTRIBUTION_BUCKET"
-          value = google_storage_bucket.media_read.name
+          value = replace(google_storage_bucket.media_read.url, "gs://", "")
         }
         env {
           name  = "GOOGLE_CLOUD_PROJECT"
           value = data.google_project.project.number
         }
+
         env {
           name  = "FIRESTORE_PROJECT_ID"
           value = "${var.stage}-${local.org}"

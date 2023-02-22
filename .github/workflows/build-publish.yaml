@@ -17,7 +17,7 @@ on:
 
 jobs:
   api:
-    uses: ./.github/workflows/build-publish-api.yaml
+    uses: ./.github/workflows/build-container.yaml
     secrets:
       gcp_api_token: ${{ secrets.gcp_api_token }}
     with:
@@ -27,7 +27,7 @@ jobs:
       gcp_registry: us-east4-docker.pkg.dev
       build_number: ${{ inputs.build_number }}
   web:
-    uses: ./.github/workflows/build-publish-web.yaml
+    uses: ./.github/workflows/build-container.yaml
     secrets:
       gcp_api_token: ${{ secrets.gcp_api_token }}
     with:
