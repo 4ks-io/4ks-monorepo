@@ -5,7 +5,7 @@ import {
   searchContextReducer,
   SearchContextAction,
 } from './search-context-reducer';
-import { Spinner, SpinnerSize } from '@fluentui/react/lib/Spinner';
+import { useAppConfigContext } from '..';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 
 const SearchContext = React.createContext<SearchContextState>(initialState);
@@ -15,6 +15,7 @@ type SearchContextProviderProps = { children: React.ReactNode };
 export function SearchContextProvider({
   children,
 }: SearchContextProviderProps) {
+  const atx = useAppConfigContext();
   const [state, dispatch] = useReducer(searchContextReducer, initialState);
 
   function setResults(restults: []) {
@@ -31,10 +32,10 @@ export function SearchContextProvider({
   useEffect(() => {
     const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
       server: {
-        apiKey: 'local-4ks-api-key', // Be sure to use an API key that only allows search operations
+        apiKey: atx.TYPESENSE_API_KEY,
         nodes: [
           {
-            host: window.location.origin.replace('https://', ''),
+            host: atx.TYPESENSE_URL,
             port: 443,
             path: '/search',
             protocol: 'https',

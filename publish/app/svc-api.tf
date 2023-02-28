@@ -68,6 +68,16 @@ resource "google_cloud_run_service" "api" {
           value = "/api"
         }
 
+        env {
+          name = "TYPESENSE_URL"
+          value = "https://m5wzvue301hkiy9gp-1.a1.typesense.net"
+        }
+
+        env {
+          name = "TYPESENSE_API_KEY"
+          value = var.typesense_api_key
+        }
+
       }
 
     }

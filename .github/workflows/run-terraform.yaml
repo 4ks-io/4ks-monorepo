@@ -89,6 +89,7 @@ jobs:
           TF_VAR_stage: ${{ inputs.environment }}
           TF_VAR_api_build_number: ${{ inputs.build_number }}
           TF_VAR_web_build_number: ${{ inputs.build_number }}
+          TF_VAR_TYPESENSE_API_KEY: ${{ secrets.TYPESENSE_API_KEY_DEV }}
           TF_WORKSPACE: app-${{ inputs.environment }}-us-east
           GOOGLE_CREDENTIALS: ${{ secrets.gcp_api_token }}
           # TF_tls_key: ${{ secrets.tls_key }}
