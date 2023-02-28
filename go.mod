@@ -36,6 +36,7 @@ require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/deepmap/oapi-codegen v1.9.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
@@ -68,6 +69,7 @@ require (
 	github.com/prometheus/procfs v0.7.3 // indirect
 	github.com/rs/xid v1.4.0 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
+	github.com/sony/gobreaker v0.5.0 // indirect
 	github.com/typesense/typesense-go v0.6.2 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	go.opencensus.io v0.23.0 // indirect
