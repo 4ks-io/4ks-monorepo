@@ -25,6 +25,7 @@ export function AppConfigContextProvider({
       conf.AUTH0_DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN as string;
       conf.AUTH0_CLIENT_ID = import.meta.env.VITE_AUTH0_CLIENT_ID as string;
       conf.TYPESENSE_URL = import.meta.env.VITE_TYPESENSE_URL as string;
+      conf.TYPESENSE_PATH = import.meta.env.VITE_TYPESENSE_PATH as string;
       conf.TYPESENSE_API_KEY = import.meta.env.VITE_TYPESENSE_API_KEY as string;
       conf.MEDIA_FALLBACK_URL = import.meta.env
         .VITE_MEDIA_FALLBACK_URL as string;

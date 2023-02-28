@@ -40,6 +40,8 @@ spec:
               value: eM5Zyyfp6coLg3zORMFsZEnQmpqxBjHd
             - name: VITE_TYPESENSE_URL
               value: local.4ks.io
+            - name: VITE_TYPESENSE_PATH
+              value: /search
             - name: VITE_TYPESENSE_API_KEY
               value: local-4ks-api-key
             - name: VITE_MEDIA_FALLBACK_URL

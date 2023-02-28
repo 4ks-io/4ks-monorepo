@@ -36,8 +36,8 @@ export function SearchContextProvider({
         nodes: [
           {
             host: atx.TYPESENSE_URL,
+            path: atx.TYPESENSE_PATH,
             port: 443,
-            path: '/search',
             protocol: 'https',
           },
         ],

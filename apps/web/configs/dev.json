@@ -5,5 +5,6 @@
   "VERSION": "0.0.0",
   "MEDIA_FALLBACK_URL": "https://storage.googleapis.com/static.dev.4ks.io/fallback",
   "TYPESENSE_URL": "m5wzvue301hkiy9gp-1.a1.typesense.net",
+  "TYPESENSE_PATH": "",
   "TYPESENSE_API_KEY": "0ZWIJhdVUnWOASNvPDjPRCS8vf7TyPjm"
 }
