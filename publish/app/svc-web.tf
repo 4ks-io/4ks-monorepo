@@ -16,6 +16,10 @@ resource "google_cloud_run_service" "web" {
         ports {
           container_port = 5000
         }
+        env {
+          name  = "APP_ENV"
+          value = var.app_env_map[terraform.workspace]
+        }
       }
     }
   }
