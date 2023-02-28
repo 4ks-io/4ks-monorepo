@@ -2,6 +2,7 @@ p, 1, admin_group, /users/*, list, allow
 p, 1, admin_group, /users/*, delete, allow
 p, 1, admin_group, /recipes/*, list, allow
 p, 1, admin_group, /recipes/*, create, allow
+p, 1, admin_group, /_admin/search/*, create, allow
 
 p, 10, resource_users_group, /users/*, read, allow
 p, 10, resource_users_group, /users/*, write, allow

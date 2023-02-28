@@ -46,6 +46,12 @@ func (rc *recipeController) ForkRecipe(c *gin.Context) {
 		return
 	}
 
+	err = rc.searchService.UpsertSearchRecipeDocument(newRecipe)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
 	c.JSON(http.StatusOK, newRecipe)
 }
 

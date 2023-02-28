@@ -5,4 +5,6 @@ export const initialState: AppConfig = {
   AUTH0_DOMAIN: '',
   AUTH0_CLIENT_ID: '',
   MEDIA_FALLBACK_URL: '',
+  TYPESENSE_URL: '',
+  TYPESENSE_API_KEY: '',
 };

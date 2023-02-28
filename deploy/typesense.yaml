@@ -1,18 +1,18 @@
 # https://dev.to/ndrean/rails-on-kubernetes-with-minikube-and-tilt-25ka
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: typesense-pv
-  labels:
-    app: typesense
-spec:
-  storageClassName: standard
-  capacity:
-    storage: 5Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: '/tmp/4ks-typesense-pv'
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: typesense-pv
+#   labels:
+#     app: typesense
+# spec:
+#   storageClassName: standard
+#   capacity:
+#     storage: 5Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: /tmp/4ks-typesense-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -52,13 +52,17 @@ spec:
           volumeMounts:
             - name: typesense-pv
               mountPath: /data
-              readOnly: false
           env:
             - name: TYPESENSE_DATA_DIR
               value: /data
             - name: TYPESENSE_API_KEY
               value: local-4ks-api-key
-          args: ['--enable-cors']
+            - name: TYPESENSE_ENABLE_CORS
+              value: 'false'
+            # - name: TYPESENSE_CORS_DOMAINS
+            #   value: https://local.4ks.io
+            # - name: TYPESENSE_ENABLE_ACCESS_LOGGIN
+            #   value: 'true'
           ports:
             - containerPort: 8108
           livenessProbe:
@@ -85,39 +89,4 @@ spec:
     - protocol: TCP
       port: 8108
       targetPort: 8108
-#
-# options:
-#  -d, --data-dir                           Directory where data will be stored. (string)
-#  -a, --api-key                            API key that allows all operations. (string)
-#  -s, --search-only-api-key                [DEPRECATED: use API key management end-point] API key that allows only searches. (string [=])
-#      --api-address                        Address to which Typesense API service binds. (string [=0.0.0.0])
-#      --api-port                           Port on which Typesense API service listens. (unsigned int [=8108])
-#      --peering-address                    Internal IP address to which Typesense peering service binds. (string [=])
-#      --peering-port                       Port on which Typesense peering service listens. (unsigned int [=8107])
-#      --peering-subnet                     Internal subnet that Typesense should use for peering. (string [=])
-#      --nodes                              Path to file containing comma separated string of all nodes in the cluster. (string [=])
-#  -c, --ssl-certificate                    Path to the SSL certificate file. (string [=])
-#  -k, --ssl-certificate-key                Path to the SSL certificate key file. (string [=])
-#      --ssl-refresh-interval-seconds       Frequency of automatic reloading of SSL certs from disk. (unsigned int [=28800])
-#      --enable-cors                        Enable CORS requests. (bool [=1])
-#      --cors-domains                       Comma separated list of domains that are allowed for CORS. (string [=])
-#      --max-memory-ratio                   Maximum fraction of system memory to be used. (float [=1])
-#      --snapshot-interval-seconds          Frequency of replication log snapshots. (int [=3600])
-#      --snapshot-max-byte-count-per-rpc    Maximum snapshot file size in bytes transferred for each RPC. (int [=4194304])
-#      --healthy-read-lag                   Reads are rejected if the updates lag behind this threshold. (unsigned long [=1000])
-#      --healthy-write-lag                  Writes are rejected if the updates lag behind this threshold. (unsigned long [=500])
-#      --log-slow-requests-time-ms          When >= 0, requests that take longer than this duration are logged. (int [=-1])
-#      --num-collections-parallel-load      Number of collections that are loaded in parallel during start up. (unsigned int [=4])
-#      --num-documents-parallel-load        Number of documents per collection that are indexed in parallel during start up. (unsigned int [=1000])
-#      --thread-pool-size                   Number of threads used for handling concurrent requests. (unsigned int [=4])
-#      --log-dir                            Path to the log directory. (string [=])
-#      --config                             Path to the configuration file. (string [=])
-#      --enable-access-logging              Enable access logging. (bool [=0])
-#     typesense │ WARNING: Detected container restart. Pod: typesense-979487446-7wzg8. Container: typesense.
-#      --disk-used-max-percentage           Reject writes when used disk space exceeds this percentage. Default: 100 (never reject). (int [=100])
-#      --memory-used-max-percentage         Reject writes when memory usage exceeds this percentage. Default: 100 (never reject). (int [=100])
-#      --skip-writes                        Skip all writes except config changes. Default: false. (bool [=0])
-#      --log-slow-searches-time-ms          When >= 0, searches that take longer than this duration are logged. (int [=30000])
-#  -h, --listen-address                     [DEPRECATED: use `api-address`] Address to which Typesense API service binds. (string [=0.0.0.0])
-#  -p, --listen-port                        [DEPRECATED: use `api-port`] Port on which Typesense API service listens. (unsigned int [=8108])
-#  -m, --master                             [DEPRECATED: use clustering via --nodes] Master's address in http(s)://<master_address>:<master_port> format to start as read-only replica. (string [=])
+# https://typesense.org/docs/0.24.0/api/server-configuration.html#using-command-line-arguments

@@ -16,27 +16,6 @@ resource "google_cloud_run_service" "web" {
         ports {
           container_port = 5000
         }
-        env {
-          name  = "VITE_MEDIA_FALLBACK_URL"
-          value = "https://storage.googleapis.com/${google_storage_bucket.media_static.name}/fallback"
-        }
-        env {
-          name  = "VITE_AUTH0_CLIENT_ID"
-          value = "eM5Zyyfp6coLg3zORMFsZEnQmpqxBjHd"
-        }
-        env {
-          name  = "VITE_AUTH0_AUDIENCE"
-          value = local.web_api_url
-        }
-        env {
-          name  = "VITE_AUTH0_DOMAIN"
-          value = "${local.org}-${var.stage}.us.auth0.com"
-        }
-
-        env {
-          name  = "APP_ENV"
-          value = var.app_env_map[terraform.workspace]
-        }
       }
     }
   }

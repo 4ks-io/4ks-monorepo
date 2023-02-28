@@ -34,7 +34,7 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 	recipeRevision := &models.RecipeRevision{
 		Id:           newRevisionDoc.ID,
 		Name:         recipe.Name,
-		Link:					recipe.Link,
+		Link:         recipe.Link,
 		RecipeId:     newRecipeDoc.ID,
 		Author:       recipe.Author,
 		Instructions: recipe.Instructions,

@@ -112,7 +112,7 @@ func (rs recipeService) GetRecipeMedia(recipeId *string) ([]*models.RecipeMedia,
 	var status [2]int
 	status[0] = int(models.MediaStatusReady)
 	// workaround to see images locally; upload-media status update callback only works in hosted firestore
-	if (firstoreProjectId == "local-4ks") {
+	if firstoreProjectId == "local-4ks" {
 		status[1] = int(models.MediaStatusRequested)
 	}
 	recipeMediasDocs, err := recipeMediasCollection.Where("rootRecipeId", "==", recipeId).Where("status", "in", status).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
@@ -136,7 +136,6 @@ func (rs recipeService) GetRecipeMedia(recipeId *string) ([]*models.RecipeMedia,
 
 	return recipeMedias, nil
 }
-
 
 func (rs recipeService) GetAdminRecipeMedias(recipeId *string) ([]*models.RecipeMedia, error) {
 	recipeMediasDocs, err := recipeMediasCollection.Where("rootRecipeId", "==", recipeId).Documents(ctx).GetAll()

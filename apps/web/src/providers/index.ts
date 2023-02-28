@@ -5,6 +5,7 @@ import {
 } from './app-config-context';
 import { RecipeContextProvider, useRecipeContext } from './recipe-context';
 import { SessionContextProvider, useSessionContext } from './session-context';
+import { SearchContextProvider, useSearchContext } from './search-context';
 
 export type { AppConfig };
 export {
@@ -14,4 +15,6 @@ export {
   useRecipeContext,
   SessionContextProvider,
   useSessionContext,
+  SearchContextProvider,
+  useSearchContext,
 };

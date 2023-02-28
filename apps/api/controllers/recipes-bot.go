@@ -44,5 +44,11 @@ func (rc *recipeController) BotCreateRecipe(c *gin.Context) {
 		return
 	}
 
+	err = rc.searchService.UpsertSearchRecipeDocument(createdRecipe)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
 	c.JSON(http.StatusOK, createdRecipe)
 }

@@ -10,10 +10,10 @@ import (
 func RecipesRouterAuth(router *gin.Engine) {
 	rc := controllers.NewRecipeController()
 
-	a := router.Group("/_admin")
+	a := router.Group("/_admin/recipes")
 	{
-		a.POST("recipes", middleware.Authorize("/recipes/*", "create"), rc.BotCreateRecipe)
-		a.GET("recipes/:id/media", middleware.Authorize("/recipes/*", "list"),rc.GetAdminRecipeMedias)
+		a.POST("", middleware.Authorize("/recipes/*", "create"), rc.BotCreateRecipe)
+		a.GET(":id/media", middleware.Authorize("/recipes/*", "list"), rc.GetAdminRecipeMedias)
 	}
 
 	r := router.Group("/recipes")

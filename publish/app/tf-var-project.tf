@@ -20,6 +20,10 @@ variable "web_build_number" {
   type = string
 }
 
+variable "typesense_api_key" {
+  type = string
+}
+
 locals {
   org                   = "4ks"
   domain                = "4ks.io"
@@ -28,5 +32,4 @@ locals {
   web_domain            = "${var.web_subdomain_env_map[terraform.workspace]}${local.org}.io"
   web_base_url          = "https://${local.web_domain}"
   web_api_url           = "https://${local.web_domain}/api"
-
 }

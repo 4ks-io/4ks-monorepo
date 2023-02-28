@@ -18,19 +18,20 @@ export function AppConfigContextProvider({
   const [loading, setLoading] = useState(true);
 
   async function getAppConfig() {
-    let appConfig = initialState;
+    let conf = initialState;
 
     if (import.meta?.env?.VITE_AUTH0_AUDIENCE) {
-      appConfig.AUTH0_AUDIENCE = import.meta.env.VITE_AUTH0_AUDIENCE as string;
-      appConfig.AUTH0_DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN as string;
-      appConfig.AUTH0_CLIENT_ID = import.meta.env
-        .VITE_AUTH0_CLIENT_ID as string;
-      appConfig.MEDIA_FALLBACK_URL = import.meta.env
+      conf.AUTH0_AUDIENCE = import.meta.env.VITE_AUTH0_AUDIENCE as string;
+      conf.AUTH0_DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN as string;
+      conf.AUTH0_CLIENT_ID = import.meta.env.VITE_AUTH0_CLIENT_ID as string;
+      conf.TYPESENSE_URL = import.meta.env.VITE_TYPESENSE_URL as string;
+      conf.TYPESENSE_API_KEY = import.meta.env.VITE_TYPESENSE_API_KEY as string;
+      conf.MEDIA_FALLBACK_URL = import.meta.env
         .VITE_MEDIA_FALLBACK_URL as string;
     } else {
-      appConfig = await (await fetch('/config.json')).json();
+      conf = await (await fetch('/config.json')).json();
     }
-    return appConfig;
+    return conf;
   }
 
   useEffect(() => {

@@ -30,6 +30,8 @@ var serviceAccountName = os.Getenv("SERVICE_ACCOUNT_EMAIL")
 var cgpStorageUrl = "https://storage.cloud.google.com"
 var baseReadUrl = fmt.Sprintf("%s/%s", cgpStorageUrl, distributionBucket)
 
+const expirationMinutes = 2
+
 var (
 	ErrUnauthorized              = errors.New("unauthorized user")
 	ErrUnableToUpdateRecipe      = errors.New("error updating recipe")
@@ -42,23 +44,26 @@ var (
 	// ErrFailedToSign              = errors.New("failed to sign url")
 )
 
-const expirationMinutes = 2
-
 type RecipeService interface {
-	GetRecipeById(id *string) (*models.Recipe, error)
-	DeleteRecipe(id *string) error
-	GetRecipes(limit int) ([]*models.Recipe, error)
-	GetRecipesByUsername(username *string, limit int) ([]*models.Recipe, error)
+	// create
 	CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe, error)
-	UpdateRecipeById(id *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error)
-	ForkRecipeById(id *string, forkAuthor models.UserSummary) (*models.Recipe, error)
-	StarRecipeById(id *string, user models.UserSummary) (bool, error)
-	GetRecipeRevisions(recipeId *string) ([]*models.RecipeRevision, error)
-	GetRecipeRevisionById(revisionId *string) (*models.RecipeRevision, error)
 	CreateRecipeMedia(mp *utils.MediaProps, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error)
 	CreateRecipeMediaSignedUrl(mp *utils.MediaProps, wg *sync.WaitGroup) (*string, error)
-	GetRecipeMedia(recipeId *string) ([]*models.RecipeMedia, error)
+	// delete
+	DeleteRecipe(id *string) error
+	// get
 	GetAdminRecipeMedias(recipeId *string) ([]*models.RecipeMedia, error)
+	GetRecipes(limit int) ([]*models.Recipe, error)
+	GetRecipeById(id *string) (*models.Recipe, error)
+	GetRecipesByUsername(username *string, limit int) ([]*models.Recipe, error)
+	GetRecipeMedia(recipeId *string) ([]*models.RecipeMedia, error)
+	GetRecipeRevisions(recipeId *string) ([]*models.RecipeRevision, error)
+	GetRecipeRevisionById(revisionId *string) (*models.RecipeRevision, error)
+	// set
+	ForkRecipeById(id *string, forkAuthor models.UserSummary) (*models.Recipe, error)
+	StarRecipeById(id *string, user models.UserSummary) (bool, error)
+	// update
+	UpdateRecipeById(id *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error)
 }
 
 type recipeService struct {

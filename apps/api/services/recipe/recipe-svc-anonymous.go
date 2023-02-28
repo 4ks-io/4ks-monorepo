@@ -54,11 +54,10 @@ func (rs recipeService) GetRecipes(limit int) ([]*models.Recipe, error) {
 	return all, nil
 }
 
-
 func (rs recipeService) GetRecipesByUsername(username *string, limit int) ([]*models.Recipe, error) {
 	var all []*models.Recipe
 	iter := recipeCollection.Where("author.username", "==", &username).Limit(limit).Documents(ctx)
-	
+
 	defer iter.Stop()
 
 	for {

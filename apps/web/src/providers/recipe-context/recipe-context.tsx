@@ -64,9 +64,7 @@ export function RecipeContextProvider({
   }
 
   async function setRecipe() {
-    const recipe: models_Recipe = await ctx?.api?.recipes.getRecipes1(
-      state.recipeId
-    );
+    const recipe = await ctx?.api?.recipes.getRecipes1(state.recipeId);
     await dispatch({ type: RecipeContextAction.SET_CONTENT, payload: recipe });
   }
 
