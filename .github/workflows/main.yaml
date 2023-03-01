@@ -19,7 +19,7 @@ jobs:
     secrets:
       gcp_api_token: ${{ secrets.GOOGLE_CREDENTIALS }}
       tf_api_token: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
-      typesense_API_key: ${{ secrets.TYPESENSE_API_KEY_DEV }}
+      typesense_api_key: ${{ secrets.TYPESENSE_API_KEY_DEV }}
     with:
       environment: dev
       build_number: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
