@@ -60,6 +60,8 @@ spec:
               value: http://typesense.default.svc.cluster.local:8108
             - name: TYPESENSE_API_KEY
               value: local-4ks-api-key
+            - name: IO_4KS_DEVING
+              value: 'true'
           ports:
             - containerPort: 5000
           readinessProbe:

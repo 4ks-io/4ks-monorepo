@@ -6,12 +6,15 @@ import (
 	models "4ks/libs/go/models"
 	"context"
 	"fmt"
+	"os"
 	"sync"
 	"time"
 
 	firestore "cloud.google.com/go/firestore"
 	"cloud.google.com/go/storage"
 )
+
+var isLocalDevelopment = os.Getenv("IO_4KS_DEVING")
 
 func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
 	recipeDoc, err := recipeCollection.Doc(*recipeId).Get(ctx)
@@ -112,7 +115,7 @@ func (rs recipeService) GetRecipeMedia(recipeId *string) ([]*models.RecipeMedia,
 	var status [2]int
 	status[0] = int(models.MediaStatusReady)
 	// workaround to see images locally; upload-media status update callback only works in hosted firestore
-	if firstoreProjectId == "local-4ks" {
+	if isLocalDevelopment == "true" {
 		status[1] = int(models.MediaStatusRequested)
 	}
 	recipeMediasDocs, err := recipeMediasCollection.Where("rootRecipeId", "==", recipeId).Where("status", "in", status).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()

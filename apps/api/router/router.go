@@ -2,6 +2,7 @@ package router
 
 import (
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
@@ -14,8 +15,19 @@ import (
 	utils "4ks/apps/api/utils"
 )
 
+var isLocalDevelopment = os.Getenv("IO_4KS_DEVING")
+
 func New() *gin.Engine {
-	router := gin.Default()
+	var router *gin.Engine
+	if isLocalDevelopment == "true" {
+		router = gin.Default()
+	} else {
+		// disable logging
+		router = gin.New()
+		// Recovery middleware recovers from any panics and possibly writes a 500
+		router.Use(gin.Recovery())
+	}
+	// disable trustedproxy logic
 	router.SetTrustedProxies(nil)
 	router.Use(middleware.CorsMiddleware())
 

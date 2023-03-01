@@ -16,10 +16,8 @@ on:
         required: true
       tf_api_token:
         required: true
-      # tls_key:
-      #   required: true
-      # tls_crt:
-      #   required: true
+      typesense_API_key:
+        required: true
 
 jobs:
   build:
@@ -89,7 +87,7 @@ jobs:
           TF_VAR_stage: ${{ inputs.environment }}
           TF_VAR_api_build_number: ${{ inputs.build_number }}
           TF_VAR_web_build_number: ${{ inputs.build_number }}
-          TF_VAR_typesense_api_key: ${{ secrets.TYPESENSE_API_KEY_DEV }}
+          TF_VAR_typesense_api_key: ${{ inputs.typesense_API_key }}
           TF_WORKSPACE: app-${{ inputs.environment }}-us-east
           GOOGLE_CREDENTIALS: ${{ secrets.gcp_api_token }}
           # TF_tls_key: ${{ secrets.tls_key }}

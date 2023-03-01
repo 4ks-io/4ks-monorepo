@@ -27,7 +27,6 @@ var tsUrl = os.Getenv("TYPESENSE_URL")
 var tsKey = os.Getenv("TYPESENSE_API_KEY")
 var tsc = typesense.NewClient(typesense.WithServer(tsUrl), typesense.WithAPIKey(tsKey))
 
-
 func (us searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
 
 	ing := []string{}
