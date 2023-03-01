@@ -20,4 +20,7 @@ export default defineConfig({
   optimizeDeps: {
     include: ['@4ks/api-fetch'],
   },
+  build: {
+    sourcemap: true,
+  },
 });
