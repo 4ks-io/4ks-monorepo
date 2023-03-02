@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { RecipeContextProvider } from './providers';
+import { useLocation } from 'react-router-dom';
 import {
   Landing,
   Login,
@@ -12,7 +13,6 @@ import {
   Recipe,
   Settings,
 } from './pages';
-import { RecipeViews } from './pages/Recipe/RecipeControls';
 import { RecipeContentView } from './pages/Recipe/Views/RecipeContent';
 import { RecipeCommentsView } from './pages/Recipe/Views/RecipeComments';
 import { RecipeVersionsView } from './pages/Recipe/Views/RecipeVersions';
@@ -22,6 +22,15 @@ import { RecipeSettingsView } from './pages/Recipe/Views/RecipeSettings';
 import { RecipeForksView } from './pages/Recipe/Views/RecipeForks';
 
 function Router() {
+  const location = useLocation();
+
+  // disable a few paths from saving to localstorage for post-auth routing
+  useEffect(() => {
+    if (!['/me', '/new', '/login', '/logout'].includes(location.pathname)) {
+      localStorage.setItem('locationPathname', location.pathname);
+    }
+  }, [location.pathname]);
+
   return (
     <Routes>
       <Route path="/" element={<Landing />} />

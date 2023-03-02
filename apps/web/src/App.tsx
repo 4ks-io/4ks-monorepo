@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { SessionContextProvider } from './providers';
 import Router from './Router';
 import { Auth0Provider } from '@auth0/auth0-react';
-import { useLocation } from 'react-router-dom';
 import { Stack } from '@fluentui/react/lib/Stack';
 import AppBar from './pages/Layout/AppBar';
 import { BrowserRouter } from 'react-router-dom';
@@ -10,27 +9,13 @@ import { useAppConfigContext, useSearchContext } from './providers';
 import { InstantSearch } from 'react-instantsearch-hooks-web';
 import { Spinner } from '@fluentui/react';
 
-function AppLayout() {
-  const location = useLocation();
-
-  // disable a few paths from saving to localstorage for post-auth routing
-  useEffect(() => {
-    if (!['/me', '/new', '/login', '/logout'].includes(location.pathname)) {
-      localStorage.setItem('locationPathname', location.pathname);
-    }
-  }, [location.pathname]);
-
-  return (
-    <Stack verticalAlign="space-between">
-      <AppBar />
-      <Router />
-    </Stack>
-  );
-}
-
 function App() {
   const atx = useAppConfigContext();
   const search = useSearchContext();
+
+  if (!search?.client) {
+    return <Spinner />;
+  }
 
   return (
     <Auth0Provider
@@ -42,13 +27,12 @@ function App() {
     >
       <BrowserRouter>
         <SessionContextProvider>
-          {search?.client ? (
-            <InstantSearch indexName="recipes" searchClient={search.client}>
-              <AppLayout />
-            </InstantSearch>
-          ) : (
-            <Spinner />
-          )}
+          <InstantSearch indexName="recipes" searchClient={search.client}>
+            <Stack verticalAlign="space-between">
+              <AppBar />
+              <Router />
+            </Stack>
+          </InstantSearch>
         </SessionContextProvider>
       </BrowserRouter>
     </Auth0Provider>
