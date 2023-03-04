@@ -30,7 +30,7 @@ function App() {
         <Helmet>
           <meta charSet="utf-8" />
           <title>4ks</title>
-          <link rel="canonical" href="https://4ks.io" />
+          <link rel="canonical" href="https://www.4ks.io" />
         </Helmet>
         <SessionContextProvider>
           <InstantSearch indexName="recipes" searchClient={search.client}>

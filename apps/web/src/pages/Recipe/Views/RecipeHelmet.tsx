@@ -21,7 +21,7 @@ export function RecipeHelmet() {
     <Helmet>
       <meta charSet="utf-8" />
       <title>{title}</title>
-      <link rel="canonical" href="http://mysite.com/example" />
+      <link rel="canonical" href="https://www.4ks.io" />
     </Helmet>
   );
 }
