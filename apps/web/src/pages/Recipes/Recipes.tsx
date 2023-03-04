@@ -6,6 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useSessionContext } from '../../providers';
 import { models_Recipe } from '@4ks/api-fetch';
 import RecipeSearchTile from './RecipeSearchTile';
+import RecipeTile from './RecipeTile';
 import RecipeTileSkel from './RecipeTileSkel';
 import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { useHits } from 'react-instantsearch-hooks-web';
@@ -52,6 +53,27 @@ const Recipes = () => {
     ) : null;
   }
 
+  function RecipesFromCollection() {
+    return (
+      <>
+        {recipes &&
+          recipes.map((r) => {
+            return <RecipeTile key={r.id} recipe={r} />;
+          })}
+      </>
+    );
+  }
+
+  function RecipesFromSearch() {
+    return (
+      <>
+        {hits.map((h) => (
+          <RecipeSearchTile key={h.objectID} id={h.objectID} />
+        ))}
+      </>
+    );
+  }
+
   return (
     <>
       <NewRecipeButton />
@@ -62,9 +84,7 @@ const Recipes = () => {
         styles={stackStyles}
         tokens={itemAlignmentsStackTokens}
       >
-        {hits.map((h) => (
-          <RecipeSearchTile key={h.objectID} id={h.objectID} />
-        ))}
+        {hits.length > 0 ? <RecipesFromSearch /> : <RecipesFromCollection />}
       </Stack>
     </>
   );

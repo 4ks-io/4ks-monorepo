@@ -45,7 +45,7 @@ export function SearchContextProvider({
         cacheSearchResultsForSeconds: 2 * 60,
       },
       additionalSearchParameters: {
-        query_by: 'name,author,ingredients,instructions',
+        query_by: 'name,author,ingredients',
       },
     });
 

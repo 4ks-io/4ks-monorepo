@@ -28,7 +28,6 @@ var tsKey = os.Getenv("TYPESENSE_API_KEY")
 var tsc = typesense.NewClient(typesense.WithServer(tsUrl), typesense.WithAPIKey(tsKey))
 
 func (us searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
-
 	ing := []string{}
 	for _, v := range r.CurrentRevision.Ingredients {
 		ing = append(ing, v.Name)
@@ -44,7 +43,6 @@ func (us searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
 		Author:       r.Author.Username,
 		Name:         r.CurrentRevision.Name,
 		Ingredients:  ing,
-		Instructions: ins,
 	}
 
 	_, err := tsc.Collection("recipes").Documents().Upsert(document)
@@ -65,7 +63,7 @@ func (us searchService) RemoveSearchRecipeDocument(id *string) error {
 	return nil
 }
 
-
+// note: schema must overlap with additionalSearchParameters in search-context.tsx
 func (us searchService) CreateSearchRecipeCollection() error {
 	schema := &api.CollectionSchema{
 		Name: "recipes",
@@ -77,10 +75,6 @@ func (us searchService) CreateSearchRecipeCollection() error {
 			{
 				Name: "name",
 				Type: "string",
-			},
-			{
-				Name: "instructions",
-				Type: "string[]",
 			},
 			{
 				Name: "ingredients",
