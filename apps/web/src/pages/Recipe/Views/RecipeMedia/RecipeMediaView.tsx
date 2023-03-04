@@ -86,9 +86,11 @@ export const RecipeMediaView = () => {
     openFileSelector();
   }
 
-  const isContributor = (rtx?.recipe.contributors as models_UserSummary[])
-    .map((c) => c.id)
-    .includes(ctx.user?.id);
+  const isContributor =
+    rtx?.recipe?.contributors &&
+    (rtx?.recipe?.contributors as models_UserSummary[])
+      .map((c) => c.id)
+      .includes(ctx.user?.id);
 
   function SelectMediaButton() {
     return (
