@@ -27,7 +27,7 @@ var distributionBucket = os.Getenv("DISTRIBUTION_BUCKET")
 var uploadableBucket = os.Getenv("UPLOADABLE_BUCKET")
 var serviceAccountName = os.Getenv("SERVICE_ACCOUNT_EMAIL")
 
-var cgpStorageUrl = "https://storage.cloud.google.com"
+var cgpStorageUrl = "https://storage.googleapis.com"
 var baseReadUrl = fmt.Sprintf("%s/%s", cgpStorageUrl, distributionBucket)
 
 const expirationMinutes = 2
