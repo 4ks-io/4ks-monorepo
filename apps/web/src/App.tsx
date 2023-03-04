@@ -8,6 +8,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { useAppConfigContext, useSearchContext } from './providers';
 import { InstantSearch } from 'react-instantsearch-hooks-web';
 import { Spinner } from '@fluentui/react';
+import { Helmet } from 'react-helmet';
 
 function App() {
   const atx = useAppConfigContext();
@@ -26,6 +27,11 @@ function App() {
       cacheLocation={'localstorage'}
     >
       <BrowserRouter>
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>4ks</title>
+          <link rel="canonical" href="https://4ks.io" />
+        </Helmet>
         <SessionContextProvider>
           <InstantSearch indexName="recipes" searchClient={search.client}>
             <Stack verticalAlign="space-between">
