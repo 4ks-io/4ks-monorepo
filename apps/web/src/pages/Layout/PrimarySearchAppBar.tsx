@@ -1,29 +1,73 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Stack } from '@fluentui/react/lib/Stack';
-import { IStackStyles } from '@fluentui/react/lib/Stack';
 import { useAuth0 } from '@auth0/auth0-react';
-import logo from '../../logo.svg';
 import { useSessionContext } from '../../providers';
-import {
-  InstantSearch,
-  SearchBox,
-  useHits,
-} from 'react-instantsearch-hooks-web';
-import Menu from '@mui/material/Menu';
+import { styled, alpha } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import InputBase from '@mui/material/InputBase';
+import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import MailIcon from '@mui/icons-material/Mail';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import MoreIcon from '@mui/icons-material/MoreVert';
 import Avatar from '@mui/material/Avatar';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
+import logo from '../../logo.svg';
 
-const AppBar = () => {
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(3),
+    width: 'auto',
+  },
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: '20ch',
+    },
+  },
+}));
+
+export default function PrimarySearchAppBar() {
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   const ctx = useSessionContext();
@@ -94,20 +138,6 @@ const AppBar = () => {
     setAnchorEl(null);
   }
 
-  const stackStyles: IStackStyles = {
-    root: {
-      // background: DefaultPalette.themeTertiary,
-      borderBottom: '1px solid rgb(200, 200, 200)',
-    },
-  };
-
-  const itemStyles: React.CSSProperties = {
-    alignItems: 'center',
-    display: 'flex',
-    height: 48,
-    justifyContent: 'center',
-  };
-
   function ProfileMenu() {
     return (
       <Menu
@@ -147,9 +177,18 @@ const AppBar = () => {
   }
 
   return (
-    <Stack horizontal horizontalAlign="space-between" styles={stackStyles}>
-      <span style={itemStyles}>
-        {showLogo && (
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
           <Box
             component="img"
             sx={{
@@ -158,41 +197,48 @@ const AppBar = () => {
             }}
             alt="4ks.io"
             src={logo}
-            onClick={handleLandingClick}
+            // onClick={handleLandingClick}
           />
-        )}
-        {showSearchInput && <SearchBox placeholder="Search . . ." />}
-      </span>
-      <span style={itemStyles}>
-        {showRecipesLink && (
-          <Button onClick={handleRecipesClick}>Recipes</Button>
-        )}
-        {isAuthenticated ? (
-          <>
-            <Tooltip title="Account settings">
-              <IconButton
-                onClick={handleClick}
-                aria-controls={open ? 'account-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-              >
-                {ctx.user?.username ? (
-                  <Avatar sx={{ width: 32, height: 32 }}>
-                    {ctx.user?.username.substring(0, 1)}
-                  </Avatar>
-                ) : (
-                  <Avatar />
-                )}
-              </IconButton>
-            </Tooltip>
-            <ProfileMenu />
-          </>
-        ) : (
-          <Button onClick={handleLoginOnClick}>Login</Button>
-        )}
-      </span>
-    </Stack>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </Search>
+          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            {showRecipesLink && (
+              <Button onClick={handleRecipesClick}>Recipes</Button>
+            )}
+            {isAuthenticated ? (
+              <>
+                <Tooltip title="Account settings">
+                  <IconButton
+                    onClick={handleClick}
+                    aria-controls={open ? 'account-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                  >
+                    {ctx.user?.username ? (
+                      <Avatar sx={{ width: 32, height: 32 }}>
+                        {ctx.user?.username.substring(0, 1)}
+                      </Avatar>
+                    ) : (
+                      <Avatar />
+                    )}
+                  </IconButton>
+                </Tooltip>
+                <ProfileMenu />
+              </>
+            ) : (
+              <Button onClick={handleLoginOnClick}>Login</Button>
+            )}
+          </Box>
+        </Toolbar>
+      </AppBar>
+    </Box>
   );
-};
-
-export default AppBar;
+}

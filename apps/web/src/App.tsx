@@ -4,11 +4,14 @@ import Router from './Router';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { Stack } from '@fluentui/react/lib/Stack';
 import AppBar from './pages/Layout/AppBar';
+import PrimarySearchAppBar from './pages/Layout/PrimarySearchAppBar';
 import { BrowserRouter } from 'react-router-dom';
 import { useAppConfigContext, useSearchContext } from './providers';
 import { InstantSearch } from 'react-instantsearch-hooks-web';
 import { Spinner } from '@fluentui/react';
 import { Helmet } from 'react-helmet';
+import { ThemeProvider } from '@mui/material/styles';
+import { theme } from './mui-theme';
 
 function App() {
   const atx = useAppConfigContext();
@@ -34,10 +37,14 @@ function App() {
         </Helmet>
         <SessionContextProvider>
           <InstantSearch indexName="recipes" searchClient={search.client}>
-            <Stack verticalAlign="space-between">
-              <AppBar />
+            <ThemeProvider theme={theme}>
+              <PrimarySearchAppBar />
+              {/* <Stack verticalAlign="space-between"> */}
+              {/* <AppBar /> */}
+
               <Router />
-            </Stack>
+              {/* </Stack> */}
+            </ThemeProvider>
           </InstantSearch>
         </SessionContextProvider>
       </BrowserRouter>
