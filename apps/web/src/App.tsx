@@ -11,7 +11,7 @@ import { InstantSearch } from 'react-instantsearch-hooks-web';
 import { Spinner } from '@fluentui/react';
 import { Helmet } from 'react-helmet';
 import { ThemeProvider } from '@mui/material/styles';
-import { theme } from './mui-theme';
+import { theme } from './mui';
 
 function App() {
   const atx = useAppConfigContext();

@@ -26,6 +26,7 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import Button from '@mui/material/Button';
 import logo from '../../logo.svg';
+import { Theme, useTheme } from '@mui/material/styles';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -71,6 +72,7 @@ export default function PrimarySearchAppBar() {
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   const ctx = useSessionContext();
+  const theme = useTheme();
 
   const location = useLocation();
   const [isTransition, setIsTransition] = useState(false);
@@ -189,56 +191,70 @@ export default function PrimarySearchAppBar() {
           >
             <MenuIcon />
           </IconButton>
-          <Box
-            component="img"
-            sx={{
-              height: 36,
-              paddingRight: 1,
-            }}
-            alt="4ks.io"
-            src={logo}
-            // onClick={handleLandingClick}
-          />
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
+          {showLogo && (
+            <Box
+              component="img"
+              sx={{
+                height: 36,
+                paddingRight: 1,
+              }}
+              alt="4ks.io"
+              src={logo}
+              onClick={handleLandingClick}
             />
-          </Search>
+          )}
+          {showSearchInput && (
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </Search>
+          )}
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            {showRecipesLink && (
-              <Button onClick={handleRecipesClick}>Recipes</Button>
-            )}
-            {isAuthenticated ? (
-              <>
-                <Tooltip title="Account settings">
-                  <IconButton
-                    onClick={handleClick}
-                    aria-controls={open ? 'account-menu' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? 'true' : undefined}
-                  >
-                    {ctx.user?.username ? (
-                      <Avatar sx={{ width: 32, height: 32 }}>
-                        {ctx.user?.username.substring(0, 1)}
-                      </Avatar>
-                    ) : (
-                      <Avatar />
-                    )}
-                  </IconButton>
-                </Tooltip>
-                <ProfileMenu />
-              </>
-            ) : (
-              <Button onClick={handleLoginOnClick}>Login</Button>
-            )}
-          </Box>
+          {showRecipesLink && (
+            <Button sx={AppBarButtonStyles(theme)} onClick={handleRecipesClick}>
+              Recipes
+            </Button>
+          )}
+          {isAuthenticated ? (
+            <>
+              <Tooltip title="Account settings">
+                <IconButton
+                  onClick={handleClick}
+                  aria-controls={open ? 'account-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? 'true' : undefined}
+                >
+                  {ctx.user?.username ? (
+                    <Avatar sx={{ width: 32, height: 32 }}>
+                      {ctx.user?.username.substring(0, 1)}
+                    </Avatar>
+                  ) : (
+                    <Avatar />
+                  )}
+                </IconButton>
+              </Tooltip>
+              <ProfileMenu />
+            </>
+          ) : (
+            <Button sx={AppBarButtonStyles(theme)} onClick={handleLoginOnClick}>
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </Box>
   );
 }
+
+const AppBarButtonStyles = (theme: Theme) => {
+  return {
+    my: 2,
+    color: theme.palette.primary.dark,
+    display: 'block',
+  };
+};
