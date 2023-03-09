@@ -8,6 +8,7 @@ import { models_Recipe } from '@4ks/api-fetch';
 import RecipeSearchTile from './RecipeSearchTile';
 import RecipeTile from './RecipeTile';
 import RecipeTileSkel from './RecipeTileSkel';
+import RecipeTileSkel2 from './RecipeTileSkel2';
 import { stackStyles, itemAlignmentsStackTokens } from './styles';
 import { useHits } from 'react-instantsearch-hooks-web';
 
