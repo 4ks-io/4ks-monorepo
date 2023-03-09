@@ -2,9 +2,7 @@ import React from 'react';
 import { SessionContextProvider } from './providers';
 import Router from './Router';
 import { Auth0Provider } from '@auth0/auth0-react';
-import { Stack } from '@fluentui/react/lib/Stack';
-import AppBar from './pages/Layout/AppBar';
-import PrimarySearchAppBar from './pages/Layout/PrimarySearchAppBar';
+import MainAppBar from './pages/Layout/MainAppBar';
 import { BrowserRouter } from 'react-router-dom';
 import { useAppConfigContext, useSearchContext } from './providers';
 import { InstantSearch } from 'react-instantsearch-hooks-web';
@@ -38,12 +36,8 @@ function App() {
         <SessionContextProvider>
           <InstantSearch indexName="recipes" searchClient={search.client}>
             <ThemeProvider theme={theme}>
-              <PrimarySearchAppBar />
-              {/* <Stack verticalAlign="space-between"> */}
-              {/* <AppBar /> */}
-
+              <MainAppBar />
               <Router />
-              {/* </Stack> */}
             </ThemeProvider>
           </InstantSearch>
         </SessionContextProvider>

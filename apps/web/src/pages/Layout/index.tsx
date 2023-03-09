@@ -1,3 +1,3 @@
-import AppBar from './AppBar';
+import MainAppBar from './MainAppBar';
 
-export { AppBar };
+export { MainAppBar };

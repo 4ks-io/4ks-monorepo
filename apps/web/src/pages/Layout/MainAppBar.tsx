@@ -68,7 +68,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+export default function MainAppBar() {
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   const ctx = useSessionContext();
