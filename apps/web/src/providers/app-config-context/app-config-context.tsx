@@ -5,7 +5,7 @@ import {
   appConfigContextReducer,
   AppConfigContextAction,
 } from './app-config-context-reducer';
-import { Spinner, SpinnerSize } from '@fluentui/react/lib/Spinner';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const AppConfigContext = React.createContext<AppConfig>(initialState);
 
@@ -47,7 +47,7 @@ export function AppConfigContextProvider({
   }, []);
 
   if (loading) {
-    return <Spinner size={SpinnerSize.large} />;
+    return <CircularProgress />;
   }
   return (
     <AppConfigContext.Provider value={state}>

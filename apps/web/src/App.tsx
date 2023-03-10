@@ -6,17 +6,17 @@ import MainAppBar from './pages/Layout/MainAppBar';
 import { BrowserRouter } from 'react-router-dom';
 import { useAppConfigContext, useSearchContext } from './providers';
 import { InstantSearch } from 'react-instantsearch-hooks-web';
-import { Spinner } from '@fluentui/react';
 import { Helmet } from 'react-helmet';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './mui';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function App() {
   const atx = useAppConfigContext();
   const search = useSearchContext();
 
   if (!search?.client) {
-    return <Spinner />;
+    return <CircularProgress />;
   }
 
   return (

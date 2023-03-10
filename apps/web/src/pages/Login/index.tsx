@@ -1,10 +1,10 @@
 import React from 'react';
-import { Spinner, SpinnerSize } from '@fluentui/react/lib/Spinner';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Login = () => {
   return (
     <div style={{ marginTop: 120 }}>
-      <Spinner size={SpinnerSize.large} />
+      <CircularProgress />
     </div>
   );
 };

@@ -7,7 +7,7 @@ import { Breadcrumb, IBreadcrumbItem } from '@fluentui/react/lib/Breadcrumb';
 import { useRecipeContext } from '../../../providers';
 import { useSessionContext } from '../../../providers';
 import { IconButton } from '@fluentui/react/lib/Button';
-import Skeleton from 'react-loading-skeleton';
+import Skeleton from '@mui/material/Skeleton';
 import { Label } from '@fluentui/react/lib/Label';
 import { RecipeMediaBanner } from './components';
 
@@ -91,7 +91,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   return (
     <Stack.Item align="stretch">
       {!rtx.recipe || rtx.recipe.id == '' || rtx.recipeId == '0' ? (
-        <Skeleton height={256} />
+        <Skeleton variant="rectangular" height={256} />
       ) : (
         <RecipeMediaBanner />
       )}
@@ -106,7 +106,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
             // overflowAriaLabel="More links"
           />
         ) : (
-          <Skeleton />
+          <Skeleton variant="text" />
         )}
         {rtx?.editing ? (
           <Stack horizontal horizontalAlign="start">

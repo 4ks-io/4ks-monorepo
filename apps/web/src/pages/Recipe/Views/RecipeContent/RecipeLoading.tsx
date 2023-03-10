@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, IStackProps } from '@fluentui/react/lib/Stack';
-import { Spinner, SpinnerSize } from '@fluentui/react/lib/Spinner';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const RecipeLoading = () => {
   const rowProps: IStackProps = { horizontal: true, verticalAlign: 'center' };
@@ -15,7 +15,7 @@ const RecipeLoading = () => {
 
   return (
     <Stack {...rowProps} tokens={tokens.spinnerStack}>
-      <Spinner size={SpinnerSize.large} />
+      <CircularProgress />
     </Stack>
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, Image, ImageFit, TextField, Spinner } from '@fluentui/react';
+import { Stack, Image, ImageFit, TextField } from '@fluentui/react';
 import {
   InstantSearch,
   SearchBox,
@@ -8,6 +8,7 @@ import {
 } from 'react-instantsearch-hooks-web';
 import Logo from '../../logo.svg';
 import { useSearchContext } from '../../providers';
+import CircularProgress from '@mui/material/CircularProgress';
 
 // function CustomHits() {
 //   const { hits, results, sendEvent } = useHits();
@@ -33,7 +34,7 @@ const Landing = () => {
   const search = useSearchContext();
 
   if (!search.client) {
-    return <Spinner />;
+    return <CircularProgress />;
   }
 
   return (
