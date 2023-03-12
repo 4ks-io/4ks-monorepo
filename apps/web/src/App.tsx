@@ -2,20 +2,21 @@ import React from 'react';
 import { SessionContextProvider } from './providers';
 import Router from './Router';
 import { Auth0Provider } from '@auth0/auth0-react';
-import { Stack } from '@fluentui/react/lib/Stack';
-import AppBar from './pages/Layout/AppBar';
+import MainAppBar from './pages/Layout/MainAppBar';
 import { BrowserRouter } from 'react-router-dom';
 import { useAppConfigContext, useSearchContext } from './providers';
 import { InstantSearch } from 'react-instantsearch-hooks-web';
-import { Spinner } from '@fluentui/react';
 import { Helmet } from 'react-helmet';
+import { ThemeProvider } from '@mui/material/styles';
+import { theme } from './mui';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function App() {
   const atx = useAppConfigContext();
   const search = useSearchContext();
 
   if (!search?.client) {
-    return <Spinner />;
+    return <CircularProgress />;
   }
 
   return (
@@ -34,10 +35,10 @@ function App() {
         </Helmet>
         <SessionContextProvider>
           <InstantSearch indexName="recipes" searchClient={search.client}>
-            <Stack verticalAlign="space-between">
-              <AppBar />
+            <ThemeProvider theme={theme}>
+              <MainAppBar />
               <Router />
-            </Stack>
+            </ThemeProvider>
           </InstantSearch>
         </SessionContextProvider>
       </BrowserRouter>

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { models_Recipe, models_RecipeMediaVariant } from '@4ks/api-fetch';
 import { Text } from '@fluentui/react';
-import Skeleton from 'react-loading-skeleton';
 import { Link } from 'react-router-dom';
 import { stackStyles, stackTokens, stackItemStyles } from './styles';
 import { Image, ImageFit } from '@fluentui/react/lib/Image';
@@ -125,7 +124,7 @@ const RecipeTile = ({ recipe }: RecipeTileProps) => {
                 </span>
               </Stack.Item>
             </Stack>
-            <RecipeTags {...recipe} />
+            {/* <RecipeTags {...recipe} /> */}
             <RecipeContributors {...recipe} />
           </div>
           <Link to={`/r/${recipe.id}`}>

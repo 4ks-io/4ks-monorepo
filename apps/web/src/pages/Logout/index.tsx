@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
-import { Spinner, SpinnerSize } from '@fluentui/react/lib/Spinner';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Logout = () => {
   const { isAuthenticated } = useAuth0();
@@ -17,7 +17,7 @@ const Logout = () => {
 
   return (
     <div style={{ marginTop: 120 }}>
-      <Spinner size={SpinnerSize.large} />
+      <CircularProgress />
     </div>
   );
 };

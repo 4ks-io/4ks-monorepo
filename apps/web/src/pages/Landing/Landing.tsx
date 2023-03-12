@@ -1,13 +1,15 @@
 import React from 'react';
-import { Stack, Image, ImageFit, TextField, Spinner } from '@fluentui/react';
+import logo from '../../logo.svg';
+import { useSearchContext } from '../../providers';
+import CircularProgress from '@mui/material/CircularProgress';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import {
   InstantSearch,
   SearchBox,
   useHits,
   Hits,
 } from 'react-instantsearch-hooks-web';
-import Logo from '../../logo.svg';
-import { useSearchContext } from '../../providers';
 
 // function CustomHits() {
 //   const { hits, results, sendEvent } = useHits();
@@ -33,41 +35,28 @@ const Landing = () => {
   const search = useSearchContext();
 
   if (!search.client) {
-    return <Spinner />;
+    return <CircularProgress />;
   }
 
   return (
-    <div
-      style={{
-        height: '80vh',
-        width: '100%',
-        display: 'flex',
-        alignContent: 'center',
-      }}
-    >
+    <Box height="92vh" display="flex" flexDirection="column">
       <Stack
-        verticalAlign="center"
-        horizontalAlign="center"
-        style={{ width: '100%', rowGap: 10 }}
+        height={'100%'}
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        spacing={2}
       >
-        <Image src={Logo} width={100} imageFit={ImageFit.contain}></Image>
+        <Box
+          component="img"
+          sx={{ height: 96, paddingRight: 1 }}
+          alt="4ks.io"
+          src={logo}
+        />
         <SearchBox placeholder="Search . . ." />
         {/* <CustomHits /> */}
-        {/* <TextField
-          placeholder="Search . . ."
-          styles={{
-            fieldGroup: {
-              height: '40px',
-              borderColor: 'lightgray',
-            },
-            field: {
-              fontSize: 16,
-              height: '40px',
-            },
-          }}
-        /> */}
       </Stack>
-    </div>
+    </Box>
   );
 };
 

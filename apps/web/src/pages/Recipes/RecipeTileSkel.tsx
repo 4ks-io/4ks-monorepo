@@ -1,44 +1,28 @@
 import React from 'react';
-import { Stack } from '@fluentui/react/lib/Stack';
-import Skeleton from 'react-loading-skeleton';
-import {
-  stackStyles,
-  stackTokens,
-  stackItemStyles,
-  itemAlignmentsStackTokens,
-} from './styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
+import Skeleton from '@mui/material/Skeleton';
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
 
 interface RecipeTileSkelProps {
   id: number;
 }
 const RecipeTileSkel = ({ id }: RecipeTileSkelProps) => {
   return (
-    <Stack
-      styles={stackStyles}
-      tokens={itemAlignmentsStackTokens}
-      key={'RecipeTileSkel_' + id}
-    >
-      <Stack.Item
-        style={{
-          borderWidth: 0,
-          borderStyle: 'solid',
-          borderColor: 'gray',
-          padding: 8,
-        }}
-      >
-        <Stack styles={stackStyles} tokens={stackTokens}>
-          <Stack horizontal>
-            <Stack.Item align="auto" styles={stackItemStyles}>
-              <span>
-                <Skeleton />
-              </span>
-            </Stack.Item>
-          </Stack>
-        </Stack>
-        <Skeleton count={2} />
-        <Skeleton height={160} />
-      </Stack.Item>
-    </Stack>
+    <Grid xs={8} key={id}>
+      <Item>
+        <Skeleton />
+        <Skeleton variant="rectangular" height={160} />
+      </Item>
+    </Grid>
   );
 };
 
