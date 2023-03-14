@@ -7,12 +7,9 @@ import { grey, blueGrey } from '@mui/material/colors';
 
 export const theme = createTheme({
   palette: {
-    primary: {
-      main: grey[50],
-      dark: 'black',
-    },
     secondary: {
-      main: blueGrey[900],
+      main: '#fff',
+      dark: 'black',
     },
   },
 });

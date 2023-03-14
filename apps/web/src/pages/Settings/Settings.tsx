@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react';
 import { useSessionContext } from '../../providers';
-import { TextField } from '@fluentui/react/lib/TextField';
-import { PrimaryButton } from '@fluentui/react/lib/Button';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { usernameValidator } from '../../hooks/username-validator';
 import { dtos_UpdateUser } from '@4ks/api-fetch';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
 
 const Settings = () => {
   const ctx = useSessionContext();
@@ -31,11 +34,8 @@ const Settings = () => {
     navigate('/');
   }
 
-  function handleUsernameChange(
-    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    newValue: string | undefined
-  ) {
-    uValidator.setUsername(`${newValue}`);
+  function handleUsernameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    uValidator.setUsername(`${event.target.value}`);
   }
 
   async function handleUpdateUsername() {
@@ -48,33 +48,45 @@ const Settings = () => {
   const disableSave = !ctx.user || disableSaveUsername;
 
   return (
-    <>
-      <h2>Settings</h2>
-      <p>
-        Current Username: <b>{ctx.user?.username}</b>
-      </p>
-
-      <TextField
-        errorMessage={validationErrorMsg}
-        label="Username"
-        deferredValidationTime={1000}
-        value={uValidator.username}
-        onChange={handleUsernameChange}
-      />
-      <ul>
-        <li>Username must be minimum 8 and maximum 24 characters.</li>
-        <li>It may only contain alphanumeric characters or single hyphens.</li>
-        <li>It cannot begin or end with a hyphen.</li>
-      </ul>
-      <p>
-        <b>Renaming may take a few minutes to complete.</b>
-      </p>
-      <PrimaryButton
-        text="Save"
-        disabled={disableSave}
-        onClick={handleUpdateUsername}
-      />
-    </>
+    <Container maxWidth="sm" style={{ paddingTop: 40 }}>
+      <Typography variant="h4" component="h2">
+        Settings
+      </Typography>
+      <Stack spacing={2} style={{ paddingTop: 40 }}>
+        <Typography variant="subtitle1" component="h2">
+          Current Username: {ctx.user?.username}
+        </Typography>
+        <TextField
+          error={validationErrorMsg ? true : false}
+          label="Username"
+          value={uValidator.username}
+          defaultValue={uValidator.username}
+          helperText={validationErrorMsg}
+          onChange={handleUsernameChange}
+          // deferredValidationTime={1000}
+        />
+        <Typography variant="body1" component="h2">
+          <ul>
+            <li>Username must be minimum 8 and maximum 24 characters.</li>
+            <li>
+              It may only contain alphanumeric characters or non-consecutive
+              hyphens.
+            </li>
+            <li>It cannot begin or end with a hyphen.</li>
+          </ul>
+        </Typography>
+        <Typography variant="subtitle2" component="h2">
+          <b>Renaming may take a few minutes to complete.</b>
+        </Typography>
+        <Button
+          variant="contained"
+          disabled={disableSave}
+          onClick={handleUpdateUsername}
+        >
+          Save
+        </Button>
+      </Stack>
+    </Container>
   );
 };
 

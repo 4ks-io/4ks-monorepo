@@ -1,16 +1,13 @@
 import React, { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { TextField } from '@fluentui/react/lib/TextField';
 import { useSessionContext } from '../../providers';
-import { PrimaryButton } from '@fluentui/react/lib/Button';
 import { useNavigate } from 'react-router-dom';
 import { usernameValidator } from '../../hooks/username-validator';
-import {
-  getTheme,
-  mergeStyleSets,
-  FontWeights,
-  IIconProps,
-} from '@fluentui/react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
 
 const NewUser: React.FunctionComponent = () => {
   const { user, isAuthenticated, logout } = useAuth0();
@@ -31,18 +28,12 @@ const NewUser: React.FunctionComponent = () => {
     );
   }, [uValidator]);
 
-  function handleNameChange(
-    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    newValue: string | undefined
-  ) {
-    setDisplayName(`${newValue}`);
+  function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setDisplayName(`${event.target.value}`);
   }
 
-  function handleUsernameChange(
-    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    newValue: string | undefined
-  ) {
-    uValidator.setUsername(`${newValue}`);
+  function handleUsernameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    uValidator.setUsername(`${event.target.value}`);
   }
 
   useEffect(() => {
@@ -77,52 +68,46 @@ const NewUser: React.FunctionComponent = () => {
     }
   }
 
-  const theme = getTheme();
-
   return (
-    <>
-      <h2 className={contentStyles.heading}>Choose a username to login.</h2>
-      <TextField label="Name" value={displayName} onChange={handleNameChange} />
-      {/* <TextField
-        label="Country"
-        value={country}
-        onChange={handleCountryChange}
-      />
-      <TextField
-        label="Prefered Locale"
-        value={locale}
-        onChange={handleLocaleChange}
-      /> */}
-      <TextField
-        label="Username"
-        value={uValidator.username}
-        deferredValidationTime={1000}
-        errorMessage={validationErrorMsg}
-        onChange={handleUsernameChange}
-      />
-      <ul>
-        <li>Username must be minimum 8 and maximum 16 characters.</li>
-        <li>It may only contain alphanumeric characters or single hyphens.</li>
-        <li>It cannot begin or end with a hyphen.</li>
-      </ul>
-
-      <PrimaryButton
-        text="Save"
-        disabled={!isAuthenticated || disableSaveUsername}
-        onClick={handleSave}
-      />
-    </>
+    <Container maxWidth="sm" style={{ paddingTop: 40 }}>
+      <Typography variant="h4" component="h2">
+        Choose an identity.
+      </Typography>
+      <Stack spacing={2} style={{ paddingTop: 40 }}>
+        <TextField
+          label="Name"
+          value={displayName}
+          onChange={handleNameChange}
+        />
+        <TextField
+          error={validationErrorMsg ? true : false}
+          label="Username"
+          value={uValidator.username}
+          defaultValue={uValidator.username}
+          helperText={validationErrorMsg}
+          onChange={handleUsernameChange}
+          // deferredValidationTime={1000}
+        />
+        <Typography variant="body1" component="h2">
+          <ul>
+            <li>Username must be minimum 8 and maximum 24 characters.</li>
+            <li>
+              It may only contain alphanumeric characters or non-consecutive
+              hyphens.
+            </li>
+            <li>It cannot begin or end with a hyphen.</li>
+          </ul>
+        </Typography>
+        <Button
+          variant="contained"
+          disabled={!isAuthenticated || disableSaveUsername}
+          onClick={handleSave}
+        >
+          Save
+        </Button>
+      </Stack>
+    </Container>
   );
 };
 
 export default NewUser;
-
-const theme = getTheme();
-const contentStyles = mergeStyleSets({
-  heading: {
-    color: theme.palette.neutralPrimary,
-    fontWeight: FontWeights.semibold,
-    // fontSize: 'inherit',
-    margin: '0',
-  },
-});
