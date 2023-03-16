@@ -5,4 +5,6 @@ export const initialState: SearchContextState = {
   results: [],
   setResults: () => {},
   clearResults: () => {},
+  showModal: false,
+  closeSearch: () => {},
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
-import { useSessionContext } from '../../providers';
+import { useSearchContext, useSessionContext } from '../../providers';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -23,6 +23,7 @@ import Button from '@mui/material/Button';
 import logo from '../../logo.svg';
 import { Theme, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import SearchModal from './SearchModal';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -68,6 +69,7 @@ export default function MainAppBar() {
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   const ctx = useSessionContext();
+  const search = useSearchContext();
   const theme = useTheme();
 
   const location = useLocation();
@@ -204,7 +206,7 @@ export default function MainAppBar() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search…"
+              placeholder="Search…(ctl+k)"
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
@@ -241,6 +243,7 @@ export default function MainAppBar() {
           </Button>
         )}
       </Toolbar>
+      {search.showModal && <SearchModal />}
     </AppBar>
   );
 }

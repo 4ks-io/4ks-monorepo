@@ -3,4 +3,6 @@ export type SearchContextState = {
   results: any;
   setResults: (r: any) => void;
   clearResults: () => void;
+  showModal: boolean;
+  closeSearch: () => void;
 };

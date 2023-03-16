@@ -18,6 +18,21 @@ export function SearchContextProvider({
   const atx = useAppConfigContext();
   const [state, dispatch] = useReducer(searchContextReducer, initialState);
 
+  const keyDownHandler = (event: KeyboardEvent) => {
+    event.preventDefault();
+    if (event.ctrlKey && event.key === 'k') {
+      console.log('You just pressed Control and K!');
+      dispatch({
+        type: SearchContextAction.SHOW_MODAL,
+        payload: null,
+      });
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', keyDownHandler);
+  });
+
   function setResults(restults: []) {
     dispatch({
       type: SearchContextAction.SET_RESULTS,
@@ -27,6 +42,13 @@ export function SearchContextProvider({
 
   function clearResults() {
     setResults([]);
+  }
+
+  function closeSearch() {
+    dispatch({
+      type: SearchContextAction.HIDE_MODAL,
+      payload: null,
+    });
   }
 
   useEffect(() => {
@@ -55,6 +77,7 @@ export function SearchContextProvider({
         client: typesenseInstantsearchAdapter.searchClient,
         setResults,
         clearResults,
+        closeSearch,
       },
     });
   }, []);
