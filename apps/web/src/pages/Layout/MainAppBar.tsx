@@ -175,7 +175,6 @@ export default function MainAppBar() {
   }
 
   return (
-    // <Box sx={{ flexGrow: 1 }}>
     <AppBar position="static" color="secondary">
       <Toolbar>
         <IconButton
@@ -243,7 +242,6 @@ export default function MainAppBar() {
         )}
       </Toolbar>
     </AppBar>
-    // </Box>
   );
 }
 

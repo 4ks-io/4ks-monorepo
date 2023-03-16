@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
-import { DefaultButton } from '@fluentui/react/lib/Button';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSessionContext } from '../../providers';
 import { models_Recipe } from '@4ks/api-fetch';
 import RecipeSearchTile from './RecipeSearchTile';
 import RecipeTile from './RecipeTile';
-import RecipeTileSkel from './RecipeTileSkel';
-import { stackStyles, itemAlignmentsStackTokens } from './styles';
+import Skeleton from '@mui/material/Skeleton';
 import { useHits } from 'react-instantsearch-hooks-web';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Unstable_Grid2';
+import AddIcon from '@mui/icons-material/Add';
+import Fab from '@mui/material/Fab';
 
 const Recipes = () => {
   const ctx = useSessionContext();
@@ -30,26 +31,23 @@ const Recipes = () => {
     navigate('/r/0');
   }
 
-  if (isLoading) {
-    return (
-      <>
-        <RecipeTileSkel id={0} />
-        <RecipeTileSkel id={1} />
-        <RecipeTileSkel id={2} />
-        <RecipeTileSkel id={3} />
-      </>
-    );
-  }
-
   function NewRecipeButton() {
     return isAuthenticated ? (
-      <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
-        <DefaultButton
-          text="New Recipe"
-          onClick={navigateNewRecipe}
-          allowDisabledFocus
-        />
-      </Stack>
+      <Fab
+        color="primary"
+        aria-label="add"
+        sx={{
+          margin: 0,
+          top: 'auto',
+          right: 20,
+          bottom: 20,
+          left: 'auto',
+          position: 'fixed',
+        }}
+        onClick={navigateNewRecipe}
+      >
+        <AddIcon />
+      </Fab>
     ) : null;
   }
 
@@ -57,9 +55,11 @@ const Recipes = () => {
     return (
       <>
         {recipes &&
-          recipes.map((r) => {
-            return <RecipeTile key={r.id} recipe={r} />;
-          })}
+          recipes.map((r) => (
+            <Grid xs={8} md={6} lg={4} key={r.id}>
+              <RecipeTile key={r.id} recipe={r} />
+            </Grid>
+          ))}
       </>
     );
   }
@@ -68,25 +68,35 @@ const Recipes = () => {
     return (
       <>
         {hits.map((h) => (
-          <RecipeSearchTile key={h.objectID} id={h.objectID} />
+          <Grid xs={12} md={6} lg={4} key={h.objectID}>
+            <RecipeSearchTile key={h.objectID} id={h.objectID} />
+          </Grid>
         ))}
       </>
     );
   }
 
+  if (isLoading) {
+    return (
+      <Container style={{ marginTop: 40 }}>
+        <Grid container spacing={2}>
+          {[...Array(10).keys()].map((n) => (
+            <Grid xs={8} md={6} lg={4} key={n}>
+              <Skeleton variant="rectangular" height={373} width={373} />
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    );
+  }
+
   return (
-    <>
+    <Container style={{ marginTop: 40 }}>
       <NewRecipeButton />
-      <Stack
-        horizontal
-        horizontalAlign="space-between"
-        wrap
-        styles={stackStyles}
-        tokens={itemAlignmentsStackTokens}
-      >
+      <Grid container spacing={2}>
         {hits.length > 0 ? <RecipesFromSearch /> : <RecipesFromCollection />}
-      </Stack>
-    </>
+      </Grid>
+    </Container>
   );
 };
 
