@@ -177,7 +177,7 @@ export default function MainAppBar() {
   return (
     <AppBar position="static" color="secondary">
       <Toolbar>
-        <IconButton
+        {/* <IconButton
           size="large"
           edge="start"
           color="inherit"
@@ -185,7 +185,7 @@ export default function MainAppBar() {
           sx={{ mr: 2 }}
         >
           <MenuIcon />
-        </IconButton>
+        </IconButton> */}
         {showLogo && (
           <Box
             component="img"
