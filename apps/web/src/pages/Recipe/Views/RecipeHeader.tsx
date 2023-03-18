@@ -9,11 +9,10 @@ import Skeleton from '@mui/material/Skeleton';
 import StarOutline from '@mui/icons-material/StarOutline';
 import CallSplit from '@mui/icons-material/CallSplit';
 import Share from '@mui/icons-material/Share';
-
-import { TextField } from '@fluentui/react/lib/TextField';
-import { Breadcrumb, IBreadcrumbItem } from '@fluentui/react/lib/Breadcrumb';
-import { IconButton } from '@fluentui/react/lib/Button';
-import { Label } from '@fluentui/react/lib/Label';
+import InputAdornment from '@mui/material/InputAdornment';
+import Edit from '@mui/icons-material/Edit';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 
 interface RecipeHeaderProps {}
 
@@ -25,6 +24,15 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   const navigate = useNavigate();
   const [isNew, setIsNew] = useState(false);
   const [title, setTitle] = useState('');
+  const [chefName, setChefName] = useState<string>();
+
+  useEffect(() => {
+    if (rtx?.recipe?.author?.username) {
+      setChefName('@' + rtx?.recipe?.author?.username);
+    } else if (ctx.user?.username) {
+      setChefName('@' + ctx.user?.username);
+    }
+  }, [rtx?.recipe?.author?.username, ctx.user?.username]);
 
   function handleTitleFocus() {
     if (title == GENERIC_TITLE) {
@@ -32,17 +40,8 @@ export function RecipeHeader(props: RecipeHeaderProps) {
     }
   }
 
-  function handleTitleBlur() {
-    if (title == '') {
-      setTitle(GENERIC_TITLE);
-    }
-  }
-
-  function handleTitleChange(
-    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    newValue: string | undefined
-  ) {
-    setTitle(`${newValue}`);
+  function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setTitle(event.target.value);
   }
 
   useEffect(() => {
@@ -79,11 +78,9 @@ export function RecipeHeader(props: RecipeHeaderProps) {
     rtx?.setTitle(title);
   }
 
-  const userBreadcrumb: IBreadcrumbItem = {
-    text: '@' + (rtx?.recipe?.author?.username || ctx.user?.username),
-    key: 'UserName',
-    href: encodeURI(`/${rtx?.recipe?.author?.username}`),
-  };
+  function navigateChef() {
+    navigate(`/${rtx?.recipe?.author?.username}`);
+  }
 
   function getCountLabel(c: number | undefined) {
     return c && c > 0 ? ' (' + c + ')' : '';
@@ -100,61 +97,45 @@ export function RecipeHeader(props: RecipeHeaderProps) {
         <RecipeMediaBanner />
       )}
 
-      {userBreadcrumb.text.length > 0 ? (
-        <Breadcrumb
-          items={[userBreadcrumb]}
-          maxDisplayedItems={1}
-          ariaLabel="headercrums"
-        />
+      {chefName ? (
+        <Typography variant="h6" gutterBottom onClick={navigateChef}>
+          {chefName}
+        </Typography>
       ) : (
         <Skeleton variant="text" />
       )}
+
       {rtx?.editing ? (
         <Stack>
-          <IconButton
-            iconProps={{ iconName: 'EditMirrored' }}
-            aria-label="EditMirrored"
-          />
           <TextField
             onFocus={handleTitleFocus}
-            onBlur={handleTitleBlur}
             onChange={handleTitleChange}
-            style={{ fontWeight: 600, fontSize: '18px' }}
-            styles={{
-              field: {
-                fontSize: 16,
-                width: 400,
-              },
-            }}
-            borderless
-            readOnly={false}
-            validateOnFocusOut={true}
-            onNotifyValidationResult={handleValidationComplete}
+            onBlur={handleValidationComplete}
             value={title}
+            // variant="standard"
+            size="small"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Edit />
+                </InputAdornment>
+              ),
+            }}
           />
         </Stack>
       ) : (
         <>
           {title?.length > 0 ? (
-            <Label
-              styles={{
-                root: {
-                  fontSize: 20,
-                  height: '40px',
-                  paddingLeft: 8,
-                  marginBottom: 16,
-                },
-              }}
-            >
+            <Typography variant="h5" gutterBottom>
               {title}
-            </Label>
+            </Typography>
           ) : (
             <Skeleton />
           )}
         </>
       )}
       {isNew && (
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={2} style={{ paddingTop: 12 }}>
           <Button
             variant="outlined"
             startIcon={<CallSplit />}

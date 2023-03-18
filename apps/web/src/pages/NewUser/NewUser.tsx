@@ -82,6 +82,9 @@ const NewUser: React.FunctionComponent = () => {
         <TextField
           error={validationErrorMsg ? true : false}
           label="Username"
+          InputLabelProps={{
+            shrink: true,
+          }}
           value={uValidator.username}
           defaultValue={uValidator.username}
           helperText={validationErrorMsg}
