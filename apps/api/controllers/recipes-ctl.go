@@ -3,6 +3,7 @@ package controllers
 import (
 	recipeService "4ks/apps/api/services/recipe"
 	searchService "4ks/apps/api/services/search"
+	staticService "4ks/apps/api/services/static"
 	userService "4ks/apps/api/services/user"
 
 	"github.com/gin-gonic/gin"
@@ -28,6 +29,7 @@ type RecipeController interface {
 type recipeController struct {
 	recipeService recipeService.RecipeService
 	searchService searchService.SearchService
+	staticService staticService.StaticService
 	userService   userService.UserService
 }
 
@@ -36,5 +38,6 @@ func NewRecipeController() RecipeController {
 		recipeService: recipeService.New(),
 		searchService: searchService.New(),
 		userService:   userService.New(),
+		staticService: staticService.New(),
 	}
 }

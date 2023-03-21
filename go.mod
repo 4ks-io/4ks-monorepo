@@ -7,6 +7,7 @@ require (
 	cloud.google.com/go/storage v1.28.0
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v1.7.0
 	github.com/auth0/go-jwt-middleware/v2 v2.0.0
+	github.com/bluele/gcache v0.0.2
 	github.com/casbin/casbin/v2 v2.47.2
 	github.com/geraldo-labs/merge-struct v1.0.0
 	github.com/gin-gonic/gin v1.7.7

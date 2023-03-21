@@ -42,4 +42,3 @@ func (sc *searchController) CreateSearchRecipeCollection(c *gin.Context) {
 
 	c.JSON(http.StatusOK, "ok")
 }
-

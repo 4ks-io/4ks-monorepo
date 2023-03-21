@@ -54,6 +54,8 @@ spec:
               value: media-write.sbx.4ks.io
             - name: DISTRIBUTION_BUCKET
               value: media-read.sbx.4ks.io
+            - name: STATIC_MEDIA_BUCKET
+              value: static.dev.4ks.io
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /app/google-app-creds.json
             - name: TYPESENSE_URL
@@ -62,6 +64,8 @@ spec:
               value: local-4ks-api-key
             - name: IO_4KS_DEVING
               value: 'true'
+            - name: MEDIA_FALLBACK_URL
+              value: https://storage.googleapis.com/static.dev.4ks.io
           ports:
             - containerPort: 5000
           readinessProbe:

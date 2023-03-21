@@ -11,6 +11,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab';
+import RecipeCard from './RecipeCard';
 
 const Recipes = () => {
   const ctx = useSessionContext();
@@ -56,7 +57,7 @@ const Recipes = () => {
       <>
         {recipes &&
           recipes.map((r) => (
-            <Grid xs={8} md={6} lg={4} key={r.id}>
+            <Grid xs={12} md={6} lg={4} key={r.id}>
               <RecipeTile key={r.id} recipe={r} />
             </Grid>
           ))}
@@ -81,8 +82,8 @@ const Recipes = () => {
       <Container style={{ marginTop: 40 }}>
         <Grid container spacing={2}>
           {[...Array(10).keys()].map((n) => (
-            <Grid xs={8} md={6} lg={4} key={n}>
-              <Skeleton variant="rectangular" height={373} width={373} />
+            <Grid xs={12} md={6} lg={4} key={n}>
+              <RecipeCard loading />
             </Grid>
           ))}
         </Grid>
@@ -94,7 +95,17 @@ const Recipes = () => {
     <Container style={{ marginTop: 40 }}>
       <NewRecipeButton />
       <Grid container spacing={2}>
-        {hits.length > 0 ? <RecipesFromSearch /> : <RecipesFromCollection />}
+        {hits.map((h) => (
+          <Grid xs={12} md={6} lg={4} key={h.objectID}>
+            <RecipeCard
+              key={h.objectID}
+              id={`${h['id']}`}
+              title={`${h['name']}`}
+              chef={`${h['author']}`}
+              imageUrl={`${h['imageUrl']}`}
+            />
+          </Grid>
+        ))}
       </Grid>
     </Container>
   );

@@ -38,11 +38,19 @@ func (us searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
 		ins = append(ins, v.Text)
 	}
 
+	var banner string
+	for _, b := range r.CurrentRevision.Banner {
+		if b.Alias == "md" {
+			banner = b.Url
+		}
+	}
+
 	document := dtos.CreateSearchRecipe{
-		Id:           r.Id,
-		Author:       r.Author.Username,
-		Name:         r.CurrentRevision.Name,
-		Ingredients:  ing,
+		Id:          r.Id,
+		Author:      r.Author.Username,
+		Name:        r.CurrentRevision.Name,
+		Ingredients: ing,
+		ImageUrl:    banner,
 	}
 
 	_, err := tsc.Collection("recipes").Documents().Upsert(document)
@@ -52,7 +60,6 @@ func (us searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
 
 	return nil
 }
-
 
 func (us searchService) RemoveSearchRecipeDocument(id *string) error {
 	_, err := tsc.Collection("recipes").Document(*id).Delete()
@@ -65,6 +72,8 @@ func (us searchService) RemoveSearchRecipeDocument(id *string) error {
 
 // note: schema must overlap with additionalSearchParameters in search-context.tsx
 func (us searchService) CreateSearchRecipeCollection() error {
+	False := false
+	True := true
 	schema := &api.CollectionSchema{
 		Name: "recipes",
 		Fields: []api.Field{
@@ -79,6 +88,12 @@ func (us searchService) CreateSearchRecipeCollection() error {
 			{
 				Name: "ingredients",
 				Type: "string[]",
+			},
+			{
+				Name:  "imageUrl",
+				Type:  "string",
+				Index: &False,
+				Optional: &True,
 			},
 		},
 	}

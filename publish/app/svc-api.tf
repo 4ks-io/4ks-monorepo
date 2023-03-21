@@ -31,6 +31,10 @@ resource "google_cloud_run_service" "api" {
           value = google_storage_bucket.media_read.name
         }
         env {
+          name  = "STATIC_MEDIA_BUCKET"
+          value = google_storage_bucket.media_static.name
+        }
+        env {
           name  = "GOOGLE_CLOUD_PROJECT"
           value = data.google_project.project.number
         }
@@ -76,6 +80,10 @@ resource "google_cloud_run_service" "api" {
         env {
           name = "TYPESENSE_API_KEY"
           value = var.typesense_api_key
+        }
+        env {
+          name = "MEDIA_FALLBACK_URL"
+          value = "https://storage.googleapis.com/static.${local.web_domain}"
         }
 
       }

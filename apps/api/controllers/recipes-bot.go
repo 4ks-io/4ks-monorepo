@@ -2,6 +2,7 @@ package controllers
 
 import (
 	recipeService "4ks/apps/api/services/recipe"
+	"fmt"
 
 	"net/http"
 
@@ -34,6 +35,27 @@ func (rc *recipeController) BotCreateRecipe(c *gin.Context) {
 		Username:    "4ks-bot",
 		DisplayName: "4ks bot",
 	}
+
+	f, err := rc.staticService.GetRandomFallbackImage(c)
+	if err != nil {
+		fmt.Println(err)
+	}
+	u := rc.staticService.GetRandomFallbackImageUrl(f)
+
+	a := []models.RecipeMediaVariant{}
+	a = append(a, models.RecipeMediaVariant{
+		MaxWidth: 256,
+		Url:      u,
+		Filename: f,
+		Alias:    "sm",
+	})
+	a = append(a, models.RecipeMediaVariant{
+		MaxWidth: 1024,
+		Url:      u,
+		Filename: f,
+		Alias:    "md",
+	})
+	payload.Banner = a
 
 	createdRecipe, err := rc.recipeService.CreateRecipe(&payload)
 	if err == recipeService.ErrUnableToCreateRecipe {
