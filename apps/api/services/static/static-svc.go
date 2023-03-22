@@ -41,9 +41,10 @@ func (ss staticService) GetRandomFallbackImage(c *gin.Context) (string, error) {
 	}
 
 	// random static bucket fallback image
-	s := rand.NewSource(time.Now().Unix())
+	s := rand.NewSource(time.Now().UnixNano())
 	r := rand.New(s) // initialize local pseudorandom generator
 	i := images[r.Intn(len(images))]
+
 	return i, nil
 }
 

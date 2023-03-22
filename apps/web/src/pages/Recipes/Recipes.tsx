@@ -79,7 +79,7 @@ const Recipes = () => {
 
   if (isLoading) {
     return (
-      <Container style={{ marginTop: 40 }}>
+      <Container style={{ marginTop: 20 }}>
         <Grid container spacing={2}>
           {[...Array(10).keys()].map((n) => (
             <Grid xs={12} md={6} lg={4} key={n}>
@@ -92,9 +92,9 @@ const Recipes = () => {
   }
 
   return (
-    <Container style={{ marginTop: 40 }}>
+    <Container style={{ marginTop: 20 }}>
       <NewRecipeButton />
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         {hits.map((h) => (
           <Grid xs={12} md={6} lg={4} key={h.objectID}>
             <RecipeCard
