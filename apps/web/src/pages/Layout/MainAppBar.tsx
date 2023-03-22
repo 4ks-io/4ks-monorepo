@@ -17,8 +17,8 @@ import Avatar from '@mui/material/Avatar';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
-import Settings from '@mui/icons-material/Settings';
-import Logout from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Button from '@mui/material/Button';
 import logo from '../../logo.svg';
 import { Theme, useTheme } from '@mui/material/styles';
@@ -158,7 +158,7 @@ export default function MainAppBar() {
         {!isTransition && (
           <MenuItem onClick={handleSettingsClick}>
             <ListItemIcon>
-              <Settings fontSize="small" />
+              <SettingsIcon fontSize="small" />
             </ListItemIcon>
             Settings
           </MenuItem>
@@ -166,7 +166,7 @@ export default function MainAppBar() {
         {!isTransition && <Divider />}
         <MenuItem onClick={handleLogoutOnClick}>
           <ListItemIcon>
-            <Logout fontSize="small" />
+            <LogoutIcon fontSize="small" />
           </ListItemIcon>
           Logout
         </MenuItem>

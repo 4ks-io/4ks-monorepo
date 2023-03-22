@@ -15,7 +15,9 @@ const Recipe = () => {
         <Stack>
           <RecipeHeader />
           <RecipeControls />
-          <Outlet />
+          <Container>
+            <Outlet />
+          </Container>
         </Stack>
       </Container>
     </RecipeContextProvider>

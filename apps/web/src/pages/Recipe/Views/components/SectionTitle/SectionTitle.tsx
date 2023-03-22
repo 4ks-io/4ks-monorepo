@@ -1,8 +1,10 @@
 import React from 'react';
-import { Label } from '@fluentui/react/lib/Label';
+import Typography from '@mui/material/Typography';
 
 export function SectionTitle(props: { value: string }) {
   return (
-    <Label style={{ fontSize: '14px', fontWeight: 600 }}>{props.value}</Label>
+    <Typography variant="h5" gutterBottom>
+      {props.value}
+    </Typography>
   );
 }

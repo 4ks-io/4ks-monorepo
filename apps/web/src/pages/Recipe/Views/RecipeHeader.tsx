@@ -6,11 +6,11 @@ import { RecipeMediaBanner } from './components';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Skeleton from '@mui/material/Skeleton';
-import StarOutline from '@mui/icons-material/StarOutline';
-import CallSplit from '@mui/icons-material/CallSplit';
-import Share from '@mui/icons-material/Share';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import CallSplitIcon from '@mui/icons-material/CallSplit';
+import ShareIcon from '@mui/icons-material/Share';
 import InputAdornment from '@mui/material/InputAdornment';
-import Edit from '@mui/icons-material/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
@@ -117,7 +117,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Edit />
+                  <EditIcon />
                 </InputAdornment>
               ),
             }}
@@ -138,21 +138,21 @@ export function RecipeHeader(props: RecipeHeaderProps) {
         <Stack direction="row" spacing={2} style={{ paddingTop: 12 }}>
           <Button
             variant="outlined"
-            startIcon={<CallSplit />}
+            startIcon={<CallSplitIcon />}
             onClick={forkThisRecipe}
           >
             {`Fork${forksCountLabel}`}
           </Button>
           <Button
             variant="outlined"
-            startIcon={<StarOutline />}
+            startIcon={<StarOutlineIcon />}
             onClick={starThisRecipe}
           >
             {`Star${starsCountLabel}`}
           </Button>
           <Button
             variant="outlined"
-            startIcon={<Share />}
+            startIcon={<ShareIcon />}
             onClick={shareThisRecipe}
           >
             Share

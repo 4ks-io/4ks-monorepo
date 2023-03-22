@@ -1,12 +1,12 @@
 import React from 'react';
-import { Stack } from '@fluentui/react/lib/Stack';
 import { SectionTitle } from '../components';
-import { stackStyles, itemAlignmentsStackTokens } from './../../styles';
-import { Icon } from '@fluentui/react/lib/Icon';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useSessionContext } from '../../../../providers';
 import { useRecipeContext } from '../../../../providers';
 import { useNavigate } from 'react-router-dom';
-import { DefaultButton } from '@fluentui/react/lib/Button';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 
 interface RecipeDangerZoneProps {}
 
@@ -22,12 +22,20 @@ export function RecipeDangerZone({}: RecipeDangerZoneProps) {
   };
 
   return (
-    <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
-      <SectionTitle value={'Danger Zone'} />
-      <Stack.Item>
-        <Icon iconName="Delete" onClick={handleDelete} />
-        <DefaultButton text="Delete Recipe" onClick={handleDelete} />
-      </Stack.Item>
-    </Stack>
+    <Box sx={{ width: '100%' }}>
+      <Stack spacing={2}>
+        <SectionTitle value={'Danger Zone'} />
+        <div>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDelete}
+            startIcon={<DeleteIcon />}
+          >
+            Delete Recipe
+          </Button>
+        </div>
+      </Stack>
+    </Box>
   );
 }
