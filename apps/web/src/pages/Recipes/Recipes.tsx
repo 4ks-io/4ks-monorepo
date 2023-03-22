@@ -11,19 +11,9 @@ import Fab from '@mui/material/Fab';
 import RecipeCard from './RecipeCard';
 
 const Recipes = () => {
-  const ctx = useSessionContext();
   const { isAuthenticated } = useAuth0();
   const navigate = useNavigate();
-  const [recipes, setRecipes] = useState<models_Recipe[] | undefined>();
-  const [isLoading, setIsLoading] = useState(true);
   const { hits } = useHits();
-
-  useEffect(() => {
-    ctx.api?.recipes.getRecipes().then((r: models_Recipe[]) => {
-      setRecipes(r);
-      setIsLoading(false);
-    });
-  }, [ctx]);
 
   function navigateNewRecipe() {
     navigate('/r/0');
@@ -47,20 +37,6 @@ const Recipes = () => {
         <AddIcon />
       </Fab>
     ) : null;
-  }
-
-  if (isLoading) {
-    return (
-      <Container style={{ marginTop: 20 }}>
-        <Grid container spacing={2}>
-          {[...Array(10).keys()].map((n) => (
-            <Grid xs={12} md={6} lg={4} key={n}>
-              <RecipeCard loading />
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-    );
   }
 
   return (
