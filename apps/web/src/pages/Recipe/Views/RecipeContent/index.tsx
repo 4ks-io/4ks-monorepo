@@ -4,7 +4,7 @@ import { RecipeInstructions } from './RecipeInstructions';
 import { RecipeSocial } from './RecipeSocial';
 import { RecipeEditingControls } from './RecipeEditingControls';
 import { RecipeFontControls } from './RecipeFontControls';
-import RecipeLoading from './RecipeLoading';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useRecipeContext } from '../../../../providers';
 
 type RecipeProps = {
@@ -15,7 +15,7 @@ const RecipeContentView = ({ create = false }: RecipeProps) => {
   const rtx = useRecipeContext();
 
   if (!rtx || !rtx.recipe) {
-    return <RecipeLoading />;
+    return <CircularProgress />;
   }
 
   return (

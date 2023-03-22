@@ -1,8 +1,8 @@
 import React from 'react';
-import { Stack } from '@fluentui/react/lib/Stack';
-import { stackItemStyles } from './../../styles';
 import { useRecipeContext } from '../../../../providers';
 import { SectionTitle } from '../components';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 interface RecipeSocialProps {}
 
@@ -11,30 +11,32 @@ export function RecipeSocial(props: RecipeSocialProps) {
 
   return (
     <>
-      <Stack.Item align="start" styles={stackItemStyles}>
+      <Stack>
         <SectionTitle value={'Contributors'} />
         {rtx?.recipe?.contributors?.map((c) => {
           return (
-            <Stack.Item key={c.id} align="center" styles={stackItemStyles}>
-              <span>{c.username}</span>
-            </Stack.Item>
+            <Typography variant="body1" gutterBottom>
+              {c.username}
+            </Typography>
           );
         })}
-      </Stack.Item>
-      <Stack.Item align="start" styles={stackItemStyles}>
+      </Stack>
+      <Stack>
         {rtx?.recipe.currentRevision?.link && (
           <>
             <SectionTitle value={'Source'} />
-            <a
-              href={'https://' + rtx.recipe.currentRevision?.link}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {rtx.recipe.currentRevision?.link.split('/')[0]}
-            </a>
+            <Typography variant="body1" gutterBottom>
+              <a
+                href={'https://' + rtx.recipe.currentRevision?.link}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {rtx.recipe.currentRevision?.link.split('/')[0]}
+              </a>
+            </Typography>
           </>
         )}
-      </Stack.Item>
+      </Stack>
     </>
   );
 }

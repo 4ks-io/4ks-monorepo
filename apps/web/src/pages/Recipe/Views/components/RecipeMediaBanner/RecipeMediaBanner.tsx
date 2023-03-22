@@ -102,6 +102,9 @@ const RecipeMediaBanner = () => {
           <Stack horizontal wrap tokens={{ childrenGap: 30 }}>
             {rtx.media.map((m) => {
               let sm = getBannerVariantUrl(m?.variants, RecipeMediaSize.SM);
+              if (!sm) {
+                return;
+              }
               const isSelectedStyle =
                 m.id == selectingMediaId
                   ? {

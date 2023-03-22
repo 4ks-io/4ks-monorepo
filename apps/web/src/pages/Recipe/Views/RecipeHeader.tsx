@@ -13,6 +13,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import EditIcon from '@mui/icons-material/Edit';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import Container from '@mui/material/Container';
 
 interface RecipeHeaderProps {}
 
@@ -90,75 +91,79 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   const starsCountLabel = getCountLabel(rtx?.recipe?.metadata?.stars);
 
   return (
-    <Stack>
-      {!rtx.recipe || rtx.recipe.id == '' || rtx.recipeId == '0' ? (
-        <Skeleton variant="rectangular" height={256} />
-      ) : (
-        <RecipeMediaBanner />
-      )}
+    <>
+      <Stack>
+        {!rtx.recipe || rtx.recipe.id == '' || rtx.recipeId == '0' ? (
+          <Skeleton variant="rectangular" height={256} />
+        ) : (
+          <RecipeMediaBanner />
+        )}
 
-      {chefName ? (
-        <Typography variant="h6" gutterBottom onClick={navigateChef}>
-          {chefName}
-        </Typography>
-      ) : (
-        <Skeleton variant="text" />
-      )}
+        {chefName ? (
+          <Typography variant="h6" gutterBottom onClick={navigateChef}>
+            {chefName}
+          </Typography>
+        ) : (
+          <Skeleton variant="text" />
+        )}
 
-      {rtx?.editing ? (
-        <Stack>
-          <TextField
-            onFocus={handleTitleFocus}
-            onChange={handleTitleChange}
-            onBlur={handleValidationComplete}
-            value={title}
-            // variant="standard"
-            size="small"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EditIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Stack>
-      ) : (
-        <>
-          {title?.length > 0 ? (
-            <Typography variant="h5" gutterBottom>
-              {title}
-            </Typography>
-          ) : (
-            <Skeleton />
-          )}
-        </>
-      )}
+        {rtx?.editing ? (
+          <Stack>
+            <TextField
+              onFocus={handleTitleFocus}
+              onChange={handleTitleChange}
+              onBlur={handleValidationComplete}
+              value={title}
+              // variant="standard"
+              size="small"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EditIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Stack>
+        ) : (
+          <>
+            {title?.length > 0 ? (
+              <Typography variant="h5" gutterBottom>
+                {title}
+              </Typography>
+            ) : (
+              <Skeleton />
+            )}
+          </>
+        )}
+      </Stack>
       {isNew && (
-        <Stack direction="row" spacing={2} style={{ paddingTop: 12 }}>
-          <Button
-            variant="outlined"
-            startIcon={<CallSplitIcon />}
-            onClick={forkThisRecipe}
-          >
-            {`Fork${forksCountLabel}`}
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<StarOutlineIcon />}
-            onClick={starThisRecipe}
-          >
-            {`Star${starsCountLabel}`}
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<ShareIcon />}
-            onClick={shareThisRecipe}
-          >
-            Share
-          </Button>
-        </Stack>
+        <Container>
+          <Stack direction="row" spacing={2} style={{ paddingTop: 12 }}>
+            <Button
+              variant="outlined"
+              startIcon={<CallSplitIcon />}
+              onClick={forkThisRecipe}
+            >
+              {`Fork${forksCountLabel}`}
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<StarOutlineIcon />}
+              onClick={starThisRecipe}
+            >
+              {`Star${starsCountLabel}`}
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<ShareIcon />}
+              onClick={shareThisRecipe}
+            >
+              Share
+            </Button>
+          </Stack>
+        </Container>
       )}
-    </Stack>
+    </>
   );
 }
