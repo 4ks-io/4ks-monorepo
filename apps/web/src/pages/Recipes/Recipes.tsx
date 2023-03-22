@@ -3,9 +3,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 import { useSessionContext } from '../../providers';
 import { models_Recipe } from '@4ks/api-fetch';
-import RecipeSearchTile from './RecipeSearchTile';
-import RecipeTile from './RecipeTile';
-import Skeleton from '@mui/material/Skeleton';
 import { useHits } from 'react-instantsearch-hooks-web';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -50,31 +47,6 @@ const Recipes = () => {
         <AddIcon />
       </Fab>
     ) : null;
-  }
-
-  function RecipesFromCollection() {
-    return (
-      <>
-        {recipes &&
-          recipes.map((r) => (
-            <Grid xs={12} md={6} lg={4} key={r.id}>
-              <RecipeTile key={r.id} recipe={r} />
-            </Grid>
-          ))}
-      </>
-    );
-  }
-
-  function RecipesFromSearch() {
-    return (
-      <>
-        {hits.map((h) => (
-          <Grid xs={12} md={6} lg={4} key={h.objectID}>
-            <RecipeSearchTile key={h.objectID} id={h.objectID} />
-          </Grid>
-        ))}
-      </>
-    );
   }
 
   if (isLoading) {
