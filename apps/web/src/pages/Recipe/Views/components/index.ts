@@ -1,4 +1,4 @@
-import { SectionTitle } from './SectionTitle/index';
+import { SectionTitle } from './SectionTitle';
 import { RecipeMediaBanner } from './RecipeMediaBanner';
 
 export { RecipeMediaBanner, SectionTitle };

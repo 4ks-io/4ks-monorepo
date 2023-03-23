@@ -1,19 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { TextField } from '@fluentui/react/lib/TextField';
+import React, { useState } from 'react';
 import { models_Instruction } from '@4ks/api-fetch';
-import { stackStyles, stackItemStyles } from './../../styles';
-import { Icon } from '@fluentui/react/lib/Icon';
-import {
-  Stack,
-  IStackProps,
-  IStackStyles,
-  IStackTokens,
-  IStackItemStyles,
-} from '@fluentui/react/lib/Stack';
-
-const stackTokens: IStackTokens = {
-  childrenGap: 1,
-};
+import Stack from '@mui/material/Stack';
+import DragHandleIcon from '@mui/icons-material/DragIndicator';
+import DeleteIcon from '@mui/icons-material/Delete';
+import TextField from '@mui/material/TextField';
 
 interface RecipeInstructionProps {
   index: number;
@@ -31,16 +21,10 @@ export function RecipeInstruction({
   handleInstructionChange,
 }: RecipeInstructionProps) {
   const [active, setActive] = useState(false);
-  const [text, setText] = useState(data.text || '');
-  const [isMultiline, setIsMultiline] = useState(false);
+  const [text, setText] = useState(`${data.text}`);
 
-  useEffect(() => setIsMultiline(text?.length > 36), [text]);
-
-  function handleTextChange(
-    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    newValue?: string | undefined
-  ) {
-    setText(`${newValue}`);
+  function handleTextChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setText(`${event.target.value}`);
   }
 
   function handleDelete() {
@@ -61,47 +45,47 @@ export function RecipeInstruction({
     } as models_Instruction);
   }
 
-  const dragItemStyles: IStackItemStyles = {
-    root: {
-      // background: 'rgb(243, 242, 241)',
-      padding: 2,
-    },
-  };
-
   return (
-    <Stack.Item align="start" styles={dragItemStyles}>
-      <Stack horizontal styles={stackStyles} tokens={stackTokens}>
-        <Stack.Item>{index + 1}</Stack.Item>
-        <Stack.Item>
-          <Icon
-            iconName={editing ? 'DragObject' : 'ToggleBorder'}
-            style={{ paddingTop: '10px', paddingRight: '12px' }}
-          />
-        </Stack.Item>
-        <Stack.Item grow={2}>
+    <Stack>
+      <Stack direction="row">
+        {!editing && (
           <TextField
-            className="contentResizer"
-            borderless
-            autoAdjustHeight
-            resizable={false}
-            multiline={isMultiline}
-            readOnly={!editing}
-            value={text}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onChange={handleTextChange}
+            variant="standard"
+            value={index + 1}
+            InputProps={{ disableUnderline: true, readOnly: true }}
+            sx={{ width: 16 }}
           />
-        </Stack.Item>
+        )}
+        {editing && !active && (
+          <TextField
+            variant="standard"
+            value={index + 1}
+            InputProps={{ disableUnderline: true, readOnly: true }}
+            sx={{ width: 16 }}
+          />
+        )}
         {editing && active && (
-          <Stack.Item>
-            <Icon
-              iconName="Delete"
-              onClick={handleDelete}
-              style={{ paddingTop: '10px', paddingLeft: '4px' }}
-            />
-          </Stack.Item>
+          <DragHandleIcon sx={{ fontSize: 16, marginTop: 1 }} />
+        )}
+        <TextField
+          fullWidth
+          variant="standard"
+          value={text}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onChange={handleTextChange}
+          multiline
+          InputProps={{ disableUnderline: true }}
+          sx={{ paddingLeft: 1 }}
+        />
+
+        {editing && active && (
+          <DeleteIcon
+            sx={{ fontSize: 16, marginTop: 1 }}
+            onClick={handleDelete}
+          />
         )}
       </Stack>
-    </Stack.Item>
+    </Stack>
   );
 }
