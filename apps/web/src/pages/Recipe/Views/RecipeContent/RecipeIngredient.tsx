@@ -1,17 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Stack,
-  IStackTokens,
-  IStackItemStyles,
-} from '@fluentui/react/lib/Stack';
-import { TextField } from '@fluentui/react/lib/TextField';
+import React, { useState } from 'react';
+import Stack from '@mui/material/Stack';
 import { models_Ingredient } from '@4ks/api-fetch';
-import { stackStyles } from './../../styles';
-import { Icon } from '@fluentui/react/lib/Icon';
-
-const stackTokens: IStackTokens = {
-  childrenGap: 1,
-};
+import DragHandleIcon from '@mui/icons-material/DragIndicator';
+import DeleteIcon from '@mui/icons-material/Delete';
+import TextField from '@mui/material/TextField';
+import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 
 interface RecipeIngredientProps {
   index: number;
@@ -31,24 +24,13 @@ export function RecipeIngredient({
   const [quantity, setQuantity] = useState(data.quantity || '');
   const [name, setName] = useState(data.name || '');
   const [active, setActive] = useState(false);
-  const [isNameMultiline, setIsNameMultiline] = useState(false);
-  const [isQuantityMultiline, setIsQuantityMultiline] = useState(false);
 
-  useEffect(() => setIsNameMultiline(name?.length >= 24), [name]);
-  useEffect(() => setIsQuantityMultiline(quantity?.length >= 8), [quantity]);
-
-  function handleQuantityChange(
-    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    newValue?: string | undefined
-  ) {
-    setQuantity(`${newValue}`);
+  function handleQuantityChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setQuantity(`${event.target.value}`);
   }
 
-  function handleNameChange(
-    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    newValue?: string | undefined
-  ) {
-    setName(`${newValue}`);
+  function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setName(`${event.target.value}`);
   }
 
   function handleDelete() {
@@ -69,61 +51,45 @@ export function RecipeIngredient({
     } as models_Ingredient);
   }
 
-  const dragItemStyles: IStackItemStyles = {
-    root: {
-      // background: 'rgb(243, 242, 241)',
-      padding: 2,
-    },
-  };
+  const inputProps = { disableUnderline: true, readOnly: !editing };
 
   return (
-    <Stack.Item align="start" styles={dragItemStyles}>
-      <Stack horizontal styles={stackStyles} tokens={stackTokens}>
-        <Stack.Item>
-          <Icon
-            iconName={editing ? 'DragObject' : 'ToggleBorder'}
-            style={{ paddingTop: '10px', paddingRight: '12px' }}
-          />
-        </Stack.Item>
-        <Stack.Item grow={2}>
-          <TextField
-            className="contentResizer"
-            style={{ width: '96px' }}
-            borderless
-            multiline={isQuantityMultiline}
-            autoAdjustHeight
-            resizable={false}
-            readOnly={!editing}
-            value={quantity}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onChange={handleQuantityChange}
-          />
-        </Stack.Item>
-        <Stack.Item grow={8}>
-          <TextField
-            className="contentResizer"
-            borderless
-            multiline={isNameMultiline}
-            autoAdjustHeight
-            resizable={false}
-            readOnly={!editing}
-            value={name}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onChange={handleNameChange}
-          />
-        </Stack.Item>
+    <Stack>
+      <Stack direction="row">
+        {editing && active ? (
+          <DragHandleIcon sx={{ fontSize: 16, marginTop: 1 }} />
+        ) : (
+          <HorizontalRuleIcon sx={{ fontSize: 16, marginTop: 1 }} />
+        )}
+        <TextField
+          fullWidth
+          variant="standard"
+          value={quantity}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onChange={handleQuantityChange}
+          multiline
+          InputProps={inputProps}
+          sx={{ paddingLeft: 1, width: '96px' }}
+        />
+        <TextField
+          fullWidth
+          variant="standard"
+          value={name}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onChange={handleNameChange}
+          multiline
+          InputProps={inputProps}
+          sx={{ paddingLeft: 1 }}
+        />
         {editing && active && (
-          <Stack.Item>
-            <Icon
-              iconName="Delete"
-              onClick={handleDelete}
-              style={{ paddingTop: '10px', paddingLeft: '4px' }}
-            />
-          </Stack.Item>
+          <DeleteIcon
+            sx={{ fontSize: 16, marginTop: 1 }}
+            onClick={handleDelete}
+          />
         )}
       </Stack>
-    </Stack.Item>
+    </Stack>
   );
 }

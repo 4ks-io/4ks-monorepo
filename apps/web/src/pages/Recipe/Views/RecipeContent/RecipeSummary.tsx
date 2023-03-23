@@ -9,7 +9,6 @@ import { DefaultPalette } from '@fluentui/react';
 import { formatDate } from '../../../../utils/dateTime';
 import { useRecipeContext } from '../../../../providers';
 import { Icon } from '@fluentui/react/lib/Icon';
-import { stackStyles } from './../../styles';
 
 interface RecipeSummaryProps {}
 
@@ -65,7 +64,7 @@ export function RecipeSummary(props: RecipeSummaryProps) {
   return (
     <Stack.Item align="stretch" styles={stackItemStyles}>
       <RecipeTags />
-      <Stack horizontal styles={stackStyles} tokens={stackTokens}>
+      <Stack horizontal tokens={stackTokens}>
         <Stack.Item grow styles={stackItemStyles}>
           <span style={spanStyle}>prep time: 10 mins</span>
         </Stack.Item>
@@ -76,7 +75,7 @@ export function RecipeSummary(props: RecipeSummaryProps) {
           <span style={spanStyle}>total time: 30 mins</span>
         </Stack.Item>
       </Stack>
-      <Stack horizontal styles={stackStyles} tokens={stackTokens}>
+      <Stack horizontal tokens={stackTokens}>
         <Stack.Item grow styles={stackItemStyles}>
           <span style={spanStyle}>servings: 36 cookies</span>
         </Stack.Item>

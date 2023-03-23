@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import { models_Instruction } from '@4ks/api-fetch';
-import { stackStyles, itemAlignmentsStackTokens } from './../../styles';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useRecipeContext } from '../../../../providers';
 import { RecipeInstruction } from './RecipeInstruction';

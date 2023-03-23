@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
-import { DefaultButton } from '@fluentui/react/lib/Button';
+import Stack from '@mui/material/Stack';
 import { models_Ingredient } from '@4ks/api-fetch';
 import { stackStyles, itemAlignmentsStackTokens } from './../../styles';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useRecipeContext } from '../../../../providers';
 import { RecipeIngredient } from './RecipeIngredient';
 import { SectionTitle } from '../components';
+import Button from '@mui/material/Button';
 import {
   handleListAdd,
   handleListChange,
@@ -48,7 +48,7 @@ export function RecipeIngredients() {
   );
 
   return (
-    <Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
+    <Stack>
       <SectionTitle value={'Ingredients'} />
 
       <DragDropContext onDragEnd={onDragEnd}>
@@ -94,11 +94,9 @@ export function RecipeIngredients() {
         </Droppable>
       </DragDropContext>
       {rtx?.editing && (
-        <DefaultButton
-          text="Add Ingredient"
-          onClick={handleIngredientAdd}
-          allowDisabledFocus
-        />
+        <Button variant="outlined" onClick={handleIngredientAdd}>
+          Add Ingredient
+        </Button>
       )}
     </Stack>
   );

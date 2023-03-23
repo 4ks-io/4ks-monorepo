@@ -21,7 +21,7 @@ export function RecipeInstruction({
   handleInstructionChange,
 }: RecipeInstructionProps) {
   const [active, setActive] = useState(false);
-  const [text, setText] = useState(`${data.text}`);
+  const [text, setText] = useState(data.text || '');
 
   function handleTextChange(event: React.ChangeEvent<HTMLInputElement>) {
     setText(`${event.target.value}`);
@@ -45,6 +45,8 @@ export function RecipeInstruction({
     } as models_Instruction);
   }
 
+  const inputProps = { disableUnderline: true, readOnly: !editing };
+
   return (
     <Stack>
       <Stack direction="row">
@@ -61,7 +63,7 @@ export function RecipeInstruction({
             variant="standard"
             value={index + 1}
             InputProps={{ disableUnderline: true, readOnly: true }}
-            sx={{ width: 16 }}
+            sx={{ width: 20 }}
           />
         )}
         {editing && active && (
@@ -75,10 +77,9 @@ export function RecipeInstruction({
           onBlur={handleBlur}
           onChange={handleTextChange}
           multiline
-          InputProps={{ disableUnderline: true }}
+          InputProps={inputProps}
           sx={{ paddingLeft: 1 }}
         />
-
         {editing && active && (
           <DeleteIcon
             sx={{ fontSize: 16, marginTop: 1 }}
