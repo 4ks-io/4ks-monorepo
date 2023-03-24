@@ -15,7 +15,7 @@ export function RecipeSocial(props: RecipeSocialProps) {
         <SectionTitle value={'Contributors'} />
         {rtx?.recipe?.contributors?.map((c) => {
           return (
-            <Typography variant="body1" gutterBottom>
+            <Typography key={c.username} variant="body1" gutterBottom>
               {c.username}
             </Typography>
           );
