@@ -90,9 +90,9 @@ func (us searchService) CreateSearchRecipeCollection() error {
 				Type: "string[]",
 			},
 			{
-				Name:  "imageUrl",
-				Type:  "string",
-				Index: &False,
+				Name:     "imageUrl",
+				Type:     "string",
+				Index:    &False,
 				Optional: &True,
 			},
 		},

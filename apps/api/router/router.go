@@ -1,10 +1,10 @@
 package router
 
 import (
-	"log"
-	"os"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	ginprometheus "github.com/zsais/go-gin-prometheus"
@@ -15,19 +15,12 @@ import (
 	utils "4ks/apps/api/utils"
 )
 
-var isLocalDevelopment = os.Getenv("IO_4KS_DEVING")
-
 func New() *gin.Engine {
 	var router *gin.Engine
-	if isLocalDevelopment == "true" {
-		router = gin.Default()
-	} else {
-		// disable logging
-		router = gin.New()
-		// Recovery middleware recovers from any panics and possibly writes a 500
-		router.Use(gin.Recovery())
-	}
-	// disable trustedproxy logic
+	router = gin.New()
+	router.Use(middleware.DefaultStructuredLogger()) // adds our new middleware
+	// Recovery middleware recovers from any panics and possibly writes a 500
+	router.Use(gin.Recovery())
 	router.SetTrustedProxies(nil)
 	router.Use(middleware.CorsMiddleware())
 
@@ -35,10 +28,10 @@ func New() *gin.Engine {
 	prom.Use(router)
 
 	if value := utils.GetBoolEnv("SWAGGER_ENABLED", false); value {
-		log.Printf("Swagger enabled: %t", value)
-
 		prefix := utils.GetStrEnvVar("SWAGGER_URL_PREFIX", "")
-		log.Printf("Swagger url prefix: %s", prefix)
+
+		log.Info().Msg(fmt.Sprintf("Swagger enabled: %t", value))
+		log.Info().Msg(fmt.Sprintf("Swagger url prefix: %s", prefix))
 
 		swaggerUrl := ginSwagger.URL(prefix + "/swagger/doc.json") // The url pointing to API definition
 		router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, swaggerUrl))
