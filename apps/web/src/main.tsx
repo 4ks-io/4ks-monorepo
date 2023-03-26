@@ -1,10 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { initializeIcons } from '@fluentui/react/lib/Icons';
 import { AppConfigContextProvider, SearchContextProvider } from './providers';
-
-initializeIcons();
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { useFilePicker, FileContent } from 'use-file-picker';
 import { useRecipeContext } from '../../../../providers';
 import { useSessionContext } from '../../../../providers';
 import { models_UserSummary } from '@4ks/api-fetch';
-import { Image, ImageFit, ImageLoadState } from '@fluentui/react/lib/Image';
-import { Stack } from '@fluentui/react/lib/Stack';
 import { RecipeMediaViewImage } from './RecipeMediaViewImage';
+import Grid from '@mui/material/Unstable_Grid2';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Badge from '@mui/material/Badge';
+import CloseIcon from '@mui/icons-material/Close';
 
 export const RecipeMediaView = () => {
   const { isAuthenticated } = useAuth0();
@@ -18,14 +20,15 @@ export const RecipeMediaView = () => {
     rtx.resetMedia();
   }, []);
 
-  const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
-    readAs: 'DataURL',
-    accept: 'image/*',
-    multiple: false,
-    limitFilesConfig: { max: 2 },
-    // minFileSize: 1,
-    maxFileSize: 5, // in megabytes
-  });
+  const [openFileSelector, { filesContent, loading, errors, clear }] =
+    useFilePicker({
+      readAs: 'DataURL',
+      accept: 'image/*',
+      multiple: false,
+      limitFilesConfig: { max: 2 },
+      // minFileSize: 1,
+      maxFileSize: 5, // in megabytes
+    });
 
   function getContentTypeFromFileExt(filename: string): string | undefined {
     var ext = filename.split('.').pop() || '';
@@ -55,7 +58,7 @@ export const RecipeMediaView = () => {
         return;
       }
       const m = await ctx.api?.recipes.postRecipesMedia(`${rtx?.recipeId}`, {
-        contentType: ct,
+        // contentType: ct,
         filename: filesContent[0].name,
       });
 
@@ -94,21 +97,25 @@ export const RecipeMediaView = () => {
 
   function SelectMediaButton() {
     return (
-      <DefaultButton
-        text="Select Image to Upload"
+      <Button
+        variant="text"
         onClick={handleSelectMedia}
-        allowDisabledFocus
-      />
+        sx={{ paddingBottom: 2 }}
+      >
+        Select Image to Upload
+      </Button>
     );
   }
 
   function UploadMediaButton() {
     return (
-      <PrimaryButton
-        text="Upload Image"
+      <Button
+        variant="text"
         onClick={handleUploadMedia}
-        allowDisabledFocus
-      />
+        sx={{ paddingBottom: 2 }}
+      >
+        Upload Image
+      </Button>
     );
   }
 
@@ -125,22 +132,33 @@ export const RecipeMediaView = () => {
 
             {filesContent.map((file, index) => {
               return (
-                <div
-                  key={index}
-                  style={{
-                    width: 256,
-                    borderStyle: 'solid',
-                    border: '2px solid rgb(0, 120, 212)',
-                  }}
+                <Grid
+                  xs
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
                 >
-                  <Image
-                    src={file.content}
-                    imageFit={ImageFit.cover}
-                    alt={file.name}
-                    width={256}
-                    height={160}
-                  />
-                </div>
+                  <Badge
+                    onClick={() => clear()}
+                    color="primary"
+                    badgeContent={<CloseIcon />}
+                  >
+                    <Box
+                      component="img"
+                      sx={{
+                        // height: 256,
+                        width: 384,
+                        // maxHeight: { xs: 256, md: 256 },
+                        maxWidth: { xs: 384, md: 384 },
+                        borderStyle: 'solid',
+                        border: '2px solid rgb(0, 120, 212)',
+                        marginBottom: 2,
+                      }}
+                      alt={file.name}
+                      src={file.content}
+                    />
+                  </Badge>
+                </Grid>
               );
             })}
           </>
@@ -155,11 +173,11 @@ export const RecipeMediaView = () => {
   return (
     <>
       {newMediaControls()}
-      <Stack horizontal wrap tokens={{ childrenGap: 30 }}>
+      <Grid container spacing={1}>
         {rtx.media.map((m) => (
           <RecipeMediaViewImage key={m.id} media={m} />
         ))}
-      </Stack>
+      </Grid>
     </>
   );
 };

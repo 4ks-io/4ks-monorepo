@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { useRecipeContext } from '../../../../providers';
 import { useSessionContext } from '../../../../providers';
 import {
@@ -57,10 +57,12 @@ export function RecipeEditingControls({
 
   return (
     <Stack direction="row" spacing={2}>
-      <Typography variant="body1" gutterBottom>
-        edit
-      </Typography>
-      <Switch onChange={toggleEditing} defaultChecked={create} />
+      <FormControlLabel
+        sx={{ color: 'text.primary' }}
+        control={<Switch onChange={toggleEditing} defaultChecked={create} />}
+        label="edit"
+      />
+
       {rtx?.editing && (
         <>
           <Button
