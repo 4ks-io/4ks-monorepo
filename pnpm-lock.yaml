@@ -37,7 +37,6 @@ importers:
       react: ^17.0.2
       react-beautiful-dnd: ^13.1.0
       react-dom: ^17.0.2
-      react-font-size-changer: ^0.2.0
       react-helmet: ^6.1.0
       react-instantsearch-hooks-web: ^6.39.3
       react-router-dom: 6.3.0
@@ -61,7 +60,6 @@ importers:
       react: 17.0.2
       react-beautiful-dnd: 13.1.0_react-dom@17.0.2+react@17.0.2
       react-dom: 17.0.2_react@17.0.2
-      react-font-size-changer: 0.2.0
       react-helmet: 6.1.0_react@17.0.2
       react-instantsearch-hooks-web: 6.39.3_react-dom@17.0.2+react@17.0.2
       react-router-dom: 6.3.0_react-dom@17.0.2+react@17.0.2
@@ -5317,18 +5315,6 @@ packages:
       - react-native
     dev: false
 
-  /react-dom/16.14.0_react@16.14.0:
-    resolution: {integrity: sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw==}
-    peerDependencies:
-      react: ^16.14.0
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-      prop-types: 15.8.1
-      react: 16.14.0
-      scheduler: 0.19.1
-    dev: false
-
   /react-dom/17.0.2_react@17.0.2:
     resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
     peerDependencies:
@@ -5342,13 +5328,6 @@ packages:
 
   /react-fast-compare/3.2.0:
     resolution: {integrity: sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==}
-    dev: false
-
-  /react-font-size-changer/0.2.0:
-    resolution: {integrity: sha512-pJKflNE2KqalBUes7xz36mdhAHFJnuIhciqFRfexXRvZm5+yh28t4DR2MiftIIqnoK4muizUS/vCtzyKbuUtNA==}
-    dependencies:
-      react: 16.14.0
-      react-dom: 16.14.0_react@16.14.0
     dev: false
 
   /react-helmet/6.1.0_react@17.0.2:
@@ -5474,15 +5453,6 @@ packages:
       prop-types: 15.8.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
-    dev: false
-
-  /react/16.14.0:
-    resolution: {integrity: sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==}
-    engines: {node: '>=0.10.0'}
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-      prop-types: 15.8.1
     dev: false
 
   /react/17.0.2:
@@ -5652,13 +5622,6 @@ packages:
     dependencies:
       xmlchars: 2.2.0
     dev: true
-
-  /scheduler/0.19.1:
-    resolution: {integrity: sha512-n/zwRWRYSUj0/3g/otKDRPMh6qv2SYMWNq85IEa8iZyAv8od9zDYpGSnpBEjNgcMNq6Scbu5KfIPxNF72R/2EA==}
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-    dev: false
 
   /scheduler/0.20.2:
     resolution: {integrity: sha512-2eWfGgAqqWFGqtdMmcL5zCMK1U8KlXv8SQFGglL3CEtd0aDVDWgeF/YoCmvln55m5zSk3J/20hTaSBeSObsQDQ==}

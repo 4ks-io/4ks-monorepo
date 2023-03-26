@@ -3,7 +3,6 @@ import { RecipeIngredients } from './RecipeIngredients';
 import { RecipeInstructions } from './RecipeInstructions';
 import { RecipeSocial } from './RecipeSocial';
 import { RecipeEditingControls } from './RecipeEditingControls';
-import { RecipeFontControls } from './RecipeFontControls';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useRecipeContext } from '../../../../providers';
 
@@ -21,11 +20,9 @@ const RecipeContentView = ({ create = false }: RecipeProps) => {
   return (
     <>
       <RecipeEditingControls create={create} />
-      {/* <RecipeSummary /> */}
       <RecipeIngredients />
       <RecipeInstructions />
       <RecipeSocial />
-      <RecipeFontControls />
     </>
   );
 };

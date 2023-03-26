@@ -1,8 +1,10 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
-import { Stack } from '@fluentui/react/lib/Stack';
-import { Toggle } from '@fluentui/react/lib/Toggle';
+import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import { useRecipeContext } from '../../../../providers';
 import { useSessionContext } from '../../../../providers';
 import {
@@ -10,7 +12,6 @@ import {
   dtos_UpdateRecipe,
   models_UserSummary,
 } from '@4ks/api-fetch';
-import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 
 interface RecipeEditingControlsProps {
   create?: boolean;
@@ -25,12 +26,10 @@ export function RecipeEditingControls({
   const navigate = useNavigate();
 
   function toggleEditing(
-    event: React.MouseEvent<HTMLElement>,
-    checked?: boolean
+    event: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean
   ) {
-    if (typeof checked !== 'undefined') {
-      rtx?.setEditing(checked);
-    }
+    rtx?.editing != checked && rtx?.setEditing(checked);
   }
 
   function saveRecipe() {
@@ -57,32 +56,25 @@ export function RecipeEditingControls({
   }
 
   return (
-    <Stack.Item>
-      <Stack horizontal horizontalAlign="space-between">
-        <Stack.Item>
-          <Toggle
-            label="Edit"
-            inlineLabel
-            onChange={toggleEditing}
-            defaultChecked={create}
-          />
-        </Stack.Item>
-        {rtx?.editing && (
-          <Stack horizontal horizontalAlign="space-between">
-            <Stack.Item style={{ paddingRight: 12 }}>
-              <PrimaryButton
-                text="Save"
-                disabled={!isAuthenticated}
-                onClick={saveRecipe}
-              />
-            </Stack.Item>
-
-            <Stack.Item>
-              <DefaultButton text="Discard" onClick={rtx?.resetRecipe} />
-            </Stack.Item>
-          </Stack>
-        )}
-      </Stack>
-    </Stack.Item>
+    <Stack direction="row" spacing={2}>
+      <Typography variant="body1" gutterBottom>
+        edit
+      </Typography>
+      <Switch onChange={toggleEditing} defaultChecked={create} />
+      {rtx?.editing && (
+        <>
+          <Button
+            variant="contained"
+            disabled={!isAuthenticated}
+            onClick={saveRecipe}
+          >
+            Save
+          </Button>
+          <Button variant="outlined" onClick={rtx?.resetRecipe}>
+            Discard
+          </Button>
+        </>
+      )}
+    </Stack>
   );
 }
