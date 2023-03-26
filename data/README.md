@@ -1,8 +1,3 @@
-# Typesense
-
-http://localhost:8108/stats.json
-x-typesense-api-key: local-4ks-api-key
-
 # Upload seed data
 
 To be grant yourself membership to the bot_group in `apps/api/casbin/policy.csv`
@@ -21,17 +16,3 @@ curl -X 'POST' \
 
 go run upload.go -f single_dataset.csv
 ```
-
-## delete Typesense collection
-
-```
-export TYPESENSE_API_KEY=local-4ks-api-key
-curl -H "X-TYPESENSE-API-KEY: ${TYPESENSE_API_KEY}" \
-     -X DELETE \
-    "http://localhost:8108/collections/recipes"
-```
-
-Download complete dataset from
-https://recipenlg.cs.put.poznan.pl/
-
-(https://recipenlg.cs.put.poznan.pl/dataset)

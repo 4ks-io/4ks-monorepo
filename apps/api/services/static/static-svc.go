@@ -9,6 +9,7 @@ import (
 	"cloud.google.com/go/storage"
 	"github.com/bluele/gcache"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 	"google.golang.org/api/iterator"
 )
 
@@ -57,8 +58,10 @@ func FetchFallbackImages(c *gin.Context, cache gcache.Cache) ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		cache.SetWithExpire(key, img, time.Second*3600)
-		fmt.Println("Fallback images cached for 3600 seconds")
+		log.Info().Msg("Fallback images cached for 3600 seconds")
+
 		images, err = cache.Get(key)
 		if err != nil {
 			return nil, err

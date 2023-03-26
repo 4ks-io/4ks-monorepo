@@ -46,6 +46,7 @@ export function SearchContextProvider({
       },
       additionalSearchParameters: {
         query_by: 'name,author,ingredients',
+        per_page: 20,
       },
     });
 

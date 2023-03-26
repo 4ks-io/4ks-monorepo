@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -31,6 +32,7 @@ var (
 type UserService interface {
 	GetAllUsers() ([]*models.User, error)
 	GetUserById(id *string) (*models.User, error)
+	GetUserByUsername(username *string) (*models.User, error)
 	GetUserByEmail(emailAddress *string) (*models.User, error)
 	CreateUser(userId *string, userEmail *string, user *dtos.CreateUser) (*models.User, error)
 	UpdateUserById(userId *string, user *dtos.UpdateUser) (*models.User, error)
@@ -92,6 +94,30 @@ func (us userService) GetUserById(id *string) (*models.User, error) {
 	}
 
 	user.Id = result.Ref.ID
+	return user, nil
+}
+
+
+func (us userService) GetUserByUsername(username *string) (*models.User, error) {
+	l := strings.ToLower(*username)
+	fmt.Println(l)
+	// result, err := userCollection.Where("usernameLower", "==", l).Documents(ctx).GetAll()
+	result, err := userCollection.Where("usernameLower", "==", strings.ToLower(*username)).Documents(ctx).GetAll()
+	if err != nil || len(result) == 0 {
+		return nil, ErrUserNotFound
+	}
+	fmt.Print(result)
+
+	userSnapshot := result[0]
+	user := new(models.User)
+	fmt.Print(user.Id)
+
+	err = userSnapshot.DataTo(user)
+	if err != nil {
+		return nil, err
+	}
+
+	user.Id = userSnapshot.Ref.ID
 	return user, nil
 }
 

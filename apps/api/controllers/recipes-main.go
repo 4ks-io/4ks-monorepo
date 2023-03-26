@@ -128,9 +128,22 @@ func (rc *recipeController) GetRecipe(c *gin.Context) {
 func (rc *recipeController) GetRecipesByUsername(c *gin.Context) {
 	username := c.Param("username")
 
+	var id string
+	// get user id
+	if username == "4ks-bot" {
+		id = "bot"
+	} else {
+		u, err := rc.userService.GetUserByUsername(&username)
+		if err == recipeService.ErrRecipeNotFound {
+			c.AbortWithError(http.StatusNotFound, err)
+			return
+		} 
+		id = u.Id
+	}
+
 	// hardcode limit for now
-	limit := 20
-	recipes, err := rc.recipeService.GetRecipesByUsername(&username, limit)
+	limit := 40
+	recipes, err := rc.recipeService.GetRecipesByUserID(&id, limit)
 
 	if err == recipeService.ErrRecipeNotFound {
 		c.AbortWithError(http.StatusNotFound, err)
@@ -155,7 +168,7 @@ func (rc *recipeController) GetRecipesByUsername(c *gin.Context) {
 // @Security 		ApiKeyAuth
 func (rc *recipeController) GetRecipes(c *gin.Context) {
 	// hardcode limit for now
-	limit := 20
+	limit := 40
 	recipes, err := rc.recipeService.GetRecipes(limit)
 
 	if err == recipeService.ErrRecipeNotFound {

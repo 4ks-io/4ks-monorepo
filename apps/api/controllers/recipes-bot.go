@@ -2,11 +2,11 @@ package controllers
 
 import (
 	recipeService "4ks/apps/api/services/recipe"
-	"fmt"
 
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 
 	"4ks/apps/api/dtos"
 	models "4ks/libs/go/models"
@@ -38,7 +38,7 @@ func (rc *recipeController) BotCreateRecipe(c *gin.Context) {
 
 	f, err := rc.staticService.GetRandomFallbackImage(c)
 	if err != nil {
-		fmt.Println(err)
+		log.Error().Err(err).Msg("failed to get random fallback image")
 	}
 	u := rc.staticService.GetRandomFallbackImageUrl(f)
 

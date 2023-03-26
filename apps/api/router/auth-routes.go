@@ -2,11 +2,11 @@ package router
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	adapter "github.com/gwatts/gin-adapter"
+	"github.com/rs/zerolog/log"
 
 	"4ks/apps/api/middleware"
 	"4ks/apps/api/utils"
@@ -24,13 +24,11 @@ var CASBIN_VERBOSE = true
 // @Router 			/auth-test [get]
 // @Security 		ApiKeyAuth
 func TestJWTAuth(c *gin.Context) {
-	// fmt.Println(c.Request.Header)
-
 	userEmail := c.Request.Context().Value(utils.UserEmail{}).(string)
-	fmt.Println(userEmail)
-
 	userId := c.Request.Context().Value(utils.UserId{}).(string)
-	fmt.Println(userId)
+	
+	log.Debug().Msg(userEmail)
+	log.Debug().Msg(userId)
 
 	claims := utils.ExtractClaimsFromRequest(c.Request)
 	// customClaims := utils.ExtractCustomClaimsFromClaims(&claims)

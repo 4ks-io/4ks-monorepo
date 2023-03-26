@@ -63,8 +63,6 @@ func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeId *string
 		UpdatedDate:  timestamp,
 	}
 
-	fmt.Println(recipeMedia)
-
 	_, err = recipeMediasCollection.Doc(mp.Basename).Create(ctx, recipeMedia)
 	if err != nil {
 		return nil, err

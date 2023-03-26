@@ -56,6 +56,7 @@ type RecipeService interface {
 	GetRecipes(limit int) ([]*models.Recipe, error)
 	GetRecipeById(id *string) (*models.Recipe, error)
 	GetRecipesByUsername(username *string, limit int) ([]*models.Recipe, error)
+	GetRecipesByUserID(id *string, limit int) ([]*models.Recipe, error)
 	GetRecipeMedia(recipeId *string) ([]*models.RecipeMedia, error)
 	GetRecipeRevisions(recipeId *string) ([]*models.RecipeRevision, error)
 	GetRecipeRevisionById(revisionId *string) (*models.RecipeRevision, error)

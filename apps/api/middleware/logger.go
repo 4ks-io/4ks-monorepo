@@ -1,5 +1,7 @@
 package middleware
 
+// https://learninggolang.com/it5-gin-structured-logging.html
+
 import (
 	"time"
 

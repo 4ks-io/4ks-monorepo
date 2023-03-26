@@ -2,6 +2,7 @@ package router
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
@@ -15,15 +16,21 @@ import (
 	utils "4ks/apps/api/utils"
 )
 
+var isLocalDevelopment = os.Getenv("IO_4KS_DEVING")
+
 func New() *gin.Engine {
 	var router *gin.Engine
 	router = gin.New()
-	router.Use(middleware.DefaultStructuredLogger()) // adds our new middleware
-	// Recovery middleware recovers from any panics and possibly writes a 500
+
+	if isLocalDevelopment == "true" {
+		router.Use(middleware.DefaultStructuredLogger()) // add logging middleware
+	}
+
 	router.Use(gin.Recovery())
 	router.SetTrustedProxies(nil)
 	router.Use(middleware.CorsMiddleware())
 
+	// prometheus metrics
 	prom := ginprometheus.NewPrometheus("gin")
 	prom.Use(router)
 

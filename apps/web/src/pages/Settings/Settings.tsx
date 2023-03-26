@@ -54,6 +54,9 @@ const Settings = () => {
       </Typography>
       <Stack spacing={2} style={{ paddingTop: 40 }}>
         <Typography variant="subtitle1" component="h2">
+          Email: {ctx.user?.emailAddress}
+        </Typography>
+        <Typography variant="subtitle1" component="h2">
           Current Username: {ctx.user?.username}
         </Typography>
         <TextField
