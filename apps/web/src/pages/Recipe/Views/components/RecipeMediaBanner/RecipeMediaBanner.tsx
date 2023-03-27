@@ -3,18 +3,32 @@ import { useRecipeContext } from '../../../../../providers';
 import { models_RecipeMediaVariant } from '@4ks/api-fetch';
 import { RecipeMediaSize } from '../../../../../types';
 import { useAppConfigContext } from '../../../../../providers';
+import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Unstable_Grid2';
 import Dialog from '@mui/material/Dialog';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import RecipeMediaBannerImagePreview from './RecipeMediaBannerImagePreview';
+
+export function getBannerVariantUrl(
+  variants: models_RecipeMediaVariant[] | undefined,
+  size: RecipeMediaSize = RecipeMediaSize.MD
+): models_RecipeMediaVariant | undefined {
+  return variants && variants.filter((v) => v.alias == size)[0];
+}
 
 const RecipeMediaBanner = () => {
   const atx = useAppConfigContext();
   const rtx = useRecipeContext();
+
   const [imageSrc, setImageSrc] = useState<string>();
+  const [showBanner, setShowBanner] = useState(true);
   const [showBannerSelectModal, setShowBannerSelectModal] = useState(false);
 
   const [selectingMediaId, setSelectingMediaId] = useState<string>();
@@ -25,13 +39,6 @@ const RecipeMediaBanner = () => {
 
   function setRandomImage() {
     setImageSrc(`${atx.MEDIA_FALLBACK_URL}/f${random}.jpg`);
-  }
-
-  function getBannerVariantUrl(
-    variants: models_RecipeMediaVariant[] | undefined,
-    size: RecipeMediaSize = RecipeMediaSize.MD
-  ): models_RecipeMediaVariant | undefined {
-    return variants && variants.filter((v) => v.alias == size)[0];
   }
 
   useEffect(() => {
@@ -74,65 +81,61 @@ const RecipeMediaBanner = () => {
   }
 
   return (
-    <div style={{ height: '256px' }}>
+    <div>
       <Dialog open={showBannerSelectModal} onClose={discardImageSelection}>
-        <DialogTitle>Select Banner Image</DialogTitle>
-        <DialogContent>
+        <DialogTitle sx={{ m: 0, p: 2 }}>
+          Select Banner Image
+          <IconButton
+            aria-label="close"
+            onClick={discardImageSelection}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
           <Grid container spacing={1}>
-            {rtx.media.map((m) => {
-              let sm = getBannerVariantUrl(m?.variants, RecipeMediaSize.SM);
-              if (!sm) {
-                return;
-              }
-              const isSelectedStyle =
-                m.id == selectingMediaId
-                  ? {
-                      borderStyle: 'solid',
-                      border: '2px solid rgb(0, 120, 212)',
-                    }
-                  : {};
-              return (
-                <div key={m.id} style={isSelectedStyle}>
-                  <Box
-                    component="img"
-                    onClick={() => {
-                      setSelectingMedia(m?.variants);
-                      setSelectingMediaId(m.id);
-                    }}
-                    sx={{
-                      height: 256,
-                      width: '100%',
-                      maxHeight: { xs: 256, md: 256 },
-                      overflow: 'hidden',
-                    }}
-                    alt={sm.filename}
-                    src={sm.url}
-                  />
-                </div>
-              );
-            })}
+            {rtx.media.map((m) =>
+              RecipeMediaBannerImagePreview({
+                media: m,
+                selectingMediaId,
+                setSelectingMedia,
+                setSelectingMediaId,
+              })
+            )}
           </Grid>
-          <Stack direction="row">
-            <Button onClick={confirmImageSelection}>Select</Button>
-            <span style={{ marginLeft: '8px' }}></span>
-            <Button onClick={discardImageSelection}>Cancel</Button>
-          </Stack>
         </DialogContent>
+        <DialogActions>
+          <Button onClick={confirmImageSelection}>Select</Button>
+          <span style={{ marginLeft: '8px' }}></span>
+          <Button onClick={discardImageSelection}>Cancel</Button>
+        </DialogActions>
       </Dialog>
 
-      <Box
-        component="img"
-        onClick={handleOpenBannerSelectModal}
-        sx={{
-          height: 256,
-          width: '100%',
-          maxHeight: { xs: 256, md: 256 },
-          // maxWidth: { xs: 384, md: 384 },
-          overflow: 'hidden',
-        }}
-        alt="banner image"
-        src={imageSrc}
-      />
+      {/* Banner Image */}
+      {showBanner && (
+        <Box
+          component="img"
+          onClick={handleOpenBannerSelectModal}
+          sx={{
+            width: '100%',
+            overflow: 'hidden',
+          }}
+          alt="banner image"
+          src={imageSrc}
+        />
+      )}
+      <Button
+        variant="text"
+        onClick={() => setShowBanner(!showBanner)}
+        sx={{ paddingBottom: 2, width: '100%' }}
+      >
+        {showBanner ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+      </Button>
     </div>
   );
 };

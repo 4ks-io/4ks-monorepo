@@ -14,6 +14,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
+import Badge from '@mui/material/Badge';
 
 interface RecipeHeaderProps {}
 
@@ -83,13 +84,6 @@ export function RecipeHeader(props: RecipeHeaderProps) {
     navigate(`/${rtx?.recipe?.author?.username}`);
   }
 
-  function getCountLabel(c: number | undefined) {
-    return c && c > 0 ? ' (' + c + ')' : '';
-  }
-
-  const forksCountLabel = getCountLabel(rtx?.recipe?.metadata?.forks);
-  const starsCountLabel = getCountLabel(rtx?.recipe?.metadata?.stars);
-
   return (
     <>
       <Stack>
@@ -140,20 +134,24 @@ export function RecipeHeader(props: RecipeHeaderProps) {
       {isNew && (
         <Container>
           <Stack direction="row" spacing={2} style={{ paddingTop: 12 }}>
-            <Button
-              variant="outlined"
-              startIcon={<CallSplitIcon />}
-              onClick={forkThisRecipe}
-            >
-              {`Fork${forksCountLabel}`}
-            </Button>
-            <Button
-              variant="outlined"
-              startIcon={<StarOutlineIcon />}
-              onClick={starThisRecipe}
-            >
-              {`Star${starsCountLabel}`}
-            </Button>
+            <Badge color="primary" badgeContent={rtx?.recipe?.metadata?.forks}>
+              <Button
+                variant="outlined"
+                startIcon={<CallSplitIcon />}
+                onClick={forkThisRecipe}
+              >
+                Fork
+              </Button>
+            </Badge>
+            <Badge color="primary" badgeContent={rtx?.recipe?.metadata?.stars}>
+              <Button
+                variant="outlined"
+                startIcon={<StarOutlineIcon />}
+                onClick={starThisRecipe}
+              >
+                Star
+              </Button>
+            </Badge>
             <Button
               variant="outlined"
               startIcon={<ShareIcon />}
