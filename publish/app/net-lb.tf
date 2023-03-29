@@ -46,6 +46,17 @@ resource "google_compute_url_map" "urlmap" {
       }
     }
 
+    path_rule {
+      paths   = ["/static/*"]
+      service = google_compute_backend_bucket.media_static.id
+      route_action {
+        url_rewrite {
+          path_prefix_rewrite = "/"
+        }
+      }
+    }
+
+
   }
 
   test {

@@ -73,16 +73,16 @@ resource "google_cloud_run_service" "api" {
         }
 
         env {
-          name = "TYPESENSE_URL"
+          name  = "TYPESENSE_URL"
           value = "https://m5wzvue301hkiy9gp-1.a1.typesense.net"
         }
 
         env {
-          name = "TYPESENSE_API_KEY"
+          name  = "TYPESENSE_API_KEY"
           value = var.typesense_api_key
         }
         env {
-          name = "MEDIA_FALLBACK_URL"
+          name  = "MEDIA_FALLBACK_URL"
           value = "https://storage.googleapis.com/static.${local.web_domain}"
         }
 
