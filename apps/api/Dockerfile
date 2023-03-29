@@ -1,4 +1,4 @@
-FROM golang:1.18-alpine as build
+FROM golang:1.20-alpine as build
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 WORKDIR /app
 

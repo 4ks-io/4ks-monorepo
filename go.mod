@@ -1,6 +1,6 @@
 module 4ks
 
-go 1.18
+go 1.20
 
 require (
 	cloud.google.com/go/firestore v1.6.1
@@ -13,6 +13,7 @@ require (
 	github.com/gin-gonic/gin v1.9.0
 	github.com/gwatts/gin-adapter v1.0.0
 	github.com/rs/xid v1.4.0
+	github.com/rs/zerolog v1.29.0
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
 	github.com/swaggo/gin-swagger v1.4.3
 	github.com/swaggo/swag v1.8.2
@@ -75,7 +76,6 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.34.0 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/rs/zerolog v1.29.0 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/sony/gobreaker v0.5.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
