@@ -17,7 +17,7 @@
 1. Install [tilt](https://docs.tilt.dev/install.html)
 1. Install `nodejs`, `pnpm`, and `go`
 1. Install swaggo/swag \
-   `go install github.com/swaggo/swag/cmd/swag@v1.8.1`
+   `go install github.com/swaggo/swag/cmd/swag@v1.8.12`
 
 ## Instructions
 

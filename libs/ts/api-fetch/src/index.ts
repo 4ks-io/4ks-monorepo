@@ -18,6 +18,8 @@ export type { dtos_UpdateUser } from './models/dtos_UpdateUser';
 export type { models_CreateRecipeMedia } from './models/models_CreateRecipeMedia';
 export type { models_Ingredient } from './models/models_Ingredient';
 export type { models_Instruction } from './models/models_Instruction';
+export { models_MediaBestUse } from './models/models_MediaBestUse';
+export { models_MediaStatus } from './models/models_MediaStatus';
 export type { models_Recipe } from './models/models_Recipe';
 export type { models_RecipeMedia } from './models/models_RecipeMedia';
 export type { models_RecipeMediaVariant } from './models/models_RecipeMediaVariant';

@@ -107,7 +107,7 @@ export class RecipesService {
      * Delete Recipe
      * Delete Recipe
      * @param recipeId Recipe Id
-     * @returns any
+     * @returns any OK
      * @throws ApiError
      */
     public deleteRecipes(
@@ -227,7 +227,7 @@ export class RecipesService {
      * Star Recipe
      * Star Recipe
      * @param recipeId Recipe Id
-     * @returns any
+     * @returns any OK
      * @throws ApiError
      */
     public postRecipesStar(

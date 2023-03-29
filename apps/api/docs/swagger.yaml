@@ -98,6 +98,52 @@ definitions:
       type:
         type: string
     type: object
+  models.MediaBestUse:
+    enum:
+    - 0
+    - 1
+    - 2
+    type: integer
+    x-enum-varnames:
+    - MediaBestUseGeneral
+    - MediaBestUseIngredient
+    - MediaBestUseInstruction
+  models.MediaStatus:
+    enum:
+    - 0
+    - 1
+    - 2
+    - 60
+    - 61
+    - 62
+    - 63
+    - 64
+    - 65
+    - 70
+    - 71
+    - 72
+    - 73
+    - 80
+    - 81
+    - 82
+    type: integer
+    x-enum-varnames:
+    - MediaStatusRequested
+    - MediaStatusProcessing
+    - MediaStatusReady
+    - MediaStatusErrorUnknown
+    - MediaStatusErrorSize
+    - MediaStatusErrorMissingAttr
+    - MediaStatusErrorInvalidMIMEType
+    - MediaStatusErrorVision
+    - MediaStatusErrorSafeSearch
+    - MediaStatusErrorInappropriateAdult
+    - MediaStatusErrorInappropriateMedical
+    - MediaStatusErrorInappropriateViolence
+    - MediaStatusErrorInappropriateRacy
+    - MediaStatusErrorFailedCopy
+    - MediaStatusErrorFailedResize
+    - MediaStatusErrorFailedVariant
   models.Recipe:
     properties:
       author:
@@ -124,7 +170,7 @@ definitions:
   models.RecipeMedia:
     properties:
       bestUse:
-        type: integer
+        $ref: '#/definitions/models.MediaBestUse'
       contentType:
         type: string
       createdDate:
@@ -138,7 +184,7 @@ definitions:
       rootRecipeId:
         type: string
       status:
-        type: integer
+        $ref: '#/definitions/models.MediaStatus'
       updatedDate:
         type: string
       variants:
@@ -365,7 +411,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: ""
+          description: OK
       security:
       - ApiKeyAuth: []
       summary: Delete Recipe
@@ -537,7 +583,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: ""
+          description: OK
       security:
       - ApiKeyAuth: []
       summary: Star Recipe
@@ -665,7 +711,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: ""
+          description: OK
       security:
       - ApiKeyAuth: []
       summary: Delete User
