@@ -12,6 +12,6 @@ func SearchRouter(router *gin.Engine) {
 
 	a := router.Group("/_admin/search")
 	{
-		a.POST("collection-init-recipe", middleware.Authorize("/_admin/search/*", "create"), sc.CreateSearchRecipeCollection)
+		a.POST("collection-init-recipe", middleware.Authorize("/search/*", "create"), sc.CreateSearchRecipeCollection)
 	}
 }

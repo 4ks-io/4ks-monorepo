@@ -50,7 +50,7 @@ type RecipeService interface {
 	CreateRecipeMedia(mp *utils.MediaProps, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error)
 	CreateRecipeMediaSignedUrl(mp *utils.MediaProps, wg *sync.WaitGroup) (*string, error)
 	// delete
-	DeleteRecipe(id *string) error
+	DeleteRecipe(id string, usrSub string) error
 	// get
 	GetAdminRecipeMedias(recipeId *string) ([]*models.RecipeMedia, error)
 	GetRecipes(limit int) ([]*models.Recipe, error)

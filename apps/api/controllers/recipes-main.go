@@ -1,10 +1,13 @@
 package controllers
 
 import (
+	"4ks/apps/api/middleware"
 	recipeService "4ks/apps/api/services/recipe"
 
 	"net/http"
 
+	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
+	"github.com/auth0/go-jwt-middleware/v2/validator"
 	"github.com/gin-gonic/gin"
 
 	"4ks/apps/api/dtos"
@@ -32,6 +35,10 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 
 	userId := c.Request.Context().Value(utils.UserId{}).(string)
 	author, err := rc.userService.GetUserById(&userId)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
 
 	payload.Author = models.UserSummary{
 		Id:          userId,
@@ -69,10 +76,18 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 // @Security 		ApiKeyAuth
 func (rc *recipeController) DeleteRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
-	err := rc.recipeService.DeleteRecipe(&recipeId)
+
+	claims := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
+	customClaims := claims.CustomClaims.(*middleware.CustomClaims)
+	sub := customClaims.Id
+
+	err := rc.recipeService.DeleteRecipe(recipeId, sub)
 
 	if err == recipeService.ErrRecipeNotFound {
 		c.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err == recipeService.ErrUnauthorized {
+		c.AbortWithError(http.StatusUnauthorized, err)
 		return
 	} else if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
@@ -204,6 +219,10 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 
 	userId := c.Request.Context().Value(utils.UserId{}).(string)
 	author, err := rc.userService.GetUserById(&userId)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
 
 	payload.Author = models.UserSummary{
 		Id:          userId,

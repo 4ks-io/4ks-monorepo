@@ -15,9 +15,7 @@ func (rs recipeService) GetRecipeById(id *string) (*models.Recipe, error) {
 	}
 
 	recipe := new(models.Recipe)
-	err = result.DataTo(recipe)
-
-	if err != nil {
+	if err = result.DataTo(recipe); err != nil {
 		return nil, err
 	}
 

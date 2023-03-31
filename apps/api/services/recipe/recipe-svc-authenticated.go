@@ -11,13 +11,26 @@ import (
 	models "4ks/libs/go/models"
 )
 
-func (rs recipeService) DeleteRecipe(id *string) error {
-	existingId, _ := recipeCollection.Doc(*id).Get(ctx)
-	if !existingId.Exists() {
+func (rs recipeService) DeleteRecipe(id string, sub string) error {
+	result, _ := recipeCollection.Doc(id).Get(ctx)
+	if !result.Exists() {
 		return ErrRecipeNotFound
 	}
 
-	_, err := recipeCollection.Doc(*id).Delete(ctx)
+	recipe := new(models.Recipe)
+	if err := result.DataTo(recipe); err != nil {
+		return err
+	}
+
+	// is author
+	c, _ := middleware.EnforceContributor(sub, recipe.Contributors)
+	// is admin
+	a, _ := middleware.Enforce(sub, "/recipes/*", "delete")
+	if !c && !a {
+		return ErrUnauthorized
+	}
+
+	_, err := recipeCollection.Doc(id).Delete(ctx)
 	if err != nil {
 		return err
 	}
@@ -77,7 +90,7 @@ func (rs recipeService) UpdateRecipeById(recipeId *string, recipeUpdate *dtos.Up
 	recipeDoc.DataTo(recipe)
 
 	// e, err := middleware.EnforceAuthor(&recipeUpdate.Author.Id, &recipe.Author)
-	e, err := middleware.EnforceContributor(&recipeUpdate.Author.Id, &recipe.Contributors)
+	e, err := middleware.EnforceContributor(recipeUpdate.Author.Id, recipe.Contributors)
 	if err != nil {
 		return nil, ErrUnableToUpdateRecipe
 	} else if !e {

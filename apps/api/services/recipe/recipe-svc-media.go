@@ -25,7 +25,7 @@ func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeId *string
 	recipe := new(models.Recipe)
 	recipeDoc.DataTo(recipe)
 
-	e, err := middleware.EnforceContributor(userId, &recipe.Contributors)
+	e, err := middleware.EnforceContributor(*userId, recipe.Contributors)
 	if err != nil {
 		return nil, ErrUnableToCreateRecipeMedia
 	} else if !e {
