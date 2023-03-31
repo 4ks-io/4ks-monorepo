@@ -36,7 +36,7 @@ func Enforce(sub string, obj string, act string) (bool, error) {
 // ABAC Author
 var c2 = casbin.NewEnforceContext("2")
 
-func EnforceAuthor(sub *string, obj *models.UserSummary) (bool, error) {
+func EnforceAuthor(sub string, obj models.UserSummary) (bool, error) {
 	// eCtx := casbin.NewEnforceContext("2")
 	// fmt.Println(eCtx)
 	err = e.LoadPolicy()
@@ -44,7 +44,7 @@ func EnforceAuthor(sub *string, obj *models.UserSummary) (bool, error) {
 		return false, fmt.Errorf("failed to load policy: %w", err)
 	}
 
-	ok, err := e.Enforce(c2, *sub, obj)
+	ok, err := e.Enforce(c2, sub, obj)
 	if err != nil {
 		return false, fmt.Errorf("failed to enforce policy: %w", err)
 	}
