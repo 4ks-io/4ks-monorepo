@@ -80,7 +80,7 @@ export function SearchContextProvider({
       type: SearchContextAction.INIT,
       payload: {
         client: typesenseInstantsearchAdapter.searchClient,
-        open: true,
+        open: false,
         handleClose,
         handleOpen,
         setResults,
