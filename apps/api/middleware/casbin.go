@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var VERBOSE = true
+var VERBOSE = false
 
 // where should this be declared?
 var model = "apps/api/casbin/model.conf"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SessionContextProvider } from './providers';
 import Router from './Router';
 import { Auth0Provider } from '@auth0/auth0-react';
@@ -10,6 +10,7 @@ import { Helmet } from 'react-helmet';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './mui';
 import CircularProgress from '@mui/material/CircularProgress';
+import SearchDialog from './components/SearchDialog/SearchDialog';
 
 function App() {
   const atx = useAppConfigContext();
@@ -34,8 +35,17 @@ function App() {
           <link rel="canonical" href="https://www.4ks.io" />
         </Helmet>
         <SessionContextProvider>
-          <InstantSearch indexName="recipes" searchClient={search.client}>
+          <InstantSearch
+            indexName="recipes"
+            searchClient={search.client}
+            // initialUiState={{
+            //   ['recipes']: {
+            //     query: 'pepper',
+            //   },
+            // }}
+          >
             <ThemeProvider theme={theme}>
+              <SearchDialog />
               <MainAppBar />
               <Router />
             </ThemeProvider>

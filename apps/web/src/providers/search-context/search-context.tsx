@@ -18,16 +18,42 @@ export function SearchContextProvider({
   const atx = useAppConfigContext();
   const [state, dispatch] = useReducer(searchContextReducer, initialState);
 
-  function setResults(restults: []) {
+  useEffect(() => {
+    window.addEventListener('keydown', keyDownHandler);
+  }, []);
+
+  function setResults(results: []) {
     dispatch({
       type: SearchContextAction.SET_RESULTS,
-      payload: restults,
+      payload: results,
     });
   }
 
   function clearResults() {
     setResults([]);
   }
+
+  function handleOpen() {
+    dispatch({
+      type: SearchContextAction.OPEN_DIALOG,
+      payload: null,
+    });
+  }
+
+  function handleClose() {
+    dispatch({
+      type: SearchContextAction.CLOSE_DIALOG,
+      payload: null,
+    });
+  }
+
+  const keyDownHandler = (event: KeyboardEvent) => {
+    if (event.ctrlKey && event.key === 'k') {
+      event.preventDefault();
+      handleOpen();
+      console.log('Control and K!');
+    }
+  };
 
   useEffect(() => {
     const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
@@ -54,6 +80,9 @@ export function SearchContextProvider({
       type: SearchContextAction.INIT,
       payload: {
         client: typesenseInstantsearchAdapter.searchClient,
+        open: false,
+        handleClose,
+        handleOpen,
         setResults,
         clearResults,
       },

@@ -1,9 +1,15 @@
 import React from 'react';
 import logo from '../../logo.svg';
+import { useNavigate } from 'react-router-dom';
 import { useSearchContext } from '../../providers';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
+import Chip from '@mui/material/Chip';
+
 import {
   InstantSearch,
   SearchBox,
@@ -31,11 +37,16 @@ import {
 // }
 
 // https://www.algolia.com/doc/guides/building-search-ui/widgets/create-your-own-widgets/react-hooks/
-const Landing = () => {
+export default function Landing() {
   const search = useSearchContext();
+  const navigate = useNavigate();
 
   if (!search.client) {
     return <CircularProgress />;
+  }
+
+  function handleOpenSearch() {
+    search.handleOpen();
   }
 
   return (
@@ -53,11 +64,26 @@ const Landing = () => {
           alt="4ks.io"
           src={logo}
         />
-        <SearchBox placeholder="Search . . ." />
-        {/* <CustomHits /> */}
+        {/* <SearchBox placeholder="Search . . ." onSubmit={() => navigate('/r')} />
+        <CustomHits /> */}
+        <TextField
+          id="searchBox"
+          defaultValue={'Search . . .'}
+          onClick={handleOpenSearch}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <Chip label="Ctrl+K" />
+              </InputAdornment>
+            ),
+          }}
+        />
       </Stack>
     </Box>
   );
-};
-
-export default Landing;
+}

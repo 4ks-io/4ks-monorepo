@@ -7,7 +7,18 @@ import Skeleton from '@mui/material/Skeleton';
 import { Link } from 'react-router-dom';
 import StarIcon from '@mui/icons-material/Star';
 import ShareIcon from '@mui/icons-material/Share';
-import CardActions from '@mui/material/CardActions';
+import { styled } from '@mui/material/styles';
+
+// https://css.glass/
+const StyledCardHeader = styled(CardHeader)({
+  margin: '-90px auto 0',
+  borderRadius: '4px',
+  position: 'relative',
+  zIndex: 2,
+  background: 'rgba(255, 255, 255, 0.2)',
+  boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+  backdropFilter: 'blur(5px)',
+});
 
 interface MediaProps {
   loading?: boolean;
@@ -23,7 +34,6 @@ function RecipeCard(props: MediaProps) {
 
   return (
     <Card>
-      <CardActions disableSpacing></CardActions>
       {loading ? (
         <Skeleton sx={{ height: 280 }} animation="wave" variant="rectangular" />
       ) : (
@@ -36,8 +46,8 @@ function RecipeCard(props: MediaProps) {
           />
         </Link>
       )}
-      <CardHeader
-        style={{ padding: 4 }}
+      <StyledCardHeader
+        // style={{ padding: 4 }}
         action={
           loading ? null : (
             <>
@@ -59,11 +69,25 @@ function RecipeCard(props: MediaProps) {
               style={{ marginBottom: 6 }}
             />
           ) : (
-            title
+            <Link
+              style={{ textDecoration: 'none', color: 'black' }}
+              to={`/r/${id}`}
+            >
+              {title}
+            </Link>
           )
         }
         subheader={
-          loading ? <Skeleton animation="wave" height={20} width="40%" /> : chef
+          loading ? (
+            <Skeleton animation="wave" height={20} width="40%" />
+          ) : (
+            <Link
+              style={{ textDecoration: 'none', color: 'black' }}
+              to={`/${chef}`}
+            >
+              {chef}
+            </Link>
+          )
         }
       />
     </Card>
