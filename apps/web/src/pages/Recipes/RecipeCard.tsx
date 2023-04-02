@@ -11,7 +11,7 @@ import { styled } from '@mui/material/styles';
 
 // https://css.glass/
 const StyledCardHeader = styled(CardHeader)({
-  margin: '-90px auto 0',
+  margin: '-120px auto 0',
   borderRadius: '4px',
   position: 'relative',
   zIndex: 2,
@@ -60,6 +60,7 @@ function RecipeCard(props: MediaProps) {
             </>
           )
         }
+        // todo: {overflow: 'hidden', textOverflow: 'ellipsis'}
         title={
           loading ? (
             <Skeleton

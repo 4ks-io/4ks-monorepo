@@ -68,7 +68,7 @@ export default function Landing() {
         <CustomHits /> */}
         <TextField
           id="searchBox"
-          defaultValue={'Search . . .'}
+          placeholder="Search..."
           onClick={handleOpenSearch}
           InputProps={{
             startAdornment: (

@@ -175,7 +175,7 @@ export default function MainAppBar() {
         {showSearchInput && (
           <TextField
             id="searchBox"
-            defaultValue={'Search...'}
+            placeholder="Search..."
             onClick={handleOpenSearch}
             sx={{ width: 200 }}
             InputProps={{

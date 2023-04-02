@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useReducer, useState } from 'react';
+import React, { useEffect, useContext, useReducer } from 'react';
 import { initialState } from './search-context-init';
 import { SearchContextState } from './search-context-types';
 import {
@@ -21,6 +21,14 @@ export function SearchContextProvider({
   useEffect(() => {
     window.addEventListener('keydown', keyDownHandler);
   }, []);
+
+  function keyDownHandler(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key === 'k' && !state.open) {
+      handleOpen();
+      event.preventDefault();
+      // console.log('Control and K!');
+    }
+  }
 
   function setResults(results: []) {
     dispatch({
@@ -47,14 +55,6 @@ export function SearchContextProvider({
     });
   }
 
-  const keyDownHandler = (event: KeyboardEvent) => {
-    if (event.ctrlKey && event.key === 'k') {
-      event.preventDefault();
-      handleOpen();
-      console.log('Control and K!');
-    }
-  };
-
   useEffect(() => {
     const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
       server: {
@@ -80,7 +80,7 @@ export function SearchContextProvider({
       type: SearchContextAction.INIT,
       payload: {
         client: typesenseInstantsearchAdapter.searchClient,
-        open: false,
+        open: true,
         handleClose,
         handleOpen,
         setResults,
