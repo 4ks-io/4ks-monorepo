@@ -1,85 +1,21 @@
 import React from 'react';
-import Box from '@mui/material/Box';
+import { useSearchContext } from '../../providers';
+import { useNavigate } from 'react-router-dom';
+import { useHits } from 'react-instantsearch-hooks-web';
 import Button from '@mui/material/Button';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useSearchContext } from '../../providers';
 import Divider from '@mui/material/Divider';
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
-import Chip from '@mui/material/Chip';
-import SearchIcon from '@mui/icons-material/Search';
-import { useNavigate } from 'react-router-dom';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
+import SearchBox from './SearchBox';
 
-import {
-  InstantSearch,
-  SearchBox,
-  useHits,
-  Hits,
-} from 'react-instantsearch-hooks-web';
-import Skeleton from '@mui/material/Skeleton';
+import { FormattedHits } from './CustomHits';
+import { Hit } from './types';
 
-interface Hit {
-  // typesense
-  objectID: string;
-  // text_match: number;
-  // text_match_info: any;
-  _highlightResult: any;
-  //   {
-  //     "author": {
-  //         "value": "4ks-bot",
-  //         "matchLevel": "none",
-  //         "matchedWords": []
-  //     },
-  //     "ingredients": [
-  //         {
-  //             "value": " very thin spaghetti",
-  //             "matchLevel": "none",
-  //             "matchedWords": []
-  //         },
-  //         {
-  //             "value": "1/2 bottle McCormick <mark>Salad</mark> Supreme (seasoning)",
-  //             "matchLevel": "full",
-  //             "matchedWords": [
-  //                 "Salad"
-  //             ]
-  //         },
-  //         {
-  //             "value": "1 bottle Zesty Italian dressing",
-  //             "matchLevel": "none",
-  //             "matchedWords": []
-  //         }
-  //     ],
-  //     "name": {
-  //         "value": "Summer Spaghetti",
-  //         "matchLevel": "none",
-  //         "matchedWords": []
-  //     }
-  // }
-  // 4ks
-  id: string;
-  author: string;
-  name: string;
-  imageUrl: string;
-  ingredients: string[];
-}
 export default function SearchDialog() {
   const { open, handleClose } = useSearchContext();
   const navigate = useNavigate();
+  const { hits } = useHits();
 
   // todo: true for mobile
   const [fullScreen, setFullScreen] = React.useState(true);
@@ -87,57 +23,38 @@ export default function SearchDialog() {
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState<DialogProps['maxWidth']>('xl');
 
-  function handleSubmit() {
+  function handleExploreClick() {
     handleClose();
     navigate('/r');
   }
 
-  function CustomHit(h: any) {
-    // console.log(h);
-    function handleRecipeNav() {
-      handleClose();
-      navigate(`r/${h['id']}`);
+  function GenericHits() {
+    if (hits.length === 0 || hits[0].hasOwnProperty('text_match')) {
+      return null;
     }
 
-    return (
-      <Card sx={{ display: 'flex' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-          <CardContent sx={{ flex: '1 0 auto' }}>
-            <Typography component="div" variant="h6">
-              {h['name'] as string}
-            </Typography>
-            <Typography
-              variant="subtitle1"
-              color="text.secondary"
-              component="div"
-              onClick={handleRecipeNav}
-            >
-              {h['author'] as string}
-            </Typography>
-          </CardContent>
-        </Box>
-        <CardMedia
-          component="img"
-          sx={{ width: 100 }}
-          image={h['imageUrl']}
-          // alt="Live from space album cover"
-        />
-      </Card>
-    );
+    return FormattedHits(hits, 'Explore', handleClose);
   }
 
-  function CustomHits() {
-    const { hits, results } = useHits();
-    return hits.length > 1 ? (
-      <Stack spacing={1}>{hits.map((h) => CustomHit(h))}</Stack>
-    ) : (
-      <>
-        <Skeleton variant="text" />
-        <Skeleton variant="text" />
-        <Skeleton variant="text" />
-        <Skeleton variant="text" />
-      </>
+  function TitleHits() {
+    const filteredHits = hits.filter(
+      (h) =>
+        h.hasOwnProperty('text_match') &&
+        (h as unknown as Hit)._highlightResult.name.matchedWords.length > 0
     );
+    return FormattedHits(filteredHits.slice(0, 8), 'Recipes', handleClose);
+  }
+
+  function IngredientHits() {
+    const filteredHits = hits.filter(
+      (h) =>
+        h.hasOwnProperty('text_match') &&
+        (h as unknown as Hit)._highlightResult.ingredients.find(
+          (i) => i.matchLevel != 'none'
+        )
+    );
+    console.log(filteredHits);
+    return FormattedHits(filteredHits.slice(0, 8), 'Ingredients', handleClose);
   }
 
   return (
@@ -149,46 +66,16 @@ export default function SearchDialog() {
       onClose={handleClose}
     >
       <DialogTitle>
-        <TextField
-          id="searchBox"
-          variant="standard"
-          defaultValue={'Search...'}
-          // onClick={handleOpenSearch}
-          sx={{ width: '100%' }}
-          InputProps={{
-            disableUnderline: true,
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <Chip label="esc" />
-              </InputAdornment>
-            ),
-          }}
-        />
-        <SearchBox placeholder="Search . . ." onSubmit={handleSubmit} />
+        <SearchBox />
       </DialogTitle>
       <Divider />
+      <Button onClick={handleExploreClick}>Explore</Button>
+
       <DialogContent>
-        <DialogContentText>Results</DialogContentText>
-        <Box
-          noValidate
-          component="form"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            m: 'auto',
-          }}
-        >
-          <CustomHits />
-        </Box>
+        <GenericHits />
+        <TitleHits />
+        <IngredientHits />
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Close</Button>
-      </DialogActions>
     </Dialog>
   );
 }

@@ -57,7 +57,7 @@ export default function MainAppBar() {
     } else {
       setShowLogo(true);
       setIsTransition(false);
-      setShowRecipesLink(true);
+      setShowRecipesLink(false);
       setShowSearchInput(true);
     }
   }, [location.pathname]);
@@ -80,7 +80,7 @@ export default function MainAppBar() {
     }
   }
 
-  function handleRecipesClick() {
+  function handleExploreClick() {
     navigate('/r');
   }
 
@@ -168,13 +168,14 @@ export default function MainAppBar() {
 
         <Box sx={{ flexGrow: 1 }} />
         {showRecipesLink && (
-          <Button sx={AppBarButtonStyles(theme)} onClick={handleRecipesClick}>
-            Recipes
+          <Button sx={AppBarButtonStyles(theme)} onClick={handleExploreClick}>
+            Explore
           </Button>
         )}
         {showSearchInput && (
           <TextField
             id="searchBox"
+            size="small"
             placeholder="Search..."
             onClick={handleOpenSearch}
             sx={{ width: 200 }}
