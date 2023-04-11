@@ -21,7 +21,9 @@ const RecipeContentView = ({ create = false }: RecipeProps) => {
     <>
       <RecipeEditingControls create={create} />
       <RecipeIngredients />
+      <div style={{ paddingBottom: 30 }} />
       <RecipeInstructions />
+      <div style={{ paddingBottom: 30 }} />
       <RecipeSocial />
     </>
   );

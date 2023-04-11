@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import { models_Ingredient } from '@4ks/api-fetch';
-import { stackStyles, itemAlignmentsStackTokens } from './../../styles';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useRecipeContext } from '../../../../providers';
 import { RecipeIngredient } from './RecipeIngredient';
 import { SectionTitle } from '../components';
-import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import IconButton from '@mui/material/IconButton';
+
 import {
   handleListAdd,
   handleListChange,
@@ -49,7 +50,12 @@ export function RecipeIngredients() {
 
   return (
     <Stack>
-      <SectionTitle value={'Ingredients'} />
+      <Stack direction="row" spacing={2}>
+        <SectionTitle value={'Ingredients'} />
+        <IconButton aria-label="add" onClick={handleIngredientAdd}>
+          <AddIcon />
+        </IconButton>
+      </Stack>
 
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="ingredients">
@@ -93,11 +99,11 @@ export function RecipeIngredients() {
           )}
         </Droppable>
       </DragDropContext>
-      {rtx?.editing && (
+      {/* {rtx?.editing && (
         <Button variant="outlined" onClick={handleIngredientAdd}>
           Add Ingredient
         </Button>
-      )}
+      )} */}
     </Stack>
   );
 }

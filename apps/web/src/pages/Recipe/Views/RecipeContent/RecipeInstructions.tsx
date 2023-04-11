@@ -5,7 +5,8 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useRecipeContext } from '../../../../providers';
 import { RecipeInstruction } from './RecipeInstruction';
 import { SectionTitle } from '../components';
-import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import IconButton from '@mui/material/IconButton';
 import {
   handleListAdd,
   handleListChange,
@@ -56,7 +57,12 @@ export function RecipeInstructions() {
 
   return (
     <Stack>
-      <SectionTitle value={'Instructions'} />
+      <Stack direction="row" spacing={2}>
+        <SectionTitle value={'Instructions'} />
+        <IconButton aria-label="add" onClick={handleInstructionAdd}>
+          <AddIcon />
+        </IconButton>
+      </Stack>
 
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <Droppable droppableId="instructions">
@@ -100,11 +106,11 @@ export function RecipeInstructions() {
           )}
         </Droppable>
       </DragDropContext>
-      {rtx?.editing && (
+      {/* {rtx?.editing && (
         <Button variant="outlined" onClick={handleInstructionAdd}>
           Add Instruction
         </Button>
-      )}
+      )} */}
     </Stack>
   );
 }

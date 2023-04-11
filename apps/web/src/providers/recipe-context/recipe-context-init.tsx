@@ -59,7 +59,7 @@ export const initialState: IRecipeContext = {
   setInstructions: () => {},
   setBanner: () => {},
   recipeId: '0',
-  editing: false,
+  editing: true,
   media: [],
   recipe: initialRecipe,
 };

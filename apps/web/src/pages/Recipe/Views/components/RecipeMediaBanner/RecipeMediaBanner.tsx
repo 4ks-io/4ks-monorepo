@@ -81,7 +81,7 @@ const RecipeMediaBanner = () => {
   }
 
   return (
-    <div>
+    <>
       <Dialog open={showBannerSelectModal} onClose={discardImageSelection}>
         <DialogTitle sx={{ m: 0, p: 2 }}>
           Select Banner Image
@@ -118,6 +118,15 @@ const RecipeMediaBanner = () => {
 
       {/* Banner Image */}
       {showBanner && (
+        <Button
+          variant="text"
+          onClick={() => setShowBanner(!showBanner)}
+          sx={{ paddingBottom: 2, width: '100%' }}
+        >
+          <ExpandLessIcon />
+        </Button>
+      )}
+      {showBanner && (
         <Box
           component="img"
           onClick={handleOpenBannerSelectModal}
@@ -136,7 +145,7 @@ const RecipeMediaBanner = () => {
       >
         {showBanner ? <ExpandLessIcon /> : <ExpandMoreIcon />}
       </Button>
-    </div>
+    </>
   );
 };
 

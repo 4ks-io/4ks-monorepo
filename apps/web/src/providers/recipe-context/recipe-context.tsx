@@ -29,10 +29,10 @@ export function RecipeContextProvider({
   const NO_RECIPE_ID = '0';
 
   function setEditing(editing: boolean) {
-    dispatch({
-      type: RecipeContextAction.SET_EDIT_MODE,
-      payload: editing,
-    });
+    // dispatch({
+    //   type: RecipeContextAction.SET_EDIT_MODE,
+    //   payload: editing,
+    // });
   }
 
   function setBanner(banner: Array<models_RecipeMediaVariant>) {

@@ -11,7 +11,7 @@ const Recipe = () => {
   return (
     <RecipeContextProvider>
       <RecipeHelmet />
-      <Container style={{ paddingTop: 16 }}>
+      <Container style={{ paddingTop: 16, paddingBottom: 100 }}>
         <Stack>
           <RecipeHeader />
           <RecipeControls />

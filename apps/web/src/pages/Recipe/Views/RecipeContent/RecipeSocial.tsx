@@ -21,6 +21,7 @@ export function RecipeSocial(props: RecipeSocialProps) {
           );
         })}
       </Stack>
+      <div style={{ paddingBottom: 30 }} />
       <Stack>
         {rtx?.recipe.currentRevision?.link && (
           <>

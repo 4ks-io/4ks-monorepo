@@ -27,6 +27,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   const [isNew, setIsNew] = useState(false);
   const [title, setTitle] = useState('');
   const [chefName, setChefName] = useState<string>();
+  const [titleFocus, setTitleFocus] = useState(false);
 
   useEffect(() => {
     if (rtx?.recipe?.author?.username) {
@@ -37,6 +38,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   }, [rtx?.recipe?.author?.username, ctx.user?.username]);
 
   function handleTitleFocus() {
+    setTitleFocus(true);
     if (title == GENERIC_TITLE) {
       setTitle(``);
     }
@@ -77,6 +79,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   }
 
   function handleValidationComplete() {
+    setTitleFocus(false);
     rtx?.setTitle(title);
   }
 
@@ -104,17 +107,22 @@ export function RecipeHeader(props: RecipeHeaderProps) {
         {rtx?.editing ? (
           <Stack>
             <TextField
+              variant="standard"
               onFocus={handleTitleFocus}
               onChange={handleTitleChange}
               onBlur={handleValidationComplete}
               value={title}
               // variant="standard"
               size="small"
+              inputProps={{ style: { fontSize: 28 } }} // font size of input text
               InputProps={{
-                startAdornment: (
+                disableUnderline: true,
+                startAdornment: titleFocus ? (
                   <InputAdornment position="start">
                     <EditIcon />
                   </InputAdornment>
+                ) : (
+                  <></>
                 ),
               }}
             />
