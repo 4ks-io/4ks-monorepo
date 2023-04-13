@@ -63,7 +63,8 @@ export function RecipeIngredient({
         )}
         <TextField
           fullWidth
-          variant="standard"
+          size="small"
+          variant={quantity != '' ? 'standard' : 'outlined'}
           value={quantity}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -75,7 +76,8 @@ export function RecipeIngredient({
         />
         <TextField
           fullWidth
-          variant="standard"
+          size="small"
+          variant={name != '' ? 'standard' : 'outlined'}
           value={name}
           onFocus={handleFocus}
           onBlur={handleBlur}

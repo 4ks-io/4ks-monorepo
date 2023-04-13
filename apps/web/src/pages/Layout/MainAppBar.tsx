@@ -11,6 +11,7 @@ import InputBase from '@mui/material/InputBase';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
+import ExploreIcon from '@mui/icons-material/Explore';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Avatar from '@mui/material/Avatar';
@@ -39,7 +40,7 @@ export default function MainAppBar() {
 
   const [showLogo, setShowLogo] = useState(true);
   const [showSearchInput, setShowSearchInput] = useState(true);
-  const [showRecipesLink, setShowRecipesLink] = useState(true);
+  const [showExploreLink, setShowExploreLink] = useState(true);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -48,16 +49,16 @@ export default function MainAppBar() {
     if (location.pathname == '/') {
       setShowLogo(false);
       setShowSearchInput(false);
-      setShowRecipesLink(true);
+      setShowExploreLink(true);
     } else if (['/new', '/login', '/logout'].includes(location.pathname)) {
       setShowLogo(true);
       setIsTransition(true);
-      setShowRecipesLink(false);
+      setShowExploreLink(false);
       setShowSearchInput(false);
     } else {
       setShowLogo(true);
       setIsTransition(false);
-      setShowRecipesLink(false);
+      setShowExploreLink(false);
       setShowSearchInput(true);
     }
   }, [location.pathname]);
@@ -167,11 +168,7 @@ export default function MainAppBar() {
         )}
 
         <Box sx={{ flexGrow: 1 }} />
-        {showRecipesLink && (
-          <Button sx={AppBarButtonStyles(theme)} onClick={handleExploreClick}>
-            Explore
-          </Button>
-        )}
+
         {showSearchInput && (
           <TextField
             id="searchBox"
@@ -192,6 +189,14 @@ export default function MainAppBar() {
               ),
             }}
           />
+        )}
+
+        {showExploreLink && (
+          <Tooltip title="Explore">
+            <IconButton aria-label="explore" size="large">
+              <ExploreIcon fontSize="inherit" onClick={handleExploreClick} />
+            </IconButton>
+          </Tooltip>
         )}
 
         {isAuthenticated ? (

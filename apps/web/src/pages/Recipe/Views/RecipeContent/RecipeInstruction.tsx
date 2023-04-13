@@ -74,7 +74,8 @@ export function RecipeInstruction({
         )}
         <TextField
           fullWidth
-          variant="standard"
+          size="small"
+          variant={text != '' ? 'standard' : 'outlined'}
           value={text}
           onFocus={handleFocus}
           onBlur={handleBlur}
