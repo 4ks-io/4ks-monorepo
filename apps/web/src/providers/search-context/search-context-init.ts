@@ -8,4 +8,6 @@ export const initialState: SearchContextState = {
   results: [],
   setResults: () => {},
   clearResults: () => {},
+  value: '',
+  setValue: () => {},
 };

@@ -37,6 +37,13 @@ export function SearchContextProvider({
     });
   }
 
+  function setValue(value: string) {
+    dispatch({
+      type: SearchContextAction.SET_VALUE,
+      payload: value,
+    });
+  }
+
   function clearResults() {
     setResults([]);
   }
@@ -85,6 +92,7 @@ export function SearchContextProvider({
         handleOpen,
         setResults,
         clearResults,
+        setValue,
       },
     });
   }, []);

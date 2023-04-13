@@ -172,6 +172,7 @@ export default function MainAppBar() {
         {showSearchInput && (
           <TextField
             id="searchBox"
+            value={search.value || ''}
             size="small"
             placeholder="Search..."
             onClick={handleOpenSearch}
@@ -193,8 +194,12 @@ export default function MainAppBar() {
 
         {showExploreLink && (
           <Tooltip title="Explore">
-            <IconButton aria-label="explore" size="large">
-              <ExploreIcon fontSize="inherit" onClick={handleExploreClick} />
+            <IconButton
+              aria-label="explore"
+              size="large"
+              onClick={handleExploreClick}
+            >
+              <ExploreIcon fontSize="inherit" />
             </IconButton>
           </Tooltip>
         )}

@@ -13,8 +13,8 @@ import { FormattedHits } from './CustomHits';
 import { Hit } from './types';
 
 export default function SearchDialog() {
-  const { open, handleClose } = useSearchContext();
   const navigate = useNavigate();
+  const { open, handleClose } = useSearchContext();
   const { hits } = useHits();
 
   // todo: true for mobile
@@ -53,7 +53,6 @@ export default function SearchDialog() {
           (i) => i.matchLevel != 'none'
         )
     );
-    console.log(filteredHits);
     return FormattedHits(filteredHits.slice(0, 8), 'Ingredients', handleClose);
   }
 

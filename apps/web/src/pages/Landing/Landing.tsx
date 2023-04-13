@@ -10,36 +10,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
 
-import {
-  InstantSearch,
-  SearchBox,
-  useHits,
-  Hits,
-} from 'react-instantsearch-hooks-web';
-
-// function CustomHits() {
-//   const { hits, results, sendEvent } = useHits();
-
-//   return (
-//     <ul>
-//       {hits.map((h) => {
-//         return (
-//           <li key={h.objectID}>
-//             {' '}
-//             <a href={`r/${h['id']}`}>
-//               @{h['author'] as string} / {h['name'] as string}
-//             </a>
-//           </li>
-//         );
-//       })}
-//     </ul>
-//   );
-// }
-
 // https://www.algolia.com/doc/guides/building-search-ui/widgets/create-your-own-widgets/react-hooks/
 export default function Landing() {
   const search = useSearchContext();
-  const navigate = useNavigate();
 
   if (!search.client) {
     return <CircularProgress />;
@@ -64,10 +37,9 @@ export default function Landing() {
           alt="4ks.io"
           src={logo}
         />
-        {/* <SearchBox placeholder="Search . . ." onSubmit={() => navigate('/r')} />
-        <CustomHits /> */}
         <TextField
           id="searchBox"
+          value={search.value || ''}
           placeholder="Search..."
           onClick={handleOpenSearch}
           InputProps={{

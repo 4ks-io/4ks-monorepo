@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useSearchContext } from '../../providers';
 import { useNavigate } from 'react-router-dom';
 import type { UseSearchBoxProps } from 'react-instantsearch-hooks-web';
@@ -15,8 +15,10 @@ const queryHook: UseSearchBoxProps['queryHook'] = (query, search) => {
 
 export default function SearchBox(props: UseSearchBoxProps) {
   // const { query, clear, isSearchStalled } = useSearchBox(props);
-  const { handleClose } = useSearchContext();
+  const { handleClose, setValue, value } = useSearchContext();
   const navigate = useNavigate();
+
+  useEffect(() => refine(value), [value]);
 
   const { refine } = useSearchBox({
     queryHook: queryHook,
@@ -24,6 +26,7 @@ export default function SearchBox(props: UseSearchBoxProps) {
 
   function handleChange(event: any) {
     refine(event.target.value);
+    setValue(event.target.value);
   }
 
   function handleSubmit() {
@@ -34,8 +37,8 @@ export default function SearchBox(props: UseSearchBoxProps) {
   return (
     <TextField
       id="searchBox"
-      // onChange={handleOnS}
       variant="standard"
+      value={value || ''}
       onChange={handleChange}
       onSubmit={handleSubmit}
       placeholder={'Search...'}
