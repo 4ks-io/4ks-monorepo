@@ -8,7 +8,6 @@ import TextField from '@mui/material/TextField';
 interface RecipeInstructionProps {
   index: number;
   data: models_Instruction;
-  editing: boolean;
   handleInstructionDelete: (index: number) => void;
   handleInstructionChange: (index: number, data: models_Instruction) => void;
 }
@@ -16,7 +15,6 @@ interface RecipeInstructionProps {
 export function RecipeInstruction({
   data,
   index,
-  editing,
   handleInstructionDelete,
   handleInstructionChange,
 }: RecipeInstructionProps) {
@@ -45,20 +43,13 @@ export function RecipeInstruction({
     } as models_Instruction);
   }
 
-  const inputProps = { disableUnderline: true, readOnly: !editing };
+  // todo: remove readOnly
+  const inputProps = { disableUnderline: true, readOnly: false };
 
   return (
     <Stack>
       <Stack direction="row">
-        {!editing && (
-          <TextField
-            variant="standard"
-            value={index + 1}
-            InputProps={{ disableUnderline: true, readOnly: true }}
-            sx={{ width: 16 }}
-          />
-        )}
-        {editing && !active && (
+        {!active && (
           <TextField
             variant="standard"
             value={index + 1}
@@ -67,7 +58,7 @@ export function RecipeInstruction({
             inputProps={{ style: { fontSize: 20 } }}
           />
         )}
-        {editing && active && (
+        {active && (
           <DragHandleIcon
             sx={{ fontSize: 20, marginTop: 1, marginLeft: '2px' }}
           />
@@ -85,7 +76,7 @@ export function RecipeInstruction({
           sx={{ paddingLeft: 1, paddingTop: '4px' }}
           inputProps={{ style: { fontSize: 20 } }}
         />
-        {editing && active && (
+        {active && (
           <DeleteIcon
             sx={{ fontSize: 16, marginTop: 1 }}
             onClick={handleDelete}

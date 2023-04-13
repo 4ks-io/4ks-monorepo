@@ -50,6 +50,11 @@ export default function MainAppBar() {
       setShowLogo(false);
       setShowSearchInput(false);
       setShowExploreLink(true);
+    } else if (location.pathname == '/r') {
+      setShowLogo(true);
+      setIsTransition(false);
+      setShowExploreLink(false);
+      setShowSearchInput(true);
     } else if (['/new', '/login', '/logout'].includes(location.pathname)) {
       setShowLogo(true);
       setIsTransition(true);
@@ -58,7 +63,7 @@ export default function MainAppBar() {
     } else {
       setShowLogo(true);
       setIsTransition(false);
-      setShowExploreLink(false);
+      setShowExploreLink(true);
       setShowSearchInput(true);
     }
   }, [location.pathname]);

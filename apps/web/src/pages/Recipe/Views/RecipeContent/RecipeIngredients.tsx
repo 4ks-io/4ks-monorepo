@@ -69,12 +69,7 @@ export function RecipeIngredients() {
               {ingredients?.map((ingredient, index) => {
                 const key = `ingredient_${index}_${ingredient.id}`;
                 return (
-                  <Draggable
-                    key={key}
-                    draggableId={key}
-                    index={index}
-                    isDragDisabled={!rtx?.editing}
-                  >
+                  <Draggable key={key} draggableId={key} index={index}>
                     {(provided) => (
                       <li
                         ref={provided.innerRef}
@@ -85,7 +80,6 @@ export function RecipeIngredients() {
                           index={index}
                           key={ingredient.name}
                           data={ingredient}
-                          editing={rtx?.editing || false}
                           handleIngredientDelete={handleIngredientDelete}
                           handleIngredientChange={handleIngredientChange}
                         />
@@ -99,11 +93,6 @@ export function RecipeIngredients() {
           )}
         </Droppable>
       </DragDropContext>
-      {/* {rtx?.editing && (
-        <Button variant="outlined" onClick={handleIngredientAdd}>
-          Add Ingredient
-        </Button>
-      )} */}
     </Stack>
   );
 }

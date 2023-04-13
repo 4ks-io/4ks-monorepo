@@ -9,7 +9,6 @@ import Checkbox from '@mui/material/Checkbox';
 interface RecipeIngredientProps {
   index: number;
   data: models_Ingredient;
-  editing: boolean;
   handleIngredientDelete: (index: number) => void;
   handleIngredientChange: (index: number, data: models_Ingredient) => void;
 }
@@ -17,7 +16,6 @@ interface RecipeIngredientProps {
 export function RecipeIngredient({
   data,
   index,
-  editing,
   handleIngredientDelete,
   handleIngredientChange,
 }: RecipeIngredientProps) {
@@ -51,12 +49,13 @@ export function RecipeIngredient({
     } as models_Ingredient);
   }
 
-  const inputProps = { disableUnderline: true, readOnly: !editing };
+  // todo : remove readonly
+  const inputProps = { disableUnderline: true, readOnly: false };
 
   return (
     <Stack>
       <Stack direction="row">
-        {editing && active ? (
+        {active ? (
           <DragHandleIcon sx={{ fontSize: 20, marginTop: 1, marginLeft: 1 }} />
         ) : (
           <Checkbox size="small" />
@@ -87,7 +86,7 @@ export function RecipeIngredient({
           sx={{ paddingLeft: 1, paddingTop: '4px' }}
           inputProps={{ style: { fontSize: 20 } }}
         />
-        {editing && active && (
+        {active && (
           <DeleteIcon
             sx={{ fontSize: 16, marginTop: 1 }}
             onClick={handleDelete}

@@ -76,12 +76,7 @@ export function RecipeInstructions() {
               {instructions?.map((instruction, index) => {
                 const key = `instruction_${index}_${instruction.id}`;
                 return (
-                  <Draggable
-                    key={key}
-                    draggableId={key}
-                    index={index}
-                    isDragDisabled={!rtx?.editing}
-                  >
+                  <Draggable key={key} draggableId={key} index={index}>
                     {(provided) => (
                       <li
                         ref={provided.innerRef}
@@ -92,7 +87,6 @@ export function RecipeInstructions() {
                           index={index}
                           key={instruction.text}
                           data={instruction}
-                          editing={rtx?.editing || false}
                           handleInstructionDelete={handleInstructionDelete}
                           handleInstructionChange={handleInstructionChange}
                         />
@@ -106,11 +100,6 @@ export function RecipeInstructions() {
           )}
         </Droppable>
       </DragDropContext>
-      {/* {rtx?.editing && (
-        <Button variant="outlined" onClick={handleInstructionAdd}>
-          Add Instruction
-        </Button>
-      )} */}
     </Stack>
   );
 }

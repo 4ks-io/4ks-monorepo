@@ -108,40 +108,26 @@ export function RecipeHeader(props: RecipeHeaderProps) {
           <Skeleton variant="text" />
         )}
 
-        {rtx?.editing ? (
-          <Stack>
-            <TextField
-              variant="standard"
-              onFocus={handleTitleFocus}
-              onChange={handleTitleChange}
-              onBlur={handleTitleBlur}
-              value={title}
-              // variant="standard"
-              size="small"
-              inputProps={{ style: { fontSize: 28 } }} // font size of input text
-              InputProps={{
-                disableUnderline: true,
-                startAdornment: titleFocus ? (
-                  <InputAdornment position="start">
-                    <EditIcon />
-                  </InputAdornment>
-                ) : (
-                  <></>
-                ),
-              }}
-            />
-          </Stack>
-        ) : (
-          <>
-            {title?.length > 0 ? (
-              <Typography variant="h5" gutterBottom>
-                {title}
-              </Typography>
+        <TextField
+          variant="standard"
+          onFocus={handleTitleFocus}
+          onChange={handleTitleChange}
+          onBlur={handleTitleBlur}
+          value={title}
+          // variant="standard"
+          size="small"
+          inputProps={{ style: { fontSize: 28 } }} // font size of input text
+          InputProps={{
+            disableUnderline: true,
+            startAdornment: titleFocus ? (
+              <InputAdornment position="start">
+                <EditIcon />
+              </InputAdornment>
             ) : (
-              <Skeleton />
-            )}
-          </>
-        )}
+              <></>
+            ),
+          }}
+        />
       </Stack>
       {isNew && (
         <Container>

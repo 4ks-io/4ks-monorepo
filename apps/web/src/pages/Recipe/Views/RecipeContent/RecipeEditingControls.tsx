@@ -40,13 +40,6 @@ export function RecipeEditingControls({
   const [saveSucess, setSaveSucess] = React.useState(false);
   const [saveError, setSaveError] = React.useState(false);
 
-  function toggleEditing(
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ) {
-    rtx?.editing != checked && rtx?.setEditing(checked);
-  }
-
   async function saveRecipeChanges() {
     // handle new recipe
     if (create) {
@@ -96,28 +89,6 @@ export function RecipeEditingControls({
 
   return (
     <>
-      {/* <Stack direction="row" spacing={2}>
-        <FormControlLabel
-          sx={{ color: 'text.primary' }}
-          control={<Switch onChange={toggleEditing} defaultChecked={create} />}
-          label="edit"
-        />
-
-        {rtx?.editing && (
-          <>
-            <Button
-              variant="contained"
-              disabled={!isAuthenticated}
-              onClick={saveRecipeChanges}
-            >
-              Save
-            </Button>
-            <Button variant="outlined" onClick={discardRecipeChanges}>
-              Discard
-            </Button>
-          </>
-        )}
-      </Stack> */}
       <Snackbar open={saveSucess} autoHideDuration={2000} onClose={handleClose}>
         <Alert
           onClose={handleClose}
