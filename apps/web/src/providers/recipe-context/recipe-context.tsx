@@ -28,13 +28,6 @@ export function RecipeContextProvider({
   const [state, dispatch] = useReducer(recipeContextReducer, initialState);
   const NO_RECIPE_ID = '0';
 
-  function setEditing(editing: boolean) {
-    // dispatch({
-    //   type: RecipeContextAction.SET_EDIT_MODE,
-    //   payload: editing,
-    // });
-  }
-
   function setBanner(banner: Array<models_RecipeMediaVariant>) {
     dispatch({
       type: RecipeContextAction.SET_BANNER,
@@ -85,14 +78,7 @@ export function RecipeContextProvider({
   }, [recipeId]);
 
   useEffect(() => {
-    if (state.recipeId) {
-      if (state.recipeId == NO_RECIPE_ID) {
-        setEditing(true);
-      } else {
-        setEditing(false);
-        setRecipe();
-      }
-    }
+    state.recipeId && state.recipeId != NO_RECIPE_ID && setRecipe();
   }, [ctx?.api, state.recipeId]);
 
   useEffect(() => {
@@ -108,7 +94,6 @@ export function RecipeContextProvider({
         payload: {
           resetMedia: setMedia,
           resetRecipe: setRecipe,
-          setEditing,
           setTitle,
           setIngredients,
           setInstructions,
@@ -122,7 +107,6 @@ export function RecipeContextProvider({
           payload: {
             resetMedia: setMedia,
             resetRecipe: setRecipe,
-            setEditing,
             setBanner,
             setTitle: () => {},
             setIngredients: () => {},

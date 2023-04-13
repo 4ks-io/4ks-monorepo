@@ -12,7 +12,6 @@ export enum RecipeContextAction {
   SET_INGREDIENTS = 'setRecipeIngredients',
   SET_INSTRUCTIONS = 'setRecipeInstructions',
   SET_TITLE = 'setRecipeTitle',
-  SET_EDIT_MODE = 'setEditMode',
   SET_BANNER = 'setBanner',
   SET_MEDIA = 'setMedia',
 }
@@ -22,9 +21,6 @@ export function recipeContextReducer(
   action: IAction
 ): IRecipeContext {
   switch (action.type) {
-    //
-    case RecipeContextAction.SET_EDIT_MODE:
-      return { ...state, editing: action.payload };
     //
     case RecipeContextAction.SET_ID:
       return { ...state, recipeId: action.payload };
@@ -50,7 +46,6 @@ export function recipeContextReducer(
         ...state,
         resetMedia,
         resetRecipe,
-        setEditing,
         setIngredients,
         setInstructions,
         setTitle,
