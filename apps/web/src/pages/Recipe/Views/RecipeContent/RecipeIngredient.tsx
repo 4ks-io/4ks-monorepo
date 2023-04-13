@@ -4,7 +4,7 @@ import { models_Ingredient } from '@4ks/api-fetch';
 import DragHandleIcon from '@mui/icons-material/DragIndicator';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TextField from '@mui/material/TextField';
-import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
+import Checkbox from '@mui/material/Checkbox';
 
 interface RecipeIngredientProps {
   index: number;
@@ -57,9 +57,9 @@ export function RecipeIngredient({
     <Stack>
       <Stack direction="row">
         {editing && active ? (
-          <DragHandleIcon sx={{ fontSize: 16, marginTop: 1 }} />
+          <DragHandleIcon sx={{ fontSize: 20, marginTop: 1, marginLeft: 1 }} />
         ) : (
-          <HorizontalRuleIcon sx={{ fontSize: 16, marginTop: 1 }} />
+          <Checkbox size="small" />
         )}
         <TextField
           fullWidth
@@ -70,7 +70,8 @@ export function RecipeIngredient({
           onChange={handleQuantityChange}
           multiline
           InputProps={inputProps}
-          sx={{ paddingLeft: 1, width: '96px' }}
+          sx={{ paddingLeft: 1, width: '96px', paddingTop: '4px' }}
+          inputProps={{ style: { fontSize: 20 } }}
         />
         <TextField
           fullWidth
@@ -81,7 +82,8 @@ export function RecipeIngredient({
           onChange={handleNameChange}
           multiline
           InputProps={inputProps}
-          sx={{ paddingLeft: 1 }}
+          sx={{ paddingLeft: 1, paddingTop: '4px' }}
+          inputProps={{ style: { fontSize: 20 } }}
         />
         {editing && active && (
           <DeleteIcon

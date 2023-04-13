@@ -64,10 +64,13 @@ export function RecipeInstruction({
             value={index + 1}
             InputProps={{ disableUnderline: true, readOnly: true }}
             sx={{ width: 20 }}
+            inputProps={{ style: { fontSize: 20 } }}
           />
         )}
         {editing && active && (
-          <DragHandleIcon sx={{ fontSize: 16, marginTop: 1 }} />
+          <DragHandleIcon
+            sx={{ fontSize: 20, marginTop: 1, marginLeft: '2px' }}
+          />
         )}
         <TextField
           fullWidth
@@ -78,7 +81,8 @@ export function RecipeInstruction({
           onChange={handleTextChange}
           multiline
           InputProps={inputProps}
-          sx={{ paddingLeft: 1 }}
+          sx={{ paddingLeft: 1, paddingTop: '4px' }}
+          inputProps={{ style: { fontSize: 20 } }}
         />
         {editing && active && (
           <DeleteIcon

@@ -41,21 +41,7 @@ func (rc *recipeController) BotCreateRecipe(c *gin.Context) {
 		log.Error().Err(err).Msg("failed to get random fallback image")
 	}
 	u := rc.staticService.GetRandomFallbackImageUrl(f)
-
-	a := []models.RecipeMediaVariant{}
-	a = append(a, models.RecipeMediaVariant{
-		MaxWidth: 256,
-		Url:      u,
-		Filename: f,
-		Alias:    "sm",
-	})
-	a = append(a, models.RecipeMediaVariant{
-		MaxWidth: 1024,
-		Url:      u,
-		Filename: f,
-		Alias:    "md",
-	})
-	payload.Banner = a
+	payload.Banner = createMockBanner(f, u)
 
 	createdRecipe, err := rc.recipeService.CreateRecipe(&payload)
 	if err == recipeService.ErrUnableToCreateRecipe {

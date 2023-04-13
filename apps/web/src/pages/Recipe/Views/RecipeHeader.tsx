@@ -78,13 +78,17 @@ export function RecipeHeader(props: RecipeHeaderProps) {
     alert('Share!');
   }
 
-  function handleValidationComplete() {
+  function handleTitleBlur() {
+    if (['', undefined].includes(title)) {
+      setTitle(GENERIC_TITLE);
+    } else {
+      rtx?.setTitle(title);
+    }
     setTitleFocus(false);
-    rtx?.setTitle(title);
   }
 
   function navigateChef() {
-    navigate(`/${rtx?.recipe?.author?.username}`);
+    !isNew && navigate(`/${rtx?.recipe?.author?.username}`);
   }
 
   return (
@@ -110,7 +114,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
               variant="standard"
               onFocus={handleTitleFocus}
               onChange={handleTitleChange}
-              onBlur={handleValidationComplete}
+              onBlur={handleTitleBlur}
               value={title}
               // variant="standard"
               size="small"

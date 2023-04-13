@@ -9,6 +9,7 @@ import (
 	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
 	"github.com/auth0/go-jwt-middleware/v2/validator"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 
 	"4ks/apps/api/dtos"
 	"4ks/apps/api/utils"
@@ -45,6 +46,13 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 		Username:    author.Username,
 		DisplayName: author.DisplayName,
 	}
+
+	f, err := rc.staticService.GetRandomFallbackImage(c)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to get random fallback image")
+	}
+	u := rc.staticService.GetRandomFallbackImageUrl(f)
+	payload.Banner = createMockBanner(f, u)
 
 	createdRecipe, err := rc.recipeService.CreateRecipe(&payload)
 	if err == recipeService.ErrUnableToCreateRecipe {
