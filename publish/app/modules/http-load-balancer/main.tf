@@ -25,12 +25,12 @@ resource "google_compute_global_address" "default" {
 # IF PLAIN HTTP ENABLED, CREATE FORWARDING RULE AND PROXY
 # ------------------------------------------------------------------------------
 
-resource "google_compute_target_http_proxy" "http" {
-  count   = var.enable_http ? 1 : 0
-  project = var.project
-  name    = "${var.name}-http-proxy"
-  url_map = google_compute_url_map.http_redirect_urlmap[0].self_link
-}
+# resource "google_compute_target_http_proxy" "http" {
+#   count   = var.enable_http ? 1 : 0
+#   project = var.project
+#   name    = "${var.name}-http-proxy"
+#   url_map = google_compute_url_map.http_redirect_urlmap[0].self_link
+# }
 
 # resource "google_compute_project_default_network_tier" "default" {
 #   network_tier = var.network_tier
@@ -52,21 +52,21 @@ resource "google_compute_url_map" "http_redirect_urlmap" {
 }
 
 # resource "google_compute_global_forwarding_rule" "http" {
-resource "google_compute_forwarding_rule" "http" {
-  # provider   = google-beta
-  count      = var.enable_http ? 1 : 0
-  project    = var.project
-  region     = var.region
-  name       = "${var.name}-http-rule"
-  target     = google_compute_target_http_proxy.http[0].self_link
-  # ip_address = google_compute_global_address.default.address // global
-  port_range = "80"
-  network_tier = var.network_tier
+# resource "google_compute_forwarding_rule" "http" {
+#   # provider   = google-beta
+#   count      = var.enable_http ? 1 : 0
+#   project    = var.project
+#   region     = var.region
+#   name       = "${var.name}-http-rule"
+#   target     = google_compute_target_http_proxy.http[0].self_link
+#   # ip_address = google_compute_global_address.default.address // global
+#   port_range = "80"
+#   network_tier = var.network_tier
 
-  # depends_on = [google_compute_global_address.default] // global
+#   # depends_on = [google_compute_global_address.default] // global
 
-  labels = var.custom_labels
-}
+#   labels = var.custom_labels
+# }
 
 # ------------------------------------------------------------------------------
 # IF SSL ENABLED, CREATE FORWARDING RULE AND PROXY
