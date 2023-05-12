@@ -8,10 +8,6 @@ variable "zone" {
   default = "us-east4-b"
 }
 
-variable "stage" {
-  default = "dev"
-}
-
 variable "api_build_number" {
   type = string
 }
@@ -24,12 +20,33 @@ variable "typesense_api_key" {
   type = string
 }
 
+variable "typesense_url" {
+  type = map(string)
+  default = {
+    "app-dev-us-east" = "https://m5wzvue301hkiy9gp-1.a1.typesense.net",
+    "app-tst-us-east" = ""
+    "app-prd-us-east" = "https://4d02iphk3zbtgo6jp-1.a1.typesense.net"
+  }
+}
+
+variable "auth0_domain" {
+  type = map(string)
+  default = {
+    "app-dev-us-east" = "dev-4ks.us.auth0.com",
+    "app-tst-us-east" = ""
+    "app-prd-us-east" = "4ks.us.auth0.com",
+  }
+}
+
 locals {
   org                   = "4ks"
   domain                = "4ks.io"
-  dns_managed_zone_name = "4ks-${var.stage}-app-zone"
-  project               = "${var.stage}-4ks"
+  stage                 = substr(terraform.workspace, 4, 3)
+  dns_managed_zone_name = "4ks-${local.stage}-app-zone"
+  project               = "${local.stage}-4ks"
+  www_domain            = "${var.www_subdomain_env_map[terraform.workspace]}${local.org}.io"
   web_domain            = "${var.web_subdomain_env_map[terraform.workspace]}${local.org}.io"
-  web_base_url          = "https://${local.web_domain}"
-  web_api_url           = "https://${local.web_domain}/api"
+  web_api_url           = "https://${local.www_domain}/api"
+
+  google_compute_managed_ssl_certificate_name = "managed-certificate"
 }

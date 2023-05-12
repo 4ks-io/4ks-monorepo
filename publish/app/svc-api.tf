@@ -1,10 +1,3 @@
-resource "google_artifact_registry_repository" "api" {
-  repository_id = "api"
-  location      = var.region
-  description   = "docker/helm repo for api images"
-  format        = "docker"
-}
-
 resource "google_cloud_run_service" "api" {
   name     = "api"
   location = var.region
@@ -13,7 +6,7 @@ resource "google_cloud_run_service" "api" {
     spec {
       service_account_name = google_service_account.api.email
       containers {
-        image = "us-east4-docker.pkg.dev/${var.stage}-${local.org}/api/app:${var.api_build_number}"
+        image = "us-east4-docker.pkg.dev/${local.stage}-${local.org}/api/app:${var.api_build_number}"
         ports {
           container_port = 5000
         }
@@ -24,15 +17,15 @@ resource "google_cloud_run_service" "api" {
         }
         env {
           name  = "UPLOADABLE_BUCKET"
-          value = google_storage_bucket.media_write.name
+          value = data.google_storage_bucket.media_write.name
         }
         env {
           name  = "DISTRIBUTION_BUCKET"
-          value = google_storage_bucket.media_read.name
+          value = data.google_storage_bucket.media_read.name
         }
         env {
           name  = "STATIC_MEDIA_BUCKET"
-          value = google_storage_bucket.media_static.name
+          value = data.google_storage_bucket.media_static.name
         }
         env {
           name  = "GOOGLE_CLOUD_PROJECT"
@@ -41,11 +34,11 @@ resource "google_cloud_run_service" "api" {
 
         env {
           name  = "FIRESTORE_PROJECT_ID"
-          value = "${var.stage}-${local.org}"
+          value = "${local.stage}-${local.org}"
         }
         env {
           name  = "AUTH0_DOMAIN"
-          value = "${local.org}-${var.stage}.us.auth0.com"
+          value = var.auth0_domain[terraform.workspace]
         }
         env {
           name  = "AUTH0_AUDIENCE"
@@ -74,7 +67,7 @@ resource "google_cloud_run_service" "api" {
 
         env {
           name  = "TYPESENSE_URL"
-          value = "https://m5wzvue301hkiy9gp-1.a1.typesense.net"
+          value = var.typesense_url[terraform.workspace]
         }
 
         env {
@@ -103,6 +96,24 @@ resource "google_service_account" "api" {
   description  = "Identity used by the Cloud Run API service"
 }
 
+resource "google_project_iam_member" "service_agent" {
+  project = local.project
+  role    = "roles/appengine.serviceAgent"
+  member  = "serviceAccount:${google_service_account.api.email}"
+}
+
+resource "google_project_iam_member" "datastore_user" {
+  project = local.project
+  role    = "roles/datastore.user"
+  member  = "serviceAccount:${google_service_account.api.email}"
+}
+
+resource "google_project_iam_member" "firestore_service_agent" {
+  project = local.project
+  role    = "roles/firestore.serviceAgent"
+  member  = "serviceAccount:${google_service_account.api.email}"
+}
+
 resource "google_project_iam_custom_role" "api" {
   role_id     = "cloudRunAPI"
   title       = "Cloud Run API"
@@ -114,7 +125,6 @@ resource "google_project_iam_custom_role" "api" {
   ]
 }
 
-
 data "google_iam_policy" "api_custom" {
   binding {
     role = google_project_iam_custom_role.api.id
@@ -123,7 +133,6 @@ data "google_iam_policy" "api_custom" {
     ]
   }
 }
-
 
 data "google_iam_policy" "api_token_creator" {
   binding {

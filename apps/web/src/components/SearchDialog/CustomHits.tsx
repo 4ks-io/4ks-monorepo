@@ -51,30 +51,32 @@ export function FormattedHits(
   }
 
   return (
-    <Box
-      noValidate
-      component="form"
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        m: 'auto',
-      }}
-    >
-      <Typography variant="h5" gutterBottom>
-        {title}
-      </Typography>
-      {hits.length > 1 ? (
-        <Stack spacing={1}>
-          {hits.map((h: Hit) => CustomHit(h, handleClose))}
-        </Stack>
-      ) : (
-        <>
-          <Skeleton variant="text" />
-          <Skeleton variant="text" />
-          <Skeleton variant="text" />
-          <Skeleton variant="text" />
-        </>
-      )}
-    </Box>
+    <div style={{ paddingBottom: 20 }}>
+      <Box
+        noValidate
+        component="form"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          m: 'auto',
+        }}
+      >
+        <Typography variant="h5" gutterBottom>
+          {title}
+        </Typography>
+        {hits.length > 1 ? (
+          <Stack spacing={1}>
+            {hits.map((h: Hit) => CustomHit(h, handleClose))}
+          </Stack>
+        ) : (
+          <>
+            <Skeleton variant="text" />
+            <Skeleton variant="text" />
+            <Skeleton variant="text" />
+            <Skeleton variant="text" />
+          </>
+        )}
+      </Box>
+    </div>
   );
 }

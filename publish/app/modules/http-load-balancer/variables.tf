@@ -8,6 +8,18 @@ variable "project" {
   type        = string
 }
 
+variable "region" {
+  description = "Region in which to deploy network resources"
+  type        = string
+}
+
+variable "network_tier" {
+  // https://cloud.google.com/network-tiers
+  description = "Google network Tier"
+  type        = string
+  default     = "STANDARD"
+}
+
 variable "name" {
   description = "Name for the load balancer forwarding rule and prefix for supporting resources."
   type        = string

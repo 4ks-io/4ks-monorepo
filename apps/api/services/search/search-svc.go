@@ -4,6 +4,7 @@ import (
 	"4ks/apps/api/dtos"
 	"4ks/libs/go/models"
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/typesense/typesense-go/typesense"
@@ -99,6 +100,7 @@ func (us searchService) CreateSearchRecipeCollection() error {
 	}
 
 	_, err := tsc.Collections().Create(schema)
+	fmt.Print(err)
 	if err != nil {
 		return err
 	}

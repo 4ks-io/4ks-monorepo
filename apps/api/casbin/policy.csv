@@ -8,5 +8,14 @@ p, 1, admin_group, /search/*, create, allow
 p, 10, resource_users_group, /users/*, read, allow
 p, 10, resource_users_group, /users/*, write, allow
 
+g, nic, dev_admin
 g, aa0afb0ac37b1c1e2e8da0fb79b9a7ddfd0fde9075e9db0b478daa42eca500ea, resource_users_group
 g, aa0afb0ac37b1c1e2e8da0fb79b9a7ddfd0fde9075e9db0b478daa42eca500ea, admin_group
+
+g, nic, prd_admin
+g, 46a9ae64525d761613dd5cb865618526e5ee0c6c36cfd519716530e5f2694c75, resource_users_group
+g, 46a9ae64525d761613dd5cb865618526e5ee0c6c36cfd519716530e5f2694c75, admin_group
+
+g, hammad, prd_admin
+g, f1e311f02e10391dcb5e0fdfb565d61ff775f1b02bdef7f0a5f95de14b3d6215, resource_users_group
+g, f1e311f02e10391dcb5e0fdfb565d61ff775f1b02bdef7f0a5f95de14b3d6215, admin_group

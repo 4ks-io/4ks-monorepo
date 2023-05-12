@@ -1,10 +1,3 @@
-resource "google_artifact_registry_repository" "web" {
-  repository_id = "web"
-  location      = var.region
-  description   = "docker/helm repo for web images"
-  format        = "docker"
-}
-
 resource "google_cloud_run_service" "web" {
   name     = "web"
   location = var.region
@@ -12,7 +5,7 @@ resource "google_cloud_run_service" "web" {
   template {
     spec {
       containers {
-        image = "us-east4-docker.pkg.dev/${var.stage}-${local.org}/web/app:${var.web_build_number}"
+        image = "us-east4-docker.pkg.dev/${local.stage}-${local.org}/web/app:${var.web_build_number}"
         ports {
           container_port = 5000
         }

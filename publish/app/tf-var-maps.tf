@@ -15,6 +15,14 @@ variable "web_subdomain_env_map" {
     "app-prd-us-east" = ""
   }
 }
+variable "www_subdomain_env_map" {
+  type = map(string)
+  default = {
+    "app-dev-us-east" = "dev.",
+    "app-tst-us-east" = "tst."
+    "app-prd-us-east" = "www."
+  }
+}
 
 variable "feat_api_jaeger_enabled_map" {
   type = map(string)

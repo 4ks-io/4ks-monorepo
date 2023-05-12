@@ -3,6 +3,7 @@ module "lb" {
   source                = "./modules/http-load-balancer"
   name                  = local.project
   project               = data.google_project.project.number
+  region                = var.region
   url_map               = google_compute_url_map.urlmap.self_link
   dns_managed_zone_name = local.dns_managed_zone_name
   custom_domain_names   = [local.web_domain]
@@ -13,7 +14,7 @@ module "lb" {
 
   # hack to prevent the resource from constantly changing
   # ssl_certificates      = [google_compute_managed_ssl_certificate.default.id]
-  ssl_certificates = ["https://www.googleapis.com/compute/v1/projects/${var.stage}-${local.org}/global/sslCertificates/${local.google_compute_managed_ssl_certificate_name}"]
+  ssl_certificates = ["https://www.googleapis.com/compute/v1/projects/${local.stage}-${local.org}/global/sslCertificates/${local.google_compute_managed_ssl_certificate_name}"]
 
   #   custom_labels = var.custom_labels
 }
@@ -48,15 +49,13 @@ resource "google_compute_url_map" "urlmap" {
 
     path_rule {
       paths   = ["/static/*"]
-      service = google_compute_backend_bucket.media_static.id
+      service = data.google_compute_backend_bucket.media_static.id
       route_action {
         url_rewrite {
           path_prefix_rewrite = "/"
         }
       }
     }
-
-
   }
 
   test {
@@ -67,7 +66,7 @@ resource "google_compute_url_map" "urlmap" {
 }
 
 resource "google_compute_security_policy" "development" {
-  name = "${var.stage}-policy"
+  name = "${local.stage}-policy"
 
   rule {
     action   = "allow"

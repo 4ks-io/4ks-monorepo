@@ -98,6 +98,7 @@ func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 func (rc *recipeController) GetRecipeMedia(c *gin.Context) {
 	recipeId := c.Param("id")
 	recipeMedias, err := rc.recipeService.GetRecipeMedia(&recipeId)
+	fmt.Print(err)
 
 	if err == recipeService.ErrRecipeNotFound {
 		c.AbortWithError(http.StatusNotFound, err)

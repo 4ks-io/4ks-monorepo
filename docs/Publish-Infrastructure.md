@@ -81,16 +81,17 @@ export TF_WORKSPACE="app-dev-us-east"
 gcloud auth configure-docker us-east4-docker.pkg.dev
 
 # build
-export VERSION=0.0.1-next
+export registry=dev-4ks|prd-4ks
+export VERSION=0.0.6
 docker build . --build-arg VERSION=$VERSION -f ./apps/api/Dockerfile -t 4ks/api:next
 
 # publish
 NEXT=$(docker images | grep 4ks/api | grep next | head -n1  | awk '{print $3}')
-docker tag $NEXT us-east4-docker.pkg.dev/dev-4ks/api/app:next
-docker tag $NEXT us-east4-docker.pkg.dev/dev-4ks/api/app:$VERSION
-docker push us-east4-docker.pkg.dev/dev-4ks/api/app:next
-docker push us-east4-docker.pkg.dev/dev-4ks/api/app:$NEXT
-docker push us-east4-docker.pkg.dev/dev-4ks/api/app:$VERSION
+docker tag $NEXT us-east4-docker.pkg.dev/$registry/api/app:next
+docker tag $NEXT us-east4-docker.pkg.dev/$registry/api/app:$VERSION
+docker push us-east4-docker.pkg.dev/$registry/api/app:next
+docker push us-east4-docker.pkg.dev/$registry/api/app:$NEXT
+docker push us-east4-docker.pkg.dev/$registry/api/app:$VERSION
 
 // this requires a slight tilt mod to disable web/api
 docker run --rm \
@@ -128,10 +129,10 @@ docker build \
 
 VERSION=0.0.7
 LATEST=$(docker images | grep 4ks/web | grep latest | head -n1 | awk '{print $3}')
-docker tag $LATEST us-east4-docker.pkg.dev/dev-4ks/web/app:latest
-docker tag $LATEST us-east4-docker.pkg.dev/dev-4ks/web/app:$VERSION
-docker push us-east4-docker.pkg.dev/dev-4ks/web/app:latest
-docker push us-east4-docker.pkg.dev/dev-4ks/web/app:$VERSION
+docker tag $LATEST us-east4-docker.pkg.dev/$registry/web/app:latest
+docker tag $LATEST us-east4-docker.pkg.dev/$registry/web/app:$VERSION
+docker push us-east4-docker.pkg.dev/$registry/web/app:latest
+docker push us-east4-docker.pkg.dev/$registry/web/app:$VERSION
 
 docker run --rm -p 5005:5000 4ks/web:latest
 ```

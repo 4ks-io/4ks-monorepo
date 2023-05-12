@@ -1,0 +1,1 @@
+export GOOGLE_APPLICATION_CREDENTIALS=/home/ndelorme/.prd-4ks-869398883338.json
