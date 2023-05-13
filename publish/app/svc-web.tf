@@ -5,7 +5,7 @@ resource "google_cloud_run_service" "web" {
   template {
     spec {
       containers {
-        image = "${container_registry}/web/app:${var.web_build_number}"
+        image = "${local.container_registry}/web/app:${var.web_build_number}"
         ports {
           container_port = 5000
         }
