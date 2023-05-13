@@ -1,5 +1,5 @@
 {
-  "AUTH0_AUDIENCE": "https://4ks.io/api",
+  "AUTH0_AUDIENCE": "https://www.4ks.io/api",
   "AUTH0_DOMAIN": "4ks.us.auth0.com",
   "AUTH0_CLIENT_ID": "vAUr50Saqug9Mf3Yu4cFvAaT2nsgNLIN",
   "VERSION": "0.0.0",

@@ -82,7 +82,7 @@ gcloud auth configure-docker us-east4-docker.pkg.dev
 
 # build
 export registry=dev-4ks|prd-4ks
-export VERSION=0.0.6
+export VERSION=0.0.7
 docker build . --build-arg VERSION=$VERSION -f ./apps/api/Dockerfile -t 4ks/api:next
 
 # publish
@@ -127,7 +127,7 @@ docker build \
     --cache-from $BUILD \
     --target app -f apps/web/Dockerfile . -t $APP
 
-VERSION=0.0.7
+VERSION=0.0.8
 LATEST=$(docker images | grep 4ks/web | grep latest | head -n1 | awk '{print $3}')
 docker tag $LATEST us-east4-docker.pkg.dev/$registry/web/app:latest
 docker tag $LATEST us-east4-docker.pkg.dev/$registry/web/app:$VERSION
