@@ -11,15 +11,32 @@ jobs:
       environment: dev
       build_number: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
     secrets:
-      gcp_api_token: ${{ secrets.GOOGLE_CREDENTIALS }}
+      gcp_api_token: ${{ secrets.GOOGLE_CREDENTIALS_ENG }}
 
   dev:
     needs: build
     uses: ./.github/workflows/run-terraform.yaml
     secrets:
-      gcp_api_token: ${{ secrets.GOOGLE_CREDENTIALS }}
+      gcp_api_token: ${{ secrets.GOOGLE_CREDENTIALS_DEV }}
       tf_api_token: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
       typesense_api_key: ${{ secrets.TYPESENSE_API_KEY_DEV }}
     with:
       environment: dev
+      build_number: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
+
+  review:
+    needs: dev
+    uses: actions/github-script@v6
+    with:
+      script: exit 1
+
+  prd:
+    needs: review
+    uses: ./.github/workflows/run-terraform.yaml
+    secrets:
+      gcp_api_token: ${{ secrets.GOOGLE_CREDENTIALS_PRD }}
+      tf_api_token: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+      typesense_api_key: ${{ secrets.TYPESENSE_API_KEY_PRD }}
+    with:
+      environment: prd
       build_number: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}

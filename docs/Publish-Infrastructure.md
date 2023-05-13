@@ -81,7 +81,7 @@ export TF_WORKSPACE="app-dev-us-east"
 gcloud auth configure-docker us-east4-docker.pkg.dev
 
 # build
-export registry=dev-4ks|prd-4ks
+export registry=eng-4ks
 export VERSION=0.0.7
 docker build . --build-arg VERSION=$VERSION -f ./apps/api/Dockerfile -t 4ks/api:next
 

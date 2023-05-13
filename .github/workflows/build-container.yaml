@@ -7,12 +7,12 @@ on:
         description: 'api | web'
         required: true
         type: string
-      environment:
-        description: 'dev | tst | prd'
-        required: true
-        type: string
+      # environment:
+      #   description: 'dev | tst | prd'
+      #   required: true
+      #   type: string
       gcp_project_name:
-        description: 'dev-4ks | tst-4ks | prd-4ks'
+        description: 'dev-4ks | tst-4ks | prd-4ks | eng-4ks'
         required: true
         type: string
       gcp_registry:
@@ -31,7 +31,7 @@ jobs:
   build:
     name: container
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
+    # environment: ${{ inputs.environment }}
     steps:
       # checkout
       - uses: actions/checkout@v3
