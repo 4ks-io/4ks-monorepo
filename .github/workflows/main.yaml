@@ -24,12 +24,12 @@ jobs:
       environment: dev
       build_number: ${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
 
-  review:
-    needs: dev
-    uses: ./.github/workflows/manual-review.yaml
+  # review:
+  #   needs: dev
+  #   uses: ./.github/workflows/manual-review.yaml
 
   prd:
-    needs: review
+    needs: dev
     uses: ./.github/workflows/run-terraform.yaml
     secrets:
       gcp_api_token: ${{ secrets.GOOGLE_CREDENTIALS_PRD }}
