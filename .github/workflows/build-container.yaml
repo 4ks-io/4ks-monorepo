@@ -34,19 +34,7 @@ jobs:
     # environment: ${{ inputs.environment }}
     steps:
       # checkout
-      - name: Checkout
-        uses: actions/checkout@v3
-      # setup buildx runner
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      # enable caching
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+      - uses: actions/checkout@v3
       # package.json hack
       - name: PACKAGE_JSON hack
         run: |
@@ -67,7 +55,7 @@ jobs:
           gcloud auth configure-docker ${{ inputs.gcp_registry }} --quiet
       # build
       - name: Build
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v3
         with:
           context: .
           build-args: |
@@ -77,9 +65,5 @@ jobs:
           tags: |
             ${{ inputs.gcp_registry }}/${{ inputs.gcp_project_name }}/${{ inputs.app_name }}/app:${{ inputs.build_number }}
             ${{ inputs.gcp_registry }}/${{ inputs.gcp_project_name }}/${{ inputs.app_name }}/app:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
-      - name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          # cache-from: type=registry,ref=4ks/${{APP}}-ci:buildcache
+          # cache-to: type=registry,ref=4ks/${{APP}}-ci:buildcache,mode=max
