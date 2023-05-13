@@ -22,7 +22,7 @@ jobs:
       gcp_api_token: ${{ secrets.gcp_api_token }}
     with:
       app_name: api
-      environment: ${{ inputs.environment }}
+      # environment: ${{ inputs.environment }}
       gcp_project_name: eng-4ks
       gcp_registry: us-east4-docker.pkg.dev
       build_number: ${{ inputs.build_number }}
@@ -32,7 +32,7 @@ jobs:
       gcp_api_token: ${{ secrets.gcp_api_token }}
     with:
       app_name: web
-      environment: ${{ inputs.environment }}
+      # environment: ${{ inputs.environment }}
       gcp_project_name: eng-4ks
       gcp_registry: us-east4-docker.pkg.dev
       build_number: ${{ inputs.build_number }}
