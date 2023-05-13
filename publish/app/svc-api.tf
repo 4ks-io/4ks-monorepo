@@ -16,7 +16,7 @@ resource "google_cloud_run_service" "api" {
           value = google_service_account.api.email
         }
         env {
-          name  = "UPLOADABLE_BUCKET"
+          name  = "PUBLISH_MEDIA_BUCKET"
           value = data.google_storage_bucket.media_write.name
         }
         env {

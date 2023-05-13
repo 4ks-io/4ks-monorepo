@@ -34,7 +34,6 @@ locals {
   project               = "${local.stage}-4ks"
   www_domain            = "${var.www_subdomain_env_map[terraform.workspace]}${local.org}.io"
   web_domain            = "${var.web_subdomain_env_map[terraform.workspace]}${local.org}.io"
-  web_api_url           = "https://${local.www_domain}/api"
 
   google_compute_managed_ssl_certificate_name = "managed-certificate"
 }
