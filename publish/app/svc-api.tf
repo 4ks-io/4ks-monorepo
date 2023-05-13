@@ -6,7 +6,7 @@ resource "google_cloud_run_service" "api" {
     spec {
       service_account_name = google_service_account.api.email
       containers {
-        image = "us-east4-docker.pkg.dev/${local.stage}-${local.org}/api/app:${var.api_build_number}"
+        image = "${container_registry}/api/app:${var.api_build_number}"
         ports {
           container_port = 5000
         }
