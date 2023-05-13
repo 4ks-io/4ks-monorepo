@@ -26,9 +26,7 @@ jobs:
 
   review:
     needs: dev
-    uses: actions/github-script@v6
-    with:
-      script: exit 1
+    uses: ./.github/workflows/manual-review.yaml
 
   prd:
     needs: review
