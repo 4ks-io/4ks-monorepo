@@ -1,9 +1,12 @@
+resource "google_compute_project_default_network_tier" "default" {
+  network_tier = "PREMIUM"
+}
 
 module "lb" {
-  source                = "./modules/http-load-balancer"
+  source                = "./modules/http-global-load-balancer"
   name                  = local.project
   project               = data.google_project.project.number
-  region                = var.region
+  # region                = var.region
   url_map               = google_compute_url_map.urlmap.self_link
   dns_managed_zone_name = local.dns_managed_zone_name
   custom_domain_names   = [local.web_domain]

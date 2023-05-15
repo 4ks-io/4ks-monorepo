@@ -23,7 +23,7 @@ resource "google_storage_bucket_iam_member" "media_static_viewer" {
 resource "google_compute_backend_bucket" "media_static" {
   name        = "${local.project}-static-backend"
   bucket_name = google_storage_bucket.media_static.name
-  enable_cdn  = false // true if network_tier is PREMIUM
+  enable_cdn  = true // global: true if network_tier is PREMIUM
 }
 
 ## logo
