@@ -71,17 +71,17 @@ resource "google_compute_url_map" "urlmap" {
 resource "google_compute_security_policy" "development" {
   name = "${local.stage}-policy"
 
-  rule {
-    action   = "allow"
-    priority = "1000"
-    match {
-      versioned_expr = "SRC_IPS_V1"
-      config {
-        src_ip_ranges = var.development_ip_addresses
-      }
-    }
-    description = "Allow access to non-production sites"
-  }
+  # rule {
+  #   action   = "allow"
+  #   priority = "1000"
+  #   match {
+  #     versioned_expr = "SRC_IPS_V1"
+  #     config {
+  #       src_ip_ranges = var.development_ip_addresses
+  #     }
+  #   }
+  #   description = "Allow access to non-production sites"
+  # }
 
   rule {
     # action = "deny(403)"
