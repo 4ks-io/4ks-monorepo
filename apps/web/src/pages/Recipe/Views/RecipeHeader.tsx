@@ -15,10 +15,19 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import Badge from '@mui/material/Badge';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 interface RecipeHeaderProps {}
 
 const GENERIC_TITLE = `INSERT TITLE HERE`;
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export function RecipeHeader(props: RecipeHeaderProps) {
   const rtx = useRecipeContext();
@@ -28,6 +37,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   const [title, setTitle] = useState('');
   const [chefName, setChefName] = useState<string>();
   const [titleFocus, setTitleFocus] = useState(false);
+  const [shareSucess, setShareSucess] = useState(false);
 
   useEffect(() => {
     if (rtx?.recipe?.author?.username) {
@@ -52,6 +62,8 @@ export function RecipeHeader(props: RecipeHeaderProps) {
     if (rtx?.recipeId == '0') {
       setIsNew(true);
       setTitle(GENERIC_TITLE);
+    } else {
+      setIsNew(false);
     }
   }, [rtx?.recipeId]);
 
@@ -74,8 +86,31 @@ export function RecipeHeader(props: RecipeHeaderProps) {
     });
   }
 
-  function shareThisRecipe() {
-    alert('Share!');
+  async function shareThisRecipe() {
+    const shareDetails = {
+      url: window.location.href,
+      title,
+      text: rtx?.recipe?.author?.username,
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareDetails);
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      // browser
+      navigator.clipboard.writeText(window.location.href);
+      setShareSucess(true);
+    }
+  }
+
+  function handleClose(event?: React.SyntheticEvent | Event, reason?: string) {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setShareSucess(false);
   }
 
   function handleTitleBlur() {
@@ -93,8 +128,17 @@ export function RecipeHeader(props: RecipeHeaderProps) {
 
   return (
     <>
+      <Snackbar
+        open={shareSucess}
+        autoHideDuration={2000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success">
+          Copied to clipboard!
+        </Alert>
+      </Snackbar>
       <Stack>
-        {!rtx.recipe || rtx.recipe.id == '' || rtx.recipeId == '0' ? (
+        {!rtx.recipe || rtx.recipe.id == '' || isNew ? (
           <Skeleton variant="rectangular" height={256} />
         ) : (
           <RecipeMediaBanner />
@@ -129,7 +173,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
           }}
         />
       </Stack>
-      {isNew && (
+      {
         <Container>
           <Stack direction="row" spacing={2} style={{ paddingTop: 12 }}>
             <Badge color="primary" badgeContent={rtx?.recipe?.metadata?.forks}>
@@ -137,6 +181,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
                 variant="outlined"
                 startIcon={<CallSplitIcon />}
                 onClick={forkThisRecipe}
+                disabled={isNew}
               >
                 Fork
               </Button>
@@ -146,6 +191,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
                 variant="outlined"
                 startIcon={<StarOutlineIcon />}
                 onClick={starThisRecipe}
+                disabled={isNew}
               >
                 Star
               </Button>
@@ -154,12 +200,13 @@ export function RecipeHeader(props: RecipeHeaderProps) {
               variant="outlined"
               startIcon={<ShareIcon />}
               onClick={shareThisRecipe}
+              disabled={isNew}
             >
               Share
             </Button>
           </Stack>
         </Container>
-      )}
+      }
     </>
   );
 }

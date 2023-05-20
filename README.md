@@ -22,7 +22,7 @@
 ## Instructions
 
 1. Start kubernetes including a local container registry \
-    `minikube start` \
+    `minikube start` or `minikube start --driver=docker` \
     or \
    `k3d cluster create 4ks --registry-create 4ks-registry`
 1. Nginx is used for local development only. Build and run using docker-compose. \
