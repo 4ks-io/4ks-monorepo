@@ -90,7 +90,7 @@ export function RecipeHeader(props: RecipeHeaderProps) {
     const shareDetails = {
       url: window.location.href,
       title,
-      text: rtx?.recipe?.author?.username,
+      text: title,
     };
     if (navigator.share) {
       try {
