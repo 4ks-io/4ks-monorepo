@@ -3,7 +3,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import {
   models_Ingredient,
   models_Instruction,
-  models_Recipe,
   models_RecipeMediaVariant,
 } from '@4ks/api-fetch';
 import { useSessionContext } from '..';
@@ -23,10 +22,10 @@ export function RecipeContextProvider({
 }: RecipeContextProviderProps) {
   const { isAuthenticated } = useAuth0();
   const ctx = useSessionContext();
-  let { recipeId } = useParams();
+  const { recipeId } = useParams();
 
   const [state, dispatch] = useReducer(recipeContextReducer, initialState);
-  const NO_RECIPE_ID = '0';
+  const NO_RECIPE_ID = '-1';
 
   function setBanner(banner: Array<models_RecipeMediaVariant>) {
     dispatch({

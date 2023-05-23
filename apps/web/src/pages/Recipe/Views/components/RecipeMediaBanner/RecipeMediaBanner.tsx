@@ -10,6 +10,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Dialog from '@mui/material/Dialog';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Skeleton from '@mui/material/Skeleton';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -23,7 +24,11 @@ export function getBannerVariantUrl(
   return variants && variants.filter((v) => v.alias == size)[0];
 }
 
-const RecipeMediaBanner = () => {
+interface RecipeMediaBannerProps {
+  isNew: boolean;
+}
+
+const RecipeMediaBanner = ({ isNew }: RecipeMediaBannerProps) => {
   const atx = useAppConfigContext();
   const rtx = useRecipeContext();
 
@@ -40,6 +45,11 @@ const RecipeMediaBanner = () => {
   function setRandomImage() {
     setImageSrc(`${atx.MEDIA_FALLBACK_URL}/f${random}.jpg`);
   }
+
+  useEffect(() => {
+    const b = localStorage.getItem('showBanner') || 'true';
+    setShowBanner(/true/i.test(b));
+  }, []);
 
   useEffect(() => {
     if (rtx?.recipe?.currentRevision?.banner) {
@@ -80,6 +90,12 @@ const RecipeMediaBanner = () => {
     }
   }
 
+  function toggleBanner() {
+    const b = !showBanner;
+    setShowBanner(b);
+    localStorage.setItem('showBanner', b ? 'true' : 'false');
+  }
+
   return (
     <>
       <Dialog open={showBannerSelectModal} onClose={discardImageSelection}>
@@ -118,29 +134,26 @@ const RecipeMediaBanner = () => {
 
       {/* Banner Image */}
       {showBanner && (
-        <Button
-          variant="text"
-          onClick={() => setShowBanner(!showBanner)}
-          sx={{ paddingBottom: 2, width: '100%' }}
-        >
-          <ExpandLessIcon />
-        </Button>
-      )}
-      {showBanner && (
-        <Box
-          component="img"
-          onClick={handleOpenBannerSelectModal}
-          sx={{
-            width: '100%',
-            overflow: 'hidden',
-          }}
-          alt="banner image"
-          src={imageSrc}
-        />
+        <>
+          {!rtx.recipe || rtx.recipe.id == '' || isNew ? (
+            <Skeleton variant="rectangular" height={256} />
+          ) : (
+            <Box
+              component="img"
+              onClick={handleOpenBannerSelectModal}
+              sx={{
+                width: '100%',
+                overflow: 'hidden',
+              }}
+              alt="banner image"
+              src={imageSrc}
+            />
+          )}
+        </>
       )}
       <Button
         variant="text"
-        onClick={() => setShowBanner(!showBanner)}
+        onClick={toggleBanner}
         sx={{ paddingBottom: 2, width: '100%' }}
       >
         {showBanner ? <ExpandLessIcon /> : <ExpandMoreIcon />}

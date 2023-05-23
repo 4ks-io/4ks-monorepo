@@ -16,9 +16,8 @@ import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import Badge from '@mui/material/Badge';
 import Snackbar from '@mui/material/Snackbar';
+import CircularProgress from '@mui/material/CircularProgress';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-
-interface RecipeHeaderProps {}
 
 const GENERIC_TITLE = `INSERT TITLE HERE`;
 
@@ -29,10 +28,11 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export function RecipeHeader(props: RecipeHeaderProps) {
+export function RecipeHeader() {
   const rtx = useRecipeContext();
   const ctx = useSessionContext();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const [isNew, setIsNew] = useState(false);
   const [title, setTitle] = useState('');
   const [chefName, setChefName] = useState<string>();
@@ -59,13 +59,14 @@ export function RecipeHeader(props: RecipeHeaderProps) {
   }
 
   useEffect(() => {
-    if (rtx?.recipeId == '0') {
+    if (location.pathname == '/r/0') {
       setIsNew(true);
       setTitle(GENERIC_TITLE);
-    } else {
-      setIsNew(false);
+      setIsLoading(false);
+    } else if (rtx?.recipe?.createdDate != '') {
+      setIsLoading(false);
     }
-  }, [rtx?.recipeId]);
+  }, [rtx?.recipeId, rtx?.recipe?.createdDate]);
 
   useEffect(() => {
     if (rtx?.recipe?.currentRevision?.name != '') {
@@ -138,40 +139,40 @@ export function RecipeHeader(props: RecipeHeaderProps) {
         </Alert>
       </Snackbar>
       <Stack>
-        {!rtx.recipe || rtx.recipe.id == '' || isNew ? (
-          <Skeleton variant="rectangular" height={256} />
-        ) : (
-          <RecipeMediaBanner />
-        )}
+        <RecipeMediaBanner isNew={isNew} />
 
-        {chefName ? (
+        {isLoading ? (
+          <Skeleton variant="text" height={28} />
+        ) : (
           <Typography variant="h6" gutterBottom onClick={navigateChef}>
             {chefName}
           </Typography>
-        ) : (
-          <Skeleton variant="text" />
         )}
 
-        <TextField
-          variant="standard"
-          onFocus={handleTitleFocus}
-          onChange={handleTitleChange}
-          onBlur={handleTitleBlur}
-          value={title}
-          // variant="standard"
-          size="small"
-          inputProps={{ style: { fontSize: 28 } }} // font size of input text
-          InputProps={{
-            disableUnderline: true,
-            startAdornment: titleFocus ? (
-              <InputAdornment position="start">
-                <EditIcon />
-              </InputAdornment>
-            ) : (
-              <></>
-            ),
-          }}
-        />
+        {isLoading ? (
+          <Skeleton variant="text" height={36} />
+        ) : (
+          <TextField
+            variant="standard"
+            onFocus={handleTitleFocus}
+            onChange={handleTitleChange}
+            onBlur={handleTitleBlur}
+            value={title}
+            // variant="standard"
+            size="small"
+            inputProps={{ style: { fontSize: 28 } }} // font size of input text
+            InputProps={{
+              disableUnderline: true,
+              startAdornment: titleFocus ? (
+                <InputAdornment position="start">
+                  <EditIcon />
+                </InputAdornment>
+              ) : (
+                <></>
+              ),
+            }}
+          />
+        )}
       </Stack>
       {
         <Container>
