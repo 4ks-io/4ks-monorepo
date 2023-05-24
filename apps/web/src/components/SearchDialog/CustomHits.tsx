@@ -64,18 +64,9 @@ export function FormattedHits(
         <Typography variant="h5" gutterBottom>
           {title}
         </Typography>
-        {hits.length > 1 ? (
-          <Stack spacing={1}>
-            {hits.map((h: Hit) => CustomHit(h, handleClose))}
-          </Stack>
-        ) : (
-          <>
-            <Skeleton variant="text" />
-            <Skeleton variant="text" />
-            <Skeleton variant="text" />
-            <Skeleton variant="text" />
-          </>
-        )}
+        <Stack spacing={1}>
+          {hits.map((h: Hit) => CustomHit(h, handleClose))}
+        </Stack>
       </Box>
     </div>
   );
