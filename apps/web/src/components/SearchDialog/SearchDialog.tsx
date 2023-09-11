@@ -28,8 +28,12 @@ export default function SearchDialog() {
     navigate('/r');
   }
 
+  function hasTextMatch(hit: Hit) {
+    return hit.prototype.hasOwnProperty.call('text_match');
+  }
+
   function GenericHits() {
-    if (hits.length === 0 || hits[0].hasOwnProperty('text_match')) {
+    if (hits.length === 0 || hasTextMatch(hits[0] as unknown as Hit)) {
       return null;
     }
 
@@ -39,7 +43,7 @@ export default function SearchDialog() {
   function TitleHits() {
     const filteredHits = hits.filter(
       (h) =>
-        h.hasOwnProperty('text_match') &&
+        hasTextMatch(h as unknown as Hit) &&
         (h as unknown as Hit)._highlightResult.name.matchedWords.length > 0
     );
     return FormattedHits(filteredHits.slice(0, 8), 'Recipes', handleClose);
@@ -48,7 +52,7 @@ export default function SearchDialog() {
   function IngredientHits() {
     const filteredHits = hits.filter(
       (h) =>
-        h.hasOwnProperty('text_match') &&
+        hasTextMatch(h as unknown as Hit) &&
         (h as unknown as Hit)._highlightResult.ingredients.find(
           (i) => i.matchLevel != 'none'
         )

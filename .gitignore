@@ -44,3 +44,5 @@ Thumbs.db
 PACKAGE_JSON/
 
 re.sh
+
+.env

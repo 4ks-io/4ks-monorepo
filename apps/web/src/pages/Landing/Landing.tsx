@@ -9,9 +9,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
+import AddIcon from '@mui/icons-material/Add';
+import Fab from '@mui/material/Fab';
 
 // https://www.algolia.com/doc/guides/building-search-ui/widgets/create-your-own-widgets/react-hooks/
 export default function Landing() {
+  const navigate = useNavigate();
   const search = useSearchContext();
 
   if (!search.client) {
@@ -22,8 +25,33 @@ export default function Landing() {
     search.handleOpen();
   }
 
+  function navigateNewRecipe() {
+    navigate('/r/0');
+  }
+
+  function NewRecipeButton() {
+    return (
+      <Fab
+        color="primary"
+        aria-label="add"
+        sx={{
+          margin: 0,
+          top: 'auto',
+          right: 20,
+          bottom: 20,
+          left: 'auto',
+          position: 'fixed',
+        }}
+        onClick={navigateNewRecipe}
+      >
+        <AddIcon />
+      </Fab>
+    );
+  }
+
   return (
     <Box height="92vh" display="flex" flexDirection="column">
+      <NewRecipeButton />
       <Stack
         height={'100%'}
         direction="column"

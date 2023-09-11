@@ -103,37 +103,41 @@ export function RecipeEditingControls({
           Failed to save.
         </Alert>
       </Snackbar>
-      <Fab
-        color="primary"
-        aria-label="save"
-        sx={{
-          margin: 0,
-          top: 'auto',
-          right: 20,
-          bottom: 20,
-          left: 'auto',
-          position: 'fixed',
-        }}
-        onClick={saveRecipeChanges}
-      >
-        <SaveIcon />
-      </Fab>
-      <Fab
-        size="small"
-        color="secondary"
-        aria-label="discard"
-        sx={{
-          margin: 0,
-          top: 'auto',
-          right: 80,
-          bottom: 20,
-          left: 'auto',
-          position: 'fixed',
-        }}
-        onClick={discardRecipeChanges}
-      >
-        <CloseIcon />
-      </Fab>
+      {isAuthenticated && (
+        <>
+          <Fab
+            color="primary"
+            aria-label="save"
+            sx={{
+              margin: 0,
+              top: 'auto',
+              right: 20,
+              bottom: 20,
+              left: 'auto',
+              position: 'fixed',
+            }}
+            onClick={saveRecipeChanges}
+          >
+            <SaveIcon />
+          </Fab>
+          <Fab
+            size="small"
+            color="secondary"
+            aria-label="discard"
+            sx={{
+              margin: 0,
+              top: 'auto',
+              right: 80,
+              bottom: 20,
+              left: 'auto',
+              position: 'fixed',
+            }}
+            onClick={discardRecipeChanges}
+          >
+            <CloseIcon />
+          </Fab>
+        </>
+      )}
     </>
   );
 }

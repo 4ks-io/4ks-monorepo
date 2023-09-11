@@ -1,5 +1,4 @@
 import React from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 import { useHits } from 'react-instantsearch-hooks-web';
 import Container from '@mui/material/Container';
@@ -9,7 +8,6 @@ import Fab from '@mui/material/Fab';
 import RecipeCard from './RecipeCard';
 
 const Recipes = () => {
-  const { isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   const { hits } = useHits();
 
@@ -18,7 +16,7 @@ const Recipes = () => {
   }
 
   function NewRecipeButton() {
-    return isAuthenticated ? (
+    return (
       <Fab
         color="primary"
         aria-label="add"
@@ -34,7 +32,7 @@ const Recipes = () => {
       >
         <AddIcon />
       </Fab>
-    ) : null;
+    );
   }
 
   return (
