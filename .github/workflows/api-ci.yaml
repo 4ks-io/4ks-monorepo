@@ -3,7 +3,7 @@ on:
   pull_request:
     types: [opened, synchronize]
     paths:
-      - (nx|workspace).json
+      - (workspace).json
       - go*
       - apps/api/**
       - libs/go/**

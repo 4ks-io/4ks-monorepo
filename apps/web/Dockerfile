@@ -26,7 +26,6 @@ FROM dev as build
 RUN apk --no-cache add bash jq
 WORKDIR /app
 COPY ./.npmrc .
-COPY ./nx.json .
 COPY ./pnpm-lock.yaml .
 COPY ./pnpm-workspace.yaml .
 COPY ./tsconfig.base.json .
@@ -37,9 +36,9 @@ RUN pnpm install
 COPY ./libs/ts ./libs/ts
 COPY ./apps/web/ ./apps/web
 
-# libs (nx??)
+# 
 WORKDIR /app/libs/ts/api-fetch
-RUN pnpm run codegen && pnpm run build-fetch
+RUN pnpm --filter @4ks/api-fetch codegen && pnpm --filter @4ks/api-fetch build
 
 # app
 WORKDIR /app/apps/web

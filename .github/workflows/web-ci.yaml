@@ -3,7 +3,7 @@ on:
   pull_request:
     types: [opened, synchronize]
     paths:
-      - (nx|packagets|config.base|workspace).json
+      - (packagets|config.base|workspace).json
       - pnpm*
       - apps/web/**
       - libs/ts/**

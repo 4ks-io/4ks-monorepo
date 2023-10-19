@@ -43,8 +43,8 @@ sudo chmod 644 ./out/private.key
 7. Copy and rename pem and key into develop folder (e.g. develop-docker).
 
 ```
-cp ./out/certificate.pem ../local.4ks.io.pem
-cp ./out/private.key ../local.4ks.io.key
+mv ./out/certificate.pem ../local.4ks.io.pem
+mv ./out/private.key ../local.4ks.io.key
 ```
 
 # Convert to pfx (for Firefox)

@@ -2,13 +2,28 @@
 # https://docs.tilt.dev/api.html#api.version_settings
 version_settings(constraint='>=0.22.2')
 
-# https://docs.tilt.dev/api.html#api.docker_build
-# https://docs.tilt.dev/live_update_reference.html
+# resources
+k8s_yaml([
+    './deploy/api.yaml',
+    './deploy/web.yaml',
+    './deploy/firestore.yaml',
+    './deploy/typesense.yaml',
+    # './deploy/jaeger.yaml'
+])
+
+# api
+k8s_resource('api', port_forwards='0.0.0.0:5734:5000',labels=['backend'])
 docker_build(
     '4ks-api',
     context='.',
     dockerfile='./apps/api/Dockerfile.dev',
-    only=['./apps/api', './go.mod', './go.sum', './libs/go', './deploy/sbx-4ks-google-app-creds.json'],
+    only=[
+        './apps/api',
+        './go.mod',
+        './go.sum',
+        './libs/go',
+        './deploy/sbx-4ks-google-app-creds.json'
+    ],
     live_update=[
         sync('./apps/api/', '/app/apps/api'),
         sync('./libs/go/', '/app/libs/go'),
@@ -19,12 +34,15 @@ docker_build(
     ]
 )
 
+# web
+k8s_resource('web', port_forwards='0.0.0.0:5735:3000', labels=['web'])
 docker_build(
     '4ks-web',
     context='.',
     dockerfile='./apps/web/Dockerfile.dev',
     only=[],
     ignore=[
+        './apps/api',
         './dist',
         './node_modules',
         './publish',
@@ -37,7 +55,9 @@ docker_build(
         fall_back_on('./apps/web/vite.config.ts'),
         sync('./', '/app/'),
         sync('./libs/ts/api-fetch', '/app/libs/ts/api-fetch'),
-        run('npx nx run ts-api-fetch:build-fetch',trigger=['./libs/ts/api-fetch/'] ),
+        run(
+            'pnpm --filter @4ks/ts-api-fetch build',
+            trigger=['./libs/ts/api-fetch/'] ),
         run(
             'pnpm install',
             trigger=['./package.json', './apps/web/package.json']
@@ -45,50 +65,11 @@ docker_build(
     ]
 )
 
-# https://docs.tilt.dev/api.html#api.k8s_yaml
-k8s_yaml([
-    './deploy/api.yaml',
-    './deploy/web.yaml',
-    './deploy/firestore.yaml',
-    './deploy/typesense.yaml',
-    './deploy/jaeger.yaml'
-])
 
-# https://docs.tilt.dev/api.html#api.k8s_resource
-k8s_resource(
-    'api',
-    port_forwards='0.0.0.0:5734:5000',
-    labels=['backend']
-)
-
-k8s_resource(
-    'web',
-    port_forwards='0.0.0.0:5735:3000',
-    labels=['web']
-)
-
-k8s_resource(
-    'typesense',
-    port_forwards='0.0.0.0:8108:8108',
-    labels=['typesense','database']
-)
-
-k8s_resource(
-    'firestore',
-    port_forwards='8200:8200',
-    labels=['firestore','database']
-)
-
-k8s_resource(
-    'jaeger',
-    port_forwards=['9411:9411','5775:5775','6831:6831','6832:6832','5778:5778','16686:16686','14250:14250','14268:14268','14269:14269'],
-    labels=['jaeger']
-)
-
-# v1alpha1.pod_log_stream_template_spec(
-#     ignore_containers=[
-#         'typesense*']
-# )
+# more
+k8s_resource('typesense', port_forwards='0.0.0.0:8108:8108', labels=['typesense','database'])
+k8s_resource('firestore', port_forwards='8200:8200', labels=['firestore','database'])
+# k8s_resource( 'jaeger', port_forwards=['9411:9411','5775:5775','6831:6831','6832:6832','5778:5778','16686:16686','14250:14250','14268:14268','14269:14269'], labels=['jaeger'])
 
 # config.main_path is the absolute path to the Tiltfile being run
 # https://docs.tilt.dev/api.html#modules.config.main_path
