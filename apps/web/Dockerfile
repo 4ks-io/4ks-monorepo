@@ -6,7 +6,6 @@ RUN npm install -g pnpm
 WORKDIR /app
 COPY ./pnpm-lock.yaml .
 COPY ./pnpm-workspace.yaml .
-COPY ./workspace.json .
 COPY ./PACKAGE_JSON/ ./
 RUN pnpm install --production && rm -rf /app
   # output -> /root/.local/share/pnpm/store/v3
@@ -16,7 +15,6 @@ FROM prd as dev
 WORKDIR /app
 COPY ./pnpm-lock.yaml .
 COPY ./pnpm-workspace.yaml .
-COPY ./workspace.json .
 COPY ./PACKAGE_JSON/ ./
 RUN pnpm install && rm -rf /app
   # output -> /root/.local/share/pnpm/store/v3
@@ -29,7 +27,6 @@ COPY ./.npmrc .
 COPY ./pnpm-lock.yaml .
 COPY ./pnpm-workspace.yaml .
 COPY ./tsconfig.base.json .
-COPY ./workspace.json .
 COPY ./PACKAGE_JSON/ ./
 RUN pnpm install
 
