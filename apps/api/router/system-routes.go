@@ -7,7 +7,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	controllers "4ks/apps/api/controllers"
 	utils "4ks/apps/api/utils"
 )
 
@@ -27,13 +26,11 @@ func GetAPIVersion(version string) func(c *gin.Context) {
 	}
 }
 
-func SystemRouter(router *gin.Engine) {
+func SystemRouter(router *gin.RouterGroup) {
 	path := utils.GetStrEnvVar("VERSION_FILE_PATH", "/VERSION")
 	v, err := os.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
-	systemCtlr := controllers.NewSystemController()
 	router.GET("/version", GetAPIVersion(strings.TrimSuffix(string(v), "\n")))
-	router.GET("/ready", systemCtlr.CheckReadiness)
 }

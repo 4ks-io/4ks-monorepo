@@ -1,7 +1,6 @@
 package router
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -11,6 +10,7 @@ import (
 	ginprometheus "github.com/zsais/go-gin-prometheus"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 
+	controllers "4ks/apps/api/controllers"
 	_ "4ks/apps/api/docs"
 	"4ks/apps/api/middleware"
 	utils "4ks/apps/api/utils"
@@ -18,9 +18,18 @@ import (
 
 var isLocalDevelopment = os.Getenv("IO_4KS_DEVING")
 
+var (
+	SwaggerEnabled = false
+	SwaggerPrefix = ""
+)
+
+func init() {
+	SwaggerEnabled = utils.GetBoolEnv("SWAGGER_ENABLED", false)
+	SwaggerPrefix = utils.GetStrEnvVar("SWAGGER_URL_PREFIX", "")
+}
+
 func New() *gin.Engine {
-	var router *gin.Engine
-	router = gin.New()
+	router := gin.New()
 
 	if isLocalDevelopment == "true" {
 		router.Use(middleware.DefaultStructuredLogger()) // add logging middleware
@@ -34,23 +43,29 @@ func New() *gin.Engine {
 	prom := ginprometheus.NewPrometheus("gin")
 	prom.Use(router)
 
-	if value := utils.GetBoolEnv("SWAGGER_ENABLED", false); value {
-		prefix := utils.GetStrEnvVar("SWAGGER_URL_PREFIX", "")
+	systemCtlr := controllers.NewSystemController()
+	router.GET("/ready", systemCtlr.CheckReadiness)
 
-		log.Info().Msg(fmt.Sprintf("Swagger enabled: %t", value))
-		log.Info().Msg(fmt.Sprintf("Swagger url prefix: %s", prefix))
-
-		swaggerUrl := ginSwagger.URL(prefix + "/swagger/doc.json") // The url pointing to API definition
-		router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, swaggerUrl))
-	}
-
-	SystemRouter(router)
+	
 	router.Use(otelgin.Middleware("4ks-api"))
-	RecipesRouterUnauth(router)
-	AuthRouter(router)
-	UsersRouter(router)
-	RecipesRouterAuth(router)
-	SearchRouter(router)
+
+	api := router.Group("/api")
+	{
+		// swagger
+		if value := SwaggerEnabled; value {
+			log.Info().Caller().Bool("enabled", value).Str("prefix", SwaggerPrefix).Msg("Swagger")
+
+			swaggerUrl := ginSwagger.URL(SwaggerPrefix + "/swagger/doc.json") // The url pointing to API definition
+			api.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, swaggerUrl))
+		}
+		// routes
+		SystemRouter(api)
+		RecipesRouterUnauth(api)
+		AuthRouter(api)
+		UsersRouter(api)
+		RecipesRouterAuth(api)
+		SearchRouter(api)
+	}
 
 	return router
 }

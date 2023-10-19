@@ -7,7 +7,7 @@ import (
 	"4ks/apps/api/middleware"
 )
 
-func RecipesRouterAuth(router *gin.Engine) {
+func RecipesRouterAuth(router *gin.RouterGroup) {
 	rc := controllers.NewRecipeController()
 
 	a := router.Group("/_admin/recipes")
@@ -28,7 +28,7 @@ func RecipesRouterAuth(router *gin.Engine) {
 	}
 }
 
-func RecipesRouterUnauth(router *gin.Engine) {
+func RecipesRouterUnauth(router *gin.RouterGroup) {
 	rc := controllers.NewRecipeController()
 
 	r := router.Group("/recipes")

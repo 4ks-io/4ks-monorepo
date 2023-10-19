@@ -34,10 +34,6 @@ func main() {
 
 	router := router.New()
 
-	// Configure Open Telemetry Middleware for Gin
-	// moved into groups to avoid logging system routes (eg. /ready)
-	// router.Use(otelgin.Middleware("4ks-api"))
-
 	addr := "0.0.0.0:" + utils.GetStrEnvVar("PORT", "5000")
 	if err := router.Run(addr); err != nil {
 		log.Fatalf("http server error: %v", err)

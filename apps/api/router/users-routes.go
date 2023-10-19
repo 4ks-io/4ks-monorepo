@@ -7,7 +7,7 @@ import (
 	"4ks/apps/api/middleware"
 )
 
-func UsersRouter(router *gin.Engine) {
+func UsersRouter(router *gin.RouterGroup) {
 	uc := controllers.NewUserController()
 
 	users := router.Group("/users")

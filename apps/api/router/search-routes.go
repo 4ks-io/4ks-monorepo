@@ -7,7 +7,7 @@ import (
 	"4ks/apps/api/middleware"
 )
 
-func SearchRouter(router *gin.Engine) {
+func SearchRouter(router *gin.RouterGroup) {
 	sc := controllers.NewSearchController()
 
 	a := router.Group("/_admin/search")

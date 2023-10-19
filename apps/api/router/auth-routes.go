@@ -36,7 +36,7 @@ func TestJWTAuth(c *gin.Context) {
 	c.JSON(http.StatusOK, claims)
 }
 
-func AuthRouter(router *gin.Engine) {
+func AuthRouter(router *gin.RouterGroup) {
 	// validate jwt
 	router.Use(adapter.Wrap(middleware.EnsureValidToken()))
 
