@@ -48,11 +48,14 @@ spec:
             claimName: typesense-pvc
       containers:
         - name: typesense
-          image: typesense/typesense:0.24.0
+          image: typesense/typesense:0.25.0
           volumeMounts:
             - name: typesense-pv
               mountPath: /data
           env:
+            # https://github.com/typesense/typesense/issues/475#issuecomment-1597713929
+            - name: GLOG_minloglevel
+              value: '1'
             - name: TYPESENSE_DATA_DIR
               value: /data
             - name: TYPESENSE_API_KEY
