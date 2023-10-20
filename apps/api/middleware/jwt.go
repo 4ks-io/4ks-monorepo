@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"net/http"
@@ -66,16 +65,7 @@ func EnforceJWT() func(next http.Handler) http.Handler {
 	}
 
 	errorHandler := func(w http.ResponseWriter, r *http.Request, err error) {
-		log.Error().Caller().Err(err).Msg("Encountered error while validating JWT")
-
-		fmt.Println(r)
-		// print headers
-		var keys string
-		for key := range r.Header {
-			keys += key + " "
-		}
-		log.Debug().Caller().Msg(keys)
-
+		log.Error().Caller().Err(err).Msg("failed to validate JWT")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte(`{"message":"Failed to validate JWT."}`))
