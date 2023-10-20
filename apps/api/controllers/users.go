@@ -14,7 +14,7 @@ import (
 type UserController interface {
 	CreateUser(c *gin.Context)
 	HeadAuthenticatedUser(c *gin.Context)
-	// GetCurrentUserExist(c *gin.Context)
+	GetCurrentUserExist(c *gin.Context)
 	GetCurrentUser(c *gin.Context)
 	GetUser(c *gin.Context)
 	GetUsers(c *gin.Context)

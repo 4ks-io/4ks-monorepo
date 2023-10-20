@@ -82,10 +82,19 @@ func AppendRoutes(r *gin.Engine, c *Controllers, o *RouteOpts) {
 		}
 		users := api.Group("/users")
 		{
-			users.GET("", middleware.Authorize("/users/*", "list"), c.User.GetUsers)
 			users.DELETE(":id", middleware.Authorize("/users/*", "delete"), c.User.DeleteUser)
 			users.POST("username", c.User.TestUsername)
+			users.POST("", c.User.CreateUser)
+			users.GET("profile", c.User.GetCurrentUser)
+			users.GET("exist", c.User.GetCurrentUserExist)
+			users.GET("", middleware.Authorize("/users/*", "list"), c.User.GetUsers)
 			users.GET(":id", c.User.GetUser)
+			users.PATCH(":id", c.User.UpdateUser)
+
+			// users.GET("", middleware.Authorize("/users/*", "list"), c.User.GetUsers)
+			// users.DELETE(":id", middleware.Authorize("/users/*", "delete"), c.User.DeleteUser)
+			// users.POST("username", c.User.TestUsername)
+			// users.GET(":id", c.User.GetUser)
 		}
 
 		// admin
