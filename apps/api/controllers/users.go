@@ -3,17 +3,18 @@ package controllers
 import (
 	"4ks/apps/api/dtos"
 	userService "4ks/apps/api/services/user"
-	"4ks/apps/api/utils"
 	"4ks/libs/go/models"
 
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 type UserController interface {
 	CreateUser(c *gin.Context)
-	GetCurrentUserExist(c *gin.Context)
+	HeadAuthenticatedUser(c *gin.Context)
+	// GetCurrentUserExist(c *gin.Context)
 	GetCurrentUser(c *gin.Context)
 	GetUser(c *gin.Context)
 	GetUsers(c *gin.Context)
@@ -41,11 +42,11 @@ func NewUserController() UserController {
 // @Produce 		json
 // @Param       user     body  	   dtos.CreateUser  true  "User Data"
 // @Success 		200 		 {object} 	 models.User
-// @Router		 	/users   [post]
+// @Router		 	/user   [post]
 // @Security 		ApiKeyAuth
 func (uc *userController) CreateUser(c *gin.Context) {
-	userId := c.Request.Context().Value(utils.UserId{}).(string)
-	userEmail := c.Request.Context().Value(utils.UserEmail{}).(string)
+	userId := c.GetString("id")
+	userEmail := c.GetString("email")
 
 	payload := dtos.CreateUser{}
 	if err := c.BindJSON(&payload); err != nil {
@@ -124,10 +125,10 @@ func (uc *userController) GetUser(c *gin.Context) {
 // @Accept 	   	json
 // @Produce   	json
 // @Success 		200 		{object} 	models.User
-// @Router 			/users/profile [get]
+// @Router 			/user [get]
 // @Security 		ApiKeyAuth
 func (uc *userController) GetCurrentUser(c *gin.Context) {
-	userId := c.Request.Context().Value(utils.UserId{}).(string)
+	userId := c.GetString("id")
 	user, err := uc.userService.GetUserById(&userId)
 
 	if err == userService.ErrUserNotFound {
@@ -151,7 +152,7 @@ func (uc *userController) GetCurrentUser(c *gin.Context) {
 // @Router 			/users/exist [get]
 // @Security 		ApiKeyAuth
 func (uc *userController) GetCurrentUserExist(c *gin.Context) {
-	userId := c.Request.Context().Value(utils.UserId{}).(string)
+	userId := c.GetString("id")
 	_, err := uc.userService.GetUserById(&userId)
 
 	data := models.UserExist{}
@@ -167,6 +168,38 @@ func (uc *userController) GetCurrentUserExist(c *gin.Context) {
 
 	data.Exist = true
 	c.JSON(http.StatusOK, data)
+}
+
+
+// HeadAuthenticatedUser godoc
+// @Schemes
+// @Summary 	  Head Authenticated user
+// @Description Head Authenticated user
+// @Router 			/user [head]
+// @Tags 		    Users
+// @Produce   	json
+// @Success 		200
+// @Success 		204   "No Content"
+// @Failure     400		"Invalid Request"
+// @Failure     404		"Record Not Found"
+// @Failure     500		"Internal Error"
+// @Security 		ApiKeyAuth
+func (uc *userController) HeadAuthenticatedUser(c *gin.Context) {
+	userId := c.GetString("id")
+	
+	if _, err := uc.userService.GetUserById(&userId); err != nil {
+		// handle user not found
+		if err == userService.ErrUserNotFound {
+			c.JSON(http.StatusNoContent, nil)
+			return
+		}
+		// handle other errors
+		log.Error().Err(err).Caller().Msg("GetUserById")
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, nil)
 }
 
 // GetUsers	godoc
@@ -196,19 +229,12 @@ func (uc *userController) GetUsers(c *gin.Context) {
 // @Tags 				Users
 // @Accept 			json
 // @Produce 		json
-// @Param       userId 	 path      string           true  "User Id"
 // @Param       payload  body  	   dtos.UpdateUser  true  "User Data"
 // @Success 		200 		 {object}  models.User
-// @Router 			/users/{userId}   [patch]
+// @Router 			/user   [patch]
 // @Security 		ApiKeyAuth
 func (uc *userController) UpdateUser(c *gin.Context) {
-	reqUserId := c.Param("id")
-	curUserId := c.Request.Context().Value(utils.UserId{}).(string)
-
-	if reqUserId != curUserId {
-		c.AbortWithError(http.StatusForbidden, nil)
-		return
-	}
+	userId := c.GetString("id")
 
 	payload := dtos.UpdateUser{}
 	if err := c.BindJSON(&payload); err != nil {
@@ -216,7 +242,7 @@ func (uc *userController) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	u, err := uc.userService.UpdateUserById(&reqUserId, &payload)
+	u, err := uc.userService.UpdateUserById(&userId, &payload)
 	if err == userService.ErrUserNotFound {
 		c.AbortWithError(http.StatusNotFound, err)
 		return

@@ -6,9 +6,9 @@ import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
 
 import { AdminService } from './services/AdminService';
-import { ApiService } from './services/ApiService';
 import { RecipesService } from './services/RecipesService';
 import { SearchService } from './services/SearchService';
+import { SystemService } from './services/SystemService';
 import { UsersService } from './services/UsersService';
 
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
@@ -16,9 +16,9 @@ type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class ApiClient {
 
     public readonly admin: AdminService;
-    public readonly api: ApiService;
     public readonly recipes: RecipesService;
     public readonly search: SearchService;
+    public readonly system: SystemService;
     public readonly users: UsersService;
 
     public readonly request: BaseHttpRequest;
@@ -37,9 +37,9 @@ export class ApiClient {
         });
 
         this.admin = new AdminService(this.request);
-        this.api = new ApiService(this.request);
         this.recipes = new RecipesService(this.request);
         this.search = new SearchService(this.request);
+        this.system = new SystemService(this.request);
         this.users = new UsersService(this.request);
     }
 }

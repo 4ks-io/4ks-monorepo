@@ -1,18 +1,14 @@
 package controllers
 
 import (
-	"4ks/apps/api/middleware"
 	recipeService "4ks/apps/api/services/recipe"
 
 	"net/http"
 
-	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
-	"github.com/auth0/go-jwt-middleware/v2/validator"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 
 	"4ks/apps/api/dtos"
-	"4ks/apps/api/utils"
 	models "4ks/libs/go/models"
 )
 
@@ -34,7 +30,7 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 		return
 	}
 
-	userId := c.Request.Context().Value(utils.UserId{}).(string)
+	userId := c.GetString("id")
 	author, err := rc.userService.GetUserById(&userId)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
@@ -85,9 +81,10 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 func (rc *recipeController) DeleteRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
 
-	claims := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
-	customClaims := claims.CustomClaims.(*middleware.CustomClaims)
-	sub := customClaims.Id
+	// claims := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
+	// customClaims := claims.CustomClaims.(*middleware.CustomClaims)
+	// sub := customClaims.Id
+	sub := c.GetString("id")
 
 	err := rc.recipeService.DeleteRecipe(recipeId, sub)
 
@@ -160,7 +157,7 @@ func (rc *recipeController) GetRecipesByUsername(c *gin.Context) {
 		if err == recipeService.ErrRecipeNotFound {
 			c.AbortWithError(http.StatusNotFound, err)
 			return
-		} 
+		}
 		id = u.Id
 	}
 
@@ -225,7 +222,7 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 		return
 	}
 
-	userId := c.Request.Context().Value(utils.UserId{}).(string)
+	userId := c.GetString("id")
 	author, err := rc.userService.GetUserById(&userId)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)

@@ -43,7 +43,7 @@ func getMediaContentType(ext *string) (string, error) {
 // @Security 		ApiKeyAuth
 func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 	recipeId := c.Param("id")
-	userId := c.Request.Context().Value(utils.UserId{}).(string)
+	userId := c.GetString("id")
 
 	payload := dtos.CreateRecipeMedia{}
 	if err := c.BindJSON(&payload); err != nil {

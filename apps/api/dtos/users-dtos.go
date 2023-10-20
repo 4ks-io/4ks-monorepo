@@ -1,8 +1,8 @@
 package dtos
 
 type CreateUser struct {
-	Username    string `json:"username" binding:"required"`
-	DisplayName string `json:"displayName" binding:"required"`
+	Username    string `json:"username"    binding:"required" example:"BobDylan"`
+	DisplayName string `json:"displayName" binding:"required" example:"Bob Dylan"`
 }
 
 type UpdateUser struct {

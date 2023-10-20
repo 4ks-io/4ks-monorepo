@@ -29,8 +29,10 @@ definitions:
   dtos.CreateUser:
     properties:
       displayName:
+        example: Bob Dylan
         type: string
       username:
+        example: BobDylan
         type: string
     required:
     - displayName
@@ -337,11 +339,23 @@ paths:
       summary: Get all medias for a Recipe
       tags:
       - Admin
-  /auth-test:
+  /healthcheck:
     get:
       consumes:
       - application/json
-      description: Test JWT Auth
+      description: healthcheck
+      produces:
+      - application/json
+      responses: {}
+      summary: healthcheck
+      tags:
+      - System
+  /ready:
+    get:
+      consumes:
+      - application/json
+      description: Check system readiness by probing downstream services such as the
+        database.
       produces:
       - application/json
       responses:
@@ -349,11 +363,9 @@ paths:
           description: OK
           schema:
             type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Test JWT Auth
+      summary: Checks Readiness
       tags:
-      - API
+      - System
   /recipes:
     get:
       consumes:
@@ -654,23 +666,64 @@ paths:
       summary: Initialize Search Recipe Collection
       tags:
       - Search
-  /users:
+  /user:
     get:
       consumes:
       - application/json
-      description: Get All Users
+      description: Get Current User
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.User'
-            type: array
+            $ref: '#/definitions/models.User'
       security:
       - ApiKeyAuth: []
-      summary: Get All Users
+      summary: Get Current User
+      tags:
+      - Users
+    head:
+      description: Head Authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "204":
+          description: No Content
+        "400":
+          description: Invalid Request
+        "404":
+          description: Record Not Found
+        "500":
+          description: Internal Error
+      security:
+      - ApiKeyAuth: []
+      summary: Head Authenticated user
+      tags:
+      - Users
+    patch:
+      consumes:
+      - application/json
+      description: Update User
+      parameters:
+      - description: User Data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdateUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      security:
+      - ApiKeyAuth: []
+      summary: Update User
       tags:
       - Users
     post:
@@ -694,6 +747,25 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Create a new User
+      tags:
+      - Users
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Get All Users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Users
       tags:
       - Users
   /users/{userId}:
@@ -739,34 +811,6 @@ paths:
       summary: Get a User (by ID)
       tags:
       - Users
-    patch:
-      consumes:
-      - application/json
-      description: Update User
-      parameters:
-      - description: User Id
-        in: path
-        name: userId
-        required: true
-        type: string
-      - description: User Data
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.UpdateUser'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.User'
-      security:
-      - ApiKeyAuth: []
-      summary: Update User
-      tags:
-      - Users
   /users/exist:
     get:
       description: Get Current User Exist
@@ -780,23 +824,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get Current User Exist
-      tags:
-      - Users
-  /users/profile:
-    get:
-      consumes:
-      - application/json
-      description: Get Current User
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.User'
-      security:
-      - ApiKeyAuth: []
-      summary: Get Current User
       tags:
       - Users
   /users/username:
@@ -837,7 +864,7 @@ paths:
             type: string
       summary: Get API Version
       tags:
-      - API
+      - System
 securityDefinitions:
   ApiKeyAuth:
     in: header

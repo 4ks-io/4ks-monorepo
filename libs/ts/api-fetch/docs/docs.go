@@ -95,14 +95,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth-test": {
+        "/healthcheck": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Test JWT Auth",
+                "description": "healthcheck",
                 "consumes": [
                     "application/json"
                 ],
@@ -110,9 +105,25 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "API"
+                    "System"
                 ],
-                "summary": "Test JWT Auth",
+                "summary": "healthcheck",
+                "responses": {}
+            }
+        },
+        "/ready": {
+            "get": {
+                "description": "Check system readiness by probing downstream services such as the database.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "System"
+                ],
+                "summary": "Checks Readiness",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -604,14 +615,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/users": {
+        "/user": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get All Users",
+                "description": "Get Current User",
                 "consumes": [
                     "application/json"
                 ],
@@ -621,15 +632,12 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
-                "summary": "Get All Users",
+                "summary": "Get Current User",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.User"
-                            }
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 }
@@ -670,6 +678,106 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "head": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Head Authenticated user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Head Authenticated user",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Invalid Request"
+                    },
+                    "404": {
+                        "description": "Record Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Update User",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update User",
+                "parameters": [
+                    {
+                        "description": "User Data",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.UpdateUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get All Users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get All Users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.User"
+                            }
+                        }
+                    }
+                }
             }
         },
         "/users/exist": {
@@ -692,34 +800,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.UserExist"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/profile": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get Current User",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Get Current User",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.User"
                         }
                     }
                 }
@@ -831,50 +911,6 @@ const docTemplate = `{
                         "description": "OK"
                     }
                 }
-            },
-            "patch": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Update User",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Update User",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User Id",
-                        "name": "userId",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "User Data",
-                        "name": "payload",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dtos.UpdateUser"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.User"
-                        }
-                    }
-                }
             }
         },
         "/version": {
@@ -887,7 +923,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "API"
+                    "System"
                 ],
                 "summary": "Get API Version",
                 "responses": {
@@ -950,10 +986,12 @@ const docTemplate = `{
             ],
             "properties": {
                 "displayName": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Bob Dylan"
                 },
                 "username": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "BobDylan"
                 }
             }
         },

@@ -16,6 +16,71 @@ export class UsersService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
+     * Get Current User
+     * Get Current User
+     * @returns models_User OK
+     * @throws ApiError
+     */
+    public getUser(): CancelablePromise<models_User> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/user',
+        });
+    }
+
+    /**
+     * Create a new User
+     * Create a new User
+     * @param user User Data
+     * @returns models_User OK
+     * @throws ApiError
+     */
+    public postUser(
+        user: dtos_CreateUser,
+    ): CancelablePromise<models_User> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/user',
+            body: user,
+        });
+    }
+
+    /**
+     * Head Authenticated user
+     * Head Authenticated user
+     * @returns any OK
+     * @throws ApiError
+     */
+    public headUser(): CancelablePromise<any> {
+        return this.httpRequest.request({
+            method: 'HEAD',
+            url: '/user',
+            errors: {
+                400: `Invalid Request`,
+                404: `Record Not Found`,
+                500: `Internal Error`,
+            },
+        });
+    }
+
+    /**
+     * Update User
+     * Update User
+     * @param payload User Data
+     * @returns models_User OK
+     * @throws ApiError
+     */
+    public patchUser(
+        payload: dtos_UpdateUser,
+    ): CancelablePromise<models_User> {
+        return this.httpRequest.request({
+            method: 'PATCH',
+            url: '/user',
+            body: payload,
+        });
+    }
+
+    /**
      * Get All Users
      * Get All Users
      * @returns models_User OK
@@ -29,23 +94,6 @@ export class UsersService {
     }
 
     /**
-     * Create a new User
-     * Create a new User
-     * @param user User Data
-     * @returns models_User OK
-     * @throws ApiError
-     */
-    public postUsers(
-        user: dtos_CreateUser,
-    ): CancelablePromise<models_User> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/users',
-            body: user,
-        });
-    }
-
-    /**
      * Get Current User Exist
      * Get Current User Exist
      * @returns models_UserExist OK
@@ -55,19 +103,6 @@ export class UsersService {
         return this.httpRequest.request({
             method: 'GET',
             url: '/users/exist',
-        });
-    }
-
-    /**
-     * Get Current User
-     * Get Current User
-     * @returns models_User OK
-     * @throws ApiError
-     */
-    public getUsersProfile(): CancelablePromise<models_User> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/users/profile',
         });
     }
 
@@ -123,28 +158,6 @@ export class UsersService {
             path: {
                 'userId': userId,
             },
-        });
-    }
-
-    /**
-     * Update User
-     * Update User
-     * @param userId User Id
-     * @param payload User Data
-     * @returns models_User OK
-     * @throws ApiError
-     */
-    public patchUsers(
-        userId: string,
-        payload: dtos_UpdateUser,
-    ): CancelablePromise<models_User> {
-        return this.httpRequest.request({
-            method: 'PATCH',
-            url: '/users/{userId}',
-            path: {
-                'userId': userId,
-            },
-            body: payload,
         });
     }
 

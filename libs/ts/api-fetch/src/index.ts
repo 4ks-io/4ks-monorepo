@@ -31,7 +31,7 @@ export type { models_Username } from './models/models_Username';
 export type { models_UserSummary } from './models/models_UserSummary';
 
 export { AdminService } from './services/AdminService';
-export { ApiService } from './services/ApiService';
 export { RecipesService } from './services/RecipesService';
 export { SearchService } from './services/SearchService';
+export { SystemService } from './services/SystemService';
 export { UsersService } from './services/UsersService';

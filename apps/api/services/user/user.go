@@ -3,13 +3,13 @@ package user
 import (
 	"context"
 	"errors"
-	"log"
 	"os"
 	"regexp"
 	"strings"
 	"time"
 
 	firestore "cloud.google.com/go/firestore"
+	"github.com/rs/zerolog/log"
 	"google.golang.org/api/iterator"
 
 	"4ks/apps/api/dtos"
@@ -45,7 +45,7 @@ type userService struct {
 
 func New() UserService {
 	if value, ok := os.LookupEnv("FIRESTORE_EMULATOR_HOST"); ok {
-		log.Printf("Using Firestore Emulator: '%s'", value)
+		log.Info().Caller().Str("host", value).Msg("Using Firestore Emulator")
 	}
 	return &userService{}
 }
@@ -95,7 +95,6 @@ func (us userService) GetUserById(id *string) (*models.User, error) {
 	user.Id = result.Ref.ID
 	return user, nil
 }
-
 
 func (us userService) GetUserByUsername(username *string) (*models.User, error) {
 	// result, err := userCollection.Where("usernameLower", "==", l).Documents(ctx).GetAll()

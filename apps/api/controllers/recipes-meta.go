@@ -8,7 +8,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"4ks/apps/api/utils"
 	models "4ks/libs/go/models"
 )
 
@@ -25,7 +24,7 @@ import (
 func (rc *recipeController) ForkRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
 
-	userId := c.Request.Context().Value(utils.UserId{}).(string)
+	userId := c.GetString("id")
 	author, err := rc.userService.GetUserById(&userId)
 
 	if err == userService.ErrUserNotFound {
@@ -68,7 +67,7 @@ func (rc *recipeController) ForkRecipe(c *gin.Context) {
 func (rc *recipeController) StarRecipe(c *gin.Context) {
 	recipeId := c.Param("id")
 
-	userId := c.Request.Context().Value(utils.UserId{}).(string)
+	userId := c.GetString("id")
 	author, err := rc.userService.GetUserById(&userId)
 
 	if err == userService.ErrUserNotFound {

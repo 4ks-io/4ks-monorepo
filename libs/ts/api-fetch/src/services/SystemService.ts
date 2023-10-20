@@ -4,20 +4,33 @@
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 
-export class ApiService {
+export class SystemService {
 
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
-     * Test JWT Auth
-     * Test JWT Auth
+     * healthcheck
+     * healthcheck
+     * @returns void
+     * @throws ApiError
+     */
+    public getHealthcheck(): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/healthcheck',
+        });
+    }
+
+    /**
+     * Checks Readiness
+     * Check system readiness by probing downstream services such as the database.
      * @returns string OK
      * @throws ApiError
      */
-    public getAuthTest(): CancelablePromise<string> {
+    public getReady(): CancelablePromise<string> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/auth-test',
+            url: '/ready',
         });
     }
 

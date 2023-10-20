@@ -8,11 +8,11 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/rs/zerolog/log"
-
 	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
 	"github.com/auth0/go-jwt-middleware/v2/jwks"
 	"github.com/auth0/go-jwt-middleware/v2/validator"
+	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 var (
@@ -33,6 +33,43 @@ type CustomClaims struct {
 // it to satisfy validator.CustomClaims interface.
 func (c CustomClaims) Validate(ctx context.Context) error {
 	return nil
+}
+
+// ExtractClaimsFromRequest extracts the claims from the request
+func ExtractClaimsFromRequest(request *http.Request) validator.ValidatedClaims {
+	return *request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
+}
+
+// ExtractCustomClaimsFromClaims extracts the custom claims from the claims
+func ExtractCustomClaimsFromClaims(claims *validator.ValidatedClaims) CustomClaims {
+	return *claims.CustomClaims.(*CustomClaims)
+}
+
+type UserEmail struct{}
+type UserId struct{}
+type UserTimeZone struct{}
+type UserCountryCode struct{}
+
+func AppendCustomClaims() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		// log.Debug().Caller().Msgf("access_token: %s", ctx.Request.Header["Authorization"])
+
+		// add auth ID to context
+		claims := ExtractClaimsFromRequest(ctx.Request)
+		ctx.Set("authID", claims.RegisteredClaims.Subject)
+
+		// custom clais
+		customClaims := ExtractCustomClaimsFromClaims(&claims)
+		ctx.Set("id", customClaims.Id)
+		ctx.Set("email", customClaims.Email)
+		log.Debug().Caller().
+			Str("authID", claims.RegisteredClaims.Subject).
+			Str("id", customClaims.Id).
+			Str("email", customClaims.Email).
+			Msg("claims")
+
+		ctx.Next()
+	}
 }
 
 // EnforceJWT is a middleware that will check the validity of our JWT.
