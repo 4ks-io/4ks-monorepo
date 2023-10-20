@@ -37,11 +37,22 @@ func TestJWTAuth(c *gin.Context) {
 }
 
 func AuthRouter(router *gin.RouterGroup) {
+	
 	// validate jwt
-	router.Use(adapter.Wrap(middleware.EnsureValidToken()))
+	router.Use(adapter.Wrap(middleware.EnforceJWT()))
 
 	// append auth0 claims to context
 	router.Use(func(ctx *gin.Context) {
+		headers := ctx.Request.Header
+		var keys string
+		for key := range headers {
+			keys += key + " "
+		}
+		log.Debug().Caller().Msg(keys)
+		
+		// fmt.Println(h["Authorization"])
+
+
 		claims := utils.ExtractClaimsFromRequest(ctx.Request)
 		customClaims := utils.ExtractCustomClaimsFromClaims(&claims)
 

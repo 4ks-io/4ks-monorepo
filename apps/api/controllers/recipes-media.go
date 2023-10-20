@@ -14,6 +14,7 @@ import (
 	"4ks/apps/api/utils"
 
 	"github.com/rs/xid"
+	"github.com/rs/zerolog/log"
 )
 
 func getMediaContentType(ext *string) (string, error) {
@@ -98,7 +99,7 @@ func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 func (rc *recipeController) GetRecipeMedia(c *gin.Context) {
 	recipeId := c.Param("id")
 	recipeMedias, err := rc.recipeService.GetRecipeMedia(&recipeId)
-	fmt.Print(err)
+	log.Error().Err(err).Caller().Msg("client: could not create request")
 
 	if err == recipeService.ErrRecipeNotFound {
 		c.AbortWithError(http.StatusNotFound, err)

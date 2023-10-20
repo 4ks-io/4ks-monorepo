@@ -3,7 +3,6 @@ package user
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -99,18 +98,16 @@ func (us userService) GetUserById(id *string) (*models.User, error) {
 
 
 func (us userService) GetUserByUsername(username *string) (*models.User, error) {
-	l := strings.ToLower(*username)
-	fmt.Println(l)
 	// result, err := userCollection.Where("usernameLower", "==", l).Documents(ctx).GetAll()
 	result, err := userCollection.Where("usernameLower", "==", strings.ToLower(*username)).Documents(ctx).GetAll()
 	if err != nil || len(result) == 0 {
 		return nil, ErrUserNotFound
 	}
-	fmt.Print(result)
+	// fmt.Print(result)
 
 	userSnapshot := result[0]
 	user := new(models.User)
-	fmt.Print(user.Id)
+	// fmt.Print(user.Id)
 
 	err = userSnapshot.DataTo(user)
 	if err != nil {

@@ -2,15 +2,22 @@ package middleware
 
 import (
 	"context"
-	"log"
+	"os"
+
 	"net/http"
 	"net/url"
-	"os"
 	"time"
+
+	"github.com/rs/zerolog/log"
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
 	"github.com/auth0/go-jwt-middleware/v2/jwks"
 	"github.com/auth0/go-jwt-middleware/v2/validator"
+)
+
+var (
+ domain = os.Getenv("AUTH0_DOMAIN")
+ audience = os.Getenv("AUTH0_AUDIENCE")
 )
 
 // CustomClaims contains custom data we want from the token.
@@ -28,17 +35,15 @@ func (c CustomClaims) Validate(ctx context.Context) error {
 	return nil
 }
 
-// EnsureValidToken is a middleware that will check the validity of our JWT.
-func EnsureValidToken() func(next http.Handler) http.Handler {
-	audience := os.Getenv("AUTH0_AUDIENCE")
-	domain := os.Getenv("AUTH0_DOMAIN")
-
-	// log.Printf("audience: " + audience)
-	// log.Printf("issuerURL: " + issuerURL.String())
-
+// EnforceJWT is a middleware that will check the validity of our JWT.
+// todo: could this (already curriend) function be curried to pass in audience and domain?
+// see https://github.com/cool8sniper/gin-rest-gorm-rbac-sample/blob/master/middleware/jwt.go
+func EnforceJWT() func(next http.Handler) http.Handler {
+	// log.Debug().Caller().Str("domain", domain).Str("audience", audience).Msg("EnforceJWT")
 	issuerURL, err := url.Parse("https://" + domain + "/")
 	if err != nil {
-		log.Fatalf("Failed to parse the issuer url: %v", err)
+		log.Error().Err(err).Caller().Msg("Failed to parse the issuer url")
+		panic(err)
 	}
 
 	provider := jwks.NewCachingProvider(issuerURL, 5*time.Minute)
@@ -55,14 +60,12 @@ func EnsureValidToken() func(next http.Handler) http.Handler {
 		),
 		validator.WithAllowedClockSkew(time.Minute),
 	)
-
 	if err != nil {
-		log.Fatalf("Failed to set up the jwt validator")
+		log.Error().Err(err).Caller().Msg("Failed to set up the jwt validator")
 	}
 
 	errorHandler := func(w http.ResponseWriter, r *http.Request, err error) {
-		log.Printf("Encountered error while validating JWT: %v", err)
-
+		log.Error().Caller().Err(err).Msg("Encountered error while validating JWT")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte(`{"message":"Failed to validate JWT."}`))
@@ -74,7 +77,6 @@ func EnsureValidToken() func(next http.Handler) http.Handler {
 	)
 
 	return func(next http.Handler) http.Handler {
-		// log.Printf("attempting to validate jwt ...")
 		return middleware.CheckJWT(next)
 	}
 }

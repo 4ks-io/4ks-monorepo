@@ -1,3 +1,4 @@
+// Package middleware contains the middleware functions used by the application.
 package middleware
 
 // https://learninggolang.com/it5-gin-structured-logging.html
@@ -20,13 +21,17 @@ func DefaultStructuredLogger() gin.HandlerFunc {
 // logger for testing purposes.
 func StructuredLogger(logger *zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		start := time.Now() // Start timer
 		path := c.Request.URL.Path
 		raw := c.Request.URL.RawQuery
 
 		// Process request
 		c.Next()
+
+		// don't log healthcheck
+		if path == "/healthcheck" || path == "/ready" {
+			return
+		}
 
 		// Fill the params
 		param := gin.LogFormatterParams{}
@@ -55,11 +60,11 @@ func StructuredLogger(logger *zerolog.Logger) gin.HandlerFunc {
 			logEvent = logger.Info()
 		}
 
-		logEvent.Str("client_id", param.ClientIP).
+		logEvent.Str("ip", param.ClientIP).
 			Str("method", param.Method).
-			Int("status_code", param.StatusCode).
-			Int("body_size", param.BodySize).
 			Str("path", param.Path).
+			Int("statusCode", param.StatusCode).
+			Int("bodySize", param.BodySize).
 			Str("latency", param.Latency.String()).
 			Msg(param.ErrorMessage)
 	}
