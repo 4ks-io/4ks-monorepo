@@ -170,7 +170,6 @@ func (uc *userController) GetCurrentUserExist(c *gin.Context) {
 	c.JSON(http.StatusOK, data)
 }
 
-
 // HeadAuthenticatedUser godoc
 // @Schemes
 // @Summary 	  Head Authenticated user
@@ -186,7 +185,7 @@ func (uc *userController) GetCurrentUserExist(c *gin.Context) {
 // @Security 		ApiKeyAuth
 func (uc *userController) HeadAuthenticatedUser(c *gin.Context) {
 	userId := c.GetString("id")
-	
+
 	if _, err := uc.userService.GetUserById(&userId); err != nil {
 		// handle user not found
 		if err == userService.ErrUserNotFound {

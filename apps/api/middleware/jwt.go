@@ -16,8 +16,8 @@ import (
 )
 
 var (
- domain = os.Getenv("AUTH0_DOMAIN")
- audience = os.Getenv("AUTH0_AUDIENCE")
+	domain   = os.Getenv("AUTH0_DOMAIN")
+	audience = os.Getenv("AUTH0_AUDIENCE")
 )
 
 // CustomClaims contains custom data we want from the token.
@@ -91,7 +91,7 @@ func EnforceJWT() func(next http.Handler) http.Handler {
 		issuerURL.String(),
 		[]string{audience},
 		validator.WithCustomClaims(
-			func() validator.CustomClaims {	
+			func() validator.CustomClaims {
 				return &CustomClaims{}
 			},
 		),

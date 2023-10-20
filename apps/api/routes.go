@@ -26,7 +26,6 @@ func EnforceAuth(r *gin.RouterGroup) {
 	r.Use(middleware.AppendCustomClaims())
 }
 
-
 func AppendRoutes(r *gin.Engine, c *Controllers, o *RouteOpts) {
 	// system
 	r.GET("/ready", c.System.CheckReadiness)

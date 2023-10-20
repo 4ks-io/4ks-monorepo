@@ -67,7 +67,7 @@ func main() {
 	// metrics
 	prom := ginprometheus.NewPrometheus("gin")
 	prom.Use(r)
-	
+
 	o := &RouteOpts{
 		SwaggerEnabled: utils.GetBoolEnv("SWAGGER_ENABLED", false),
 		SwaggerPrefix:  utils.GetStrEnvVar("SWAGGER_URL_PREFIX", ""),

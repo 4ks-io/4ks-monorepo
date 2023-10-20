@@ -24,8 +24,8 @@ import (
 const (
 	service = "4ks-api"
 
-// 	environment = "local"
-// 	port
+// environment = "local"
+// port
 )
 
 func InitTracerProvider() *sdktrace.TracerProvider {
