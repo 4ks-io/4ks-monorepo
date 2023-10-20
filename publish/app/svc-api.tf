@@ -50,7 +50,7 @@ resource "google_cloud_run_service" "api" {
         }
         env {
           name  = "GIN_MODE"
-          value = "release"
+          value = "debug"
         }
         env {
           name  = "JAEGER_ENABLED"
