@@ -17,15 +17,15 @@ import (
 // @Tags 				Recipes
 // @Accept 			json
 // @Produce 		json
-// @Param       recipeId 	path      	string  true  "Recipe Id"
+// @Param       recipeID 	path      	string  true  "Recipe ID"
 // @Success 		200 		{object} 	models.Recipe
-// @Router 			/recipes/{recipeId}/fork [post]
+// @Router 			/recipes/{recipeID}/fork [post]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) ForkRecipe(c *gin.Context) {
-	recipeId := c.Param("id")
+	recipeID := c.Param("id")
 
-	userId := c.GetString("id")
-	author, err := rc.userService.GetUserById(&userId)
+	userID := c.GetString("id")
+	author, err := rc.userService.GetUserByID(&userID)
 
 	if err == userService.ErrUserNotFound {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -35,8 +35,8 @@ func (rc *recipeController) ForkRecipe(c *gin.Context) {
 		return
 	}
 
-	newRecipe, err := rc.recipeService.ForkRecipeById(&recipeId, models.UserSummary{
-		Id:          userId,
+	newRecipe, err := rc.recipeService.ForkRecipeByID(&recipeID, models.UserSummary{
+		ID:          userID,
 		Username:    author.Username,
 		DisplayName: author.DisplayName,
 	})
@@ -60,15 +60,15 @@ func (rc *recipeController) ForkRecipe(c *gin.Context) {
 // @Tags 				Recipes
 // @Accept 			json
 // @Produce 		json
-// @Param       recipeId 	path      	string  true  "Recipe Id"
+// @Param       recipeID 	path      	string  true  "Recipe ID"
 // @Success 		200
-// @Router 			/recipes/{recipeId}/star [post]
+// @Router 			/recipes/{recipeID}/star [post]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) StarRecipe(c *gin.Context) {
-	recipeId := c.Param("id")
+	recipeID := c.Param("id")
 
-	userId := c.GetString("id")
-	author, err := rc.userService.GetUserById(&userId)
+	userID := c.GetString("id")
+	author, err := rc.userService.GetUserByID(&userID)
 
 	if err == userService.ErrUserNotFound {
 		c.AbortWithStatus(http.StatusBadRequest)
@@ -78,8 +78,8 @@ func (rc *recipeController) StarRecipe(c *gin.Context) {
 		return
 	}
 
-	_, err = rc.recipeService.StarRecipeById(&recipeId, models.UserSummary{
-		Id:          userId,
+	_, err = rc.recipeService.StarRecipeByID(&recipeID, models.UserSummary{
+		ID:          userID,
 		Username:    author.Username,
 		DisplayName: author.DisplayName,
 	})

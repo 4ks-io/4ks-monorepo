@@ -24,14 +24,14 @@ var (
 type CustomClaims struct {
 	Scope       string `json:"scope"`
 	Email       string `json:"https://4ks.io/email"`
-	Id          string `json:"https://4ks.io/id"`
+	ID          string `json:"https://4ks.io/id"`
 	Timezone    string `json:"https://4ks.io/timeZone"`
 	CountryCode string `json:"https://4ks.io/countryCode"`
 }
 
 // Validate does nothing for this example, but we need
 // it to satisfy validator.CustomClaims interface.
-func (c CustomClaims) Validate(ctx context.Context) error {
+func (c CustomClaims) Validate(_ context.Context) error {
 	return nil
 }
 
@@ -45,11 +45,7 @@ func ExtractCustomClaimsFromClaims(claims *validator.ValidatedClaims) CustomClai
 	return *claims.CustomClaims.(*CustomClaims)
 }
 
-type UserEmail struct{}
-type UserId struct{}
-type UserTimeZone struct{}
-type UserCountryCode struct{}
-
+// AppendCustomClaims is a middleware that will append custom claims to the context.
 func AppendCustomClaims() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// log.Debug().Caller().Msgf("access_token: %s", ctx.Request.Header["Authorization"])
@@ -60,11 +56,12 @@ func AppendCustomClaims() gin.HandlerFunc {
 
 		// custom clais
 		customClaims := ExtractCustomClaimsFromClaims(&claims)
-		ctx.Set("id", customClaims.Id)
+		ctx.Set("id", customClaims.ID)
 		ctx.Set("email", customClaims.Email)
+
 		log.Debug().Caller().
 			Str("authID", claims.RegisteredClaims.Subject).
-			Str("id", customClaims.Id).
+			Str("id", customClaims.ID).
 			Str("email", customClaims.Email).
 			Msg("claims")
 

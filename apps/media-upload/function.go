@@ -1,3 +1,4 @@
+// package function is the entrypoint for the Cloud Function that validates and resizes images
 package function
 
 import (

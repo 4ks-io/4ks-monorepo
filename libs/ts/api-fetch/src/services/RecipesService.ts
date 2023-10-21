@@ -67,8 +67,8 @@ export class RecipesService {
 
     /**
      * Get a Recipe Revision
-     * Get a Revision By Id
-     * @param revisionId Revision Id
+     * Get a Revision By ID
+     * @param revisionId Revision ID
      * @returns models_RecipeRevision OK
      * @throws ApiError
      */
@@ -77,9 +77,9 @@ export class RecipesService {
     ): CancelablePromise<models_RecipeRevision> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/recipes/revisions/{revisionId}',
+            url: '/recipes/revisions/{revisionID}',
             path: {
-                'revisionId': revisionId,
+                'revisionID': revisionId,
             },
         });
     }
@@ -87,7 +87,7 @@ export class RecipesService {
     /**
      * Get a Recipe (by ID)
      * Get a Recipe (by ID)
-     * @param recipeId Recipe Id
+     * @param recipeId Recipe ID
      * @returns models_Recipe OK
      * @throws ApiError
      */
@@ -96,9 +96,9 @@ export class RecipesService {
     ): CancelablePromise<models_Recipe> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/recipes/{recipeId}',
+            url: '/recipes/{recipeID}',
             path: {
-                'recipeId': recipeId,
+                'recipeID': recipeId,
             },
         });
     }
@@ -106,7 +106,7 @@ export class RecipesService {
     /**
      * Delete Recipe
      * Delete Recipe
-     * @param recipeId Recipe Id
+     * @param recipeId Recipe ID
      * @returns any OK
      * @throws ApiError
      */
@@ -115,9 +115,9 @@ export class RecipesService {
     ): CancelablePromise<any> {
         return this.httpRequest.request({
             method: 'DELETE',
-            url: '/recipes/{recipeId}',
+            url: '/recipes/{recipeID}',
             path: {
-                'recipeId': recipeId,
+                'recipeID': recipeId,
             },
         });
     }
@@ -125,7 +125,7 @@ export class RecipesService {
     /**
      * Update Recipe
      * Update Recipe
-     * @param recipeId Recipe Id
+     * @param recipeId Recipe ID
      * @param payload Recipe Data
      * @returns models_Recipe OK
      * @throws ApiError
@@ -136,9 +136,9 @@ export class RecipesService {
     ): CancelablePromise<models_Recipe> {
         return this.httpRequest.request({
             method: 'PATCH',
-            url: '/recipes/{recipeId}',
+            url: '/recipes/{recipeID}',
             path: {
-                'recipeId': recipeId,
+                'recipeID': recipeId,
             },
             body: payload,
         });
@@ -147,7 +147,7 @@ export class RecipesService {
     /**
      * Fork Recipe
      * Fork Recipe
-     * @param recipeId Recipe Id
+     * @param recipeId Recipe ID
      * @returns models_Recipe OK
      * @throws ApiError
      */
@@ -156,9 +156,9 @@ export class RecipesService {
     ): CancelablePromise<models_Recipe> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/recipes/{recipeId}/fork',
+            url: '/recipes/{recipeID}/fork',
             path: {
-                'recipeId': recipeId,
+                'recipeID': recipeId,
             },
         });
     }
@@ -166,7 +166,7 @@ export class RecipesService {
     /**
      * Get all medias for a Recipe
      * Get all medias for a Recipe
-     * @param recipeId Recipe Id
+     * @param recipeId Recipe ID
      * @returns models_RecipeMedia OK
      * @throws ApiError
      */
@@ -175,17 +175,17 @@ export class RecipesService {
     ): CancelablePromise<Array<models_RecipeMedia>> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/recipes/{recipeId}/media',
+            url: '/recipes/{recipeID}/media',
             path: {
-                'recipeId': recipeId,
+                'recipeID': recipeId,
             },
         });
     }
 
     /**
-     * Create a new Media SignedUrl
-     * Create a new Media SignedUrl
-     * @param recipeId Recipe Id
+     * Create a new Media SignedURL
+     * Create a new Media SignedURL
+     * @param recipeId Recipe ID
      * @param payload Payload
      * @returns models_CreateRecipeMedia OK
      * @throws ApiError
@@ -196,9 +196,9 @@ export class RecipesService {
     ): CancelablePromise<models_CreateRecipeMedia> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/recipes/{recipeId}/media',
+            url: '/recipes/{recipeID}/media',
             path: {
-                'recipeId': recipeId,
+                'recipeID': recipeId,
             },
             body: payload,
         });
@@ -207,7 +207,7 @@ export class RecipesService {
     /**
      * Get all revisions for a Recipe
      * Get all revisions for a Recipe
-     * @param recipeId Recipe Id
+     * @param recipeId Recipe ID
      * @returns models_RecipeRevision OK
      * @throws ApiError
      */
@@ -216,9 +216,9 @@ export class RecipesService {
     ): CancelablePromise<Array<models_RecipeRevision>> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/recipes/{recipeId}/revisions',
+            url: '/recipes/{recipeID}/revisions',
             path: {
-                'recipeId': recipeId,
+                'recipeID': recipeId,
             },
         });
     }
@@ -226,7 +226,7 @@ export class RecipesService {
     /**
      * Star Recipe
      * Star Recipe
-     * @param recipeId Recipe Id
+     * @param recipeId Recipe ID
      * @returns any OK
      * @throws ApiError
      */
@@ -235,9 +235,9 @@ export class RecipesService {
     ): CancelablePromise<any> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/recipes/{recipeId}/star',
+            url: '/recipes/{recipeID}/star',
             path: {
-                'recipeId': recipeId,
+                'recipeID': recipeId,
             },
         });
     }

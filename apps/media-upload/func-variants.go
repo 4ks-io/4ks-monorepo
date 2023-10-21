@@ -19,6 +19,8 @@ import (
 )
 
 func createVariant(ctx context.Context, bkt *storage.BucketHandle, i image.Image, ifmt string, f FileProps, size int, wg *sync.WaitGroup) (string, error) {
+	// defer wg.Done()	
+
 	// resize
 	var v *image.NRGBA
 	v = imaging.Resize(i, size, 0, imaging.Lanczos)

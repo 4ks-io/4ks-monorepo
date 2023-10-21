@@ -1,3 +1,4 @@
+// Package controllers provides the controllers for the application
 package controllers
 
 import (
@@ -31,7 +32,7 @@ func (rc *recipeController) BotCreateRecipe(c *gin.Context) {
 	}
 
 	payload.Author = models.UserSummary{
-		Id:          "bot",
+		ID:          "bot",
 		Username:    "4ks-bot",
 		DisplayName: "4ks bot",
 	}
@@ -40,7 +41,7 @@ func (rc *recipeController) BotCreateRecipe(c *gin.Context) {
 	if err != nil {
 		log.Error().Err(err).Msg("failed to get random fallback image")
 	}
-	u := rc.staticService.GetRandomFallbackImageUrl(f)
+	u := rc.staticService.GetRandomFallbackImageURL(f)
 	payload.Banner = createMockBanner(f, u)
 
 	createdRecipe, err := rc.recipeService.CreateRecipe(&payload)

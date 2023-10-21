@@ -1,3 +1,4 @@
+// Package user is the user service
 package user
 
 import (
@@ -16,25 +17,30 @@ import (
 	models "4ks/libs/go/models"
 )
 
-var firstoreProjectId = os.Getenv("FIRESTORE_PROJECT_ID")
+var firstoreProjectID = os.Getenv("FIRESTORE_PROJECT_ID")
 var ctx = context.Background()
-var storage, _ = firestore.NewClient(ctx, firstoreProjectId)
+var storage, _ = firestore.NewClient(ctx, firstoreProjectID)
 var userCollection = storage.Collection("users")
 
 var (
+	// ErrEmailInUse is returned when a user is unable to create a recipe
 	ErrEmailInUse      = errors.New("a user with that email already exists")
+	// ErrUsernameInUse is returned when a user is unable to create a recipe
 	ErrUsernameInUse   = errors.New("a user with that username already exists")
+	// ErrInvalidUsername is returned when a user is unable to create a recipe
 	ErrInvalidUsername = errors.New("invalid username")
+	// ErrUserNotFound is returned when a user is unable to create a recipe
 	ErrUserNotFound    = errors.New("a user with that email was not found")
 )
 
-type UserService interface {
+// Service is the interface for the user service
+type Service interface {
 	GetAllUsers() ([]*models.User, error)
-	GetUserById(id *string) (*models.User, error)
+	GetUserByID(id *string) (*models.User, error)
 	GetUserByUsername(username *string) (*models.User, error)
 	GetUserByEmail(emailAddress *string) (*models.User, error)
-	CreateUser(userId *string, userEmail *string, user *dtos.CreateUser) (*models.User, error)
-	UpdateUserById(userId *string, user *dtos.UpdateUser) (*models.User, error)
+	CreateUser(userID *string, userEmail *string, user *dtos.CreateUser) (*models.User, error)
+	UpdateUserByID(userID *string, user *dtos.UpdateUser) (*models.User, error)
 	DeleteUser(id *string) error
 	TestUsernameValid(username *string) bool
 	TestUsernameExist(username *string) (bool, error)
@@ -43,7 +49,8 @@ type UserService interface {
 type userService struct {
 }
 
-func New() UserService {
+// New creates a new user service
+func New() Service {
 	if value, ok := os.LookupEnv("FIRESTORE_EMULATOR_HOST"); ok {
 		log.Info().Caller().Str("host", value).Msg("Using Firestore Emulator")
 	}
@@ -72,14 +79,14 @@ func (us userService) GetAllUsers() ([]*models.User, error) {
 			// break the loop or return.
 			return nil, err
 		}
-		// fmt.Println(u.Id)
+		// fmt.Println(u.ID)
 		all = append(all, &u)
 	}
 
 	return all, nil
 }
 
-func (us userService) GetUserById(id *string) (*models.User, error) {
+func (us userService) GetUserByID(id *string) (*models.User, error) {
 	result, err := userCollection.Doc(*id).Get(ctx)
 	if err != nil {
 		return nil, ErrUserNotFound
@@ -92,7 +99,7 @@ func (us userService) GetUserById(id *string) (*models.User, error) {
 		return nil, err
 	}
 
-	user.Id = result.Ref.ID
+	user.ID = result.Ref.ID
 	return user, nil
 }
 
@@ -106,14 +113,14 @@ func (us userService) GetUserByUsername(username *string) (*models.User, error) 
 
 	userSnapshot := result[0]
 	user := new(models.User)
-	// fmt.Print(user.Id)
+	// fmt.Print(user.ID)
 
 	err = userSnapshot.DataTo(user)
 	if err != nil {
 		return nil, err
 	}
 
-	user.Id = userSnapshot.Ref.ID
+	user.ID = userSnapshot.Ref.ID
 	return user, nil
 }
 
@@ -131,7 +138,7 @@ func (us userService) GetUserByEmail(emailAddress *string) (*models.User, error)
 		return nil, err
 	}
 
-	user.Id = userSnapshot.Ref.ID
+	user.ID = userSnapshot.Ref.ID
 	return user, nil
 }
 
@@ -155,14 +162,14 @@ func (us userService) TestUsernameValid(username *string) bool {
 	return false
 }
 
-func (us userService) CreateUser(userId *string, userEmail *string, user *dtos.CreateUser) (*models.User, error) {
+func (us userService) CreateUser(userID *string, userEmail *string, user *dtos.CreateUser) (*models.User, error) {
 	isValid := us.TestUsernameValid(&user.Username)
 	if !isValid {
 		return nil, ErrInvalidUsername
 	}
 
-	existingUserId, _ := userCollection.Doc(*userId).Get(ctx)
-	if existingUserId.Exists() {
+	existingUserID, _ := userCollection.Doc(*userID).Get(ctx)
+	if existingUserID.Exists() {
 		return nil, ErrEmailInUse
 	}
 
@@ -175,7 +182,7 @@ func (us userService) CreateUser(userId *string, userEmail *string, user *dtos.C
 	}
 
 	newUser := &models.User{
-		Id:            *userId,
+		ID:            *userID,
 		Username:      user.Username,
 		UsernameLower: strings.ToLower(user.Username),
 		DisplayName:   user.DisplayName,
@@ -184,7 +191,7 @@ func (us userService) CreateUser(userId *string, userEmail *string, user *dtos.C
 		UpdatedDate:   time.Now().UTC(),
 	}
 
-	_, err = userCollection.Doc(*userId).Create(ctx, newUser)
+	_, err = userCollection.Doc(*userID).Create(ctx, newUser)
 	if err != nil {
 		return nil, err
 	}
@@ -192,7 +199,7 @@ func (us userService) CreateUser(userId *string, userEmail *string, user *dtos.C
 	return newUser, nil
 }
 
-func (us userService) UpdateUserById(userId *string, user *dtos.UpdateUser) (*models.User, error) {
+func (us userService) UpdateUserByID(userID *string, user *dtos.UpdateUser) (*models.User, error) {
 	if user.Username != "" {
 		isValid := us.TestUsernameValid(&user.Username)
 		if !isValid {
@@ -200,7 +207,7 @@ func (us userService) UpdateUserById(userId *string, user *dtos.UpdateUser) (*mo
 		}
 	}
 
-	_, err := userCollection.Doc(*userId).Update(ctx, []firestore.Update{
+	_, err := userCollection.Doc(*userID).Update(ctx, []firestore.Update{
 		{
 			Path:  "username",
 			Value: user.Username,
@@ -214,7 +221,7 @@ func (us userService) UpdateUserById(userId *string, user *dtos.UpdateUser) (*mo
 		log.Printf("An error has occurred: %s", err)
 	}
 
-	u, err := us.GetUserById(userId)
+	u, err := us.GetUserByID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -223,13 +230,13 @@ func (us userService) UpdateUserById(userId *string, user *dtos.UpdateUser) (*mo
 }
 
 // todo: add with disableUser/enableUser as we never want to delete a recipe
-func (us userService) DeleteUser(userId *string) error {
-	existingUserId, _ := userCollection.Doc(*userId).Get(ctx)
-	if !existingUserId.Exists() {
+func (us userService) DeleteUser(userID *string) error {
+	existingUserID, _ := userCollection.Doc(*userID).Get(ctx)
+	if !existingUserID.Exists() {
 		return ErrUserNotFound
 	}
 
-	_, err := userCollection.Doc(*userId).Delete(ctx)
+	_, err := userCollection.Doc(*userID).Delete(ctx)
 	if err != nil {
 		return err
 	}

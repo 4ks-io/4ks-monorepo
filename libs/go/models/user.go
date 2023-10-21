@@ -7,7 +7,7 @@ type UserExist struct {
 }
 
 type User struct {
-	Id            string    `firestore:"id" json:"id"`
+	ID            string    `firestore:"id" json:"id"`
 	Username      string    `firestore:"username,omitempty" json:"username"`
 	UsernameLower string    `firestore:"usernameLower,omitempty" json:"usernameLower"`
 	DisplayName   string    `firestore:"displayName,omitempty" json:"displayName"`
@@ -19,7 +19,7 @@ type User struct {
 // Subset of a user that will be nested in a RecipeRevision or Recipe object
 
 type UserSummary struct {
-	Id          string `firestore:"id,omitempty" json:"id"`
+	ID          string `firestore:"id,omitempty" json:"id"`
 	Username    string `firestore:"username,omitempty" json:"username"`
 	DisplayName string `firestore:"displayName,omitempty" json:"displayName"`
 }

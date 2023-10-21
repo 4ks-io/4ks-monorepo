@@ -7,14 +7,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// SearchController is the interface for the search controller
 type SearchController interface {
 	CreateSearchRecipeCollection(c *gin.Context)
 }
 
 type searchController struct {
-	searchService searchService.SearchService
+	searchService searchService.Service
 }
 
+// NewSearchController creates a new search controller
 func NewSearchController() SearchController {
 	return &searchController{
 		searchService: searchService.New(),

@@ -30,15 +30,15 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 		return
 	}
 
-	userId := c.GetString("id")
-	author, err := rc.userService.GetUserById(&userId)
+	userID := c.GetString("id")
+	author, err := rc.userService.GetUserByID(&userID)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
 	payload.Author = models.UserSummary{
-		Id:          userId,
+		ID:          userID,
 		Username:    author.Username,
 		DisplayName: author.DisplayName,
 	}
@@ -47,7 +47,7 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 	if err != nil {
 		log.Error().Err(err).Msg("failed to get random fallback image")
 	}
-	u := rc.staticService.GetRandomFallbackImageUrl(f)
+	u := rc.staticService.GetRandomFallbackImageURL(f)
 	payload.Banner = createMockBanner(f, u)
 
 	createdRecipe, err := rc.recipeService.CreateRecipe(&payload)
@@ -74,19 +74,19 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 // @Tags 				Recipes
 // @Accept 			json
 // @Produce 		json
-// @Param       recipeId 	path      string  true  "Recipe Id"
+// @Param       recipeID 	path      string  true  "Recipe ID"
 // @Success 		200
-// @Router 			/recipes/{recipeId}   [delete]
+// @Router 			/recipes/{recipeID}   [delete]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) DeleteRecipe(c *gin.Context) {
-	recipeId := c.Param("id")
+	recipeID := c.Param("id")
 
 	// claims := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
 	// customClaims := claims.CustomClaims.(*middleware.CustomClaims)
-	// sub := customClaims.Id
+	// sub := customClaims.ID
 	sub := c.GetString("id")
 
-	err := rc.recipeService.DeleteRecipe(recipeId, sub)
+	err := rc.recipeService.DeleteRecipe(recipeID, sub)
 
 	if err == recipeService.ErrRecipeNotFound {
 		c.AbortWithError(http.StatusNotFound, err)
@@ -99,7 +99,7 @@ func (rc *recipeController) DeleteRecipe(c *gin.Context) {
 		return
 	}
 
-	err = rc.searchService.RemoveSearchRecipeDocument(&recipeId)
+	err = rc.searchService.RemoveSearchRecipeDocument(&recipeID)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
@@ -115,13 +115,13 @@ func (rc *recipeController) DeleteRecipe(c *gin.Context) {
 // @Tags 		    Recipes
 // @Accept 	   	json
 // @Produce   	json
-// @Param       recipeId 	path      	string  true  "Recipe Id"
+// @Param       recipeID 	path      	string  true  "Recipe ID"
 // @Success 		200 		{object} 	models.Recipe
-// @Router 			/recipes/{recipeId} [get]
+// @Router 			/recipes/{recipeID} [get]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) GetRecipe(c *gin.Context) {
-	recipeId := c.Param("id")
-	recipe, err := rc.recipeService.GetRecipeById(&recipeId)
+	recipeID := c.Param("id")
+	recipe, err := rc.recipeService.GetRecipeByID(&recipeID)
 
 	if err == recipeService.ErrRecipeNotFound {
 		c.AbortWithError(http.StatusNotFound, err)
@@ -158,7 +158,7 @@ func (rc *recipeController) GetRecipesByUsername(c *gin.Context) {
 			c.AbortWithError(http.StatusNotFound, err)
 			return
 		}
-		id = u.Id
+		id = u.ID
 	}
 
 	// hardcode limit for now
@@ -208,13 +208,13 @@ func (rc *recipeController) GetRecipes(c *gin.Context) {
 // @Tags 				Recipes
 // @Accept 			json
 // @Produce 		json
-// @Param       recipeId 			path      string             true  "Recipe Id"
+// @Param       recipeID 			path      string             true  "Recipe ID"
 // @Param				payload   	  body			dtos.UpdateRecipe  true  "Recipe Data"
 // @Success 		200 					{object} 	models.Recipe
-// @Router 			/recipes/{recipeId} [patch]
+// @Router 			/recipes/{recipeID} [patch]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) UpdateRecipe(c *gin.Context) {
-	recipeId := c.Param("id")
+	recipeID := c.Param("id")
 	payload := dtos.UpdateRecipe{}
 
 	if err := c.BindJSON(&payload); err != nil {
@@ -222,20 +222,20 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 		return
 	}
 
-	userId := c.GetString("id")
-	author, err := rc.userService.GetUserById(&userId)
+	userID := c.GetString("id")
+	author, err := rc.userService.GetUserByID(&userID)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
 	payload.Author = models.UserSummary{
-		Id:          userId,
+		ID:          userID,
 		Username:    author.Username,
 		DisplayName: author.DisplayName,
 	}
 
-	createdRecipe, err := rc.recipeService.UpdateRecipeById(&recipeId, &payload)
+	createdRecipe, err := rc.recipeService.UpdateRecipeByID(&recipeID, &payload)
 
 	if err == recipeService.ErrUnableToCreateRecipe {
 		c.AbortWithError(http.StatusBadRequest, err)

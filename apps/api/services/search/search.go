@@ -1,3 +1,4 @@
+// Package search is the search service
 package search
 
 import (
@@ -11,7 +12,8 @@ import (
 	"github.com/typesense/typesense-go/typesense/api"
 )
 
-type SearchService interface {
+// Service is the interface for the search service
+type Service interface {
 	CreateSearchRecipeCollection() error
 	RemoveSearchRecipeDocument(id *string) error
 	UpsertSearchRecipeDocument(r *models.Recipe) error
@@ -20,13 +22,14 @@ type SearchService interface {
 type searchService struct {
 }
 
-func New() SearchService {
+// New creates a new search service
+func New() Service {
 	return &searchService{}
 }
 
-var tsUrl = os.Getenv("TYPESENSE_URL")
+var tsURL = os.Getenv("TYPESENSE_URL")
 var tsKey = os.Getenv("TYPESENSE_API_KEY")
-var tsc = typesense.NewClient(typesense.WithServer(tsUrl), typesense.WithAPIKey(tsKey))
+var tsc = typesense.NewClient(typesense.WithServer(tsURL), typesense.WithAPIKey(tsKey))
 
 func (us searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
 	ing := []string{}
@@ -42,16 +45,16 @@ func (us searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
 	var banner string
 	for _, b := range r.CurrentRevision.Banner {
 		if b.Alias == "md" {
-			banner = b.Url
+			banner = b.URL
 		}
 	}
 
 	document := dtos.CreateSearchRecipe{
-		Id:          r.Id,
+		ID:          r.ID,
 		Author:      r.Author.Username,
 		Name:        r.CurrentRevision.Name,
 		Ingredients: ing,
-		ImageUrl:    banner,
+		ImageURL:    banner,
 	}
 
 	_, err := tsc.Collection("recipes").Documents().Upsert(document)
@@ -91,7 +94,7 @@ func (us searchService) CreateSearchRecipeCollection() error {
 				Type: "string[]",
 			},
 			{
-				Name:     "imageUrl",
+				Name:     "imageURL",
 				Type:     "string",
 				Index:    &False,
 				Optional: &True,

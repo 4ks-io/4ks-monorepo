@@ -32,7 +32,7 @@ export class AdminService {
     /**
      * Get all medias for a Recipe
      * Get all medias for a Recipe
-     * @param recipeId Recipe Id
+     * @param recipeId Recipe ID
      * @returns models_RecipeMedia OK
      * @throws ApiError
      */
@@ -41,9 +41,9 @@ export class AdminService {
     ): CancelablePromise<Array<models_RecipeMedia>> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/_admin/recipes/{recipeId}/media',
+            url: '/_admin/recipes/{recipeID}/media',
             path: {
-                'recipeId': recipeId,
+                'recipeID': recipeId,
             },
         });
     }

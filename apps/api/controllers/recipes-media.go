@@ -31,19 +31,19 @@ func getMediaContentType(ext *string) (string, error) {
 
 // CreateRecipeMedia   godoc
 // @Schemes
-// @Summary 		Create a new Media SignedUrl
-// @Description Create a new Media SignedUrl
+// @Summary 		Create a new Media SignedURL
+// @Description Create a new Media SignedURL
 // @Tags 				Recipes
 // @Accept 			json
 // @Produce 		json
-// @Param       recipeId 			 path      	 string  true  "Recipe Id"
+// @Param       recipeID 			 path      	 string  true  "Recipe ID"
 // @Param       payload 	     body      	 dtos.CreateRecipeMedia  true  "Payload"
 // @Success 		200 		       {object} 	 models.CreateRecipeMedia
-// @Router		 	/recipes/{recipeId}/media  [post]
+// @Router		 	/recipes/{recipeID}/media  [post]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
-	recipeId := c.Param("id")
-	userId := c.GetString("id")
+	recipeID := c.Param("id")
+	userID := c.GetString("id")
 
 	payload := dtos.CreateRecipeMedia{}
 	if err := c.BindJSON(&payload); err != nil {
@@ -69,8 +69,8 @@ func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 	wg.Add(2)
 
 	// &mediaId, &mediaEmail, &payload
-	signedUrl, err1 := rc.recipeService.CreateRecipeMediaSignedUrl(&mp, &wg)
-	recipeMedia, err2 := rc.recipeService.CreateRecipeMedia(&mp, &recipeId, &userId, &wg)
+	signedURL, err1 := rc.recipeService.CreateRecipeMediaSignedURL(&mp, &wg)
+	recipeMedia, err2 := rc.recipeService.CreateRecipeMedia(&mp, &recipeID, &userID, &wg)
 
 	if err1 != nil {
 		c.AbortWithError(http.StatusInternalServerError, err1)
@@ -82,7 +82,7 @@ func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"recipeMedia": recipeMedia,
-		"signedUrl":   signedUrl,
+		"signedURL":   signedURL,
 	})
 }
 
@@ -92,13 +92,13 @@ func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 // @Tags 				Recipes
 // @Accept 			json
 // @Produce 		json
-// @Param       recipeId 	path      	string  true  "Recipe Id"
+// @Param       recipeID 	path      	string  true  "Recipe ID"
 // @Success 		200 		  {array} 	  models.RecipeMedia
-// @Router 			/recipes/{recipeId}/media [get]
+// @Router 			/recipes/{recipeID}/media [get]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) GetRecipeMedia(c *gin.Context) {
-	recipeId := c.Param("id")
-	recipeMedias, err := rc.recipeService.GetRecipeMedia(&recipeId)
+	recipeID := c.Param("id")
+	recipeMedias, err := rc.recipeService.GetRecipeMedia(&recipeID)
 	log.Error().Err(err).Caller().Msg("client: could not create request")
 
 	if err == recipeService.ErrRecipeNotFound {
@@ -118,13 +118,13 @@ func (rc *recipeController) GetRecipeMedia(c *gin.Context) {
 // @Tags 				Admin
 // @Accept 			json
 // @Produce 		json
-// @Param       recipeId 	path      	string  true  "Recipe Id"
+// @Param       recipeID 	path      	string  true  "Recipe ID"
 // @Success 		200 		  {array} 	  models.RecipeMedia
-// @Router 			/_admin/recipes/{recipeId}/media [get]
+// @Router 			/_admin/recipes/{recipeID}/media [get]
 // @Security 		ApiKeyAuth
 func (rc *recipeController) GetAdminRecipeMedias(c *gin.Context) {
-	recipeId := c.Param("id")
-	recipeMedias, err := rc.recipeService.GetRecipeMedia(&recipeId)
+	recipeID := c.Param("id")
+	recipeMedias, err := rc.recipeService.GetRecipeMedia(&recipeID)
 
 	if err == recipeService.ErrRecipeNotFound {
 		c.AbortWithError(http.StatusNotFound, err)

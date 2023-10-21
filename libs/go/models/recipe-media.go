@@ -12,13 +12,13 @@ const (
 
 type RecipeMediaVariant struct {
 	MaxWidth int    `firestore:"maxWidth" json:"maxWidth"`
-	Url      string `firestore:"url" json:"url"`
+	URL      string `firestore:"url" json:"url"`
 	Filename string `firestore:"filename" json:"filename"`
 	Alias    string `firestore:"alias" json:"alias"`
 }
 
 type RecipeMedia struct {
-	Id           string               `firestore:"id" json:"id"`
+	ID           string               `firestore:"id" json:"id"`
 	Variants     []RecipeMediaVariant `firestore:"variants" json:"variants"`
 	ContentType  string               `firestore:"contentType" json:"contentType"`
 	RecipeId     string               `firestore:"recipeId" json:"recipeId"`

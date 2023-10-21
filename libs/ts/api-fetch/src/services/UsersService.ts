@@ -126,7 +126,7 @@ export class UsersService {
     /**
      * Get a User (by ID)
      * Get a User (by ID)
-     * @param userId User Id
+     * @param userId User ID
      * @returns models_User OK
      * @throws ApiError
      */
@@ -135,9 +135,9 @@ export class UsersService {
     ): CancelablePromise<models_User> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/users/{userId}',
+            url: '/users/{userID}',
             path: {
-                'userId': userId,
+                'userID': userId,
             },
         });
     }
@@ -145,7 +145,7 @@ export class UsersService {
     /**
      * Delete User
      * Delete User
-     * @param userId User Id
+     * @param userId User ID
      * @returns any OK
      * @throws ApiError
      */
@@ -154,9 +154,9 @@ export class UsersService {
     ): CancelablePromise<any> {
         return this.httpRequest.request({
             method: 'DELETE',
-            url: '/users/{userId}',
+            url: '/users/{userID}',
             path: {
-                'userId': userId,
+                'userID': userId,
             },
         });
     }

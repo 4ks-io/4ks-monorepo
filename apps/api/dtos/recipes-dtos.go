@@ -1,7 +1,9 @@
+// Package dtos is the interface for the api dtos
 package dtos
 
 import "4ks/libs/go/models"
 
+// CreateRecipe godoc
 type CreateRecipe struct {
 	Name         string                      `json:"name"`
 	Link         string                      `json:"link"`
@@ -11,6 +13,7 @@ type CreateRecipe struct {
 	Banner       []models.RecipeMediaVariant `json:"banner"`
 }
 
+// UpdateRecipe godoc
 type UpdateRecipe struct {
 	Name         string                      `json:"name"`
 	Link         string                      `json:"link"`
@@ -20,6 +23,7 @@ type UpdateRecipe struct {
 	Banner       []models.RecipeMediaVariant `json:"banner"`
 }
 
+// CreateRecipeMedia godoc
 type CreateRecipeMedia struct {
 	Filename string `json:"filename" binding:"required"`
 }

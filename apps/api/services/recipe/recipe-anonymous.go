@@ -7,7 +7,7 @@ import (
 	models "4ks/libs/go/models"
 )
 
-func (rs recipeService) GetRecipeById(id *string) (*models.Recipe, error) {
+func (rs recipeService) GetRecipeByID(id *string) (*models.Recipe, error) {
 	result, err := recipeCollection.Doc(*id).Get(ctx)
 
 	if err != nil {
@@ -19,7 +19,7 @@ func (rs recipeService) GetRecipeById(id *string) (*models.Recipe, error) {
 		return nil, err
 	}
 
-	recipe.Id = result.Ref.ID
+	recipe.ID = result.Ref.ID
 	return recipe, nil
 }
 
@@ -109,8 +109,8 @@ func (rs recipeService) GetRecipesByUserID(id *string, limit int) ([]*models.Rec
 	return all, nil
 }
 
-func (rs recipeService) GetRecipeRevisions(recipeId *string) ([]*models.RecipeRevision, error) {
-	recipeRevisionsDocs, err := recipeRevisionsCollection.Where("recipeId", "==", recipeId).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
+func (rs recipeService) GetRecipeRevisions(recipeID *string) ([]*models.RecipeRevision, error) {
+	recipeRevisionsDocs, err := recipeRevisionsCollection.Where("recipeID", "==", recipeID).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
 
 	if err != nil {
 		return nil, err
@@ -131,8 +131,8 @@ func (rs recipeService) GetRecipeRevisions(recipeId *string) ([]*models.RecipeRe
 	return recipeRevisions, nil
 }
 
-func (rs recipeService) GetRecipeRevisionById(revisionId *string) (*models.RecipeRevision, error) {
-	recipeRevisionDoc, err := recipeRevisionsCollection.Doc(*revisionId).Get(ctx)
+func (rs recipeService) GetRecipeRevisionByID(revisionID *string) (*models.RecipeRevision, error) {
+	recipeRevisionDoc, err := recipeRevisionsCollection.Doc(*revisionID).Get(ctx)
 
 	if err != nil {
 		return nil, ErrRecipeRevisionNotFound

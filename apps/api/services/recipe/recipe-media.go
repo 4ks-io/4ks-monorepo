@@ -16,8 +16,10 @@ import (
 
 var isLocalDevelopment = os.Getenv("IO_4KS_DEVING")
 
-func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeId *string, userId *string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
-	recipeDoc, err := recipeCollection.Doc(*recipeId).Get(ctx)
+func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeID *string, userID *string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
+	defer wg.Done()
+
+	recipeDoc, err := recipeCollection.Doc(*recipeID).Get(ctx)
 	if err != nil {
 		return nil, ErrRecipeNotFound
 	}
@@ -25,7 +27,7 @@ func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeId *string
 	recipe := new(models.Recipe)
 	recipeDoc.DataTo(recipe)
 
-	e, err := middleware.EnforceContributor(*userId, recipe.Contributors)
+	e, err := middleware.EnforceContributor(*userID, recipe.Contributors)
 	if err != nil {
 		return nil, ErrUnableToCreateRecipeMedia
 	} else if !e {
@@ -38,25 +40,25 @@ func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeId *string
 	a := []models.RecipeMediaVariant{}
 	a = append(a, models.RecipeMediaVariant{
 		MaxWidth: 256,
-		Url:      fmt.Sprintf("%s/%s", baseReadUrl, mp.Basename+"_256"+mp.Extension),
+		URL:      fmt.Sprintf("%s/%s", baseReadURL, mp.Basename+"_256"+mp.Extension),
 		Filename: mp.Basename + "_256" + mp.Extension,
 		Alias:    "sm",
 	})
 	a = append(a, models.RecipeMediaVariant{
 		MaxWidth: 1024,
-		Url:      fmt.Sprintf("%s/%s", baseReadUrl, mp.Basename+"_1024"+mp.Extension),
+		URL:      fmt.Sprintf("%s/%s", baseReadURL, mp.Basename+"_1024"+mp.Extension),
 		Filename: mp.Basename + "_1024" + mp.Extension,
 		Alias:    "md",
 	})
 
 	// https://github.com/4ks-io/4ks-monorepo/blob/f4f12c2f7eb4c6dc671b6b58dcafbeaf5702eeb8/apps/media-upload/function.go
 	recipeMedia := &models.RecipeMedia{
-		Id:           newRecipeMediaDoc.ID,
+		ID:           newRecipeMediaDoc.ID,
 		Variants:     a,
 		ContentType:  mp.ContentType,
-		RecipeId:     recipe.Id,
+		RecipeId:     recipe.ID,
 		RootRecipeId: recipe.Root,
-		OwnerId:      *userId,
+		OwnerId:      *userID,
 		Status:       models.MediaStatusRequested,
 		BestUse:      models.MediaBestUseGeneral,
 		CreatedDate:  timestamp,
@@ -71,7 +73,9 @@ func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeId *string
 	return recipeMedia, nil
 }
 
-func (rs recipeService) CreateRecipeMediaSignedUrl(mp *utils.MediaProps, wg *sync.WaitGroup) (*string, error) {
+func (rs recipeService) CreateRecipeMediaSignedURL(mp *utils.MediaProps, wg *sync.WaitGroup) (*string, error) {
+	defer wg.Done()
+
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx)
 	if err != nil {
@@ -97,14 +101,14 @@ func (rs recipeService) CreateRecipeMediaSignedUrl(mp *utils.MediaProps, wg *syn
 	return &url, nil
 }
 
-func (rs recipeService) GetRecipeMedia(recipeId *string) ([]*models.RecipeMedia, error) {
+func (rs recipeService) GetRecipeMedia(recipeID *string) ([]*models.RecipeMedia, error) {
 	var status [2]int
 	status[0] = int(models.MediaStatusReady)
 	// workaround to see images locally; upload-media status update callback only works in hosted firestore
 	if isLocalDevelopment == "true" {
 		status[1] = int(models.MediaStatusRequested)
 	}
-	recipeMediasDocs, err := recipeMediasCollection.Where("rootRecipeId", "==", recipeId).Where("status", "in", status).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
+	recipeMediasDocs, err := recipeMediasCollection.Where("rootRecipeId", "==", recipeID).Where("status", "in", status).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
 
 	if err != nil {
 		return nil, err
@@ -126,8 +130,8 @@ func (rs recipeService) GetRecipeMedia(recipeId *string) ([]*models.RecipeMedia,
 	return recipeMedias, nil
 }
 
-func (rs recipeService) GetAdminRecipeMedias(recipeId *string) ([]*models.RecipeMedia, error) {
-	recipeMediasDocs, err := recipeMediasCollection.Where("rootRecipeId", "==", recipeId).Documents(ctx).GetAll()
+func (rs recipeService) GetAdminRecipeMedias(recipeID *string) ([]*models.RecipeMedia, error) {
+	recipeMediasDocs, err := recipeMediasCollection.Where("rootRecipeId", "==", recipeID).Documents(ctx).GetAll()
 
 	if err != nil {
 		return nil, err

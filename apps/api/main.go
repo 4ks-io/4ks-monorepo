@@ -1,3 +1,4 @@
+// package main is the entrypoint for the api
 package main
 
 import (

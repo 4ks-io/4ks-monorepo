@@ -314,15 +314,15 @@ paths:
       summary: Bot Create a new Recipe
       tags:
       - Admin
-  /_admin/recipes/{recipeId}/media:
+  /_admin/recipes/{recipeID}/media:
     get:
       consumes:
       - application/json
       description: Get all medias for a Recipe
       parameters:
-      - description: Recipe Id
+      - description: Recipe ID
         in: path
-        name: recipeId
+        name: recipeID
         required: true
         type: string
       produces:
@@ -408,15 +408,15 @@ paths:
       summary: Create a new Recipe
       tags:
       - Recipes
-  /recipes/{recipeId}:
+  /recipes/{recipeID}:
     delete:
       consumes:
       - application/json
       description: Delete Recipe
       parameters:
-      - description: Recipe Id
+      - description: Recipe ID
         in: path
-        name: recipeId
+        name: recipeID
         required: true
         type: string
       produces:
@@ -434,9 +434,9 @@ paths:
       - application/json
       description: Get a Recipe (by ID)
       parameters:
-      - description: Recipe Id
+      - description: Recipe ID
         in: path
-        name: recipeId
+        name: recipeID
         required: true
         type: string
       produces:
@@ -456,9 +456,9 @@ paths:
       - application/json
       description: Update Recipe
       parameters:
-      - description: Recipe Id
+      - description: Recipe ID
         in: path
-        name: recipeId
+        name: recipeID
         required: true
         type: string
       - description: Recipe Data
@@ -479,15 +479,15 @@ paths:
       summary: Update Recipe
       tags:
       - Recipes
-  /recipes/{recipeId}/fork:
+  /recipes/{recipeID}/fork:
     post:
       consumes:
       - application/json
       description: Fork Recipe
       parameters:
-      - description: Recipe Id
+      - description: Recipe ID
         in: path
-        name: recipeId
+        name: recipeID
         required: true
         type: string
       produces:
@@ -502,15 +502,15 @@ paths:
       summary: Fork Recipe
       tags:
       - Recipes
-  /recipes/{recipeId}/media:
+  /recipes/{recipeID}/media:
     get:
       consumes:
       - application/json
       description: Get all medias for a Recipe
       parameters:
-      - description: Recipe Id
+      - description: Recipe ID
         in: path
-        name: recipeId
+        name: recipeID
         required: true
         type: string
       produces:
@@ -530,11 +530,11 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create a new Media SignedUrl
+      description: Create a new Media SignedURL
       parameters:
-      - description: Recipe Id
+      - description: Recipe ID
         in: path
-        name: recipeId
+        name: recipeID
         required: true
         type: string
       - description: Payload
@@ -552,18 +552,18 @@ paths:
             $ref: '#/definitions/models.CreateRecipeMedia'
       security:
       - ApiKeyAuth: []
-      summary: Create a new Media SignedUrl
+      summary: Create a new Media SignedURL
       tags:
       - Recipes
-  /recipes/{recipeId}/revisions:
+  /recipes/{recipeID}/revisions:
     get:
       consumes:
       - application/json
       description: Get all revisions for a Recipe
       parameters:
-      - description: Recipe Id
+      - description: Recipe ID
         in: path
-        name: recipeId
+        name: recipeID
         required: true
         type: string
       produces:
@@ -580,15 +580,15 @@ paths:
       summary: Get all revisions for a Recipe
       tags:
       - Recipes
-  /recipes/{recipeId}/star:
+  /recipes/{recipeID}/star:
     post:
       consumes:
       - application/json
       description: Star Recipe
       parameters:
-      - description: Recipe Id
+      - description: Recipe ID
         in: path
-        name: recipeId
+        name: recipeID
         required: true
         type: string
       produces:
@@ -626,15 +626,15 @@ paths:
       summary: Get All Recipes by Author
       tags:
       - Recipes
-  /recipes/revisions/{revisionId}:
+  /recipes/revisions/{revisionID}:
     get:
       consumes:
       - application/json
-      description: Get a Revision By Id
+      description: Get a Revision By ID
       parameters:
-      - description: Revision Id
+      - description: Revision ID
         in: path
-        name: revisionId
+        name: revisionID
         required: true
         type: string
       produces:
@@ -768,15 +768,15 @@ paths:
       summary: Get All Users
       tags:
       - Users
-  /users/{userId}:
+  /users/{userID}:
     delete:
       consumes:
       - application/json
       description: Delete User
       parameters:
-      - description: User Id
+      - description: User ID
         in: path
-        name: userId
+        name: userID
         required: true
         type: string
       produces:
@@ -794,9 +794,9 @@ paths:
       - application/json
       description: Get a User (by ID)
       parameters:
-      - description: User Id
+      - description: User ID
         in: path
-        name: userId
+        name: userID
         required: true
         type: string
       produces:

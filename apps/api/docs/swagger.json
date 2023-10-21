@@ -47,7 +47,7 @@
                 }
             }
         },
-        "/_admin/recipes/{recipeId}/media": {
+        "/_admin/recipes/{recipeID}/media": {
             "get": {
                 "security": [
                     {
@@ -68,8 +68,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     }
@@ -234,14 +234,14 @@
                 }
             }
         },
-        "/recipes/revisions/{revisionId}": {
+        "/recipes/revisions/{revisionID}": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get a Revision By Id",
+                "description": "Get a Revision By ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -255,8 +255,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Revision Id",
-                        "name": "revisionId",
+                        "description": "Revision ID",
+                        "name": "revisionID",
                         "in": "path",
                         "required": true
                     }
@@ -271,7 +271,7 @@
                 }
             }
         },
-        "/recipes/{recipeId}": {
+        "/recipes/{recipeID}": {
             "get": {
                 "security": [
                     {
@@ -292,8 +292,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     }
@@ -327,8 +327,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     }
@@ -359,8 +359,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     },
@@ -384,7 +384,7 @@
                 }
             }
         },
-        "/recipes/{recipeId}/fork": {
+        "/recipes/{recipeID}/fork": {
             "post": {
                 "security": [
                     {
@@ -405,8 +405,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     }
@@ -421,7 +421,7 @@
                 }
             }
         },
-        "/recipes/{recipeId}/media": {
+        "/recipes/{recipeID}/media": {
             "get": {
                 "security": [
                     {
@@ -442,8 +442,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     }
@@ -466,7 +466,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Create a new Media SignedUrl",
+                "description": "Create a new Media SignedURL",
                 "consumes": [
                     "application/json"
                 ],
@@ -476,12 +476,12 @@
                 "tags": [
                     "Recipes"
                 ],
-                "summary": "Create a new Media SignedUrl",
+                "summary": "Create a new Media SignedURL",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     },
@@ -505,7 +505,7 @@
                 }
             }
         },
-        "/recipes/{recipeId}/revisions": {
+        "/recipes/{recipeID}/revisions": {
             "get": {
                 "security": [
                     {
@@ -526,8 +526,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     }
@@ -545,7 +545,7 @@
                 }
             }
         },
-        "/recipes/{recipeId}/star": {
+        "/recipes/{recipeID}/star": {
             "post": {
                 "security": [
                     {
@@ -566,8 +566,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     }
@@ -836,7 +836,7 @@
                 }
             }
         },
-        "/users/{userId}": {
+        "/users/{userID}": {
             "get": {
                 "security": [
                     {
@@ -857,8 +857,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "User Id",
-                        "name": "userId",
+                        "description": "User ID",
+                        "name": "userID",
                         "in": "path",
                         "required": true
                     }
@@ -892,8 +892,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "User Id",
-                        "name": "userId",
+                        "description": "User ID",
+                        "name": "userID",
                         "in": "path",
                         "required": true
                     }

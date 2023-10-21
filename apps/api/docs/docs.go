@@ -55,7 +55,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/_admin/recipes/{recipeId}/media": {
+        "/_admin/recipes/{recipeID}/media": {
             "get": {
                 "security": [
                     {
@@ -76,8 +76,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     }
@@ -242,14 +242,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipes/revisions/{revisionId}": {
+        "/recipes/revisions/{revisionID}": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get a Revision By Id",
+                "description": "Get a Revision By ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -263,8 +263,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Revision Id",
-                        "name": "revisionId",
+                        "description": "Revision ID",
+                        "name": "revisionID",
                         "in": "path",
                         "required": true
                     }
@@ -279,7 +279,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipes/{recipeId}": {
+        "/recipes/{recipeID}": {
             "get": {
                 "security": [
                     {
@@ -300,8 +300,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     }
@@ -335,8 +335,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     }
@@ -367,8 +367,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     },
@@ -392,7 +392,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipes/{recipeId}/fork": {
+        "/recipes/{recipeID}/fork": {
             "post": {
                 "security": [
                     {
@@ -413,8 +413,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     }
@@ -429,7 +429,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipes/{recipeId}/media": {
+        "/recipes/{recipeID}/media": {
             "get": {
                 "security": [
                     {
@@ -450,8 +450,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     }
@@ -474,7 +474,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Create a new Media SignedUrl",
+                "description": "Create a new Media SignedURL",
                 "consumes": [
                     "application/json"
                 ],
@@ -484,12 +484,12 @@ const docTemplate = `{
                 "tags": [
                     "Recipes"
                 ],
-                "summary": "Create a new Media SignedUrl",
+                "summary": "Create a new Media SignedURL",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     },
@@ -513,7 +513,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipes/{recipeId}/revisions": {
+        "/recipes/{recipeID}/revisions": {
             "get": {
                 "security": [
                     {
@@ -534,8 +534,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     }
@@ -553,7 +553,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipes/{recipeId}/star": {
+        "/recipes/{recipeID}/star": {
             "post": {
                 "security": [
                     {
@@ -574,8 +574,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Recipe Id",
-                        "name": "recipeId",
+                        "description": "Recipe ID",
+                        "name": "recipeID",
                         "in": "path",
                         "required": true
                     }
@@ -844,7 +844,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/{userId}": {
+        "/users/{userID}": {
             "get": {
                 "security": [
                     {
@@ -865,8 +865,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "User Id",
-                        "name": "userId",
+                        "description": "User ID",
+                        "name": "userID",
                         "in": "path",
                         "required": true
                     }
@@ -900,8 +900,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "User Id",
-                        "name": "userId",
+                        "description": "User ID",
+                        "name": "userID",
                         "in": "path",
                         "required": true
                     }

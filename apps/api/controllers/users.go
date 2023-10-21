@@ -11,6 +11,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+// UserController is the interface for the user controller
 type UserController interface {
 	CreateUser(c *gin.Context)
 	HeadAuthenticatedUser(c *gin.Context)
@@ -24,9 +25,10 @@ type UserController interface {
 }
 
 type userController struct {
-	userService userService.UserService
+	userService userService.Service
 }
 
+// NewUserController creates a new user controller
 func NewUserController() UserController {
 	return &userController{
 		userService: userService.New(),
@@ -45,7 +47,7 @@ func NewUserController() UserController {
 // @Router		 	/user   [post]
 // @Security 		ApiKeyAuth
 func (uc *userController) CreateUser(c *gin.Context) {
-	userId := c.GetString("id")
+	userID := c.GetString("id")
 	userEmail := c.GetString("email")
 
 	payload := dtos.CreateUser{}
@@ -54,7 +56,7 @@ func (uc *userController) CreateUser(c *gin.Context) {
 		return
 	}
 
-	createdUser, err := uc.userService.CreateUser(&userId, &userEmail, &payload)
+	createdUser, err := uc.userService.CreateUser(&userID, &userEmail, &payload)
 	if err == userService.ErrEmailInUse || err == userService.ErrUsernameInUse {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -72,13 +74,13 @@ func (uc *userController) CreateUser(c *gin.Context) {
 // @Tags 				Users
 // @Accept 			json
 // @Produce 		json
-// @Param       userId 	path      string  true  "User Id"
+// @Param       userID 	path      string  true  "User ID"
 // @Success 		200
-// @Router 			/users/{userId}   [delete]
+// @Router 			/users/{userID}   [delete]
 // @Security 		ApiKeyAuth
 func (uc *userController) DeleteUser(c *gin.Context) {
-	userId := c.Param("id")
-	err := uc.userService.DeleteUser(&userId)
+	userID := c.Param("id")
+	err := uc.userService.DeleteUser(&userID)
 
 	if err == userService.ErrUserNotFound {
 		c.AbortWithError(http.StatusNotFound, err)
@@ -98,13 +100,13 @@ func (uc *userController) DeleteUser(c *gin.Context) {
 // @Tags 		    Users
 // @Accept 	   	json
 // @Produce   	json
-// @Param       userId 	path      	string  true  "User Id"
+// @Param       userID 	path      	string  true  "User ID"
 // @Success 		200 		{object} 	models.User
-// @Router 			/users/{userId} [get]
+// @Router 			/users/{userID} [get]
 // @Security 		ApiKeyAuth
 func (uc *userController) GetUser(c *gin.Context) {
-	userId := c.Param("id")
-	user, err := uc.userService.GetUserById(&userId)
+	userID := c.Param("id")
+	user, err := uc.userService.GetUserByID(&userID)
 
 	if err == userService.ErrUserNotFound {
 		c.AbortWithError(http.StatusNotFound, err)
@@ -128,8 +130,8 @@ func (uc *userController) GetUser(c *gin.Context) {
 // @Router 			/user [get]
 // @Security 		ApiKeyAuth
 func (uc *userController) GetCurrentUser(c *gin.Context) {
-	userId := c.GetString("id")
-	user, err := uc.userService.GetUserById(&userId)
+	userID := c.GetString("id")
+	user, err := uc.userService.GetUserByID(&userID)
 
 	if err == userService.ErrUserNotFound {
 		c.AbortWithError(http.StatusNotFound, err)
@@ -152,8 +154,8 @@ func (uc *userController) GetCurrentUser(c *gin.Context) {
 // @Router 			/users/exist [get]
 // @Security 		ApiKeyAuth
 func (uc *userController) GetCurrentUserExist(c *gin.Context) {
-	userId := c.GetString("id")
-	_, err := uc.userService.GetUserById(&userId)
+	userID := c.GetString("id")
+	_, err := uc.userService.GetUserByID(&userID)
 
 	data := models.UserExist{}
 
@@ -184,16 +186,16 @@ func (uc *userController) GetCurrentUserExist(c *gin.Context) {
 // @Failure     500		"Internal Error"
 // @Security 		ApiKeyAuth
 func (uc *userController) HeadAuthenticatedUser(c *gin.Context) {
-	userId := c.GetString("id")
+	userID := c.GetString("id")
 
-	if _, err := uc.userService.GetUserById(&userId); err != nil {
+	if _, err := uc.userService.GetUserByID(&userID); err != nil {
 		// handle user not found
 		if err == userService.ErrUserNotFound {
 			c.JSON(http.StatusNoContent, nil)
 			return
 		}
 		// handle other errors
-		log.Error().Err(err).Caller().Msg("GetUserById")
+		log.Error().Err(err).Caller().Msg("GetUserByID")
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
@@ -233,7 +235,7 @@ func (uc *userController) GetUsers(c *gin.Context) {
 // @Router 			/user   [patch]
 // @Security 		ApiKeyAuth
 func (uc *userController) UpdateUser(c *gin.Context) {
-	userId := c.GetString("id")
+	userID := c.GetString("id")
 
 	payload := dtos.UpdateUser{}
 	if err := c.BindJSON(&payload); err != nil {
@@ -241,7 +243,7 @@ func (uc *userController) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	u, err := uc.userService.UpdateUserById(&userId, &payload)
+	u, err := uc.userService.UpdateUserByID(&userID, &payload)
 	if err == userService.ErrUserNotFound {
 		c.AbortWithError(http.StatusNotFound, err)
 		return

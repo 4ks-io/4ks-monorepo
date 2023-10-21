@@ -3,29 +3,44 @@ package middleware
 import (
 	"4ks/libs/go/models"
 	"fmt"
-	"log"
+	"os"
 
-	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
-	"github.com/auth0/go-jwt-middleware/v2/validator"
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
+// VERBOSE is a bool that determines if casbin should be verbose
+// todo: replace with debug from main
 var VERBOSE = false
 
-// where should this be declared?
-var model = "apps/api/casbin/model.conf"
-var policy = "apps/api/casbin/policy.csv"
-var e, err = casbin.NewEnforcer(model, policy, VERBOSE)
+var (
+	en *casbin.Enforcer
+)
 
-// RBAC enforce
-func Enforce(sub string, obj string, act string) (bool, error) {
-	err = e.LoadPolicy()
+func init() {
+	var err error
+	en, err = casbin.NewEnforcer(model, policy, VERBOSE)
 	if err != nil {
+		log.Fatal().Err(err).Caller().Msg("failed to create enforcer")
+		os.Exit(1)
+	}
+}
+
+// where should this be declared?
+const (
+ model = "apps/api/casbin/model.conf"
+ policy = "apps/api/casbin/policy.csv"
+)
+
+
+// Enforce RBAC
+func Enforce(sub string, obj string, act string) (bool, error) {
+	if err := en.LoadPolicy(); err != nil {
 		return false, fmt.Errorf("failed to load policy: %w", err)
 	}
 
-	ok, err := e.Enforce(sub, obj, act)
+	ok, err := en.Enforce(sub, obj, act)
 	if err != nil {
 		return false, fmt.Errorf("failed to enforce policy: %w", err)
 	}
@@ -36,15 +51,15 @@ func Enforce(sub string, obj string, act string) (bool, error) {
 // ABAC Author
 var c2 = casbin.NewEnforceContext("2")
 
+// EnforceAuthor determines if current subject has been authorized
 func EnforceAuthor(sub string, obj models.UserSummary) (bool, error) {
 	// eCtx := casbin.NewEnforceContext("2")
 	// fmt.Println(eCtx)
-	err = e.LoadPolicy()
-	if err != nil {
+	if err := en.LoadPolicy(); err != nil {
 		return false, fmt.Errorf("failed to load policy: %w", err)
 	}
 
-	ok, err := e.Enforce(c2, sub, obj)
+	ok, err := en.Enforce(c2, sub, obj)
 	if err != nil {
 		return false, fmt.Errorf("failed to enforce policy: %w", err)
 	}
@@ -60,18 +75,19 @@ var c3 = casbin.EnforceContext{
 	MType: "m3",
 }
 
+// EnforceContributor determines if current subject has been authorized
+// to take an action on an object.
 func EnforceContributor(sub string, obj []models.UserSummary) (bool, error) {
 	// eCtx := casbin.NewEnforceContext("2")
 	// eCtx.MType = "m3"
 	// fmt.Println(c3)
-	err := e.LoadPolicy()
-	if err != nil {
+	if err := en.LoadPolicy(); err != nil {
 		return false, fmt.Errorf("failed to load policy: %w", err)
 	}
 
 	data := getIds(obj)
 
-	ok, err := e.Enforce(c3, sub, data)
+	ok, err := en.Enforce(c3, sub, data)
 	if err != nil {
 		// fmt.Errorf("failed to enforce policy: %w", err)
 		return false, fmt.Errorf("failed to enforce policy: %w", err)
@@ -80,12 +96,12 @@ func EnforceContributor(sub string, obj []models.UserSummary) (bool, error) {
 	return ok, nil
 }
 
-// convert array of UserSummary models into string array of ids
+// getIds converts array of UserSummary models into string array of ids
 func getIds(data []models.UserSummary) []interface{} {
 	// var list []string
 	list := []string{}
 	for _, user := range data {
-		list = append(list, user.Id)
+		list = append(list, user.ID)
 	}
 
 	out := make([]interface{}, len(list))
@@ -99,14 +115,11 @@ func getIds(data []models.UserSummary) []interface{} {
 // Authorize determines if current subject has been authorized to take an action on an object.
 func Authorize(obj string, act string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		claims := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
-		customClaims := claims.CustomClaims.(*CustomClaims)
-		sub := customClaims.Id
-
+		sub := c.GetString("id")
 		ok, err := Enforce(sub, obj, act)
 		//ok, err := enforce(val.(string), obj, act, adapter)
 		if err != nil {
-			log.Println(err)
+			log.Error().Err(err).Caller().Msg("authorization error")
 			c.AbortWithStatusJSON(500, "authorization error")
 			return
 		}

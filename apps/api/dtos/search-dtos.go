@@ -1,9 +1,10 @@
 package dtos
 
+// CreateSearchRecipe godoc
 type CreateSearchRecipe struct {
-	Id          string   `json:"id"`
+	ID          string   `json:"id"`
 	Author      string   `json:"author"`
 	Name        string   `json:"name"`
-	ImageUrl    string   `json:"imageUrl"`
+	ImageURL    string   `json:"imageURL"`
 	Ingredients []string `json:"ingredients"`
 }

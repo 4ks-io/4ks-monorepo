@@ -21,11 +21,13 @@ type RouteOpts struct {
 	Debug          bool
 }
 
+// EnforceAuth enforces authentication
 func EnforceAuth(r *gin.RouterGroup) {
 	r.Use(adapter.Wrap(middleware.EnforceJWT()))
 	r.Use(middleware.AppendCustomClaims())
 }
 
+// AppendRoutes appends routes to the router
 func AppendRoutes(r *gin.Engine, c *Controllers, o *RouteOpts) {
 	// system
 	r.GET("/ready", c.System.CheckReadiness)
@@ -43,8 +45,8 @@ func AppendRoutes(r *gin.Engine, c *Controllers, o *RouteOpts) {
 		// swagger
 		if value := o.SwaggerEnabled; value {
 			log.Info().Caller().Bool("enabled", value).Str("prefix", o.SwaggerPrefix).Msg("Swagger")
-			swaggerUrl := ginSwagger.URL(o.SwaggerPrefix + "/swagger/doc.json") // The url pointing to API definition
-			api.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, swaggerUrl))
+			swaggerURL := ginSwagger.URL(o.SwaggerPrefix + "/swagger/doc.json") // The url pointing to API definition
+			api.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, swaggerURL))
 		}
 
 		// recipes
@@ -53,7 +55,7 @@ func AppendRoutes(r *gin.Engine, c *Controllers, o *RouteOpts) {
 			recipes.GET(":id", c.Recipe.GetRecipe)
 			recipes.GET("", c.Recipe.GetRecipes)
 			recipes.GET(":id/revisions", c.Recipe.GetRecipeRevisions)
-			recipes.GET("revisions/:revisionId", c.Recipe.GetRecipeRevision)
+			recipes.GET("revisions/:revisionID", c.Recipe.GetRecipeRevision)
 			recipes.GET(":id/media", c.Recipe.GetRecipeMedia)
 			recipes.GET("author/:username", c.Recipe.GetRecipesByUsername)
 
@@ -64,7 +66,7 @@ func AppendRoutes(r *gin.Engine, c *Controllers, o *RouteOpts) {
 			recipes.PATCH(":id", c.Recipe.UpdateRecipe)
 			recipes.POST(":id/star", c.Recipe.StarRecipe)
 			recipes.POST(":id/fork", c.Recipe.ForkRecipe)
-			// create recipeMedia in init status + return signedUrl
+			// create recipeMedia in init status + return signedURL
 			recipes.POST(":id/media", c.Recipe.CreateRecipeMedia)
 			recipes.DELETE(":id", c.Recipe.DeleteRecipe)
 		}

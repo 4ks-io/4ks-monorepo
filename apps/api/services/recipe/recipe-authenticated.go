@@ -45,7 +45,7 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 	recipeCreatedDate := time.Now().UTC()
 
 	recipeRevision := &models.RecipeRevision{
-		Id:           newRevisionDoc.ID,
+		ID:           newRevisionDoc.ID,
 		Name:         recipe.Name,
 		Link:         recipe.Link,
 		RecipeId:     newRecipeDoc.ID,
@@ -57,7 +57,7 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 		UpdatedDate:  recipeCreatedDate,
 	}
 	newRecipe := &models.Recipe{
-		Id:           newRecipeDoc.ID,
+		ID:           newRecipeDoc.ID,
 		Root:         newRecipeDoc.ID,
 		Author:       recipe.Author,
 		Contributors: []models.UserSummary{recipe.Author},
@@ -79,8 +79,8 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 	return newRecipe, nil
 }
 
-func (rs recipeService) UpdateRecipeById(recipeId *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error) {
-	recipeDoc, err := recipeCollection.Doc(*recipeId).Get(ctx)
+func (rs recipeService) UpdateRecipeByID(recipeID *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error) {
+	recipeDoc, err := recipeCollection.Doc(*recipeID).Get(ctx)
 
 	if err != nil {
 		return nil, ErrRecipeNotFound
@@ -89,8 +89,8 @@ func (rs recipeService) UpdateRecipeById(recipeId *string, recipeUpdate *dtos.Up
 	recipe := new(models.Recipe)
 	recipeDoc.DataTo(recipe)
 
-	// e, err := middleware.EnforceAuthor(&recipeUpdate.Author.Id, &recipe.Author)
-	e, err := middleware.EnforceContributor(recipeUpdate.Author.Id, recipe.Contributors)
+	// e, err := middleware.EnforceAuthor(&recipeUpdate.Author.ID, &recipe.Author)
+	e, err := middleware.EnforceContributor(recipeUpdate.Author.ID, recipe.Contributors)
 	if err != nil {
 		return nil, ErrUnableToUpdateRecipe
 	} else if !e {
@@ -104,7 +104,7 @@ func (rs recipeService) UpdateRecipeById(recipeId *string, recipeUpdate *dtos.Up
 	// Copy the existing revision data into the new revision
 	// Set the id of the new revision
 	mp.Struct(newRevision, recipe.CurrentRevision)
-	newRevision.Id = newRevisionDocRef.ID
+	newRevision.ID = newRevisionDocRef.ID
 
 	// Apply the new revision updates
 	mp.Struct(newRevision, recipeUpdate)
@@ -124,8 +124,8 @@ func (rs recipeService) UpdateRecipeById(recipeId *string, recipeUpdate *dtos.Up
 	return recipe, nil
 }
 
-func (rs recipeService) ForkRecipeById(recipeId *string, forkAuthor models.UserSummary) (*models.Recipe, error) {
-	recipeDoc, err := recipeCollection.Doc(*recipeId).Get(ctx)
+func (rs recipeService) ForkRecipeByID(recipeID *string, forkAuthor models.UserSummary) (*models.Recipe, error) {
+	recipeDoc, err := recipeCollection.Doc(*recipeID).Get(ctx)
 
 	if err != nil {
 		return nil, ErrRecipeNotFound
@@ -137,13 +137,13 @@ func (rs recipeService) ForkRecipeById(recipeId *string, forkAuthor models.UserS
 	newRecipeDocRef := recipeCollection.NewDoc()
 	newRevisionDocRef := recipeRevisionsCollection.NewDoc()
 
-	recipe.Branch = recipe.Id
-	recipe.Id = newRecipeDocRef.ID
+	recipe.Branch = recipe.ID
+	recipe.ID = newRecipeDocRef.ID
 
 	recipe.Author = forkAuthor
 	recipe.Contributors = []models.UserSummary{forkAuthor}
 	recipe.CurrentRevision.Author = forkAuthor
-	recipe.CurrentRevision.Id = newRevisionDocRef.ID
+	recipe.CurrentRevision.ID = newRevisionDocRef.ID
 	recipe.CurrentRevision.RecipeId = newRecipeDocRef.ID
 	recipe.Metadata.Forks = 0
 	recipe.Metadata.Stars = 0
@@ -159,8 +159,8 @@ func (rs recipeService) ForkRecipeById(recipeId *string, forkAuthor models.UserS
 	return recipe, nil
 }
 
-func (rs recipeService) StarRecipeById(recipeId *string, author models.UserSummary) (bool, error) {
-	recipeStarDocs, err := recipeStarsCollection.Where("user.id", "==", author.Id).Where("recipe.id", "==", *recipeId).Documents(ctx).GetAll()
+func (rs recipeService) StarRecipeByID(recipeID *string, author models.UserSummary) (bool, error) {
+	recipeStarDocs, err := recipeStarsCollection.Where("user.id", "==", author.ID).Where("recipe.id", "==", *recipeID).Documents(ctx).GetAll()
 
 	if err != nil {
 		return false, err
@@ -170,7 +170,7 @@ func (rs recipeService) StarRecipeById(recipeId *string, author models.UserSumma
 		return false, ErrRecipeAlreadyStarred
 	}
 
-	recipeDoc, err := recipeCollection.Doc(*recipeId).Get(ctx)
+	recipeDoc, err := recipeCollection.Doc(*recipeID).Get(ctx)
 
 	if err != nil {
 		return false, ErrRecipeNotFound
@@ -183,7 +183,7 @@ func (rs recipeService) StarRecipeById(recipeId *string, author models.UserSumma
 	recipeStarDoc := models.RecipeStar{
 		User: author,
 		Recipe: models.RecipeSummary{
-			Id:   recipe.Id,
+			ID:   recipe.ID,
 			Name: recipe.CurrentRevision.Name,
 		},
 		CreatedDate: starredDate,

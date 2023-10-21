@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// RecipeController is the interface for the recipe controller
 type RecipeController interface {
 	BotCreateRecipe(c *gin.Context)
 	CreateRecipe(c *gin.Context)
@@ -27,12 +28,13 @@ type RecipeController interface {
 }
 
 type recipeController struct {
-	recipeService recipeService.RecipeService
-	searchService searchService.SearchService
-	staticService staticService.StaticService
-	userService   userService.UserService
+	recipeService recipeService.Service
+	searchService searchService.Service
+	staticService staticService.Service
+	userService   userService.Service
 }
 
+// NewRecipeController creates a new recipe controller
 func NewRecipeController() RecipeController {
 	return &recipeController{
 		recipeService: recipeService.New(),

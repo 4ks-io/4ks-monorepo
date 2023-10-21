@@ -1,4 +1,5 @@
-package search
+// Package static is the static service
+package static
 
 import (
 	"fmt"
@@ -13,28 +14,31 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-var MEDIA_FALLBACK_URL = os.Getenv("MEDIA_FALLBACK_URL")
-var STATIC_MEDIA_BUCKET = os.Getenv("STATIC_MEDIA_BUCKET")
+var mediaFallbackURL = os.Getenv("MEDIA_FALLBACK_URL")
+var staticMediaBucket = os.Getenv("STATIC_MEDIA_BUCKET")
 
-type StaticService interface {
+// Service is the interface for the static service
+type Service interface {
 	GetRandomFallbackImage(c *gin.Context) (string, error)
-	GetRandomFallbackImageUrl(filename string) string
+	GetRandomFallbackImageURL(filename string) string
 }
 
 type staticService struct {
 	cache gcache.Cache
 }
 
-func New() StaticService {
+// New creates a new static service
+func New() Service {
 	return &staticService{
 		cache: gcache.New(20).LRU().Build(),
 	}
 }
 
-func (ss staticService) GetRandomFallbackImageUrl(filename string) string {
-	return fmt.Sprintf("%s/%s", MEDIA_FALLBACK_URL, filename)
+func (ss staticService) GetRandomFallbackImageURL(filename string) string {
+	return fmt.Sprintf("%s/%s", mediaFallbackURL, filename)
 }
 
+// GetRandomFallbackImage returns a random fallback image
 func (ss staticService) GetRandomFallbackImage(c *gin.Context) (string, error) {
 	images, err := FetchFallbackImages(c, ss.cache)
 	if err != nil {
@@ -49,7 +53,7 @@ func (ss staticService) GetRandomFallbackImage(c *gin.Context) (string, error) {
 	return i, nil
 }
 
-// fetch fallback images from cache or bucket
+// FetchFallbackImages fetches fallback images from cache or bucket
 func FetchFallbackImages(c *gin.Context, cache gcache.Cache) ([]string, error) {
 	key := "fallback"
 	images, err := cache.Get(key)
@@ -71,7 +75,7 @@ func FetchFallbackImages(c *gin.Context, cache gcache.Cache) ([]string, error) {
 	return images.([]string), nil
 }
 
-// fetch fallback images from bucket
+// FetchFallbackImagesFromBucket fetches fallback images from bucket
 func FetchFallbackImagesFromBucket(c *gin.Context) ([]string, error) {
 	client, err := storage.NewClient(c)
 	if err != nil {
@@ -79,7 +83,7 @@ func FetchFallbackImagesFromBucket(c *gin.Context) ([]string, error) {
 	}
 	defer client.Close()
 
-	bkt := client.Bucket(STATIC_MEDIA_BUCKET)
+	bkt := client.Bucket(staticMediaBucket)
 	query := &storage.Query{Prefix: "fallback/f"}
 
 	var files []string
