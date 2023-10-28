@@ -24,13 +24,13 @@ var userCollection = storage.Collection("users")
 
 var (
 	// ErrEmailInUse is returned when a user is unable to create a recipe
-	ErrEmailInUse      = errors.New("a user with that email already exists")
+	ErrEmailInUse = errors.New("a user with that email already exists")
 	// ErrUsernameInUse is returned when a user is unable to create a recipe
-	ErrUsernameInUse   = errors.New("a user with that username already exists")
+	ErrUsernameInUse = errors.New("a user with that username already exists")
 	// ErrInvalidUsername is returned when a user is unable to create a recipe
 	ErrInvalidUsername = errors.New("invalid username")
 	// ErrUserNotFound is returned when a user is unable to create a recipe
-	ErrUserNotFound    = errors.New("a user with that email was not found")
+	ErrUserNotFound = errors.New("a user with that email was not found")
 )
 
 // Service is the interface for the user service

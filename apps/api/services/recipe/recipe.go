@@ -35,21 +35,21 @@ const expirationMinutes = 2
 
 var (
 	// ErrUnauthorized is returned when a user is not authorized to perform an action
-	ErrUnauthorized              = errors.New("unauthorized user")
+	ErrUnauthorized = errors.New("unauthorized user")
 	// ErrUnableToUpdateRecipe is returned when a user is unable to update a recipe
-	ErrUnableToUpdateRecipe      = errors.New("error updating recipe")
+	ErrUnableToUpdateRecipe = errors.New("error updating recipe")
 	// ErrUnableToCreateRecipeMedia is returned when a user is unable to create a recipe media
 	ErrUnableToCreateRecipeMedia = errors.New("error creating recipe media")
 	// ErrUnableToForkRecipe is returned when a user is unable to fork a recipe
-	ErrUnableToForkRecipe        = errors.New("error forking recipe")
+	ErrUnableToForkRecipe = errors.New("error forking recipe")
 	// ErrUnableToCreateRecipe is returned when a user is unable to create a recipe
-	ErrUnableToCreateRecipe      = errors.New("error creating recipe")
+	ErrUnableToCreateRecipe = errors.New("error creating recipe")
 	// ErrRecipeNotFound is returned when a user is unable to find a recipe
-	ErrRecipeNotFound            = errors.New("recipe not found")
+	ErrRecipeNotFound = errors.New("recipe not found")
 	// ErrRecipeAlreadyStarred is returned when a user is unable to star a recipe
-	ErrRecipeAlreadyStarred      = errors.New("recipe already starred")
+	ErrRecipeAlreadyStarred = errors.New("recipe already starred")
 	// ErrRecipeRevisionNotFound is returned when a user is unable to find a recipe revision
-	ErrRecipeRevisionNotFound    = errors.New("recipe revision not found")
+	ErrRecipeRevisionNotFound = errors.New("recipe revision not found")
 	// ErrFailedToSign              = errors.New("failed to sign url")
 )
 

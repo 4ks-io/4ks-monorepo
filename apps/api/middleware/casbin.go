@@ -29,10 +29,9 @@ func init() {
 
 // where should this be declared?
 const (
- model = "apps/api/casbin/model.conf"
- policy = "apps/api/casbin/policy.csv"
+	model  = "apps/api/casbin/model.conf"
+	policy = "apps/api/casbin/policy.csv"
 )
-
 
 // Enforce RBAC
 func Enforce(sub string, obj string, act string) (bool, error) {
