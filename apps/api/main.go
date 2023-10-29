@@ -6,6 +6,8 @@ import (
 	"os"
 	"strings"
 
+	_ "4ks/apps/api/docs"
+
 	controllers "4ks/apps/api/controllers"
 	middleware "4ks/apps/api/middleware"
 	utils "4ks/apps/api/utils"
