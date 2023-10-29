@@ -20,7 +20,7 @@ import (
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipeRevisions(ctx *gin.Context) {
 	recipeID := ctx.Param("id")
-	recipeRevisions, err := c.recipeService.GetRecipeRevisions(ctx, &recipeID)
+	recipeRevisions, err := c.recipeService.GetRecipeRevisions(ctx, recipeID)
 
 	if err == recipeService.ErrRecipeNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -45,7 +45,7 @@ func (c *recipeController) GetRecipeRevisions(ctx *gin.Context) {
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipeRevision(ctx *gin.Context) {
 	revisionID := ctx.Param("revisionID")
-	recipeRevision, err := c.recipeService.GetRecipeRevisionByID(ctx, &revisionID)
+	recipeRevision, err := c.recipeService.GetRecipeRevisionByID(ctx, revisionID)
 
 	if err == recipeService.ErrRecipeRevisionNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)

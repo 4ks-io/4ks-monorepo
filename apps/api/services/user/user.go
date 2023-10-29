@@ -32,14 +32,14 @@ var (
 // Service is the interface for the user service
 type Service interface {
 	GetAllUsers(context.Context) ([]*models.User, error)
-	GetUserByID(context.Context, *string) (*models.User, error)
-	GetUserByUsername(context.Context, *string) (*models.User, error)
-	GetUserByEmail(context.Context, *string) (*models.User, error)
-	CreateUser(context.Context, *string, *string, *dtos.CreateUser) (*models.User, error)
-	UpdateUserByID(context.Context, *string, *dtos.UpdateUser) (*models.User, error)
-	DeleteUser(context.Context, *string) error
-	TestUsernameValid(*string) bool
-	TestUsernameExist(context.Context, *string) (bool, error)
+	GetUserByID(context.Context, string) (*models.User, error)
+	GetUserByUsername(context.Context, string) (*models.User, error)
+	GetUserByEmail(context.Context, string) (*models.User, error)
+	CreateUser(context.Context, string, string, *dtos.CreateUser) (*models.User, error)
+	UpdateUserByID(context.Context, string, *dtos.UpdateUser) (*models.User, error)
+	DeleteUser(context.Context, string) error
+	TestUsernameValid(string) bool
+	TestUsernameExist(context.Context, string) (bool, error)
 
 	// new
 	// TestName(string) error
@@ -94,8 +94,8 @@ func (s userService) GetAllUsers(ctx context.Context) ([]*models.User, error) {
 	return all, nil
 }
 
-func (s userService) GetUserByID(ctx context.Context, id *string) (*models.User, error) {
-	result, err := s.userCollection.Doc(*id).Get(ctx)
+func (s userService) GetUserByID(ctx context.Context, id string) (*models.User, error) {
+	result, err := s.userCollection.Doc(id).Get(ctx)
 	if err != nil {
 		return nil, ErrUserNotFound
 	}
@@ -111,9 +111,9 @@ func (s userService) GetUserByID(ctx context.Context, id *string) (*models.User,
 	return user, nil
 }
 
-func (s userService) GetUserByUsername(ctx context.Context, username *string) (*models.User, error) {
+func (s userService) GetUserByUsername(ctx context.Context, username string) (*models.User, error) {
 	// result, err := userCollection.Where("usernameLower", "==", l).Documents(ctx).GetAll()
-	result, err := s.userCollection.Where("usernameLower", "==", strings.ToLower(*username)).Documents(ctx).GetAll()
+	result, err := s.userCollection.Where("usernameLower", "==", strings.ToLower(username)).Documents(ctx).GetAll()
 	if err != nil || len(result) == 0 {
 		return nil, ErrUserNotFound
 	}
@@ -132,7 +132,7 @@ func (s userService) GetUserByUsername(ctx context.Context, username *string) (*
 	return user, nil
 }
 
-func (s userService) GetUserByEmail(ctx context.Context, emailAddress *string) (*models.User, error) {
+func (s userService) GetUserByEmail(ctx context.Context, emailAddress string) (*models.User, error) {
 	result, err := s.userCollection.Where("emailAddress", "==", emailAddress).Documents(ctx).GetAll()
 	if err != nil || len(result) == 0 {
 		return nil, ErrUserNotFound
@@ -150,7 +150,7 @@ func (s userService) GetUserByEmail(ctx context.Context, emailAddress *string) (
 	return user, nil
 }
 
-func (s userService) TestUsernameValid(username *string) bool {
+func (s userService) TestUsernameValid(username string) bool {
 	/*
 		1. at least 8 characters
 		2. no longer than 24 characters
@@ -160,8 +160,8 @@ func (s userService) TestUsernameValid(username *string) bool {
 	*/
 
 	// todo: combine these 2 regex...
-	if regexp.MustCompile("^[a-zA-Z0-9][a-zA-Z0-9-]{6,22}[a-zA-Z0-9]$").MatchString(*username) {
-		if regexp.MustCompile("--").MatchString(*username) {
+	if regexp.MustCompile("^[a-zA-Z0-9][a-zA-Z0-9-]{6,22}[a-zA-Z0-9]$").MatchString(username) {
+		if regexp.MustCompile("--").MatchString(username) {
 			return false
 		}
 		return true
@@ -170,13 +170,13 @@ func (s userService) TestUsernameValid(username *string) bool {
 	return false
 }
 
-func (s userService) CreateUser(ctx context.Context, userID *string, userEmail *string, user *dtos.CreateUser) (*models.User, error) {
-	isValid := s.TestUsernameValid(&user.Username)
+func (s userService) CreateUser(ctx context.Context, userID string, userEmail string, user *dtos.CreateUser) (*models.User, error) {
+	isValid := s.TestUsernameValid(user.Username)
 	if !isValid {
 		return nil, ErrInvalidUsername
 	}
 
-	existingUserID, _ := s.userCollection.Doc(*userID).Get(ctx)
+	existingUserID, _ := s.userCollection.Doc(userID).Get(ctx)
 	if existingUserID.Exists() {
 		return nil, ErrEmailInUse
 	}
@@ -190,16 +190,16 @@ func (s userService) CreateUser(ctx context.Context, userID *string, userEmail *
 	}
 
 	newUser := &models.User{
-		ID:            *userID,
+		ID:            userID,
 		Username:      user.Username,
 		UsernameLower: strings.ToLower(user.Username),
 		DisplayName:   user.DisplayName,
-		EmailAddress:  strings.ToLower(*userEmail),
+		EmailAddress:  strings.ToLower(userEmail),
 		CreatedDate:   time.Now().UTC(),
 		UpdatedDate:   time.Now().UTC(),
 	}
 
-	_, err = s.userCollection.Doc(*userID).Create(ctx, newUser)
+	_, err = s.userCollection.Doc(userID).Create(ctx, newUser)
 	if err != nil {
 		return nil, err
 	}
@@ -207,15 +207,15 @@ func (s userService) CreateUser(ctx context.Context, userID *string, userEmail *
 	return newUser, nil
 }
 
-func (s userService) UpdateUserByID(ctx context.Context, userID *string, user *dtos.UpdateUser) (*models.User, error) {
+func (s userService) UpdateUserByID(ctx context.Context, userID string, user *dtos.UpdateUser) (*models.User, error) {
 	if user.Username != "" {
-		isValid := s.TestUsernameValid(&user.Username)
+		isValid := s.TestUsernameValid(user.Username)
 		if !isValid {
 			return nil, ErrInvalidUsername
 		}
 	}
 
-	_, err := s.userCollection.Doc(*userID).Update(ctx, []firestore.Update{
+	_, err := s.userCollection.Doc(userID).Update(ctx, []firestore.Update{
 		{
 			Path:  "username",
 			Value: user.Username,
@@ -238,13 +238,13 @@ func (s userService) UpdateUserByID(ctx context.Context, userID *string, user *d
 }
 
 // todo: add with disableUser/enableUser as we never want to delete a recipe
-func (s userService) DeleteUser(ctx context.Context, userID *string) error {
-	existingUserID, _ := s.userCollection.Doc(*userID).Get(ctx)
+func (s userService) DeleteUser(ctx context.Context, userID string) error {
+	existingUserID, _ := s.userCollection.Doc(userID).Get(ctx)
 	if !existingUserID.Exists() {
 		return ErrUserNotFound
 	}
 
-	_, err := s.userCollection.Doc(*userID).Delete(ctx)
+	_, err := s.userCollection.Doc(userID).Delete(ctx)
 	if err != nil {
 		return err
 	}
@@ -252,9 +252,9 @@ func (s userService) DeleteUser(ctx context.Context, userID *string) error {
 	return nil
 }
 
-func (s userService) TestUsernameExist(ctx context.Context, username *string) (bool, error) {
+func (s userService) TestUsernameExist(ctx context.Context, username string) (bool, error) {
 	// u, err := url.PathUnescape(*username)
-	usersWithUsername, err := s.userCollection.Where("usernameLower", "==", strings.ToLower(*username)).Documents(ctx).GetAll()
+	usersWithUsername, err := s.userCollection.Where("usernameLower", "==", strings.ToLower(username)).Documents(ctx).GetAll()
 	if err != nil || len(usersWithUsername) > 0 {
 		return true, ErrUsernameInUse
 	}

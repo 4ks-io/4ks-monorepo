@@ -25,7 +25,7 @@ func (c *recipeController) ForkRecipe(ctx *gin.Context) {
 	recipeID := ctx.Param("id")
 
 	userID := ctx.GetString("id")
-	author, err := c.userService.GetUserByID(ctx, &userID)
+	author, err := c.userService.GetUserByID(ctx, userID)
 
 	if err == userService.ErrUserNotFound {
 		ctx.AbortWithError(http.StatusBadRequest, err)
@@ -35,7 +35,7 @@ func (c *recipeController) ForkRecipe(ctx *gin.Context) {
 		return
 	}
 
-	newRecipe, err := c.recipeService.ForkRecipeByID(ctx, &recipeID, models.UserSummary{
+	newRecipe, err := c.recipeService.ForkRecipeByID(ctx, recipeID, models.UserSummary{
 		ID:          userID,
 		Username:    author.Username,
 		DisplayName: author.DisplayName,
@@ -68,7 +68,7 @@ func (c *recipeController) StarRecipe(ctx *gin.Context) {
 	recipeID := ctx.Param("id")
 
 	userID := ctx.GetString("id")
-	author, err := c.userService.GetUserByID(ctx, &userID)
+	author, err := c.userService.GetUserByID(ctx, userID)
 
 	if err == userService.ErrUserNotFound {
 		ctx.AbortWithStatus(http.StatusBadRequest)
@@ -78,7 +78,7 @@ func (c *recipeController) StarRecipe(ctx *gin.Context) {
 		return
 	}
 
-	_, err = c.recipeService.StarRecipeByID(ctx, &recipeID, models.UserSummary{
+	_, err = c.recipeService.StarRecipeByID(ctx, recipeID, models.UserSummary{
 		ID:          userID,
 		Username:    author.Username,
 		DisplayName: author.DisplayName,

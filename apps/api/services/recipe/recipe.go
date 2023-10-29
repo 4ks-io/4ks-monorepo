@@ -49,24 +49,24 @@ var (
 type Service interface {
 	// create
 	CreateRecipe(context.Context, *dtos.CreateRecipe) (*models.Recipe, error)
-	CreateRecipeMedia(context.Context, *utils.MediaProps, *string, *string, *sync.WaitGroup) (*models.RecipeMedia, error)
-	CreateRecipeMediaSignedURL(*utils.MediaProps, *sync.WaitGroup) (*string, error)
+	CreateRecipeMedia(context.Context, *utils.MediaProps, string, string, *sync.WaitGroup) (*models.RecipeMedia, error)
+	CreateRecipeMediaSignedURL(*utils.MediaProps, *sync.WaitGroup) (string, error)
 	// delete
 	DeleteRecipe(context.Context, string, string) error
 	// get
-	GetAdminRecipeMedias(context.Context, *string) ([]*models.RecipeMedia, error)
+	GetAdminRecipeMedias(context.Context, string) ([]*models.RecipeMedia, error)
 	GetRecipes(context.Context, int) ([]*models.Recipe, error)
-	GetRecipeByID(context.Context, *string) (*models.Recipe, error)
-	GetRecipesByUsername(context.Context, *string, int) ([]*models.Recipe, error)
-	GetRecipesByUserID(context.Context, *string, int) ([]*models.Recipe, error)
-	GetRecipeMedia(context.Context, *string) ([]*models.RecipeMedia, error)
-	GetRecipeRevisions(context.Context, *string) ([]*models.RecipeRevision, error)
-	GetRecipeRevisionByID(context.Context, *string) (*models.RecipeRevision, error)
+	GetRecipeByID(context.Context, string) (*models.Recipe, error)
+	GetRecipesByUsername(context.Context, string, int) ([]*models.Recipe, error)
+	GetRecipesByUserID(context.Context, string, int) ([]*models.Recipe, error)
+	GetRecipeMedia(context.Context, string) ([]*models.RecipeMedia, error)
+	GetRecipeRevisions(context.Context, string) ([]*models.RecipeRevision, error)
+	GetRecipeRevisionByID(context.Context, string) (*models.RecipeRevision, error)
 	// set
-	ForkRecipeByID(context.Context, *string, models.UserSummary) (*models.Recipe, error)
-	StarRecipeByID(context.Context, *string, models.UserSummary) (bool, error)
+	ForkRecipeByID(context.Context, string, models.UserSummary) (*models.Recipe, error)
+	StarRecipeByID(context.Context, string, models.UserSummary) (bool, error)
 	// update
-	UpdateRecipeByID(context.Context, *string, *dtos.UpdateRecipe) (*models.Recipe, error)
+	UpdateRecipeByID(context.Context, string, *dtos.UpdateRecipe) (*models.Recipe, error)
 }
 
 type recipeService struct {

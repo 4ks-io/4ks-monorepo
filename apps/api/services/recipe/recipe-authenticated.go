@@ -80,8 +80,8 @@ func (s recipeService) CreateRecipe(ctx context.Context, recipe *dtos.CreateReci
 	return newRecipe, nil
 }
 
-func (s recipeService) UpdateRecipeByID(ctx context.Context, recipeID *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error) {
-	recipeDoc, err := s.recipeCollection.Doc(*recipeID).Get(ctx)
+func (s recipeService) UpdateRecipeByID(ctx context.Context, recipeID string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error) {
+	recipeDoc, err := s.recipeCollection.Doc(recipeID).Get(ctx)
 
 	if err != nil {
 		return nil, ErrRecipeNotFound
@@ -125,8 +125,8 @@ func (s recipeService) UpdateRecipeByID(ctx context.Context, recipeID *string, r
 	return recipe, nil
 }
 
-func (s recipeService) ForkRecipeByID(ctx context.Context, recipeID *string, forkAuthor models.UserSummary) (*models.Recipe, error) {
-	recipeDoc, err := s.recipeCollection.Doc(*recipeID).Get(ctx)
+func (s recipeService) ForkRecipeByID(ctx context.Context, recipeID string, forkAuthor models.UserSummary) (*models.Recipe, error) {
+	recipeDoc, err := s.recipeCollection.Doc(recipeID).Get(ctx)
 
 	if err != nil {
 		return nil, ErrRecipeNotFound
@@ -160,8 +160,8 @@ func (s recipeService) ForkRecipeByID(ctx context.Context, recipeID *string, for
 	return recipe, nil
 }
 
-func (s recipeService) StarRecipeByID(ctx context.Context, recipeID *string, author models.UserSummary) (bool, error) {
-	recipeStarDocs, err := s.recipeStarsCollection.Where("user.id", "==", author.ID).Where("recipe.id", "==", *recipeID).Documents(ctx).GetAll()
+func (s recipeService) StarRecipeByID(ctx context.Context, recipeID string, author models.UserSummary) (bool, error) {
+	recipeStarDocs, err := s.recipeStarsCollection.Where("user.id", "==", author.ID).Where("recipe.id", "==", recipeID).Documents(ctx).GetAll()
 
 	if err != nil {
 		return false, err
@@ -171,7 +171,7 @@ func (s recipeService) StarRecipeByID(ctx context.Context, recipeID *string, aut
 		return false, ErrRecipeAlreadyStarred
 	}
 
-	recipeDoc, err := s.recipeCollection.Doc(*recipeID).Get(ctx)
+	recipeDoc, err := s.recipeCollection.Doc(recipeID).Get(ctx)
 
 	if err != nil {
 		return false, ErrRecipeNotFound

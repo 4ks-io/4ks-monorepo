@@ -17,8 +17,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func getMediaContentType(ext *string) (string, error) {
-	switch *ext {
+func getMediaContentType(ext string) (string, error) {
+	switch ext {
 	case ".png":
 		return "image/png", nil
 	case ".jpeg", ".jpg":
@@ -26,7 +26,7 @@ func getMediaContentType(ext *string) (string, error) {
 	case ".gif":
 		return "image/gif", nil
 	}
-	return "", fmt.Errorf("invalid File Type %s", *ext)
+	return "", fmt.Errorf("invalid File Type %s", ext)
 }
 
 // CreateRecipeMedia   godoc
@@ -53,7 +53,7 @@ func (c *recipeController) CreateRecipeMedia(ctx *gin.Context) {
 
 	// compute and validate file extention/content-type
 	ext := filepath.Ext(payload.Filename)
-	ct, err := getMediaContentType(&ext)
+	ct, err := getMediaContentType(ext)
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
@@ -70,7 +70,7 @@ func (c *recipeController) CreateRecipeMedia(ctx *gin.Context) {
 
 	// &mediaId, &mediaEmail, &payload
 	signedURL, err1 := c.recipeService.CreateRecipeMediaSignedURL(&mp, &wg)
-	recipeMedia, err2 := c.recipeService.CreateRecipeMedia(ctx, &mp, &recipeID, &userID, &wg)
+	recipeMedia, err2 := c.recipeService.CreateRecipeMedia(ctx, &mp, recipeID, userID, &wg)
 
 	if err1 != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err1)
@@ -98,7 +98,7 @@ func (c *recipeController) CreateRecipeMedia(ctx *gin.Context) {
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipeMedia(ctx *gin.Context) {
 	recipeID := ctx.Param("id")
-	recipeMedias, err := c.recipeService.GetRecipeMedia(ctx, &recipeID)
+	recipeMedias, err := c.recipeService.GetRecipeMedia(ctx, recipeID)
 	log.Error().Err(err).Caller().Msg("client: could not create request")
 
 	if err == recipeService.ErrRecipeNotFound {
@@ -124,7 +124,7 @@ func (c *recipeController) GetRecipeMedia(ctx *gin.Context) {
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetAdminRecipeMedias(ctx *gin.Context) {
 	recipeID := ctx.Param("id")
-	recipeMedias, err := c.recipeService.GetRecipeMedia(ctx, &recipeID)
+	recipeMedias, err := c.recipeService.GetRecipeMedia(ctx, recipeID)
 
 	if err == recipeService.ErrRecipeNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)

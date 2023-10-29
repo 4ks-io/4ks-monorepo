@@ -15,7 +15,7 @@ import (
 // Service is the interface for the search service
 type Service interface {
 	CreateSearchRecipeCollection() error
-	RemoveSearchRecipeDocument(*string) error
+	RemoveSearchRecipeDocument(string) error
 	UpsertSearchRecipeDocument(*models.Recipe) error
 }
 
@@ -65,8 +65,8 @@ func (us searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
 	return nil
 }
 
-func (us searchService) RemoveSearchRecipeDocument(id *string) error {
-	_, err := tsc.Collection("recipes").Document(*id).Delete()
+func (us searchService) RemoveSearchRecipeDocument(id string) error {
+	_, err := tsc.Collection("recipes").Document(id).Delete()
 	if err != nil {
 		return errors.New("failed to create search document")
 	}

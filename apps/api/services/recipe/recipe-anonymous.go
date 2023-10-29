@@ -9,8 +9,8 @@ import (
 	models "4ks/libs/go/models"
 )
 
-func (s recipeService) GetRecipeByID(ctx context.Context, id *string) (*models.Recipe, error) {
-	result, err := s.recipeCollection.Doc(*id).Get(ctx)
+func (s recipeService) GetRecipeByID(ctx context.Context, id string) (*models.Recipe, error) {
+	result, err := s.recipeCollection.Doc(id).Get(ctx)
 
 	if err != nil {
 		return nil, ErrRecipeNotFound
@@ -53,7 +53,7 @@ func (s recipeService) GetRecipes(ctx context.Context, limit int) ([]*models.Rec
 	return all, nil
 }
 
-func (s recipeService) GetRecipesByUsername(ctx context.Context, username *string, limit int) ([]*models.Recipe, error) {
+func (s recipeService) GetRecipesByUsername(ctx context.Context, username string, limit int) ([]*models.Recipe, error) {
 	var all []*models.Recipe
 	iter := s.recipeCollection.Where("author.username", "==", &username).Limit(limit).Documents(ctx)
 
@@ -82,7 +82,7 @@ func (s recipeService) GetRecipesByUsername(ctx context.Context, username *strin
 	return all, nil
 }
 
-func (s recipeService) GetRecipesByUserID(ctx context.Context, id *string, limit int) ([]*models.Recipe, error) {
+func (s recipeService) GetRecipesByUserID(ctx context.Context, id string, limit int) ([]*models.Recipe, error) {
 	var all []*models.Recipe
 	iter := s.recipeCollection.Where("author.id", "==", &id).Limit(limit).Documents(ctx)
 
@@ -111,7 +111,7 @@ func (s recipeService) GetRecipesByUserID(ctx context.Context, id *string, limit
 	return all, nil
 }
 
-func (s recipeService) GetRecipeRevisions(ctx context.Context, recipeID *string) ([]*models.RecipeRevision, error) {
+func (s recipeService) GetRecipeRevisions(ctx context.Context, recipeID string) ([]*models.RecipeRevision, error) {
 	recipeRevisionsDocs, err := s.recipeRevisionsCollection.Where("recipeID", "==", recipeID).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
 
 	if err != nil {
@@ -133,8 +133,8 @@ func (s recipeService) GetRecipeRevisions(ctx context.Context, recipeID *string)
 	return recipeRevisions, nil
 }
 
-func (s recipeService) GetRecipeRevisionByID(ctx context.Context, revisionID *string) (*models.RecipeRevision, error) {
-	recipeRevisionDoc, err := s.recipeRevisionsCollection.Doc(*revisionID).Get(ctx)
+func (s recipeService) GetRecipeRevisionByID(ctx context.Context, revisionID string) (*models.RecipeRevision, error) {
+	recipeRevisionDoc, err := s.recipeRevisionsCollection.Doc(revisionID).Get(ctx)
 
 	if err != nil {
 		return nil, ErrRecipeRevisionNotFound

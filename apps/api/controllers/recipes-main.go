@@ -31,7 +31,7 @@ func (c *recipeController) CreateRecipe(ctx *gin.Context) {
 	}
 
 	userID := ctx.GetString("id")
-	author, err := c.userService.GetUserByID(ctx, &userID)
+	author, err := c.userService.GetUserByID(ctx, userID)
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
@@ -99,7 +99,7 @@ func (c *recipeController) DeleteRecipe(ctx *gin.Context) {
 		return
 	}
 
-	err = c.searchService.RemoveSearchRecipeDocument(&recipeID)
+	err = c.searchService.RemoveSearchRecipeDocument(recipeID)
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
@@ -121,7 +121,7 @@ func (c *recipeController) DeleteRecipe(ctx *gin.Context) {
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipe(ctx *gin.Context) {
 	recipeID := ctx.Param("id")
-	recipe, err := c.recipeService.GetRecipeByID(ctx, &recipeID)
+	recipe, err := c.recipeService.GetRecipeByID(ctx, recipeID)
 
 	if err == recipeService.ErrRecipeNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -153,7 +153,7 @@ func (c *recipeController) GetRecipesByUsername(ctx *gin.Context) {
 	if username == "4ks-bot" {
 		id = "bot"
 	} else {
-		u, err := c.userService.GetUserByUsername(ctx, &username)
+		u, err := c.userService.GetUserByUsername(ctx, username)
 		if err == recipeService.ErrRecipeNotFound {
 			ctx.AbortWithError(http.StatusNotFound, err)
 			return
@@ -163,7 +163,7 @@ func (c *recipeController) GetRecipesByUsername(ctx *gin.Context) {
 
 	// hardcode limit for now
 	limit := 40
-	recipes, err := c.recipeService.GetRecipesByUserID(ctx, &id, limit)
+	recipes, err := c.recipeService.GetRecipesByUserID(ctx, id, limit)
 
 	if err == recipeService.ErrRecipeNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -223,7 +223,7 @@ func (c *recipeController) UpdateRecipe(ctx *gin.Context) {
 	}
 
 	userID := ctx.GetString("id")
-	author, err := c.userService.GetUserByID(ctx, &userID)
+	author, err := c.userService.GetUserByID(ctx, userID)
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
@@ -235,7 +235,7 @@ func (c *recipeController) UpdateRecipe(ctx *gin.Context) {
 		DisplayName: author.DisplayName,
 	}
 
-	createdRecipe, err := c.recipeService.UpdateRecipeByID(ctx, &recipeID, &payload)
+	createdRecipe, err := c.recipeService.UpdateRecipeByID(ctx, recipeID, &payload)
 
 	if err == recipeService.ErrUnableToCreateRecipe {
 		ctx.AbortWithError(http.StatusBadRequest, err)

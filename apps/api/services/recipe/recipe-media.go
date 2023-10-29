@@ -13,10 +13,10 @@ import (
 	"cloud.google.com/go/storage"
 )
 
-func (s recipeService) CreateRecipeMedia(ctx context.Context, mp *utils.MediaProps, recipeID *string, userID *string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
+func (s recipeService) CreateRecipeMedia(ctx context.Context, mp *utils.MediaProps, recipeID string, userID string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
 	defer wg.Done()
 
-	recipeDoc, err := s.recipeCollection.Doc(*recipeID).Get(ctx)
+	recipeDoc, err := s.recipeCollection.Doc(recipeID).Get(ctx)
 	if err != nil {
 		return nil, ErrRecipeNotFound
 	}
@@ -24,7 +24,7 @@ func (s recipeService) CreateRecipeMedia(ctx context.Context, mp *utils.MediaPro
 	recipe := new(models.Recipe)
 	recipeDoc.DataTo(recipe)
 
-	e, err := middleware.EnforceContributor(*userID, recipe.Contributors)
+	e, err := middleware.EnforceContributor(userID, recipe.Contributors)
 	if err != nil {
 		return nil, ErrUnableToCreateRecipeMedia
 	} else if !e {
@@ -55,7 +55,7 @@ func (s recipeService) CreateRecipeMedia(ctx context.Context, mp *utils.MediaPro
 		ContentType:  mp.ContentType,
 		RecipeId:     recipe.ID,
 		RootRecipeId: recipe.Root,
-		OwnerId:      *userID,
+		OwnerId:      userID,
 		Status:       models.MediaStatusRequested,
 		BestUse:      models.MediaBestUseGeneral,
 		CreatedDate:  timestamp,
@@ -70,13 +70,13 @@ func (s recipeService) CreateRecipeMedia(ctx context.Context, mp *utils.MediaPro
 	return recipeMedia, nil
 }
 
-func (s recipeService) CreateRecipeMediaSignedURL(mp *utils.MediaProps, wg *sync.WaitGroup) (*string, error) {
+func (s recipeService) CreateRecipeMediaSignedURL(mp *utils.MediaProps, wg *sync.WaitGroup) (string, error) {
 	defer wg.Done()
 
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("storage.NewClient: %v", err)
+		return "", fmt.Errorf("storage.NewClient: %v", err)
 	}
 	defer client.Close()
 
@@ -92,13 +92,13 @@ func (s recipeService) CreateRecipeMediaSignedURL(mp *utils.MediaProps, wg *sync
 	filename := mp.Basename + mp.Extension
 	url, err := client.Bucket(uploadableBucket).SignedURL(filename, opts)
 	if err != nil {
-		return nil, fmt.Errorf("Bucket(%q). SignedURL: %v", uploadableBucket, err)
+		return "", fmt.Errorf("Bucket(%q). SignedURL: %v", uploadableBucket, err)
 	}
 
-	return &url, nil
+	return url, nil
 }
 
-func (s recipeService) GetRecipeMedia(ctx context.Context, recipeID *string) ([]*models.RecipeMedia, error) {
+func (s recipeService) GetRecipeMedia(ctx context.Context, recipeID string) ([]*models.RecipeMedia, error) {
 	var status [2]int
 	status[0] = int(models.MediaStatusReady)
 	// workaround to see images locally; upload-media status update callback only works in hosted firestore
@@ -127,7 +127,7 @@ func (s recipeService) GetRecipeMedia(ctx context.Context, recipeID *string) ([]
 	return recipeMedias, nil
 }
 
-func (s recipeService) GetAdminRecipeMedias(ctx context.Context, recipeID *string) ([]*models.RecipeMedia, error) {
+func (s recipeService) GetAdminRecipeMedias(ctx context.Context, recipeID string) ([]*models.RecipeMedia, error) {
 	recipeMediasDocs, err := s.recipeMediasCollection.Where("rootRecipeId", "==", recipeID).Documents(ctx).GetAll()
 
 	if err != nil {

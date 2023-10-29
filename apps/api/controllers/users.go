@@ -56,7 +56,7 @@ func (uc *userController) CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	createdUser, err := uc.userService.CreateUser(ctx, &userID, &userEmail, &payload)
+	createdUser, err := uc.userService.CreateUser(ctx, userID, userEmail, &payload)
 	if err == userService.ErrEmailInUse || err == userService.ErrUsernameInUse {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -80,7 +80,7 @@ func (uc *userController) CreateUser(ctx *gin.Context) {
 // @Security 		ApiKeyAuth
 func (uc *userController) DeleteUser(ctx *gin.Context) {
 	userID := ctx.Param("id")
-	err := uc.userService.DeleteUser(ctx, &userID)
+	err := uc.userService.DeleteUser(ctx, userID)
 
 	if err == userService.ErrUserNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -106,7 +106,7 @@ func (uc *userController) DeleteUser(ctx *gin.Context) {
 // @Security 		ApiKeyAuth
 func (uc *userController) GetUser(ctx *gin.Context) {
 	userID := ctx.Param("id")
-	user, err := uc.userService.GetUserByID(ctx, &userID)
+	user, err := uc.userService.GetUserByID(ctx, userID)
 
 	if err == userService.ErrUserNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -131,7 +131,7 @@ func (uc *userController) GetUser(ctx *gin.Context) {
 // @Security 		ApiKeyAuth
 func (uc *userController) GetCurrentUser(ctx *gin.Context) {
 	userID := ctx.GetString("id")
-	user, err := uc.userService.GetUserByID(ctx, &userID)
+	user, err := uc.userService.GetUserByID(ctx, userID)
 
 	if err == userService.ErrUserNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)
@@ -155,7 +155,7 @@ func (uc *userController) GetCurrentUser(ctx *gin.Context) {
 // @Security 		ApiKeyAuth
 func (uc *userController) GetCurrentUserExist(ctx *gin.Context) {
 	userID := ctx.GetString("id")
-	_, err := uc.userService.GetUserByID(ctx, &userID)
+	_, err := uc.userService.GetUserByID(ctx, userID)
 
 	data := models.UserExist{}
 
@@ -188,7 +188,7 @@ func (uc *userController) GetCurrentUserExist(ctx *gin.Context) {
 func (uc *userController) HeadAuthenticatedUser(ctx *gin.Context) {
 	userID := ctx.GetString("id")
 
-	if _, err := uc.userService.GetUserByID(ctx, &userID); err != nil {
+	if _, err := uc.userService.GetUserByID(ctx, userID); err != nil {
 		// handle user not found
 		if err == userService.ErrUserNotFound {
 			ctx.JSON(http.StatusNoContent, nil)
@@ -243,7 +243,7 @@ func (uc *userController) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	u, err := uc.userService.UpdateUserByID(ctx, &userID, &payload)
+	u, err := uc.userService.UpdateUserByID(ctx, userID, &payload)
 	if err == userService.ErrUserNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return
@@ -275,7 +275,7 @@ func (uc *userController) TestUsername(ctx *gin.Context) {
 
 	resp := models.Username{}
 
-	isValid := uc.userService.TestUsernameValid(&payload.Username)
+	isValid := uc.userService.TestUsernameValid(payload.Username)
 	if !isValid {
 		resp.Msg = "invalid"
 		resp.Valid = isValid
@@ -283,7 +283,7 @@ func (uc *userController) TestUsername(ctx *gin.Context) {
 		return
 	}
 
-	isFound, err := uc.userService.TestUsernameExist(ctx, &payload.Username)
+	isFound, err := uc.userService.TestUsernameExist(ctx, payload.Username)
 	resp.Valid = !isFound
 
 	if err == userService.ErrUsernameInUse {
