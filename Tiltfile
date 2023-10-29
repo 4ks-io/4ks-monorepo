@@ -67,7 +67,7 @@ docker_build(
     ]
 )
 
-# # web-next
+# web-next
 k8s_resource('web-next', port_forwards='0.0.0.0:5736:3000', labels=['web','next'])
 docker_build(
     'web-next',
