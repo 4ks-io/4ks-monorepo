@@ -32,6 +32,8 @@ spec:
           env:
             - name: PORT
               value: '5000'
+            - name: GIN_MODE
+              value: debug
             - name: JAEGER_ENABLED
               value: 'true'
             - name: SWAGGER_ENABLED

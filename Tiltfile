@@ -1,14 +1,14 @@
-
 # https://docs.tilt.dev/api.html#api.version_settings
 version_settings(constraint='>=0.22.2')
 
 # resources
 k8s_yaml([
-    './deploy/api.yaml',
-    './deploy/web.yaml',
-    './deploy/firestore.yaml',
-    './deploy/typesense.yaml',
-    # './deploy/jaeger.yaml'
+    'deploy/api.yaml',
+    'deploy/web.yaml',
+    'deploy/web-next.yaml',
+    'deploy/firestore.yaml',
+    'deploy/typesense.yaml',
+    # 'deploy/jaeger.yaml'
 ])
 
 # api
@@ -16,20 +16,20 @@ k8s_resource('api', port_forwards='0.0.0.0:5734:5000',labels=['backend'])
 docker_build(
     '4ks-api',
     context='.',
-    dockerfile='./apps/api/Dockerfile.dev',
+    dockerfile='apps/api/Dockerfile.dev',
     only=[
-        './apps/api',
-        './go.mod',
-        './go.sum',
-        './libs/go',
-        './deploy/sbx-4ks-google-app-creds.json'
+        'apps/api',
+        'go.mod',
+        'go.sum',
+        'libs/go',
+        'deploy/sbx-4ks-google-app-creds.json'
     ],
     live_update=[
-        sync('./apps/api/', '/app/apps/api'),
-        sync('./libs/go/', '/app/libs/go'),
+        sync('apps/api/', '/app/apps/api'),
+        sync('libs/go/', '/app/libs/go'),
         run(
             'go mod tidy',
-            trigger=['./apps/api/']
+            trigger=['apps/api/']
         )
     ]
 )
@@ -39,32 +39,65 @@ k8s_resource('web', port_forwards='0.0.0.0:5735:3000', labels=['web'])
 docker_build(
     '4ks-web',
     context='.',
-    dockerfile='./apps/web/Dockerfile.dev',
+    dockerfile='apps/web/Dockerfile.dev',
     only=[],
     ignore=[
-        './apps/api',
-        './dist',
-        './node_modules',
-        './publish',
-        './deploy',
-        './apps-dev',
-        './data',
-        './tools'
+        'apps/media-upload',
+        'apps/web-next',
+        'apps/api',
+        'apps-dev',
+        'data',
+        'deploy',
+        'dist',
+        'node_modules',
+        'publish',
+        'tools'
     ],
     live_update=[
-        fall_back_on('./apps/web/vite.config.ts'),
-        sync('./', '/app/'),
-        sync('./libs/ts/api-fetch', '/app/libs/ts/api-fetch'),
+        fall_back_on('apps/web/vite.config.ts'),
+        sync('.', '/app/'),
+        sync('libs/ts/api-fetch', '/app/libs/ts/api-fetch'),
         run(
             'pnpm --filter @4ks/ts-api-fetch build',
-            trigger=['./libs/ts/api-fetch/'] ),
+            trigger=['libs/ts/api-fetch/'] ),
         run(
             'pnpm install',
-            trigger=['./package.json', './apps/web/package.json']
+            trigger=['package.json', 'apps/web/package.json']
         )
     ]
 )
 
+# # web-next
+k8s_resource('web-next', port_forwards='0.0.0.0:5736:3000', labels=['web','next'])
+docker_build(
+    'web-next',
+    context='.',
+    dockerfile='apps/web-next/Dockerfile.dev',
+    only=[],
+    ignore=[
+        'apps/media-upload',
+        'apps/web',
+        'apps/api',
+        'apps-dev',
+        'data',
+        'deploy',
+        'dist',
+        'node_modules',
+        'publish',
+        'tools'
+    ],
+    live_update=[
+        sync('', '/app/'),
+        sync('libs/ts/api-fetch', '/app/libs/ts/api-fetch'),
+        run(
+            'pnpm --filter @4ks/ts-api-fetch build',
+            trigger=['libs/ts/api-fetch/'] ),
+        run(
+            'pnpm install',
+            trigger=['package.json', 'apps/web-next/package.json']
+        )
+    ]
+)
 
 # more
 k8s_resource('typesense', port_forwards='0.0.0.0:8108:8108', labels=['typesense','database'])
