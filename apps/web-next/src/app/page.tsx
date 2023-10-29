@@ -15,7 +15,7 @@ export default function HomePage() {
       <div>
         <Alert severity="info" sx={{ mt: 2, mb: 5 }}>
           <AlertTitle>Hello 👋</AlertTitle>
-          This app uses the Next.js App Router and Material UI v5.
+          This app uses the Next.js App Router and Material UI v5.dddddddd
         </Alert>
         <Grid container rowSpacing={3} columnSpacing={3}>
           <Grid xs={6}>

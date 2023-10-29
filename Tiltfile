@@ -40,7 +40,6 @@ docker_build(
     '4ks-web',
     context='.',
     dockerfile='apps/web/Dockerfile.dev',
-    only=[],
     ignore=[
         'apps/media-upload',
         'apps/web-next',
@@ -73,10 +72,8 @@ docker_build(
     'web-next',
     context='.',
     dockerfile='apps/web-next/Dockerfile.dev',
-    only=[],
     ignore=[
         'apps/media-upload',
-        'apps/web',
         'apps/api',
         'apps-dev',
         'data',
@@ -87,11 +84,8 @@ docker_build(
         'tools'
     ],
     live_update=[
-        sync('', '/code/'),
-        sync('libs/ts/api-fetch', '/app/libs/ts/api-fetch'),
-        run(
-            'pnpm --filter @4ks/ts-api-fetch build',
-            trigger=['libs/ts/api-fetch/'] ),
+        sync('libs/ts/api-fetch/dist', '/code/libs/ts/api-fetch/dist'),
+        sync('apps/web-next', '/code/apps/web-next'),
         run(
             'pnpm install',
             trigger=['package.json', 'apps/web-next/package.json']

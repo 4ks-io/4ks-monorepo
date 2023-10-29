@@ -3,7 +3,10 @@ import * as React from 'react';
 import createCache from '@emotion/cache';
 import { useServerInsertedHTML } from 'next/navigation';
 import { CacheProvider as DefaultCacheProvider } from '@emotion/react';
-import type { EmotionCache, Options as OptionsOfCreateCache } from '@emotion/cache';
+import type {
+  EmotionCache,
+  Options as OptionsOfCreateCache,
+} from '@emotion/cache';
 
 export type NextAppDirEmotionCacheProviderProps = {
   /** This is the options passed to createCache() from 'import createCache from "@emotion/cache"' */
@@ -16,8 +19,15 @@ export type NextAppDirEmotionCacheProviderProps = {
   children: React.ReactNode;
 };
 
+type GlobalElement = {
+  name: string;
+  style: string;
+};
+
 // Adapted from https://github.com/garronej/tss-react/blob/main/src/next/appDir.tsx
-export default function NextAppDirEmotionCacheProvider(props: NextAppDirEmotionCacheProviderProps) {
+export default function NextAppDirEmotionCacheProvider(
+  props: NextAppDirEmotionCacheProviderProps
+): React.JSX.Element {
   const { options, CacheProvider = DefaultCacheProvider, children } = props;
 
   const [registry] = React.useState(() => {
@@ -51,10 +61,7 @@ export default function NextAppDirEmotionCacheProvider(props: NextAppDirEmotionC
     let styles = '';
     let dataEmotionAttribute = registry.cache.key;
 
-    const globals: {
-      name: string;
-      style: string;
-    }[] = [];
+    const globals: GlobalElement[] = [];
 
     inserted.forEach(({ name, isGlobal }) => {
       const style = registry.cache.inserted[name];
@@ -71,7 +78,7 @@ export default function NextAppDirEmotionCacheProvider(props: NextAppDirEmotionC
 
     return (
       <React.Fragment>
-        {globals.map(({ name, style }) => (
+        {globals.map(({ name, style }: GlobalElement) => (
           <style
             key={name}
             data-emotion={`${registry.cache.key}-global ${name}`}
@@ -90,5 +97,8 @@ export default function NextAppDirEmotionCacheProvider(props: NextAppDirEmotionC
     );
   });
 
-  return <CacheProvider value={registry.cache}>{children}</CacheProvider>;
+  const provider = (
+    <CacheProvider value={registry.cache}>{children}</CacheProvider>
+  );
+  return provider;
 }
