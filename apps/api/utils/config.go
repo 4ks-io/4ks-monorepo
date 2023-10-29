@@ -7,7 +7,7 @@ import (
 )
 
 type SystemFlags struct {
-	Debug bool
+	Debug       bool
 	Development bool
 }
 

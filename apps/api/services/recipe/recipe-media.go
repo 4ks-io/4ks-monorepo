@@ -13,7 +13,6 @@ import (
 	"cloud.google.com/go/storage"
 )
 
-
 func (s recipeService) CreateRecipeMedia(ctx context.Context, mp *utils.MediaProps, recipeID *string, userID *string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
 	defer wg.Done()
 

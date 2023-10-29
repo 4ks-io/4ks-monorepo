@@ -9,7 +9,7 @@ import (
 
 // SearchController is the interface for the search controller
 type SearchController interface {
-	CreateSearchRecipeCollection(c *gin.Context)
+	CreateSearchRecipeCollection(*gin.Context)
 }
 
 type searchController struct {

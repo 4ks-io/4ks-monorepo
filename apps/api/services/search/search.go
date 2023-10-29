@@ -15,8 +15,8 @@ import (
 // Service is the interface for the search service
 type Service interface {
 	CreateSearchRecipeCollection() error
-	RemoveSearchRecipeDocument(id *string) error
-	UpsertSearchRecipeDocument(r *models.Recipe) error
+	RemoveSearchRecipeDocument(*string) error
+	UpsertSearchRecipeDocument(*models.Recipe) error
 }
 
 type searchService struct {

@@ -8,9 +8,9 @@ import (
 
 // SystemController is the interface for the systemController
 type SystemController interface {
-	CheckReadiness(c *gin.Context)
-	Healthcheck(c *gin.Context)
-	GetAPIVersion(string) func(c *gin.Context)
+	CheckReadiness(*gin.Context)
+	Healthcheck(*gin.Context)
+	GetAPIVersion(string) func(*gin.Context)
 }
 
 // systemController is the controller for the System endpoints

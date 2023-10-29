@@ -13,15 +13,15 @@ import (
 
 // UserController is the interface for the user controller
 type UserController interface {
-	CreateUser(ctx *gin.Context)
-	HeadAuthenticatedUser(ctx *gin.Context)
-	GetCurrentUserExist(ctx *gin.Context)
-	GetCurrentUser(ctx *gin.Context)
-	GetUser(ctx *gin.Context)
-	GetUsers(ctx *gin.Context)
-	DeleteUser(ctx *gin.Context)
-	UpdateUser(ctx *gin.Context)
-	TestUsername(ctx *gin.Context)
+	CreateUser(*gin.Context)
+	HeadAuthenticatedUser(*gin.Context)
+	GetCurrentUserExist(*gin.Context)
+	GetCurrentUser(*gin.Context)
+	GetUser(*gin.Context)
+	GetUsers(*gin.Context)
+	DeleteUser(*gin.Context)
+	UpdateUser(*gin.Context)
+	TestUsername(*gin.Context)
 }
 
 type userController struct {

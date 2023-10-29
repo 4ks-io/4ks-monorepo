@@ -19,8 +19,8 @@ var staticMediaBucket = os.Getenv("STATIC_MEDIA_BUCKET")
 
 // Service is the interface for the static service
 type Service interface {
-	GetRandomFallbackImage(c *gin.Context) (string, error)
-	GetRandomFallbackImageURL(filename string) string
+	GetRandomFallbackImage(*gin.Context) (string, error)
+	GetRandomFallbackImageURL(string) string
 }
 
 type staticService struct {

@@ -31,15 +31,15 @@ var (
 
 // Service is the interface for the user service
 type Service interface {
-	GetAllUsers(ctx context.Context) ([]*models.User, error)
-	GetUserByID(ctx context.Context, id *string) (*models.User, error)
-	GetUserByUsername(ctx context.Context, username *string) (*models.User, error)
-	GetUserByEmail(ctx context.Context, emailAddress *string) (*models.User, error)
-	CreateUser(ctx context.Context, userID *string, userEmail *string, user *dtos.CreateUser) (*models.User, error)
-	UpdateUserByID(ctx context.Context, userID *string, user *dtos.UpdateUser) (*models.User, error)
-	DeleteUser(ctx context.Context, id *string) error
-	TestUsernameValid(username *string) bool
-	TestUsernameExist(ctx context.Context, username *string) (bool, error)
+	GetAllUsers(context.Context) ([]*models.User, error)
+	GetUserByID(context.Context, *string) (*models.User, error)
+	GetUserByUsername(context.Context, *string) (*models.User, error)
+	GetUserByEmail(context.Context, *string) (*models.User, error)
+	CreateUser(context.Context, *string, *string, *dtos.CreateUser) (*models.User, error)
+	UpdateUserByID(context.Context, *string, *dtos.UpdateUser) (*models.User, error)
+	DeleteUser(context.Context, *string) error
+	TestUsernameValid(*string) bool
+	TestUsernameExist(context.Context, *string) (bool, error)
 
 	// new
 	// TestName(string) error
@@ -52,13 +52,13 @@ type userService struct {
 	userCollection *firestore.CollectionRef
 	validator      *validator.Validate
 	reservedWords  *[]string
-	sysFlags *utils.SystemFlags
+	sysFlags       *utils.SystemFlags
 }
 
 // New creates a new user service
 func New(sysFlags *utils.SystemFlags, store *firestore.Client, validator *validator.Validate, reservedWords *[]string) Service {
 	return &userService{
-		sysFlags: sysFlags,
+		sysFlags:       sysFlags,
 		validator:      validator,
 		reservedWords:  reservedWords,
 		userCollection: store.Collection("users"),

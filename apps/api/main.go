@@ -157,7 +157,7 @@ func AppendRoutes(r *gin.Engine, c *Controllers, o *RouteOpts) {
 func main() {
 	// args
 	sysFlags := utils.SystemFlags{
-		Debug: utils.GetStrEnvVar("GIN_MODE", "release") == "debug",
+		Debug:       utils.GetStrEnvVar("GIN_MODE", "release") == "debug",
 		Development: utils.GetBoolEnv("IO_4KS_DEVING", false),
 	}
 
