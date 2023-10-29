@@ -87,7 +87,7 @@ docker_build(
         'tools'
     ],
     live_update=[
-        sync('', '/app/'),
+        sync('', '/code/'),
         sync('libs/ts/api-fetch', '/app/libs/ts/api-fetch'),
         run(
             'pnpm --filter @4ks/ts-api-fetch build',

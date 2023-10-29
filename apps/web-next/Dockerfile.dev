@@ -7,13 +7,13 @@ WORKDIR /code
 # Copy all dependency related files and install dependencies
 COPY /package.json .
 COPY /pnpm* .
-COPY /apps/web-next/package.json ./apps/web/
-COPY /apps/web-next/pnpm* ./apps/web
+COPY /apps/web-next/package.json ./apps/web-next/
+COPY /apps/web-next/pnpm* ./apps/web-next/
 COPY /libs/ts/api-fetch/package.json ./libs/ts/api-fetch/
 RUN pnpm install
 
 COPY ./libs/ts/api-fetch ./libs/ts/api-fetch
-COPY ./apps/web-next ./apps/web
+COPY ./apps/web-next ./apps/web-next
 
 RUN pnpm --filter @4ks/api-fetch build
 
