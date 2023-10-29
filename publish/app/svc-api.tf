@@ -159,17 +159,17 @@ resource "google_compute_region_network_endpoint_group" "api_neg" {
   }
 }
 
-resource "google_compute_backend_service" "api" {
-  name = "${local.project}-api-backend"
+# resource "google_compute_backend_service" "api" {
+#   name = "${local.project}-api-backend"
 
-  protocol    = "HTTP"
-  port_name   = "http"
-  timeout_sec = 30
+#   protocol    = "HTTP"
+#   port_name   = "http"
+#   timeout_sec = 30
 
-  backend {
-    group = google_compute_region_network_endpoint_group.api_neg.id
-  }
-}
+#   backend {
+#     group = google_compute_region_network_endpoint_group.api_neg.id
+#   }
+# }
 
 output "api_service_url" {
   value = google_cloud_run_service.api.status[0].url

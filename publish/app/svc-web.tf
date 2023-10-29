@@ -45,15 +45,15 @@ resource "google_compute_region_network_endpoint_group" "web_neg" {
   }
 }
 
-resource "google_compute_backend_service" "web" {
-  name        = "${local.project}-web-backend"
-  protocol    = "HTTP"
-  port_name   = "http"
-  timeout_sec = 30
+# resource "google_compute_backend_service" "web" {
+#   name        = "${local.project}-web-backend"
+#   protocol    = "HTTP"
+#   port_name   = "http"
+#   timeout_sec = 30
 
-  security_policy = google_compute_security_policy.development.id
+#   security_policy = google_compute_security_policy.development.id
 
-  backend {
-    group = google_compute_region_network_endpoint_group.web_neg.id
-  }
-}
+#   backend {
+#     group = google_compute_region_network_endpoint_group.web_neg.id
+#   }
+# }
