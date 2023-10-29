@@ -9,14 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^3.2.0",
     "@emotion/cache": "latest",
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
+    "@tanstack/react-query": "^4.35.3",
+    "@trpc/client": "^10.43.0",
+    "@trpc/react-query": "^10.43.0",
+    "@trpc/server": "^10.43.0",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "latest",

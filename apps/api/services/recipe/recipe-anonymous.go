@@ -1,14 +1,16 @@
-package recipe
+package recipesvc
 
 import (
+	"context"
+
 	firestore "cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
 
 	models "4ks/libs/go/models"
 )
 
-func (rs recipeService) GetRecipeByID(id *string) (*models.Recipe, error) {
-	result, err := recipeCollection.Doc(*id).Get(ctx)
+func (s recipeService) GetRecipeByID(ctx context.Context, id *string) (*models.Recipe, error) {
+	result, err := s.recipeCollection.Doc(*id).Get(ctx)
 
 	if err != nil {
 		return nil, ErrRecipeNotFound
@@ -23,9 +25,9 @@ func (rs recipeService) GetRecipeByID(id *string) (*models.Recipe, error) {
 	return recipe, nil
 }
 
-func (rs recipeService) GetRecipes(limit int) ([]*models.Recipe, error) {
+func (s recipeService) GetRecipes(ctx context.Context, limit int) ([]*models.Recipe, error) {
 	var all []*models.Recipe
-	iter := recipeCollection.Limit(limit).Documents(ctx)
+	iter := s.recipeCollection.Limit(limit).Documents(ctx)
 	defer iter.Stop()
 
 	for {
@@ -51,38 +53,9 @@ func (rs recipeService) GetRecipes(limit int) ([]*models.Recipe, error) {
 	return all, nil
 }
 
-func (rs recipeService) GetRecipesByUsername(username *string, limit int) ([]*models.Recipe, error) {
+func (s recipeService) GetRecipesByUsername(ctx context.Context, username *string, limit int) ([]*models.Recipe, error) {
 	var all []*models.Recipe
-	iter := recipeCollection.Where("author.username", "==", &username).Limit(limit).Documents(ctx)
-
-	defer iter.Stop()
-
-	for {
-		doc, err := iter.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			// Handle error, possibly by returning the error
-			// to the caller. Break the loop or return.
-			return nil, err
-		}
-		var u models.Recipe
-		if err := doc.DataTo(&u); err != nil {
-			// Handle error, possibly by returning the error
-			// to the caller. Continue the loop,
-			// break the loop or return.
-			return nil, err
-		}
-		all = append(all, &u)
-	}
-
-	return all, nil
-}
-
-func (rs recipeService) GetRecipesByUserID(id *string, limit int) ([]*models.Recipe, error) {
-	var all []*models.Recipe
-	iter := recipeCollection.Where("author.id", "==", &id).Limit(limit).Documents(ctx)
+	iter := s.recipeCollection.Where("author.username", "==", &username).Limit(limit).Documents(ctx)
 
 	defer iter.Stop()
 
@@ -109,8 +82,37 @@ func (rs recipeService) GetRecipesByUserID(id *string, limit int) ([]*models.Rec
 	return all, nil
 }
 
-func (rs recipeService) GetRecipeRevisions(recipeID *string) ([]*models.RecipeRevision, error) {
-	recipeRevisionsDocs, err := recipeRevisionsCollection.Where("recipeID", "==", recipeID).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
+func (s recipeService) GetRecipesByUserID(ctx context.Context, id *string, limit int) ([]*models.Recipe, error) {
+	var all []*models.Recipe
+	iter := s.recipeCollection.Where("author.id", "==", &id).Limit(limit).Documents(ctx)
+
+	defer iter.Stop()
+
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			// Handle error, possibly by returning the error
+			// to the caller. Break the loop or return.
+			return nil, err
+		}
+		var u models.Recipe
+		if err := doc.DataTo(&u); err != nil {
+			// Handle error, possibly by returning the error
+			// to the caller. Continue the loop,
+			// break the loop or return.
+			return nil, err
+		}
+		all = append(all, &u)
+	}
+
+	return all, nil
+}
+
+func (s recipeService) GetRecipeRevisions(ctx context.Context, recipeID *string) ([]*models.RecipeRevision, error) {
+	recipeRevisionsDocs, err := s.recipeRevisionsCollection.Where("recipeID", "==", recipeID).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
 
 	if err != nil {
 		return nil, err
@@ -131,8 +133,8 @@ func (rs recipeService) GetRecipeRevisions(recipeID *string) ([]*models.RecipeRe
 	return recipeRevisions, nil
 }
 
-func (rs recipeService) GetRecipeRevisionByID(revisionID *string) (*models.RecipeRevision, error) {
-	recipeRevisionDoc, err := recipeRevisionsCollection.Doc(*revisionID).Get(ctx)
+func (s recipeService) GetRecipeRevisionByID(ctx context.Context, revisionID *string) (*models.RecipeRevision, error) {
+	recipeRevisionDoc, err := s.recipeRevisionsCollection.Doc(*revisionID).Get(ctx)
 
 	if err != nil {
 		return nil, ErrRecipeRevisionNotFound

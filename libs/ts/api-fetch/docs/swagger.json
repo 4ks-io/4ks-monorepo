@@ -670,7 +670,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/user/": {
             "head": {
                 "security": [
                     {
@@ -741,7 +743,7 @@
                 }
             }
         },
-        "/users": {
+        "/users/": {
             "get": {
                 "security": [
                     {

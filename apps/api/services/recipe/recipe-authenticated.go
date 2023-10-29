@@ -1,6 +1,7 @@
-package recipe
+package recipesvc
 
 import (
+	"context"
 	"time"
 
 	firestore "cloud.google.com/go/firestore"
@@ -11,8 +12,8 @@ import (
 	models "4ks/libs/go/models"
 )
 
-func (rs recipeService) DeleteRecipe(id string, sub string) error {
-	result, _ := recipeCollection.Doc(id).Get(ctx)
+func (s recipeService) DeleteRecipe(ctx context.Context, id string, sub string) error {
+	result, _ := s.recipeCollection.Doc(id).Get(ctx)
 	if !result.Exists() {
 		return ErrRecipeNotFound
 	}
@@ -30,7 +31,7 @@ func (rs recipeService) DeleteRecipe(id string, sub string) error {
 		return ErrUnauthorized
 	}
 
-	_, err := recipeCollection.Doc(id).Delete(ctx)
+	_, err := s.recipeCollection.Doc(id).Delete(ctx)
 	if err != nil {
 		return err
 	}
@@ -38,9 +39,9 @@ func (rs recipeService) DeleteRecipe(id string, sub string) error {
 	return nil
 }
 
-func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe, error) {
-	newRecipeDoc := recipeCollection.NewDoc()
-	newRevisionDoc := recipeRevisionsCollection.NewDoc()
+func (s recipeService) CreateRecipe(ctx context.Context, recipe *dtos.CreateRecipe) (*models.Recipe, error) {
+	newRecipeDoc := s.recipeCollection.NewDoc()
+	newRevisionDoc := s.recipeRevisionsCollection.NewDoc()
 
 	recipeCreatedDate := time.Now().UTC()
 
@@ -70,7 +71,7 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 		UpdatedDate:     recipeCreatedDate,
 	}
 
-	_, err := s.Batch().Create(newRevisionDoc, recipeRevision).Create(newRecipeDoc, newRecipe).Commit(ctx)
+	_, err := s.store.Batch().Create(newRevisionDoc, recipeRevision).Create(newRecipeDoc, newRecipe).Commit(ctx)
 
 	if err != nil {
 		return nil, ErrUnableToCreateRecipe
@@ -79,8 +80,8 @@ func (rs recipeService) CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe,
 	return newRecipe, nil
 }
 
-func (rs recipeService) UpdateRecipeByID(recipeID *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error) {
-	recipeDoc, err := recipeCollection.Doc(*recipeID).Get(ctx)
+func (s recipeService) UpdateRecipeByID(ctx context.Context, recipeID *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error) {
+	recipeDoc, err := s.recipeCollection.Doc(*recipeID).Get(ctx)
 
 	if err != nil {
 		return nil, ErrRecipeNotFound
@@ -98,7 +99,7 @@ func (rs recipeService) UpdateRecipeByID(recipeID *string, recipeUpdate *dtos.Up
 	}
 
 	recipeUpdatedDate := time.Now().UTC()
-	newRevisionDocRef := recipeRevisionsCollection.NewDoc()
+	newRevisionDocRef := s.recipeRevisionsCollection.NewDoc()
 	newRevision := &models.RecipeRevision{}
 
 	// Copy the existing revision data into the new revision
@@ -115,7 +116,7 @@ func (rs recipeService) UpdateRecipeByID(recipeID *string, recipeUpdate *dtos.Up
 	recipe.CurrentRevision = *newRevision
 	recipe.UpdatedDate = recipeUpdatedDate
 
-	_, err = s.Batch().Create(newRevisionDocRef, newRevision).Set(recipeDoc.Ref, recipe).Commit(ctx)
+	_, err = s.store.Batch().Create(newRevisionDocRef, newRevision).Set(recipeDoc.Ref, recipe).Commit(ctx)
 
 	if err != nil {
 		return nil, ErrUnableToUpdateRecipe
@@ -124,8 +125,8 @@ func (rs recipeService) UpdateRecipeByID(recipeID *string, recipeUpdate *dtos.Up
 	return recipe, nil
 }
 
-func (rs recipeService) ForkRecipeByID(recipeID *string, forkAuthor models.UserSummary) (*models.Recipe, error) {
-	recipeDoc, err := recipeCollection.Doc(*recipeID).Get(ctx)
+func (s recipeService) ForkRecipeByID(ctx context.Context, recipeID *string, forkAuthor models.UserSummary) (*models.Recipe, error) {
+	recipeDoc, err := s.recipeCollection.Doc(*recipeID).Get(ctx)
 
 	if err != nil {
 		return nil, ErrRecipeNotFound
@@ -134,8 +135,8 @@ func (rs recipeService) ForkRecipeByID(recipeID *string, forkAuthor models.UserS
 	recipe := new(models.Recipe)
 	recipeDoc.DataTo(recipe)
 
-	newRecipeDocRef := recipeCollection.NewDoc()
-	newRevisionDocRef := recipeRevisionsCollection.NewDoc()
+	newRecipeDocRef := s.recipeCollection.NewDoc()
+	newRevisionDocRef := s.recipeRevisionsCollection.NewDoc()
 
 	recipe.Branch = recipe.ID
 	recipe.ID = newRecipeDocRef.ID
@@ -148,7 +149,7 @@ func (rs recipeService) ForkRecipeByID(recipeID *string, forkAuthor models.UserS
 	recipe.Metadata.Forks = 0
 	recipe.Metadata.Stars = 0
 
-	_, err = s.Batch().Create(newRevisionDocRef, recipe.CurrentRevision).Create(newRecipeDocRef, recipe).Update(recipeDoc.Ref, []firestore.Update{
+	_, err = s.store.Batch().Create(newRevisionDocRef, recipe.CurrentRevision).Create(newRecipeDocRef, recipe).Update(recipeDoc.Ref, []firestore.Update{
 		{Path: "metadata.forks", Value: firestore.Increment(1)},
 	}).Commit(ctx)
 
@@ -159,8 +160,8 @@ func (rs recipeService) ForkRecipeByID(recipeID *string, forkAuthor models.UserS
 	return recipe, nil
 }
 
-func (rs recipeService) StarRecipeByID(recipeID *string, author models.UserSummary) (bool, error) {
-	recipeStarDocs, err := recipeStarsCollection.Where("user.id", "==", author.ID).Where("recipe.id", "==", *recipeID).Documents(ctx).GetAll()
+func (s recipeService) StarRecipeByID(ctx context.Context, recipeID *string, author models.UserSummary) (bool, error) {
+	recipeStarDocs, err := s.recipeStarsCollection.Where("user.id", "==", author.ID).Where("recipe.id", "==", *recipeID).Documents(ctx).GetAll()
 
 	if err != nil {
 		return false, err
@@ -170,7 +171,7 @@ func (rs recipeService) StarRecipeByID(recipeID *string, author models.UserSumma
 		return false, ErrRecipeAlreadyStarred
 	}
 
-	recipeDoc, err := recipeCollection.Doc(*recipeID).Get(ctx)
+	recipeDoc, err := s.recipeCollection.Doc(*recipeID).Get(ctx)
 
 	if err != nil {
 		return false, ErrRecipeNotFound
@@ -190,7 +191,7 @@ func (rs recipeService) StarRecipeByID(recipeID *string, author models.UserSumma
 		UpdatedDate: starredDate,
 	}
 
-	_, err = s.Batch().Create(recipeStarsCollection.NewDoc(), recipeStarDoc).Update(recipeDoc.Ref, []firestore.Update{
+	_, err = s.store.Batch().Create(s.recipeStarsCollection.NewDoc(), recipeStarDoc).Update(recipeDoc.Ref, []firestore.Update{
 		{Path: "metadata.stars", Value: firestore.Increment(1)},
 	}).Commit(ctx)
 

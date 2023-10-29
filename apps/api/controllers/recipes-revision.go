@@ -18,19 +18,19 @@ import (
 // @Success 		200 		{array} 	models.RecipeRevision
 // @Router 			/recipes/{recipeID}/revisions [get]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) GetRecipeRevisions(c *gin.Context) {
-	recipeID := c.Param("id")
-	recipeRevisions, err := rc.recipeService.GetRecipeRevisions(&recipeID)
+func (c *recipeController) GetRecipeRevisions(ctx *gin.Context) {
+	recipeID := ctx.Param("id")
+	recipeRevisions, err := c.recipeService.GetRecipeRevisions(ctx, &recipeID)
 
 	if err == recipeService.ErrRecipeNotFound {
-		c.AbortWithError(http.StatusNotFound, err)
+		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, recipeRevisions)
+	ctx.JSON(http.StatusOK, recipeRevisions)
 }
 
 // GetRecipeRevision godoc
@@ -43,17 +43,17 @@ func (rc *recipeController) GetRecipeRevisions(c *gin.Context) {
 // @Success 		200 		{object} 	models.RecipeRevision
 // @Router 			/recipes/revisions/{revisionID} [get]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) GetRecipeRevision(c *gin.Context) {
-	revisionID := c.Param("revisionID")
-	recipeRevision, err := rc.recipeService.GetRecipeRevisionByID(&revisionID)
+func (c *recipeController) GetRecipeRevision(ctx *gin.Context) {
+	revisionID := ctx.Param("revisionID")
+	recipeRevision, err := c.recipeService.GetRecipeRevisionByID(ctx, &revisionID)
 
 	if err == recipeService.ErrRecipeRevisionNotFound {
-		c.AbortWithError(http.StatusNotFound, err)
+		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, recipeRevision)
+	ctx.JSON(http.StatusOK, recipeRevision)
 }

@@ -30,8 +30,28 @@ spec:
         - name: web-next
           image: web-next
           env:
-            - name: FOO
-              value: bar
+            - name: IO_4KS_BASE_URL
+              value: https://local.4ks.io
+            - name: IO_4KS_API_URL
+              value: http://api.default.svc.cluster.local
+            - name: AUTH0_BASE_URL
+              value: https://local.4ks.io
+            - name: AUTH0_CLIENT_ID
+              value: eM5Zyyfp6coLg3zORMFsZEnQmpqxBjHd
+            - name: AUTH0_CLIENT_SECRET
+              value: AxT9wCGFYRTz38XhhZuVuAKZvoXiNMmPb1WYLeb-SkU90IC6vqJKdgeScbHccGHn
+            - name: AUTH0_ISSUER_BASE_URL
+              value: https://4ks-dev.us.auth0.com
+            - name: AUTH0_AUDIENCE
+              value: https://local.4ks.io/api
+            - name: AUTH0_CALLBACK
+              value: /app/auth/callback
+            - name: AUTH0_SECRET
+              value: ba0061b7a3a8697b707006005b678f775773a8b94561634308c9c5e1a2030fa4
+            - name: NEXT_PUBLIC_AUTH0_LOGIN
+              value: /app/auth/login
+            - name: NEXT_PUBLIC_AUTH0_PROFILE
+              value: /app/auth/me
           ports:
             - containerPort: 3000
           # readinessProbe:

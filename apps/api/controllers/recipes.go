@@ -35,11 +35,11 @@ type recipeController struct {
 }
 
 // NewRecipeController creates a new recipe controller
-func NewRecipeController() RecipeController {
+func NewRecipeController(u userService.Service, r recipeService.Service) RecipeController {
 	return &recipeController{
-		recipeService: recipeService.New(),
+		recipeService: r,
 		searchService: searchService.New(),
-		userService:   userService.New(),
+		userService:   u,
 		staticService: staticService.New(),
 	}
 }

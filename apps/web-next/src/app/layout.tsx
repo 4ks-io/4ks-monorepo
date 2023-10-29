@@ -1,49 +1,32 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
+import { UserProvider } from '@auth0/nextjs-auth0/client';
+import type { Metadata } from 'next';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: '4ks',
   description: '4ks',
 };
 
-export default function RootLayout({
-  children,
-}: {
+interface RootLayoutProps {
   children: React.ReactNode;
-}) {
+}
+
+function RootLayoutBody({ children }: RootLayoutProps) {
+  // todo: handle auth
+
+  return (
+    <>
+      <body>{children}</body>
+    </>
+  );
+}
+
+export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body>
-        <ThemeRegistry>
-          <AppBar position="static" sx={{ zIndex: 2000 }}>
-            <Toolbar sx={{ backgroundColor: 'background.paper' }}>
-              <Box
-                component="img"
-                sx={{
-                  height: 36,
-                  paddingRight: 1,
-                }}
-                alt="4ks.io"
-                src={'/logo.svg'}
-              />
-            </Toolbar>
-          </AppBar>
-          <Box
-            component="main"
-            sx={{
-              flexGrow: 1,
-              bgcolor: 'background.default',
-              mt: ['12px', '18px', '24px'],
-              p: 3,
-            }}
-          >
-            {children}
-          </Box>
-        </ThemeRegistry>
-      </body>
+      <UserProvider>
+        <RootLayoutBody>{children}</RootLayoutBody>
+      </UserProvider>
     </html>
   );
 }

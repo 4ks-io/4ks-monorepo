@@ -1,11 +1,8 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import MediaCard from '@/components/MediaCard';
 
-export default function HomePage() {
+export default function DefaultPage() {
   return (
     <Grid container rowSpacing={3} columnSpacing={3}>
       <Grid xs={6}>

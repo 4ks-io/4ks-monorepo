@@ -678,7 +678,9 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/user/": {
             "head": {
                 "security": [
                     {
@@ -749,7 +751,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users": {
+        "/users/": {
             "get": {
                 "security": [
                     {

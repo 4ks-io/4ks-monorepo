@@ -1,26 +1,22 @@
 // Package user is the user service
-package user
+package usersvc
 
 import (
 	"context"
 	"errors"
-	"os"
 	"regexp"
 	"strings"
 	"time"
 
 	firestore "cloud.google.com/go/firestore"
+	"github.com/go-playground/validator/v10"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/api/iterator"
 
 	"4ks/apps/api/dtos"
+	"4ks/apps/api/utils"
 	models "4ks/libs/go/models"
 )
-
-var firstoreProjectID = os.Getenv("FIRESTORE_PROJECT_ID")
-var ctx = context.Background()
-var storage, _ = firestore.NewClient(ctx, firstoreProjectID)
-var userCollection = storage.Collection("users")
 
 var (
 	// ErrEmailInUse is returned when a user is unable to create a recipe
@@ -35,31 +31,43 @@ var (
 
 // Service is the interface for the user service
 type Service interface {
-	GetAllUsers() ([]*models.User, error)
-	GetUserByID(id *string) (*models.User, error)
-	GetUserByUsername(username *string) (*models.User, error)
-	GetUserByEmail(emailAddress *string) (*models.User, error)
-	CreateUser(userID *string, userEmail *string, user *dtos.CreateUser) (*models.User, error)
-	UpdateUserByID(userID *string, user *dtos.UpdateUser) (*models.User, error)
-	DeleteUser(id *string) error
+	GetAllUsers(ctx context.Context) ([]*models.User, error)
+	GetUserByID(ctx context.Context, id *string) (*models.User, error)
+	GetUserByUsername(ctx context.Context, username *string) (*models.User, error)
+	GetUserByEmail(ctx context.Context, emailAddress *string) (*models.User, error)
+	CreateUser(ctx context.Context, userID *string, userEmail *string, user *dtos.CreateUser) (*models.User, error)
+	UpdateUserByID(ctx context.Context, userID *string, user *dtos.UpdateUser) (*models.User, error)
+	DeleteUser(ctx context.Context, id *string) error
 	TestUsernameValid(username *string) bool
-	TestUsernameExist(username *string) (bool, error)
+	TestUsernameExist(ctx context.Context, username *string) (bool, error)
+
+	// new
+	// TestName(string) error
+	// TestValidName(string) bool
+	// TestReservedWord(string) bool
+	// TestAvailableName(string) (bool, error)
 }
 
 type userService struct {
+	userCollection *firestore.CollectionRef
+	validator      *validator.Validate
+	reservedWords  *[]string
+	sysFlags *utils.SystemFlags
 }
 
 // New creates a new user service
-func New() Service {
-	if value, ok := os.LookupEnv("FIRESTORE_EMULATOR_HOST"); ok {
-		log.Info().Caller().Str("host", value).Msg("Using Firestore Emulator")
+func New(sysFlags *utils.SystemFlags, store *firestore.Client, validator *validator.Validate, reservedWords *[]string) Service {
+	return &userService{
+		sysFlags: sysFlags,
+		validator:      validator,
+		reservedWords:  reservedWords,
+		userCollection: store.Collection("users"),
 	}
-	return &userService{}
 }
 
-func (us userService) GetAllUsers() ([]*models.User, error) {
+func (s userService) GetAllUsers(ctx context.Context) ([]*models.User, error) {
 	var all []*models.User
-	iter := userCollection.Documents(ctx)
+	iter := s.userCollection.Documents(ctx)
 	defer iter.Stop() // add this line to ensure resources cleaned up
 
 	for {
@@ -86,8 +94,8 @@ func (us userService) GetAllUsers() ([]*models.User, error) {
 	return all, nil
 }
 
-func (us userService) GetUserByID(id *string) (*models.User, error) {
-	result, err := userCollection.Doc(*id).Get(ctx)
+func (s userService) GetUserByID(ctx context.Context, id *string) (*models.User, error) {
+	result, err := s.userCollection.Doc(*id).Get(ctx)
 	if err != nil {
 		return nil, ErrUserNotFound
 	}
@@ -103,9 +111,9 @@ func (us userService) GetUserByID(id *string) (*models.User, error) {
 	return user, nil
 }
 
-func (us userService) GetUserByUsername(username *string) (*models.User, error) {
+func (s userService) GetUserByUsername(ctx context.Context, username *string) (*models.User, error) {
 	// result, err := userCollection.Where("usernameLower", "==", l).Documents(ctx).GetAll()
-	result, err := userCollection.Where("usernameLower", "==", strings.ToLower(*username)).Documents(ctx).GetAll()
+	result, err := s.userCollection.Where("usernameLower", "==", strings.ToLower(*username)).Documents(ctx).GetAll()
 	if err != nil || len(result) == 0 {
 		return nil, ErrUserNotFound
 	}
@@ -124,8 +132,8 @@ func (us userService) GetUserByUsername(username *string) (*models.User, error) 
 	return user, nil
 }
 
-func (us userService) GetUserByEmail(emailAddress *string) (*models.User, error) {
-	result, err := userCollection.Where("emailAddress", "==", emailAddress).Documents(ctx).GetAll()
+func (s userService) GetUserByEmail(ctx context.Context, emailAddress *string) (*models.User, error) {
+	result, err := s.userCollection.Where("emailAddress", "==", emailAddress).Documents(ctx).GetAll()
 	if err != nil || len(result) == 0 {
 		return nil, ErrUserNotFound
 	}
@@ -142,7 +150,7 @@ func (us userService) GetUserByEmail(emailAddress *string) (*models.User, error)
 	return user, nil
 }
 
-func (us userService) TestUsernameValid(username *string) bool {
+func (s userService) TestUsernameValid(username *string) bool {
 	/*
 		1. at least 8 characters
 		2. no longer than 24 characters
@@ -162,18 +170,18 @@ func (us userService) TestUsernameValid(username *string) bool {
 	return false
 }
 
-func (us userService) CreateUser(userID *string, userEmail *string, user *dtos.CreateUser) (*models.User, error) {
-	isValid := us.TestUsernameValid(&user.Username)
+func (s userService) CreateUser(ctx context.Context, userID *string, userEmail *string, user *dtos.CreateUser) (*models.User, error) {
+	isValid := s.TestUsernameValid(&user.Username)
 	if !isValid {
 		return nil, ErrInvalidUsername
 	}
 
-	existingUserID, _ := userCollection.Doc(*userID).Get(ctx)
+	existingUserID, _ := s.userCollection.Doc(*userID).Get(ctx)
 	if existingUserID.Exists() {
 		return nil, ErrEmailInUse
 	}
 
-	usersWithUsername, err := userCollection.Where("usernameLower", "==", strings.ToLower(user.Username)).Documents(ctx).GetAll()
+	usersWithUsername, err := s.userCollection.Where("usernameLower", "==", strings.ToLower(user.Username)).Documents(ctx).GetAll()
 
 	if len(usersWithUsername) > 0 {
 		return nil, ErrUsernameInUse
@@ -191,7 +199,7 @@ func (us userService) CreateUser(userID *string, userEmail *string, user *dtos.C
 		UpdatedDate:   time.Now().UTC(),
 	}
 
-	_, err = userCollection.Doc(*userID).Create(ctx, newUser)
+	_, err = s.userCollection.Doc(*userID).Create(ctx, newUser)
 	if err != nil {
 		return nil, err
 	}
@@ -199,15 +207,15 @@ func (us userService) CreateUser(userID *string, userEmail *string, user *dtos.C
 	return newUser, nil
 }
 
-func (us userService) UpdateUserByID(userID *string, user *dtos.UpdateUser) (*models.User, error) {
+func (s userService) UpdateUserByID(ctx context.Context, userID *string, user *dtos.UpdateUser) (*models.User, error) {
 	if user.Username != "" {
-		isValid := us.TestUsernameValid(&user.Username)
+		isValid := s.TestUsernameValid(&user.Username)
 		if !isValid {
 			return nil, ErrInvalidUsername
 		}
 	}
 
-	_, err := userCollection.Doc(*userID).Update(ctx, []firestore.Update{
+	_, err := s.userCollection.Doc(*userID).Update(ctx, []firestore.Update{
 		{
 			Path:  "username",
 			Value: user.Username,
@@ -221,7 +229,7 @@ func (us userService) UpdateUserByID(userID *string, user *dtos.UpdateUser) (*mo
 		log.Printf("An error has occurred: %s", err)
 	}
 
-	u, err := us.GetUserByID(userID)
+	u, err := s.GetUserByID(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -230,13 +238,13 @@ func (us userService) UpdateUserByID(userID *string, user *dtos.UpdateUser) (*mo
 }
 
 // todo: add with disableUser/enableUser as we never want to delete a recipe
-func (us userService) DeleteUser(userID *string) error {
-	existingUserID, _ := userCollection.Doc(*userID).Get(ctx)
+func (s userService) DeleteUser(ctx context.Context, userID *string) error {
+	existingUserID, _ := s.userCollection.Doc(*userID).Get(ctx)
 	if !existingUserID.Exists() {
 		return ErrUserNotFound
 	}
 
-	_, err := userCollection.Doc(*userID).Delete(ctx)
+	_, err := s.userCollection.Doc(*userID).Delete(ctx)
 	if err != nil {
 		return err
 	}
@@ -244,9 +252,9 @@ func (us userService) DeleteUser(userID *string) error {
 	return nil
 }
 
-func (us userService) TestUsernameExist(username *string) (bool, error) {
+func (s userService) TestUsernameExist(ctx context.Context, username *string) (bool, error) {
 	// u, err := url.PathUnescape(*username)
-	usersWithUsername, err := userCollection.Where("usernameLower", "==", strings.ToLower(*username)).Documents(ctx).GetAll()
+	usersWithUsername, err := s.userCollection.Where("usernameLower", "==", strings.ToLower(*username)).Documents(ctx).GetAll()
 	if err != nil || len(usersWithUsername) > 0 {
 		return true, ErrUsernameInUse
 	}

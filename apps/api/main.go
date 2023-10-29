@@ -2,6 +2,7 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"os"
 	"strings"
@@ -10,10 +11,14 @@ import (
 
 	controllers "4ks/apps/api/controllers"
 	middleware "4ks/apps/api/middleware"
+	recipesvc "4ks/apps/api/services/recipe"
+	usersvc "4ks/apps/api/services/user"
 	utils "4ks/apps/api/utils"
 	tracing "4ks/libs/go/tracer"
 
+	"cloud.google.com/go/firestore"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	adapter "github.com/gwatts/gin-adapter"
 	"github.com/rs/zerolog/log"
 	swaggerfiles "github.com/swaggo/files"
@@ -82,7 +87,7 @@ func AppendRoutes(r *gin.Engine, c *Controllers, o *RouteOpts) {
 		}
 
 		// recipes
-		recipes := api.Group("/recipes")
+		recipes := api.Group("/recipes/")
 		{
 			recipes.GET(":id", c.Recipe.GetRecipe)
 			recipes.GET("", c.Recipe.GetRecipes)
@@ -106,14 +111,14 @@ func AppendRoutes(r *gin.Engine, c *Controllers, o *RouteOpts) {
 		// authenticated routes below this line
 		EnforceAuth(api)
 
-		user := api.Group("/user")
+		user := api.Group("/user/")
 		{
 			user.HEAD("", c.User.HeadAuthenticatedUser)
 			user.GET("", c.User.GetCurrentUser)
 			user.POST("", c.User.CreateUser)
 			user.PATCH(":id", c.User.UpdateUser)
 		}
-		users := api.Group("/users")
+		users := api.Group("/users/")
 		{
 			users.DELETE(":id", middleware.Authorize("/users/*", "delete"), c.User.DeleteUser)
 			users.POST("username", c.User.TestUsername)
@@ -131,7 +136,7 @@ func AppendRoutes(r *gin.Engine, c *Controllers, o *RouteOpts) {
 		}
 
 		// admin
-		admin := api.Group("/_admin/recipes")
+		admin := api.Group("/_admin/recipes/")
 		{
 			admin.POST("", middleware.Authorize("/recipes/*", "create"), c.Recipe.BotCreateRecipe)
 			admin.GET(":id/media", middleware.Authorize("/recipes/*", "list"), c.Recipe.GetAdminRecipeMedias)
@@ -150,7 +155,27 @@ func AppendRoutes(r *gin.Engine, c *Controllers, o *RouteOpts) {
 
 // @BasePath /api
 func main() {
-	isDebug := utils.GetStrEnvVar("GIN_MODE", "release") == "debug"
+	// args
+	sysFlags := utils.SystemFlags{
+		Debug: utils.GetStrEnvVar("GIN_MODE", "release") == "debug",
+		Development: utils.GetBoolEnv("IO_4KS_DEVING", false),
+	}
+
+	// firestore
+	firstoreProjectID := os.Getenv("FIRESTORE_PROJECT_ID")
+	if firstoreProjectID == "" {
+		panic("FIRESTORE_PROJECT_ID must be set")
+	}
+	if value, ok := os.LookupEnv("FIRESTORE_EMULATOR_HOST"); ok {
+		log.Printf("Using Firestore Emulator: '%s'", value)
+	}
+
+	// load reserved words
+	reservedWordsFile := utils.GetStrEnvVar("AUDITLAB_RESERVED_WORDS_FILE", "./reserved-words")
+	reservedWords, err := ReadWordsFromFile(reservedWordsFile)
+	if err != nil {
+		panic(err)
+	}
 
 	// jaeger
 	if value := utils.GetBoolEnv("JAEGER_ENABLED", false); value {
@@ -163,27 +188,36 @@ func main() {
 		}()
 	}
 
+	// database
+	var ctx = context.Background()
+	var store, _ = firestore.NewClient(ctx, firstoreProjectID)
+
+	// services
+	v := validator.New()
+	u := usersvc.New(&sysFlags, store, v, &reservedWords)
+	r := recipesvc.New(&sysFlags, store, v)
+
 	// controllers
 	c := &Controllers{
 		System: controllers.NewSystemController(),
-		Recipe: controllers.NewRecipeController(),
-		User:   controllers.NewUserController(),
+		Recipe: controllers.NewRecipeController(u, r),
+		User:   controllers.NewUserController(u),
 		Search: controllers.NewSearchController(),
 	}
 
 	// gin and middleware
-	r := gin.New()
-	r.Use(gin.Recovery())
-	r.SetTrustedProxies(nil)
-	r.Use(middleware.ErrorHandler)
-	r.Use(middleware.CorsMiddleware())
-	if isDebug {
-		r.Use(middleware.DefaultStructuredLogger())
+	router := gin.New()
+	router.Use(gin.Recovery())
+	router.SetTrustedProxies(nil)
+	router.Use(middleware.ErrorHandler)
+	router.Use(middleware.CorsMiddleware())
+	if sysFlags.Debug {
+		router.Use(middleware.DefaultStructuredLogger())
 	}
 
 	// metrics
 	prom := ginprometheus.NewPrometheus("gin")
-	prom.Use(r)
+	prom.Use(router)
 
 	o := &RouteOpts{
 		SwaggerEnabled: utils.GetBoolEnv("SWAGGER_ENABLED", false),
@@ -192,11 +226,30 @@ func main() {
 		Version:        getAPIVersion(),
 	}
 
-	AppendRoutes(r, c, o)
+	AppendRoutes(router, c, o)
 
 	addr := "0.0.0.0:" + utils.GetStrEnvVar("PORT", "5000")
-	if err := r.Run(addr); err != nil {
+	if err := router.Run(addr); err != nil {
 		log.Error().Caller().Err(err).Msg("Error starting http server")
 		panic(err)
 	}
+}
+
+func ReadWordsFromFile(filename string) ([]string, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var words []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		words = append(words, scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	return words, nil
 }

@@ -1,4 +1,4 @@
-package recipe
+package recipesvc
 
 import (
 	"4ks/apps/api/middleware"
@@ -6,7 +6,6 @@ import (
 	models "4ks/libs/go/models"
 	"context"
 	"fmt"
-	"os"
 	"sync"
 	"time"
 
@@ -14,12 +13,11 @@ import (
 	"cloud.google.com/go/storage"
 )
 
-var isLocalDevelopment = os.Getenv("IO_4KS_DEVING")
 
-func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeID *string, userID *string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
+func (s recipeService) CreateRecipeMedia(ctx context.Context, mp *utils.MediaProps, recipeID *string, userID *string, wg *sync.WaitGroup) (*models.RecipeMedia, error) {
 	defer wg.Done()
 
-	recipeDoc, err := recipeCollection.Doc(*recipeID).Get(ctx)
+	recipeDoc, err := s.recipeCollection.Doc(*recipeID).Get(ctx)
 	if err != nil {
 		return nil, ErrRecipeNotFound
 	}
@@ -34,7 +32,7 @@ func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeID *string
 		return nil, ErrUnauthorized
 	}
 
-	newRecipeMediaDoc := recipeMediasCollection.NewDoc()
+	newRecipeMediaDoc := s.recipeMediasCollection.NewDoc()
 	timestamp := time.Now().UTC()
 
 	a := []models.RecipeMediaVariant{}
@@ -65,7 +63,7 @@ func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeID *string
 		UpdatedDate:  timestamp,
 	}
 
-	_, err = recipeMediasCollection.Doc(mp.Basename).Create(ctx, recipeMedia)
+	_, err = s.recipeMediasCollection.Doc(mp.Basename).Create(ctx, recipeMedia)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +71,7 @@ func (rs recipeService) CreateRecipeMedia(mp *utils.MediaProps, recipeID *string
 	return recipeMedia, nil
 }
 
-func (rs recipeService) CreateRecipeMediaSignedURL(mp *utils.MediaProps, wg *sync.WaitGroup) (*string, error) {
+func (s recipeService) CreateRecipeMediaSignedURL(mp *utils.MediaProps, wg *sync.WaitGroup) (*string, error) {
 	defer wg.Done()
 
 	ctx := context.Background()
@@ -101,14 +99,14 @@ func (rs recipeService) CreateRecipeMediaSignedURL(mp *utils.MediaProps, wg *syn
 	return &url, nil
 }
 
-func (rs recipeService) GetRecipeMedia(recipeID *string) ([]*models.RecipeMedia, error) {
+func (s recipeService) GetRecipeMedia(ctx context.Context, recipeID *string) ([]*models.RecipeMedia, error) {
 	var status [2]int
 	status[0] = int(models.MediaStatusReady)
 	// workaround to see images locally; upload-media status update callback only works in hosted firestore
-	if isLocalDevelopment == "true" {
+	if s.sysFlags.Development {
 		status[1] = int(models.MediaStatusRequested)
 	}
-	recipeMediasDocs, err := recipeMediasCollection.Where("rootRecipeId", "==", recipeID).Where("status", "in", status).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
+	recipeMediasDocs, err := s.recipeMediasCollection.Where("rootRecipeId", "==", recipeID).Where("status", "in", status).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
 
 	if err != nil {
 		return nil, err
@@ -130,8 +128,8 @@ func (rs recipeService) GetRecipeMedia(recipeID *string) ([]*models.RecipeMedia,
 	return recipeMedias, nil
 }
 
-func (rs recipeService) GetAdminRecipeMedias(recipeID *string) ([]*models.RecipeMedia, error) {
-	recipeMediasDocs, err := recipeMediasCollection.Where("rootRecipeId", "==", recipeID).Documents(ctx).GetAll()
+func (s recipeService) GetAdminRecipeMedias(ctx context.Context, recipeID *string) ([]*models.RecipeMedia, error) {
+	recipeMediasDocs, err := s.recipeMediasCollection.Where("rootRecipeId", "==", recipeID).Documents(ctx).GetAll()
 
 	if err != nil {
 		return nil, err

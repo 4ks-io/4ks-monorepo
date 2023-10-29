@@ -23,17 +23,17 @@ import (
 // @Success 		200 		 {object}		models.Recipe
 // @Router		 	/recipes [post]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) CreateRecipe(c *gin.Context) {
+func (c *recipeController) CreateRecipe(ctx *gin.Context) {
 	payload := dtos.CreateRecipe{}
-	if err := c.BindJSON(&payload); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+	if err := ctx.BindJSON(&payload); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	userID := c.GetString("id")
-	author, err := rc.userService.GetUserByID(&userID)
+	userID := ctx.GetString("id")
+	author, err := c.userService.GetUserByID(ctx, &userID)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
@@ -43,29 +43,29 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 		DisplayName: author.DisplayName,
 	}
 
-	f, err := rc.staticService.GetRandomFallbackImage(c)
+	f, err := c.staticService.GetRandomFallbackImage(ctx)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to get random fallback image")
 	}
-	u := rc.staticService.GetRandomFallbackImageURL(f)
+	u := c.staticService.GetRandomFallbackImageURL(f)
 	payload.Banner = createMockBanner(f, u)
 
-	createdRecipe, err := rc.recipeService.CreateRecipe(&payload)
+	createdRecipe, err := c.recipeService.CreateRecipe(ctx, &payload)
 	if err == recipeService.ErrUnableToCreateRecipe {
-		c.AbortWithError(http.StatusBadRequest, err)
+		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	err = rc.searchService.UpsertSearchRecipeDocument(createdRecipe)
+	err = c.searchService.UpsertSearchRecipeDocument(createdRecipe)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, createdRecipe)
+	ctx.JSON(http.StatusOK, createdRecipe)
 }
 
 // DeleteRecipe godoc
@@ -78,34 +78,34 @@ func (rc *recipeController) CreateRecipe(c *gin.Context) {
 // @Success 		200
 // @Router 			/recipes/{recipeID}   [delete]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) DeleteRecipe(c *gin.Context) {
-	recipeID := c.Param("id")
+func (c *recipeController) DeleteRecipe(ctx *gin.Context) {
+	recipeID := ctx.Param("id")
 
 	// claims := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
 	// customClaims := claims.CustomClaims.(*middleware.CustomClaims)
 	// sub := customClaims.ID
-	sub := c.GetString("id")
+	sub := ctx.GetString("id")
 
-	err := rc.recipeService.DeleteRecipe(recipeID, sub)
+	err := c.recipeService.DeleteRecipe(ctx, recipeID, sub)
 
 	if err == recipeService.ErrRecipeNotFound {
-		c.AbortWithError(http.StatusNotFound, err)
+		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err == recipeService.ErrUnauthorized {
-		c.AbortWithError(http.StatusUnauthorized, err)
+		ctx.AbortWithError(http.StatusUnauthorized, err)
 		return
 	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	err = rc.searchService.RemoveSearchRecipeDocument(&recipeID)
+	err = c.searchService.RemoveSearchRecipeDocument(&recipeID)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, "ok")
+	ctx.JSON(http.StatusOK, "ok")
 }
 
 // GetRecipe		godoc
@@ -119,19 +119,19 @@ func (rc *recipeController) DeleteRecipe(c *gin.Context) {
 // @Success 		200 		{object} 	models.Recipe
 // @Router 			/recipes/{recipeID} [get]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) GetRecipe(c *gin.Context) {
-	recipeID := c.Param("id")
-	recipe, err := rc.recipeService.GetRecipeByID(&recipeID)
+func (c *recipeController) GetRecipe(ctx *gin.Context) {
+	recipeID := ctx.Param("id")
+	recipe, err := c.recipeService.GetRecipeByID(ctx, &recipeID)
 
 	if err == recipeService.ErrRecipeNotFound {
-		c.AbortWithError(http.StatusNotFound, err)
+		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, recipe)
+	ctx.JSON(http.StatusOK, recipe)
 }
 
 // GetRecipesByUsername		godoc
@@ -145,17 +145,17 @@ func (rc *recipeController) GetRecipe(c *gin.Context) {
 // @Success 		200 			{array} 		models.Recipe
 // @Router 			/recipes/author/{username}   [get]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) GetRecipesByUsername(c *gin.Context) {
-	username := c.Param("username")
+func (c *recipeController) GetRecipesByUsername(ctx *gin.Context) {
+	username := ctx.Param("username")
 
 	var id string
 	// get user id
 	if username == "4ks-bot" {
 		id = "bot"
 	} else {
-		u, err := rc.userService.GetUserByUsername(&username)
+		u, err := c.userService.GetUserByUsername(ctx, &username)
 		if err == recipeService.ErrRecipeNotFound {
-			c.AbortWithError(http.StatusNotFound, err)
+			ctx.AbortWithError(http.StatusNotFound, err)
 			return
 		}
 		id = u.ID
@@ -163,17 +163,17 @@ func (rc *recipeController) GetRecipesByUsername(c *gin.Context) {
 
 	// hardcode limit for now
 	limit := 40
-	recipes, err := rc.recipeService.GetRecipesByUserID(&id, limit)
+	recipes, err := c.recipeService.GetRecipesByUserID(ctx, &id, limit)
 
 	if err == recipeService.ErrRecipeNotFound {
-		c.AbortWithError(http.StatusNotFound, err)
+		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, recipes)
+	ctx.JSON(http.StatusOK, recipes)
 }
 
 // GetRecipes		godoc
@@ -186,20 +186,20 @@ func (rc *recipeController) GetRecipesByUsername(c *gin.Context) {
 // @Success 		200 			{array} 		models.Recipe
 // @Router 			/recipes 	[get]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) GetRecipes(c *gin.Context) {
+func (c *recipeController) GetRecipes(ctx *gin.Context) {
 	// hardcode limit for now
 	limit := 40
-	recipes, err := rc.recipeService.GetRecipes(limit)
+	recipes, err := c.recipeService.GetRecipes(ctx, limit)
 
 	if err == recipeService.ErrRecipeNotFound {
-		c.AbortWithError(http.StatusNotFound, err)
+		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, recipes)
+	ctx.JSON(http.StatusOK, recipes)
 }
 
 // UpdateRecipe	godoc
@@ -213,19 +213,19 @@ func (rc *recipeController) GetRecipes(c *gin.Context) {
 // @Success 		200 					{object} 	models.Recipe
 // @Router 			/recipes/{recipeID} [patch]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) UpdateRecipe(c *gin.Context) {
-	recipeID := c.Param("id")
+func (c *recipeController) UpdateRecipe(ctx *gin.Context) {
+	recipeID := ctx.Param("id")
 	payload := dtos.UpdateRecipe{}
 
-	if err := c.BindJSON(&payload); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+	if err := ctx.BindJSON(&payload); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	userID := c.GetString("id")
-	author, err := rc.userService.GetUserByID(&userID)
+	userID := ctx.GetString("id")
+	author, err := c.userService.GetUserByID(ctx, &userID)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
@@ -235,24 +235,24 @@ func (rc *recipeController) UpdateRecipe(c *gin.Context) {
 		DisplayName: author.DisplayName,
 	}
 
-	createdRecipe, err := rc.recipeService.UpdateRecipeByID(&recipeID, &payload)
+	createdRecipe, err := c.recipeService.UpdateRecipeByID(ctx, &recipeID, &payload)
 
 	if err == recipeService.ErrUnableToCreateRecipe {
-		c.AbortWithError(http.StatusBadRequest, err)
+		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	} else if err == recipeService.ErrUnauthorized {
-		c.AbortWithError(http.StatusUnauthorized, err)
+		ctx.AbortWithError(http.StatusUnauthorized, err)
 		return
 	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	err = rc.searchService.UpsertSearchRecipeDocument(createdRecipe)
+	err = c.searchService.UpsertSearchRecipeDocument(createdRecipe)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, createdRecipe)
+	ctx.JSON(http.StatusOK, createdRecipe)
 }

@@ -54,7 +54,7 @@ export class UsersService {
     public headUser(): CancelablePromise<any> {
         return this.httpRequest.request({
             method: 'HEAD',
-            url: '/user',
+            url: '/user/',
             errors: {
                 400: `Invalid Request`,
                 404: `Record Not Found`,
@@ -75,7 +75,7 @@ export class UsersService {
     ): CancelablePromise<models_User> {
         return this.httpRequest.request({
             method: 'PATCH',
-            url: '/user',
+            url: '/user/',
             body: payload,
         });
     }
@@ -89,7 +89,7 @@ export class UsersService {
     public getUsers(): CancelablePromise<Array<models_User>> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/users',
+            url: '/users/',
         });
     }
 

@@ -26,7 +26,7 @@ func getMediaContentType(ext *string) (string, error) {
 	case ".gif":
 		return "image/gif", nil
 	}
-	return "", fmt.Errorf("Invalid File Type %s", *ext)
+	return "", fmt.Errorf("invalid File Type %s", *ext)
 }
 
 // CreateRecipeMedia   godoc
@@ -41,13 +41,13 @@ func getMediaContentType(ext *string) (string, error) {
 // @Success 		200 		       {object} 	 models.CreateRecipeMedia
 // @Router		 	/recipes/{recipeID}/media  [post]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
-	recipeID := c.Param("id")
-	userID := c.GetString("id")
+func (c *recipeController) CreateRecipeMedia(ctx *gin.Context) {
+	recipeID := ctx.Param("id")
+	userID := ctx.GetString("id")
 
 	payload := dtos.CreateRecipeMedia{}
-	if err := c.BindJSON(&payload); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+	if err := ctx.BindJSON(&payload); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
@@ -55,7 +55,7 @@ func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 	ext := filepath.Ext(payload.Filename)
 	ct, err := getMediaContentType(&ext)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
@@ -69,18 +69,18 @@ func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 	wg.Add(2)
 
 	// &mediaId, &mediaEmail, &payload
-	signedURL, err1 := rc.recipeService.CreateRecipeMediaSignedURL(&mp, &wg)
-	recipeMedia, err2 := rc.recipeService.CreateRecipeMedia(&mp, &recipeID, &userID, &wg)
+	signedURL, err1 := c.recipeService.CreateRecipeMediaSignedURL(&mp, &wg)
+	recipeMedia, err2 := c.recipeService.CreateRecipeMedia(ctx, &mp, &recipeID, &userID, &wg)
 
 	if err1 != nil {
-		c.AbortWithError(http.StatusInternalServerError, err1)
+		ctx.AbortWithError(http.StatusInternalServerError, err1)
 		return
 	} else if err2 != nil {
-		c.AbortWithError(http.StatusInternalServerError, err2)
+		ctx.AbortWithError(http.StatusInternalServerError, err2)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"recipeMedia": recipeMedia,
 		"signedURL":   signedURL,
 	})
@@ -96,20 +96,20 @@ func (rc *recipeController) CreateRecipeMedia(c *gin.Context) {
 // @Success 		200 		  {array} 	  models.RecipeMedia
 // @Router 			/recipes/{recipeID}/media [get]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) GetRecipeMedia(c *gin.Context) {
-	recipeID := c.Param("id")
-	recipeMedias, err := rc.recipeService.GetRecipeMedia(&recipeID)
+func (c *recipeController) GetRecipeMedia(ctx *gin.Context) {
+	recipeID := ctx.Param("id")
+	recipeMedias, err := c.recipeService.GetRecipeMedia(ctx, &recipeID)
 	log.Error().Err(err).Caller().Msg("client: could not create request")
 
 	if err == recipeService.ErrRecipeNotFound {
-		c.AbortWithError(http.StatusNotFound, err)
+		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, recipeMedias)
+	ctx.JSON(http.StatusOK, recipeMedias)
 }
 
 // GetAdminRecipeMedias godoc
@@ -122,17 +122,17 @@ func (rc *recipeController) GetRecipeMedia(c *gin.Context) {
 // @Success 		200 		  {array} 	  models.RecipeMedia
 // @Router 			/_admin/recipes/{recipeID}/media [get]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) GetAdminRecipeMedias(c *gin.Context) {
-	recipeID := c.Param("id")
-	recipeMedias, err := rc.recipeService.GetRecipeMedia(&recipeID)
+func (c *recipeController) GetAdminRecipeMedias(ctx *gin.Context) {
+	recipeID := ctx.Param("id")
+	recipeMedias, err := c.recipeService.GetRecipeMedia(ctx, &recipeID)
 
 	if err == recipeService.ErrRecipeNotFound {
-		c.AbortWithError(http.StatusNotFound, err)
+		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, recipeMedias)
+	ctx.JSON(http.StatusOK, recipeMedias)
 }

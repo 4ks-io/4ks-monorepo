@@ -683,6 +683,30 @@ paths:
       summary: Get Current User
       tags:
       - Users
+    post:
+      consumes:
+      - application/json
+      description: Create a new User
+      parameters:
+      - description: User Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new User
+      tags:
+      - Users
+  /user/:
     head:
       description: Head Authenticated user
       produces:
@@ -726,30 +750,7 @@ paths:
       summary: Update User
       tags:
       - Users
-    post:
-      consumes:
-      - application/json
-      description: Create a new User
-      parameters:
-      - description: User Data
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.CreateUser'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.User'
-      security:
-      - ApiKeyAuth: []
-      summary: Create a new User
-      tags:
-      - Users
-  /users:
+  /users/:
     get:
       consumes:
       - application/json
