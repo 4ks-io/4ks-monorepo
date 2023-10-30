@@ -55,7 +55,6 @@ type RouteOpts struct {
 	SwaggerPrefix  string
 	Version        string
 	StaticPath     string
-	Debug          bool
 }
 
 // EnforceAuth enforces authentication
@@ -65,19 +64,19 @@ func EnforceAuth(r *gin.RouterGroup) {
 }
 
 // AppendRoutes appends routes to the router
-func AppendRoutes(r *gin.Engine, c *Controllers, o *RouteOpts) {
-	// system
-	r.GET("/ready", c.System.CheckReadiness)
-	r.GET("/healthcheck", c.System.Healthcheck)
-
-	// otel
-	r.Use(otelgin.Middleware("4ks-api"))
-
+func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o *RouteOpts) {
 	// api
 	api := r.Group("/api")
 	{
 		// system
+		api.GET("/ready", c.System.CheckReadiness)
+		api.GET("/healthcheck", c.System.Healthcheck)
 		api.GET("/version", c.System.GetAPIVersion(o.Version))
+
+		// otel
+		if sysFlags.JaegerEnabled {
+			api.Use(otelgin.Middleware("4ks-api"))
+		}
 
 		// swagger
 		if value := o.SwaggerEnabled; value {
@@ -157,8 +156,9 @@ func AppendRoutes(r *gin.Engine, c *Controllers, o *RouteOpts) {
 func main() {
 	// args
 	sysFlags := utils.SystemFlags{
-		Debug:       utils.GetStrEnvVar("GIN_MODE", "release") == "debug",
-		Development: utils.GetBoolEnv("IO_4KS_DEVING", false),
+		Debug:         utils.GetStrEnvVar("GIN_MODE", "release") == "debug",
+		Development:   utils.GetBoolEnv("IO_4KS_DEVING", false),
+		JaegerEnabled: utils.GetBoolEnv("JAEGER_ENABLED", false),
 	}
 
 	// firestore
@@ -178,8 +178,8 @@ func main() {
 	}
 
 	// jaeger
-	if value := utils.GetBoolEnv("JAEGER_ENABLED", false); value {
-		log.Info().Caller().Bool("enabled", value).Msg("Jaeger")
+	if sysFlags.JaegerEnabled {
+		log.Info().Caller().Bool("enabled", sysFlags.JaegerEnabled).Msg("Jaeger")
 		tp := tracing.InitTracerProvider()
 		defer func() {
 			if err := tp.Shutdown(context.Background()); err != nil {
@@ -222,11 +222,10 @@ func main() {
 	o := &RouteOpts{
 		SwaggerEnabled: utils.GetBoolEnv("SWAGGER_ENABLED", false),
 		SwaggerPrefix:  utils.GetStrEnvVar("SWAGGER_URL_PREFIX", ""),
-		Debug:          utils.GetBoolEnv("IO_4KS_DEVING", false),
 		Version:        getAPIVersion(),
 	}
 
-	AppendRoutes(router, c, o)
+	AppendRoutes(&sysFlags, router, c, o)
 
 	addr := "0.0.0.0:" + utils.GetStrEnvVar("PORT", "5000")
 	if err := router.Run(addr); err != nil {

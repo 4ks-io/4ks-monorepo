@@ -33,7 +33,7 @@ func NewSystemController() SystemController {
 func (sysCtlr *systemController) CheckReadiness(ctx *gin.Context) {
 	// todo: check database connection
 	ctx.JSON(http.StatusOK, gin.H{
-		"data": "ok",
+		"status": "ok",
 	})
 }
 
@@ -48,7 +48,7 @@ func (sysCtlr *systemController) CheckReadiness(ctx *gin.Context) {
 //	@Router		 	 /healthcheck [get]
 func (sysCtlr *systemController) Healthcheck(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
-		"Status": "Ok",
+		"status": "Ok",
 	})
 }
 

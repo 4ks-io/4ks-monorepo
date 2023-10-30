@@ -19,14 +19,14 @@ import (
 )
 
 var (
-	// ErrEmailInUse is returned when a user is unable to create a recipe
-	ErrEmailInUse = errors.New("a user with that email already exists")
-	// ErrUsernameInUse is returned when a user is unable to create a recipe
-	ErrUsernameInUse = errors.New("a user with that username already exists")
-	// ErrInvalidUsername is returned when a user is unable to create a recipe
+	// ErrEmailInUse is returned when a user email is already in use
+	ErrEmailInUse = errors.New("email already in use")
+	// ErrUsernameInUse is returned when a username is already in use
+	ErrUsernameInUse = errors.New("username already in use")
+	// ErrInvalidUsername is returned when a username is invalid
 	ErrInvalidUsername = errors.New("invalid username")
-	// ErrUserNotFound is returned when a user is unable to create a recipe
-	ErrUserNotFound = errors.New("a user with that email was not found")
+	// ErrUserNotFound is returned when a user is not found
+	ErrUserNotFound = errors.New("user not found")
 )
 
 // Service is the interface for the user service

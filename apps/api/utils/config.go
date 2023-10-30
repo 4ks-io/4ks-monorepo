@@ -7,8 +7,9 @@ import (
 )
 
 type SystemFlags struct {
-	Debug       bool
-	Development bool
+	Debug         bool
+	Development   bool
+	JaegerEnabled bool
 }
 
 // GetStrEnvVar returns a string from an environment variable
