@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type models_Username = {
-    msg: string;
-    valid: boolean;
+export type dtos_TestUsernameRequest = {
+    username: string;
 };

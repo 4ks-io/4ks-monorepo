@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+import { headers, cookies } from 'next/headers';
+import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
+
+import { serverClient } from '@/trpc/serverClient';
+import { getSession } from '@auth0/nextjs-auth0';
 
 export const metadata: Metadata = {
   title: '4ks',
@@ -11,22 +17,35 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-function RootLayoutBody({ children }: RootLayoutProps) {
-  // todo: handle auth
+async function RootLayoutBody({ children }: RootLayoutProps) {
+  const session = await getSession();
+  const pathname = headers().get('x-url-pathname');
 
-  return (
-    <>
-      <body>{children}</body>
-    </>
-  );
+  if (session) {
+    // check user exists
+    const data = await serverClient.users.exists();
+
+    if (data.Status == 204) {
+      if (pathname != '/register') {
+        redirect('/register');
+      }
+    } else if (pathname == '/register') {
+      redirect('/');
+    }
+  }
+
+  return <body>{children}</body>;
 }
 
-export default async function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <UserProvider>
-        <RootLayoutBody>{children}</RootLayoutBody>
-      </UserProvider>
+      <ThemeRegistry>
+        <UserProvider>
+          {/* @ts-expect-error Server Component */}
+          <RootLayoutBody>{children}</RootLayoutBody>
+        </UserProvider>
+      </ThemeRegistry>
     </html>
   );
 }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import MediaCard from '@/components/MediaCard';
 
-export default function DefaultPage() {
+export default async function DefaultPage() {
   return (
     <Grid container rowSpacing={3} columnSpacing={3}>
       <Grid xs={6}>

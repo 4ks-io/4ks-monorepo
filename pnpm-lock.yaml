@@ -155,35 +155,35 @@ importers:
         specifier: ^10.43.0
         version: 10.43.0
       next:
-        specifier: latest
+        specifier: 14.0.0
         version: 14.0.0(react-dom@18.2.0)(react@18.2.0)
       react:
-        specifier: latest
+        specifier: ^18
         version: 18.2.0
       react-dom:
-        specifier: latest
+        specifier: ^18
         version: 18.2.0(react@18.2.0)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
       '@types/node':
-        specifier: latest
+        specifier: ^20
         version: 20.8.9
       '@types/react':
-        specifier: latest
+        specifier: ^18
         version: 18.2.33
       '@types/react-dom':
-        specifier: latest
+        specifier: ^18
         version: 18.2.14
       eslint:
-        specifier: latest
+        specifier: ^8
         version: 8.52.0
       eslint-config-next:
-        specifier: latest
+        specifier: 14.0.0
         version: 14.0.0(eslint@8.52.0)(typescript@5.2.2)
       typescript:
-        specifier: latest
+        specifier: ^5
         version: 5.2.2
 
   libs/ts/api-fetch:
@@ -2129,7 +2129,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001324
+      caniuse-lite: 1.0.30001557
       electron-to-chromium: 1.4.103
       escalade: 3.1.1
       node-releases: 2.0.2
@@ -2171,13 +2171,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /caniuse-lite@1.0.30001324:
-    resolution: {integrity: sha512-/eYp1J6zYh1alySQB4uzYFkLmxxI8tk0kxldbNHXp8+v+rdMKdUBNjRLz7T7fz6Iox+1lIdYpc7rq6ZcXfTukg==}
-    dev: true
-
   /caniuse-lite@1.0.30001557:
     resolution: {integrity: sha512-91oR7hLNUP3gG6MLU+n96em322a8Xzes8wWdBKhLgUoiJsAF5irZnxSUCbc+qUZXNnPCfUwLOi9ZCZpkvjQajw==}
-    dev: false
 
   /chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}

@@ -38,12 +38,28 @@ definitions:
     - displayName
     - username
     type: object
-  dtos.TestUserName:
+  dtos.TestUsernameRequest:
     properties:
       username:
         type: string
     required:
     - username
+    type: object
+  dtos.TestUsernameResponse:
+    properties:
+      available:
+        type: boolean
+      msg:
+        type: string
+      username:
+        type: string
+      valid:
+        type: boolean
+    required:
+    - available
+    - msg
+    - username
+    - valid
     type: object
   dtos.UpdateRecipe:
     properties:
@@ -273,16 +289,6 @@ definitions:
         type: string
       username:
         type: string
-    type: object
-  models.Username:
-    properties:
-      msg:
-        type: string
-      valid:
-        type: boolean
-    required:
-    - msg
-    - valid
     type: object
 info:
   contact: {}
@@ -831,24 +837,24 @@ paths:
     post:
       consumes:
       - application/json
-      description: Test if a username exists
+      description: Returns username validity and availability
       parameters:
       - description: Username Data
         in: body
         name: username
         required: true
         schema:
-          $ref: '#/definitions/dtos.TestUserName'
+          $ref: '#/definitions/dtos.TestUsernameRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Username'
+            $ref: '#/definitions/dtos.TestUsernameResponse'
       security:
       - ApiKeyAuth: []
-      summary: Test if a username exists
+      summary: Returns username validity and availability
       tags:
       - Users
   /version:

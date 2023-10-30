@@ -65,14 +65,14 @@ func EnforceAuth(r *gin.RouterGroup) {
 
 // AppendRoutes appends routes to the router
 func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o *RouteOpts) {
+	// system
+	r.GET("/api/ready", c.System.CheckReadiness)
+	r.GET("/api/healthcheck", c.System.Healthcheck)
+	r.GET("/api/version", c.System.GetAPIVersion(o.Version))
+
 	// api
 	api := r.Group("/api")
 	{
-		// system
-		api.GET("/ready", c.System.CheckReadiness)
-		api.GET("/healthcheck", c.System.Healthcheck)
-		api.GET("/version", c.System.GetAPIVersion(o.Version))
-
 		// otel
 		if sysFlags.JaegerEnabled {
 			api.Use(otelgin.Middleware("4ks-api"))

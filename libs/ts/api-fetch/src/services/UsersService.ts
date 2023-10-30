@@ -2,11 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { dtos_CreateUser } from '../models/dtos_CreateUser';
-import type { dtos_TestUserName } from '../models/dtos_TestUserName';
+import type { dtos_TestUsernameRequest } from '../models/dtos_TestUsernameRequest';
+import type { dtos_TestUsernameResponse } from '../models/dtos_TestUsernameResponse';
 import type { dtos_UpdateUser } from '../models/dtos_UpdateUser';
 import type { models_User } from '../models/models_User';
 import type { models_UserExist } from '../models/models_UserExist';
-import type { models_Username } from '../models/models_Username';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
@@ -107,15 +107,15 @@ export class UsersService {
     }
 
     /**
-     * Test if a username exists
-     * Test if a username exists
+     * Returns username validity and availability
+     * Returns username validity and availability
      * @param username Username Data
-     * @returns models_Username OK
+     * @returns dtos_TestUsernameResponse OK
      * @throws ApiError
      */
     public postUsersUsername(
-        username: dtos_TestUserName,
-    ): CancelablePromise<models_Username> {
+        username: dtos_TestUsernameRequest,
+    ): CancelablePromise<dtos_TestUsernameResponse> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/users/username',

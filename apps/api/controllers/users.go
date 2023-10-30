@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"4ks/apps/api/dtos"
-	userService "4ks/apps/api/services/user"
+	usersvc "4ks/apps/api/services/user"
 	"4ks/libs/go/models"
 
 	"net/http"
@@ -25,13 +25,13 @@ type UserController interface {
 }
 
 type userController struct {
-	userService userService.Service
+	usersvc usersvc.Service
 }
 
 // NewUserController creates a new user controller
-func NewUserController(u userService.Service) UserController {
+func NewUserController(u usersvc.Service) UserController {
 	return &userController{
-		userService: u,
+		usersvc: u,
 	}
 }
 
@@ -46,7 +46,7 @@ func NewUserController(u userService.Service) UserController {
 // @Success 		200 		 {object} 	 models.User
 // @Router		 	/user   [post]
 // @Security 		ApiKeyAuth
-func (uc *userController) CreateUser(ctx *gin.Context) {
+func (c *userController) CreateUser(ctx *gin.Context) {
 	userID := ctx.GetString("id")
 	userEmail := ctx.GetString("email")
 
@@ -56,8 +56,8 @@ func (uc *userController) CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	createdUser, err := uc.userService.CreateUser(ctx, userID, userEmail, &payload)
-	if err == userService.ErrEmailInUse || err == userService.ErrUsernameInUse {
+	createdUser, err := c.usersvc.CreateUser(ctx, userID, userEmail, &payload)
+	if err == usersvc.ErrEmailInUse || err == usersvc.ErrUsernameInUse {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	} else if err != nil {
@@ -78,11 +78,11 @@ func (uc *userController) CreateUser(ctx *gin.Context) {
 // @Success 		200
 // @Router 			/users/{userID}   [delete]
 // @Security 		ApiKeyAuth
-func (uc *userController) DeleteUser(ctx *gin.Context) {
+func (c *userController) DeleteUser(ctx *gin.Context) {
 	userID := ctx.Param("id")
-	err := uc.userService.DeleteUser(ctx, userID)
+	err := c.usersvc.DeleteUser(ctx, userID)
 
-	if err == userService.ErrUserNotFound {
+	if err == usersvc.ErrUserNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
@@ -104,11 +104,11 @@ func (uc *userController) DeleteUser(ctx *gin.Context) {
 // @Success 		200 		{object} 	models.User
 // @Router 			/users/{userID} [get]
 // @Security 		ApiKeyAuth
-func (uc *userController) GetUser(ctx *gin.Context) {
+func (c *userController) GetUser(ctx *gin.Context) {
 	userID := ctx.Param("id")
-	user, err := uc.userService.GetUserByID(ctx, userID)
+	user, err := c.usersvc.GetUserByID(ctx, userID)
 
-	if err == userService.ErrUserNotFound {
+	if err == usersvc.ErrUserNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
@@ -129,11 +129,11 @@ func (uc *userController) GetUser(ctx *gin.Context) {
 // @Success 		200 		{object} 	models.User
 // @Router 			/user [get]
 // @Security 		ApiKeyAuth
-func (uc *userController) GetCurrentUser(ctx *gin.Context) {
+func (c *userController) GetCurrentUser(ctx *gin.Context) {
 	userID := ctx.GetString("id")
-	user, err := uc.userService.GetUserByID(ctx, userID)
+	user, err := c.usersvc.GetUserByID(ctx, userID)
 
-	if err == userService.ErrUserNotFound {
+	if err == usersvc.ErrUserNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
@@ -153,13 +153,13 @@ func (uc *userController) GetCurrentUser(ctx *gin.Context) {
 // @Success 		200 		{object} 	models.UserExist
 // @Router 			/users/exist [get]
 // @Security 		ApiKeyAuth
-func (uc *userController) GetCurrentUserExist(ctx *gin.Context) {
+func (c *userController) GetCurrentUserExist(ctx *gin.Context) {
 	userID := ctx.GetString("id")
-	_, err := uc.userService.GetUserByID(ctx, userID)
+	_, err := c.usersvc.GetUserByID(ctx, userID)
 
 	data := models.UserExist{}
 
-	if err == userService.ErrUserNotFound {
+	if err == usersvc.ErrUserNotFound {
 		data.Exist = false
 		ctx.JSON(http.StatusOK, data)
 		return
@@ -185,12 +185,12 @@ func (uc *userController) GetCurrentUserExist(ctx *gin.Context) {
 // @Failure     404		"Record Not Found"
 // @Failure     500		"Internal Error"
 // @Security 		ApiKeyAuth
-func (uc *userController) HeadAuthenticatedUser(ctx *gin.Context) {
+func (c *userController) HeadAuthenticatedUser(ctx *gin.Context) {
 	userID := ctx.GetString("id")
 
-	if _, err := uc.userService.GetUserByID(ctx, userID); err != nil {
+	if _, err := c.usersvc.GetUserByID(ctx, userID); err != nil {
 		// handle user not found
-		if err == userService.ErrUserNotFound {
+		if err == usersvc.ErrUserNotFound {
 			ctx.JSON(http.StatusNoContent, nil)
 			return
 		}
@@ -213,8 +213,8 @@ func (uc *userController) HeadAuthenticatedUser(ctx *gin.Context) {
 // @Success 		200 		{array} 	models.User
 // @Router 			/users/	[get]
 // @Security 		ApiKeyAuth
-func (uc *userController) GetUsers(ctx *gin.Context) {
-	user, err := uc.userService.GetAllUsers(ctx)
+func (c *userController) GetUsers(ctx *gin.Context) {
+	user, err := c.usersvc.GetAllUsers(ctx)
 
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
@@ -234,7 +234,7 @@ func (uc *userController) GetUsers(ctx *gin.Context) {
 // @Success 		200 		 {object}  models.User
 // @Router 			/user/   [patch]
 // @Security 		ApiKeyAuth
-func (uc *userController) UpdateUser(ctx *gin.Context) {
+func (c *userController) UpdateUser(ctx *gin.Context) {
 	userID := ctx.GetString("id")
 
 	payload := dtos.UpdateUser{}
@@ -243,8 +243,8 @@ func (uc *userController) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	u, err := uc.userService.UpdateUserByID(ctx, userID, &payload)
-	if err == userService.ErrUserNotFound {
+	u, err := c.usersvc.UpdateUserByID(ctx, userID, &payload)
+	if err == usersvc.ErrUserNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
@@ -256,42 +256,80 @@ func (uc *userController) UpdateUser(ctx *gin.Context) {
 }
 
 // TestUsername	godoc
-// @Summary 		Test if a username exists
-// @Description Test if a username exists
+// @Summary 		Returns username validity and availability
+// @Description Returns username validity and availability
 // @Tags 				Users
 // @Accept 			json
 // @Produce 		json
-// @Param       username    body  	   dtos.TestUserName  true  "Username Data"
-// @Success 		200 		 		{object} 	 models.Username
+// @Param       username    body  	   dtos.TestUsernameRequest  true  "Username Data"
+// @Success 		200 		 		{object} 	 dtos.TestUsernameResponse
 // @Router 			/users/username   [post]
 // @Security 		ApiKeyAuth
-func (uc *userController) TestUsername(ctx *gin.Context) {
-	payload := dtos.TestUserName{}
+func (c *userController) TestUsername(ctx *gin.Context) {
+	payload := dtos.TestUsernameRequest{}
 
 	if err := ctx.BindJSON(&payload); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	resp := models.Username{}
+	resp := dtos.TestUsernameResponse{}
+	resp.Username = payload.Username
+	resp.Available = false
+	resp.Valid = false
 
-	isValid := uc.userService.TestUsernameValid(payload.Username)
-	if !isValid {
-		resp.Msg = "invalid"
-		resp.Valid = isValid
-		ctx.JSON(http.StatusOK, resp)
+	// isValid := c.usersvc.TestUsernameValid(payload.Username)
+	// if !isValid {
+	// 	resp.Message = "invalid"
+	// 	resp.Valid = isValid
+	// 	ctx.JSON(http.StatusOK, resp)
+	// 	return
+	// }
+
+	// isFound, err := c.usersvc.TestUsernameExist(ctx, payload.Username)
+	// resp.Valid = !isFound
+
+	// if err == usersvc.ErrUsernameInUse {
+	// 	resp.Msg = "unavailable"
+	// } else if err != nil {
+	// 	ctx.AbortWithError(http.StatusInternalServerError, err)
+	// 	return
+	// }
+
+	// ctx.JSON(http.StatusOK, resp)
+
+	// handle empty
+	if payload.Username == "" {
+		resp.Message = "invalid" // todo: i18n
+		resp.Valid = false
+		ctx.JSON(http.StatusBadRequest, resp)
 		return
 	}
 
-	isFound, err := uc.userService.TestUsernameExist(ctx, payload.Username)
-	resp.Valid = !isFound
-
-	if err == userService.ErrUsernameInUse {
-		resp.Msg = "unavailable"
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusInternalServerError, err)
-		return
+	// validate
+	if err := c.usersvc.TestName(ctx, payload.Username); err != nil {
+		switch e := err; e {
+		case usersvc.ErrInvalidUsername:
+			resp.Message = "invalid"
+			ctx.JSON(http.StatusOK, resp)
+			return
+		case usersvc.ErrReservedWord:
+			resp.Message = "reserved"
+			ctx.JSON(http.StatusOK, resp)
+			return
+		case usersvc.ErrUsernameInUse:
+			resp.Valid = true
+			resp.Message = "in use"
+			ctx.JSON(http.StatusOK, resp)
+			return
+		default:
+			ctx.AbortWithError(http.StatusInternalServerError, err)
+			return
+		}
 	}
+
+	resp.Available = true
+	resp.Valid = true
 
 	ctx.JSON(http.StatusOK, resp)
 }

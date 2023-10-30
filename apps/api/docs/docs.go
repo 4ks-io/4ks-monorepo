@@ -814,7 +814,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Test if a username exists",
+                "description": "Returns username validity and availability",
                 "consumes": [
                     "application/json"
                 ],
@@ -824,7 +824,7 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
-                "summary": "Test if a username exists",
+                "summary": "Returns username validity and availability",
                 "parameters": [
                     {
                         "description": "Username Data",
@@ -832,7 +832,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dtos.TestUserName"
+                            "$ref": "#/definitions/dtos.TestUsernameRequest"
                         }
                     }
                 ],
@@ -840,7 +840,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Username"
+                            "$ref": "#/definitions/dtos.TestUsernameResponse"
                         }
                     }
                 }
@@ -997,7 +997,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dtos.TestUserName": {
+        "dtos.TestUsernameRequest": {
             "type": "object",
             "required": [
                 "username"
@@ -1005,6 +1005,29 @@ const docTemplate = `{
             "properties": {
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "dtos.TestUsernameResponse": {
+            "type": "object",
+            "required": [
+                "available",
+                "msg",
+                "username",
+                "valid"
+            ],
+            "properties": {
+                "available": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "valid": {
+                    "type": "boolean"
                 }
             }
         },
@@ -1338,21 +1361,6 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
-                }
-            }
-        },
-        "models.Username": {
-            "type": "object",
-            "required": [
-                "msg",
-                "valid"
-            ],
-            "properties": {
-                "msg": {
-                    "type": "string"
-                },
-                "valid": {
-                    "type": "boolean"
                 }
             }
         }

@@ -27,6 +27,8 @@ var (
 	ErrInvalidUsername = errors.New("invalid username")
 	// ErrUserNotFound is returned when a user is not found
 	ErrUserNotFound = errors.New("user not found")
+	// ErrReservedWord is returned when a username is a reserved word
+	ErrReservedWord  = errors.New("reserved word")
 )
 
 // Service is the interface for the user service
@@ -38,14 +40,12 @@ type Service interface {
 	CreateUser(context.Context, string, string, *dtos.CreateUser) (*models.User, error)
 	UpdateUserByID(context.Context, string, *dtos.UpdateUser) (*models.User, error)
 	DeleteUser(context.Context, string) error
-	TestUsernameValid(string) bool
-	TestUsernameExist(context.Context, string) (bool, error)
 
-	// new
-	// TestName(string) error
-	// TestValidName(string) bool
-	// TestReservedWord(string) bool
-	// TestAvailableName(string) (bool, error)
+	// test username
+	TestName( context.Context, string) error
+	TestValidName(string) bool
+	TestReservedWord(string) bool
+	TestAvailableName( context.Context, string) (bool, error)
 }
 
 type userService struct {
@@ -150,42 +150,8 @@ func (s userService) GetUserByEmail(ctx context.Context, emailAddress string) (*
 	return user, nil
 }
 
-func (s userService) TestUsernameValid(username string) bool {
-	/*
-		1. at least 8 characters
-		2. no longer than 24 characters
-		3. alphanumeric characters or hyphens
-		4. no consecutive hyphens
-		5. cannot begin or end with a hyphen
-	*/
-
-	// todo: combine these 2 regex...
-	if regexp.MustCompile("^[a-zA-Z0-9][a-zA-Z0-9-]{6,22}[a-zA-Z0-9]$").MatchString(username) {
-		if regexp.MustCompile("--").MatchString(username) {
-			return false
-		}
-		return true
-	}
-
-	return false
-}
-
 func (s userService) CreateUser(ctx context.Context, userID string, userEmail string, user *dtos.CreateUser) (*models.User, error) {
-	isValid := s.TestUsernameValid(user.Username)
-	if !isValid {
-		return nil, ErrInvalidUsername
-	}
-
-	existingUserID, _ := s.userCollection.Doc(userID).Get(ctx)
-	if existingUserID.Exists() {
-		return nil, ErrEmailInUse
-	}
-
-	usersWithUsername, err := s.userCollection.Where("usernameLower", "==", strings.ToLower(user.Username)).Documents(ctx).GetAll()
-
-	if len(usersWithUsername) > 0 {
-		return nil, ErrUsernameInUse
-	} else if err != nil {
+	if err := s.TestName(ctx, user.Username); err != nil {
 		return nil, err
 	}
 
@@ -199,8 +165,7 @@ func (s userService) CreateUser(ctx context.Context, userID string, userEmail st
 		UpdatedDate:   time.Now().UTC(),
 	}
 
-	_, err = s.userCollection.Doc(userID).Create(ctx, newUser)
-	if err != nil {
+	if _, err := s.userCollection.Doc(userID).Create(ctx, newUser); err != nil {
 		return nil, err
 	}
 
@@ -208,11 +173,8 @@ func (s userService) CreateUser(ctx context.Context, userID string, userEmail st
 }
 
 func (s userService) UpdateUserByID(ctx context.Context, userID string, user *dtos.UpdateUser) (*models.User, error) {
-	if user.Username != "" {
-		isValid := s.TestUsernameValid(user.Username)
-		if !isValid {
-			return nil, ErrInvalidUsername
-		}
+	if err := s.TestName(ctx, user.Username); err != nil {
+		return nil, err
 	}
 
 	_, err := s.userCollection.Doc(userID).Update(ctx, []firestore.Update{
@@ -252,11 +214,62 @@ func (s userService) DeleteUser(ctx context.Context, userID string) error {
 	return nil
 }
 
-func (s userService) TestUsernameExist(ctx context.Context, username string) (bool, error) {
+// TestReservedWord tests if the entityname is a reserved word
+func (s userService) TestReservedWord(name string) bool {
+	for _, word := range *s.reservedWords {
+		if word == name {
+			return true
+		}
+	}
+	return false
+}
+
+// TestValidName tests if the entityname is valid
+func (s userService) TestValidName(name string) bool {
+	/*
+		1. at least 8 characters
+		2. no longer than 24 characters
+		3. alphanumeric characters or hyphens
+		4. no consecutive hyphens
+		5. cannot begin or end with a hyphen
+	*/
+
+	// todo: combine these 2 regex...
+	if regexp.MustCompile("^[a-zA-Z0-9][a-zA-Z0-9-]{6,22}[a-zA-Z0-9]$").MatchString(name) {
+		return !regexp.MustCompile("--").MatchString(name)
+	}
+
+	return false
+}
+
+// TestAvailableName tests if the name is available
+func (s userService) TestAvailableName(ctx context.Context, username string) (bool, error) {
 	// u, err := url.PathUnescape(*username)
 	usersWithUsername, err := s.userCollection.Where("usernameLower", "==", strings.ToLower(username)).Documents(ctx).GetAll()
 	if err != nil || len(usersWithUsername) > 0 {
 		return true, ErrUsernameInUse
 	}
 	return false, nil
+}
+
+func (s userService) TestName(ctx context.Context, n string) error {
+	// test validity
+	if isValid := s.TestValidName(n); !isValid {
+		return ErrInvalidUsername
+	}
+
+	// test reserved word
+	if isReserved := s.TestReservedWord(n); isReserved {
+		return ErrReservedWord
+	}
+
+	if _, err := s.TestAvailableName(ctx, n); err != nil {
+		if err == ErrUsernameInUse {
+			return ErrUsernameInUse
+		} else if err != ErrUserNotFound {
+			return err
+		}
+	}
+
+	return nil
 }
