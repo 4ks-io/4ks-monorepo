@@ -7,7 +7,6 @@ export const apiURL = `${process.env.IO_4KS_API_URL}`;
 
 export async function getAPIClient(): Promise<ApiClient> {
   const { accessToken } = await getAccessToken();
-  console.log(apiURL);
   return new ApiClient({
     BASE: apiURL,
     TOKEN: accessToken,

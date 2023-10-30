@@ -16,6 +16,40 @@ export class UsersService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
+     * Create a new User
+     * Create a new User
+     * @param user User Data
+     * @returns models_User OK
+     * @throws ApiError
+     */
+    public postApiUser(
+        user: dtos_CreateUser,
+    ): CancelablePromise<models_User> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/user',
+            body: user,
+        });
+    }
+
+    /**
+     * Returns username validity and availability
+     * Returns username validity and availability
+     * @param username Username Data
+     * @returns dtos_TestUsernameResponse OK
+     * @throws ApiError
+     */
+    public postApiUsersUsername(
+        username: dtos_TestUsernameRequest,
+    ): CancelablePromise<dtos_TestUsernameResponse> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/users/username',
+            body: username,
+        });
+    }
+
+    /**
      * Get Current User
      * Get Current User
      * @returns models_User OK
@@ -25,23 +59,6 @@ export class UsersService {
         return this.httpRequest.request({
             method: 'GET',
             url: '/user',
-        });
-    }
-
-    /**
-     * Create a new User
-     * Create a new User
-     * @param user User Data
-     * @returns models_User OK
-     * @throws ApiError
-     */
-    public postUser(
-        user: dtos_CreateUser,
-    ): CancelablePromise<models_User> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/user',
-            body: user,
         });
     }
 
@@ -103,23 +120,6 @@ export class UsersService {
         return this.httpRequest.request({
             method: 'GET',
             url: '/users/exist',
-        });
-    }
-
-    /**
-     * Returns username validity and availability
-     * Returns username validity and availability
-     * @param username Username Data
-     * @returns dtos_TestUsernameResponse OK
-     * @throws ApiError
-     */
-    public postUsersUsername(
-        username: dtos_TestUsernameRequest,
-    ): CancelablePromise<dtos_TestUsernameResponse> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/users/username',
-            body: username,
         });
     }
 

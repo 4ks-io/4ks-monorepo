@@ -22,7 +22,7 @@ import (
 // @Produce 		json
 // @Param       recipe   body  	   	dtos.CreateRecipe  true  "Recipe Data"
 // @Success 		200 		 {object}		models.Recipe
-// @Router		 	/_admin/recipes [post]
+// @Router		 	/api/_admin/recipes [post]
 // @Security 		ApiKeyAuth
 func (c *recipeController) BotCreateRecipe(ctx *gin.Context) {
 	payload := dtos.CreateRecipe{}

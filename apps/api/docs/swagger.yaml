@@ -1,4 +1,3 @@
-basePath: /api
 definitions:
   dtos.CreateRecipe:
     properties:
@@ -296,31 +295,7 @@ info:
   title: 4ks API
   version: "1.0"
 paths:
-  /_admin/recipes:
-    post:
-      consumes:
-      - application/json
-      description: Bot Create a new Recipe
-      parameters:
-      - description: Recipe Data
-        in: body
-        name: recipe
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.CreateRecipe'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Recipe'
-      security:
-      - ApiKeyAuth: []
-      summary: Bot Create a new Recipe
-      tags:
-      - Admin
-  /_admin/recipes/{recipeID}/media:
+  /api/_admin/recipes/{recipeID}/media:
     get:
       consumes:
       - application/json
@@ -345,7 +320,31 @@ paths:
       summary: Get all medias for a Recipe
       tags:
       - Admin
-  /healthcheck:
+  /api/api/_admin/recipes:
+    post:
+      consumes:
+      - application/json
+      description: Bot Create a new Recipe
+      parameters:
+      - description: Recipe Data
+        in: body
+        name: recipe
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateRecipe'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Recipe'
+      security:
+      - ApiKeyAuth: []
+      summary: Bot Create a new Recipe
+      tags:
+      - Admin
+  /api/healthcheck:
     get:
       consumes:
       - application/json
@@ -356,7 +355,7 @@ paths:
       summary: healthcheck
       tags:
       - System
-  /ready:
+  /api/ready:
     get:
       consumes:
       - application/json
@@ -372,25 +371,7 @@ paths:
       summary: Checks Readiness
       tags:
       - System
-  /recipes:
-    get:
-      consumes:
-      - application/json
-      description: Get All Recipes
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Recipe'
-            type: array
-      security:
-      - ApiKeyAuth: []
-      summary: Get All Recipes
-      tags:
-      - Recipes
+  /api/recipes:
     post:
       consumes:
       - application/json
@@ -412,6 +393,250 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Create a new Recipe
+      tags:
+      - Recipes
+  /api/recipes/{recipeID}/fork:
+    post:
+      consumes:
+      - application/json
+      description: Fork Recipe
+      parameters:
+      - description: Recipe ID
+        in: path
+        name: recipeID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Recipe'
+      security:
+      - ApiKeyAuth: []
+      summary: Fork Recipe
+      tags:
+      - Recipes
+  /api/recipes/{recipeID}/media:
+    get:
+      consumes:
+      - application/json
+      description: Get all medias for a Recipe
+      parameters:
+      - description: Recipe ID
+        in: path
+        name: recipeID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.RecipeMedia'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get all medias for a Recipe
+      tags:
+      - Recipes
+    post:
+      consumes:
+      - application/json
+      description: Create a new Media SignedURL
+      parameters:
+      - description: Recipe ID
+        in: path
+        name: recipeID
+        required: true
+        type: string
+      - description: Payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateRecipeMedia'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CreateRecipeMedia'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new Media SignedURL
+      tags:
+      - Recipes
+  /api/recipes/{recipeID}/revisions:
+    get:
+      consumes:
+      - application/json
+      description: Get all revisions for a Recipe
+      parameters:
+      - description: Recipe ID
+        in: path
+        name: recipeID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.RecipeRevision'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get all revisions for a Recipe
+      tags:
+      - Recipes
+  /api/recipes/{recipeID}/star:
+    post:
+      consumes:
+      - application/json
+      description: Star Recipe
+      parameters:
+      - description: Recipe ID
+        in: path
+        name: recipeID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      summary: Star Recipe
+      tags:
+      - Recipes
+  /api/recipes/revisions/{revisionID}:
+    get:
+      consumes:
+      - application/json
+      description: Get a Revision By ID
+      parameters:
+      - description: Revision ID
+        in: path
+        name: revisionID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.RecipeRevision'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a Recipe Revision
+      tags:
+      - Recipes
+  /api/search/init/recipe-collection:
+    post:
+      consumes:
+      - application/json
+      description: Initialize Search Recipe Collection
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Initialize Search Recipe Collection
+      tags:
+      - Search
+  /api/user:
+    post:
+      consumes:
+      - application/json
+      description: Create a new User
+      parameters:
+      - description: User Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new User
+      tags:
+      - Users
+  /api/users/username:
+    post:
+      consumes:
+      - application/json
+      description: Returns username validity and availability
+      parameters:
+      - description: Username Data
+        in: body
+        name: username
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.TestUsernameRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.TestUsernameResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Returns username validity and availability
+      tags:
+      - Users
+  /api/version:
+    get:
+      consumes:
+      - application/json
+      description: Get API Version
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get API Version
+      tags:
+      - System
+  /recipes:
+    get:
+      consumes:
+      - application/json
+      description: Get All Recipes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Recipe'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Recipes
       tags:
       - Recipes
   /recipes/{recipeID}:
@@ -485,128 +710,6 @@ paths:
       summary: Update Recipe
       tags:
       - Recipes
-  /recipes/{recipeID}/fork:
-    post:
-      consumes:
-      - application/json
-      description: Fork Recipe
-      parameters:
-      - description: Recipe ID
-        in: path
-        name: recipeID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Recipe'
-      security:
-      - ApiKeyAuth: []
-      summary: Fork Recipe
-      tags:
-      - Recipes
-  /recipes/{recipeID}/media:
-    get:
-      consumes:
-      - application/json
-      description: Get all medias for a Recipe
-      parameters:
-      - description: Recipe ID
-        in: path
-        name: recipeID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.RecipeMedia'
-            type: array
-      security:
-      - ApiKeyAuth: []
-      summary: Get all medias for a Recipe
-      tags:
-      - Recipes
-    post:
-      consumes:
-      - application/json
-      description: Create a new Media SignedURL
-      parameters:
-      - description: Recipe ID
-        in: path
-        name: recipeID
-        required: true
-        type: string
-      - description: Payload
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.CreateRecipeMedia'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.CreateRecipeMedia'
-      security:
-      - ApiKeyAuth: []
-      summary: Create a new Media SignedURL
-      tags:
-      - Recipes
-  /recipes/{recipeID}/revisions:
-    get:
-      consumes:
-      - application/json
-      description: Get all revisions for a Recipe
-      parameters:
-      - description: Recipe ID
-        in: path
-        name: recipeID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.RecipeRevision'
-            type: array
-      security:
-      - ApiKeyAuth: []
-      summary: Get all revisions for a Recipe
-      tags:
-      - Recipes
-  /recipes/{recipeID}/star:
-    post:
-      consumes:
-      - application/json
-      description: Star Recipe
-      parameters:
-      - description: Recipe ID
-        in: path
-        name: recipeID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-      security:
-      - ApiKeyAuth: []
-      summary: Star Recipe
-      tags:
-      - Recipes
   /recipes/author/{username}:
     get:
       consumes:
@@ -632,46 +735,6 @@ paths:
       summary: Get All Recipes by Author
       tags:
       - Recipes
-  /recipes/revisions/{revisionID}:
-    get:
-      consumes:
-      - application/json
-      description: Get a Revision By ID
-      parameters:
-      - description: Revision ID
-        in: path
-        name: revisionID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.RecipeRevision'
-      security:
-      - ApiKeyAuth: []
-      summary: Get a Recipe Revision
-      tags:
-      - Recipes
-  /search/init/recipe-collection:
-    post:
-      consumes:
-      - application/json
-      description: Initialize Search Recipe Collection
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Initialize Search Recipe Collection
-      tags:
-      - Search
   /user:
     get:
       consumes:
@@ -687,29 +750,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get Current User
-      tags:
-      - Users
-    post:
-      consumes:
-      - application/json
-      description: Create a new User
-      parameters:
-      - description: User Data
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.CreateUser'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.User'
-      security:
-      - ApiKeyAuth: []
-      summary: Create a new User
       tags:
       - Users
   /user/:
@@ -833,45 +873,6 @@ paths:
       summary: Get Current User Exist
       tags:
       - Users
-  /users/username:
-    post:
-      consumes:
-      - application/json
-      description: Returns username validity and availability
-      parameters:
-      - description: Username Data
-        in: body
-        name: username
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.TestUsernameRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dtos.TestUsernameResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Returns username validity and availability
-      tags:
-      - Users
-  /version:
-    get:
-      consumes:
-      - application/json
-      description: Get API Version
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      summary: Get API Version
-      tags:
-      - System
 securityDefinitions:
   ApiKeyAuth:
     in: header

@@ -13,38 +13,38 @@ export class AdminService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
-     * Bot Create a new Recipe
-     * Bot Create a new Recipe
-     * @param recipe Recipe Data
-     * @returns models_Recipe OK
-     * @throws ApiError
-     */
-    public postAdminRecipes(
-        recipe: dtos_CreateRecipe,
-    ): CancelablePromise<models_Recipe> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/_admin/recipes',
-            body: recipe,
-        });
-    }
-
-    /**
      * Get all medias for a Recipe
      * Get all medias for a Recipe
      * @param recipeId Recipe ID
      * @returns models_RecipeMedia OK
      * @throws ApiError
      */
-    public getAdminRecipesMedia(
+    public getApiAdminRecipesMedia(
         recipeId: string,
     ): CancelablePromise<Array<models_RecipeMedia>> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/_admin/recipes/{recipeID}/media',
+            url: '/api/_admin/recipes/{recipeID}/media',
             path: {
                 'recipeID': recipeId,
             },
+        });
+    }
+
+    /**
+     * Bot Create a new Recipe
+     * Bot Create a new Recipe
+     * @param recipe Recipe Data
+     * @returns models_Recipe OK
+     * @throws ApiError
+     */
+    public postApiApiAdminRecipes(
+        recipe: dtos_CreateRecipe,
+    ): CancelablePromise<models_Recipe> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/api/_admin/recipes',
+            body: recipe,
         });
     }
 

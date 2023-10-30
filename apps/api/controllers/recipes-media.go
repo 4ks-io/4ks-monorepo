@@ -39,7 +39,7 @@ func getMediaContentType(ext string) (string, error) {
 // @Param       recipeID 			 path      	 string  true  "Recipe ID"
 // @Param       payload 	     body      	 dtos.CreateRecipeMedia  true  "Payload"
 // @Success 		200 		       {object} 	 models.CreateRecipeMedia
-// @Router		 	/recipes/{recipeID}/media  [post]
+// @Router		 	/api/recipes/{recipeID}/media  [post]
 // @Security 		ApiKeyAuth
 func (c *recipeController) CreateRecipeMedia(ctx *gin.Context) {
 	recipeID := ctx.Param("id")
@@ -94,7 +94,7 @@ func (c *recipeController) CreateRecipeMedia(ctx *gin.Context) {
 // @Produce 		json
 // @Param       recipeID 	path      	string  true  "Recipe ID"
 // @Success 		200 		  {array} 	  models.RecipeMedia
-// @Router 			/recipes/{recipeID}/media [get]
+// @Router 			/api/recipes/{recipeID}/media [get]
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipeMedia(ctx *gin.Context) {
 	recipeID := ctx.Param("id")
@@ -120,7 +120,7 @@ func (c *recipeController) GetRecipeMedia(ctx *gin.Context) {
 // @Produce 		json
 // @Param       recipeID 	path      	string  true  "Recipe ID"
 // @Success 		200 		  {array} 	  models.RecipeMedia
-// @Router 			/_admin/recipes/{recipeID}/media [get]
+// @Router 			/api/_admin/recipes/{recipeID}/media [get]
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetAdminRecipeMedias(ctx *gin.Context) {
 	recipeID := ctx.Param("id")

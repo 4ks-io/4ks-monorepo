@@ -64,7 +64,7 @@ spec:
               value: http://typesense.default.svc.cluster.local:8108
             - name: TYPESENSE_API_KEY
               value: local-4ks-api-key
-            - name: IO_4KS_DEVING
+            - name: IO_4KS_DEVELOPMENT
               value: 'true'
             - name: MEDIA_FALLBACK_URL
               value: https://storage.googleapis.com/static.dev.4ks.io

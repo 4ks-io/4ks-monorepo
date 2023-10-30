@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { headers, cookies } from 'next/headers';
 import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
+import TrpcProvider from '@/trpc/Provider';
 
 import { serverClient } from '@/trpc/serverClient';
 import { getSession } from '@auth0/nextjs-auth0';
@@ -41,10 +42,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <ThemeRegistry>
-        <UserProvider>
-          {/* @ts-expect-error Server Component */}
-          <RootLayoutBody>{children}</RootLayoutBody>
-        </UserProvider>
+        <TrpcProvider>
+          <UserProvider>
+            {/* @ts-expect-error Server Component */}
+            <RootLayoutBody>{children}</RootLayoutBody>
+          </UserProvider>
+        </TrpcProvider>
       </ThemeRegistry>
     </html>
   );

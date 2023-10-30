@@ -15,7 +15,7 @@ export default function TrpcProvider({
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: `${process.env.IO_4KS_BASE_URL}/app/trpc`,
+          url: `/app/trpc`,
 
           // // You can pass any HTTP headers you wish here
           // async headers() {

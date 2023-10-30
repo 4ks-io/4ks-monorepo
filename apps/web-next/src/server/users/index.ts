@@ -24,7 +24,7 @@ export const usersRouter = router({
     .mutation(async (opts) => {
       const { input } = opts;
       const api = await getAPIClient();
-      return await api.users.postUser(input);
+      return await api.users.postApiUser(input);
     }),
   getUserName: publicProcedure
     .input(
@@ -35,7 +35,7 @@ export const usersRouter = router({
     .mutation(async (opts) => {
       const { input } = opts;
       const api = await getAPIClient();
-      return await api.users.postUsersUsername(input);
+      return await api.users.postApiUsersUsername(input);
     }),
 });
 

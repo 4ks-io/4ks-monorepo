@@ -14,10 +14,10 @@ export class SearchService {
      * @returns string OK
      * @throws ApiError
      */
-    public postSearchInitRecipeCollection(): CancelablePromise<string> {
+    public postApiSearchInitRecipeCollection(): CancelablePromise<string> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/search/init/recipe-collection',
+            url: '/api/search/init/recipe-collection',
         });
     }
 

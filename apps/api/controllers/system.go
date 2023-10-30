@@ -29,7 +29,7 @@ func NewSystemController() SystemController {
 //	@Accept 			json
 //	@Produce 		  json
 //	@Success 		  200 		 {string} value
-//	@Router 			/ready [get]
+//	@Router       /api/ready [get]
 func (sysCtlr *systemController) CheckReadiness(ctx *gin.Context) {
 	// todo: check database connection
 	ctx.JSON(http.StatusOK, gin.H{
@@ -45,7 +45,7 @@ func (sysCtlr *systemController) CheckReadiness(ctx *gin.Context) {
 //	@Tags 			 System
 //	@Accept 		 json
 //	@Produce 		 json
-//	@Router		 	 /healthcheck [get]
+//	@Router      /api/healthcheck [get]
 func (sysCtlr *systemController) Healthcheck(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": "Ok",
@@ -60,7 +60,7 @@ func (sysCtlr *systemController) Healthcheck(ctx *gin.Context) {
 //	@Accept 		 json
 //	@Produce 		 json
 //	@Success 		 200 		 {string} value
-//	@Router 		 /version [get]
+//	@Router      /api/version [get]
 func (sysCtlr *systemController) GetAPIVersion(version string) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{

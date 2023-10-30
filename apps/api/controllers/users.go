@@ -44,7 +44,7 @@ func NewUserController(u usersvc.Service) UserController {
 // @Produce 		json
 // @Param       user     body  	   dtos.CreateUser  true  "User Data"
 // @Success 		200 		 {object} 	 models.User
-// @Router		 	/user   [post]
+// @Router		 	/api/user   [post]
 // @Security 		ApiKeyAuth
 func (c *userController) CreateUser(ctx *gin.Context) {
 	userID := ctx.GetString("id")
@@ -76,7 +76,7 @@ func (c *userController) CreateUser(ctx *gin.Context) {
 // @Produce 		json
 // @Param       userID 	path      string  true  "User ID"
 // @Success 		200
-// @Router 			/users/{userID}   [delete]
+// @Router 			/api/users/{userID}   [delete]
 // @Security 		ApiKeyAuth
 func (c *userController) DeleteUser(ctx *gin.Context) {
 	userID := ctx.Param("id")
@@ -102,7 +102,7 @@ func (c *userController) DeleteUser(ctx *gin.Context) {
 // @Produce   	json
 // @Param       userID 	path      	string  true  "User ID"
 // @Success 		200 		{object} 	models.User
-// @Router 			/users/{userID} [get]
+// @Router 			/api/users/{userID} [get]
 // @Security 		ApiKeyAuth
 func (c *userController) GetUser(ctx *gin.Context) {
 	userID := ctx.Param("id")
@@ -127,7 +127,7 @@ func (c *userController) GetUser(ctx *gin.Context) {
 // @Accept 	   	json
 // @Produce   	json
 // @Success 		200 		{object} 	models.User
-// @Router 			/user [get]
+// @Router 			/api/user [get]
 // @Security 		ApiKeyAuth
 func (c *userController) GetCurrentUser(ctx *gin.Context) {
 	userID := ctx.GetString("id")
@@ -151,7 +151,7 @@ func (c *userController) GetCurrentUser(ctx *gin.Context) {
 // @Tags 		    Users
 // @Produce   	json
 // @Success 		200 		{object} 	models.UserExist
-// @Router 			/users/exist [get]
+// @Router 			/api/users/exist [get]
 // @Security 		ApiKeyAuth
 func (c *userController) GetCurrentUserExist(ctx *gin.Context) {
 	userID := ctx.GetString("id")
@@ -176,7 +176,7 @@ func (c *userController) GetCurrentUserExist(ctx *gin.Context) {
 // @Schemes
 // @Summary 	  Head Authenticated user
 // @Description Head Authenticated user
-// @Router 			/user/ [head]
+// @Router 			/api/user/ [head]
 // @Tags 		    Users
 // @Produce   	json
 // @Success 		200
@@ -211,7 +211,7 @@ func (c *userController) HeadAuthenticatedUser(ctx *gin.Context) {
 // @Accept 	   	json
 // @Produce   	json
 // @Success 		200 		{array} 	models.User
-// @Router 			/users/	[get]
+// @Router 			/api/users/	[get]
 // @Security 		ApiKeyAuth
 func (c *userController) GetUsers(ctx *gin.Context) {
 	user, err := c.usersvc.GetAllUsers(ctx)
@@ -232,7 +232,7 @@ func (c *userController) GetUsers(ctx *gin.Context) {
 // @Produce 		json
 // @Param       payload  body  	   dtos.UpdateUser  true  "User Data"
 // @Success 		200 		 {object}  models.User
-// @Router 			/user/   [patch]
+// @Router 			/api/user/   [patch]
 // @Security 		ApiKeyAuth
 func (c *userController) UpdateUser(ctx *gin.Context) {
 	userID := ctx.GetString("id")
@@ -263,7 +263,7 @@ func (c *userController) UpdateUser(ctx *gin.Context) {
 // @Produce 		json
 // @Param       username    body  	   dtos.TestUsernameRequest  true  "Username Data"
 // @Success 		200 		 		{object} 	 dtos.TestUsernameResponse
-// @Router 			/users/username   [post]
+// @Router 			/api/users/username   [post]
 // @Security 		ApiKeyAuth
 func (c *userController) TestUsername(ctx *gin.Context) {
 	payload := dtos.TestUsernameRequest{}

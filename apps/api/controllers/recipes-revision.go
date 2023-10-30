@@ -16,7 +16,7 @@ import (
 // @Produce 		json
 // @Param       recipeID 	path      	string  true  "Recipe ID"
 // @Success 		200 		{array} 	models.RecipeRevision
-// @Router 			/recipes/{recipeID}/revisions [get]
+// @Router 			/api/recipes/{recipeID}/revisions [get]
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipeRevisions(ctx *gin.Context) {
 	recipeID := ctx.Param("id")
@@ -41,7 +41,7 @@ func (c *recipeController) GetRecipeRevisions(ctx *gin.Context) {
 // @Produce 		json
 // @Param       revisionID 	path      	string  true  "Revision ID"
 // @Success 		200 		{object} 	models.RecipeRevision
-// @Router 			/recipes/revisions/{revisionID} [get]
+// @Router 			/api/recipes/revisions/{revisionID} [get]
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipeRevision(ctx *gin.Context) {
 	revisionID := ctx.Param("revisionID")

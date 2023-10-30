@@ -21,7 +21,7 @@ import (
 // @Produce 		json
 // @Param       recipe   body  	   	dtos.CreateRecipe  true  "Recipe Data"
 // @Success 		200 		 {object}		models.Recipe
-// @Router		 	/recipes [post]
+// @Router		 	/api/recipes [post]
 // @Security 		ApiKeyAuth
 func (c *recipeController) CreateRecipe(ctx *gin.Context) {
 	payload := dtos.CreateRecipe{}
@@ -76,7 +76,7 @@ func (c *recipeController) CreateRecipe(ctx *gin.Context) {
 // @Produce 		json
 // @Param       recipeID 	path      string  true  "Recipe ID"
 // @Success 		200
-// @Router 			/recipes/{recipeID}   [delete]
+// @Router 			/api/recipes/{recipeID}   [delete]
 // @Security 		ApiKeyAuth
 func (c *recipeController) DeleteRecipe(ctx *gin.Context) {
 	recipeID := ctx.Param("id")
@@ -117,7 +117,7 @@ func (c *recipeController) DeleteRecipe(ctx *gin.Context) {
 // @Produce   	json
 // @Param       recipeID 	path      	string  true  "Recipe ID"
 // @Success 		200 		{object} 	models.Recipe
-// @Router 			/recipes/{recipeID} [get]
+// @Router 			/api/recipes/{recipeID} [get]
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipe(ctx *gin.Context) {
 	recipeID := ctx.Param("id")
@@ -143,7 +143,7 @@ func (c *recipeController) GetRecipe(ctx *gin.Context) {
 // @Produce   	json
 // @Param       username 			path      string             true  "Username"
 // @Success 		200 			{array} 		models.Recipe
-// @Router 			/recipes/author/{username}   [get]
+// @Router 			/api/recipes/author/{username}   [get]
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipesByUsername(ctx *gin.Context) {
 	username := ctx.Param("username")
@@ -184,7 +184,7 @@ func (c *recipeController) GetRecipesByUsername(ctx *gin.Context) {
 // @Accept 	   	json
 // @Produce   	json
 // @Success 		200 			{array} 		models.Recipe
-// @Router 			/recipes 	[get]
+// @Router 			/api/recipes 	[get]
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipes(ctx *gin.Context) {
 	// hardcode limit for now
@@ -211,7 +211,7 @@ func (c *recipeController) GetRecipes(ctx *gin.Context) {
 // @Param       recipeID 			path      string             true  "Recipe ID"
 // @Param				payload   	  body			dtos.UpdateRecipe  true  "Recipe Data"
 // @Success 		200 					{object} 	models.Recipe
-// @Router 			/recipes/{recipeID} [patch]
+// @Router 			/api/recipes/{recipeID} [patch]
 // @Security 		ApiKeyAuth
 func (c *recipeController) UpdateRecipe(ctx *gin.Context) {
 	recipeID := ctx.Param("id")

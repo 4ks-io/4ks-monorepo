@@ -30,8 +30,6 @@ spec:
         - name: web-next
           image: web-next
           env:
-            - name: IO_4KS_BASE_URL
-              value: https://local.4ks.io
             - name: IO_4KS_API_URL
               value: http://api.default.svc.cluster.local
             - name: AUTH0_BASE_URL

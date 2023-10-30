@@ -1,6 +1,12 @@
 # https://docs.tilt.dev/api.html#api.version_settings
 version_settings(constraint='>=0.22.2')
 
+local_resource(
+    'pnpm_install',
+    cmd='pnpm install',
+    deps=['package.json', 'pnpm-lock.yaml']
+)
+
 # resources
 k8s_yaml([
     'deploy/api.yaml',

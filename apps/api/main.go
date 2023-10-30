@@ -151,13 +151,11 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization
-
-// @BasePath /api
 func main() {
 	// args
 	sysFlags := utils.SystemFlags{
 		Debug:         utils.GetStrEnvVar("GIN_MODE", "release") == "debug",
-		Development:   utils.GetBoolEnv("IO_4KS_DEVING", false),
+		Development:   utils.GetBoolEnv("IO_4KS_DEVELOPMENT", false),
 		JaegerEnabled: utils.GetBoolEnv("JAEGER_ENABLED", false),
 	}
 

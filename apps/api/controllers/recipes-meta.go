@@ -19,7 +19,7 @@ import (
 // @Produce 		json
 // @Param       recipeID 	path      	string  true  "Recipe ID"
 // @Success 		200 		{object} 	models.Recipe
-// @Router 			/recipes/{recipeID}/fork [post]
+// @Router 			/api/recipes/{recipeID}/fork [post]
 // @Security 		ApiKeyAuth
 func (c *recipeController) ForkRecipe(ctx *gin.Context) {
 	recipeID := ctx.Param("id")
@@ -62,7 +62,7 @@ func (c *recipeController) ForkRecipe(ctx *gin.Context) {
 // @Produce 		json
 // @Param       recipeID 	path      	string  true  "Recipe ID"
 // @Success 		200
-// @Router 			/recipes/{recipeID}/star [post]
+// @Router 			/api/recipes/{recipeID}/star [post]
 // @Security 		ApiKeyAuth
 func (c *recipeController) StarRecipe(ctx *gin.Context) {
 	recipeID := ctx.Param("id")

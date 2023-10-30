@@ -17,6 +17,140 @@ export class RecipesService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
+     * Create a new Recipe
+     * Create a new Recipe
+     * @param recipe Recipe Data
+     * @returns models_Recipe OK
+     * @throws ApiError
+     */
+    public postApiRecipes(
+        recipe: dtos_CreateRecipe,
+    ): CancelablePromise<models_Recipe> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/recipes',
+            body: recipe,
+        });
+    }
+
+    /**
+     * Get a Recipe Revision
+     * Get a Revision By ID
+     * @param revisionId Revision ID
+     * @returns models_RecipeRevision OK
+     * @throws ApiError
+     */
+    public getApiRecipesRevisions(
+        revisionId: string,
+    ): CancelablePromise<models_RecipeRevision> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/recipes/revisions/{revisionID}',
+            path: {
+                'revisionID': revisionId,
+            },
+        });
+    }
+
+    /**
+     * Fork Recipe
+     * Fork Recipe
+     * @param recipeId Recipe ID
+     * @returns models_Recipe OK
+     * @throws ApiError
+     */
+    public postApiRecipesFork(
+        recipeId: string,
+    ): CancelablePromise<models_Recipe> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/recipes/{recipeID}/fork',
+            path: {
+                'recipeID': recipeId,
+            },
+        });
+    }
+
+    /**
+     * Get all medias for a Recipe
+     * Get all medias for a Recipe
+     * @param recipeId Recipe ID
+     * @returns models_RecipeMedia OK
+     * @throws ApiError
+     */
+    public getApiRecipesMedia(
+        recipeId: string,
+    ): CancelablePromise<Array<models_RecipeMedia>> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/recipes/{recipeID}/media',
+            path: {
+                'recipeID': recipeId,
+            },
+        });
+    }
+
+    /**
+     * Create a new Media SignedURL
+     * Create a new Media SignedURL
+     * @param recipeId Recipe ID
+     * @param payload Payload
+     * @returns models_CreateRecipeMedia OK
+     * @throws ApiError
+     */
+    public postApiRecipesMedia(
+        recipeId: string,
+        payload: dtos_CreateRecipeMedia,
+    ): CancelablePromise<models_CreateRecipeMedia> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/recipes/{recipeID}/media',
+            path: {
+                'recipeID': recipeId,
+            },
+            body: payload,
+        });
+    }
+
+    /**
+     * Get all revisions for a Recipe
+     * Get all revisions for a Recipe
+     * @param recipeId Recipe ID
+     * @returns models_RecipeRevision OK
+     * @throws ApiError
+     */
+    public getApiRecipesRevisions1(
+        recipeId: string,
+    ): CancelablePromise<Array<models_RecipeRevision>> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/recipes/{recipeID}/revisions',
+            path: {
+                'recipeID': recipeId,
+            },
+        });
+    }
+
+    /**
+     * Star Recipe
+     * Star Recipe
+     * @param recipeId Recipe ID
+     * @returns any OK
+     * @throws ApiError
+     */
+    public postApiRecipesStar(
+        recipeId: string,
+    ): CancelablePromise<any> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/recipes/{recipeID}/star',
+            path: {
+                'recipeID': recipeId,
+            },
+        });
+    }
+
+    /**
      * Get All Recipes
      * Get All Recipes
      * @returns models_Recipe OK
@@ -26,23 +160,6 @@ export class RecipesService {
         return this.httpRequest.request({
             method: 'GET',
             url: '/recipes',
-        });
-    }
-
-    /**
-     * Create a new Recipe
-     * Create a new Recipe
-     * @param recipe Recipe Data
-     * @returns models_Recipe OK
-     * @throws ApiError
-     */
-    public postRecipes(
-        recipe: dtos_CreateRecipe,
-    ): CancelablePromise<models_Recipe> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/recipes',
-            body: recipe,
         });
     }
 
@@ -61,25 +178,6 @@ export class RecipesService {
             url: '/recipes/author/{username}',
             path: {
                 'username': username,
-            },
-        });
-    }
-
-    /**
-     * Get a Recipe Revision
-     * Get a Revision By ID
-     * @param revisionId Revision ID
-     * @returns models_RecipeRevision OK
-     * @throws ApiError
-     */
-    public getRecipesRevisions(
-        revisionId: string,
-    ): CancelablePromise<models_RecipeRevision> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/recipes/revisions/{revisionID}',
-            path: {
-                'revisionID': revisionId,
             },
         });
     }
@@ -141,104 +239,6 @@ export class RecipesService {
                 'recipeID': recipeId,
             },
             body: payload,
-        });
-    }
-
-    /**
-     * Fork Recipe
-     * Fork Recipe
-     * @param recipeId Recipe ID
-     * @returns models_Recipe OK
-     * @throws ApiError
-     */
-    public postRecipesFork(
-        recipeId: string,
-    ): CancelablePromise<models_Recipe> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/recipes/{recipeID}/fork',
-            path: {
-                'recipeID': recipeId,
-            },
-        });
-    }
-
-    /**
-     * Get all medias for a Recipe
-     * Get all medias for a Recipe
-     * @param recipeId Recipe ID
-     * @returns models_RecipeMedia OK
-     * @throws ApiError
-     */
-    public getRecipesMedia(
-        recipeId: string,
-    ): CancelablePromise<Array<models_RecipeMedia>> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/recipes/{recipeID}/media',
-            path: {
-                'recipeID': recipeId,
-            },
-        });
-    }
-
-    /**
-     * Create a new Media SignedURL
-     * Create a new Media SignedURL
-     * @param recipeId Recipe ID
-     * @param payload Payload
-     * @returns models_CreateRecipeMedia OK
-     * @throws ApiError
-     */
-    public postRecipesMedia(
-        recipeId: string,
-        payload: dtos_CreateRecipeMedia,
-    ): CancelablePromise<models_CreateRecipeMedia> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/recipes/{recipeID}/media',
-            path: {
-                'recipeID': recipeId,
-            },
-            body: payload,
-        });
-    }
-
-    /**
-     * Get all revisions for a Recipe
-     * Get all revisions for a Recipe
-     * @param recipeId Recipe ID
-     * @returns models_RecipeRevision OK
-     * @throws ApiError
-     */
-    public getRecipesRevisions1(
-        recipeId: string,
-    ): CancelablePromise<Array<models_RecipeRevision>> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/recipes/{recipeID}/revisions',
-            path: {
-                'recipeID': recipeId,
-            },
-        });
-    }
-
-    /**
-     * Star Recipe
-     * Star Recipe
-     * @param recipeId Recipe ID
-     * @returns any OK
-     * @throws ApiError
-     */
-    public postRecipesStar(
-        recipeId: string,
-    ): CancelablePromise<any> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/recipes/{recipeID}/star',
-            path: {
-                'recipeID': recipeId,
-            },
         });
     }
 

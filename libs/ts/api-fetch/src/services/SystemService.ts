@@ -14,10 +14,10 @@ export class SystemService {
      * @returns void
      * @throws ApiError
      */
-    public getHealthcheck(): CancelablePromise<void> {
+    public getApiHealthcheck(): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/healthcheck',
+            url: '/api/healthcheck',
         });
     }
 
@@ -27,10 +27,10 @@ export class SystemService {
      * @returns string OK
      * @throws ApiError
      */
-    public getReady(): CancelablePromise<string> {
+    public getApiReady(): CancelablePromise<string> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/ready',
+            url: '/api/ready',
         });
     }
 
@@ -40,10 +40,10 @@ export class SystemService {
      * @returns string OK
      * @throws ApiError
      */
-    public getVersion(): CancelablePromise<string> {
+    public getApiVersion(): CancelablePromise<string> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/version',
+            url: '/api/version',
         });
     }
 

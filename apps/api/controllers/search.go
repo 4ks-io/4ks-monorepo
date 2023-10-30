@@ -31,7 +31,7 @@ func NewSearchController() SearchController {
 // @Accept 			json
 // @Produce 		json
 // @Success 		200 		 {string} value
-// @Router		 	/search/init/recipe-collection  [post]
+// @Router		 	/api/search/init/recipe-collection  [post]
 // @Security 		ApiKeyAuth
 func (sc *searchController) CreateSearchRecipeCollection(c *gin.Context) {
 
