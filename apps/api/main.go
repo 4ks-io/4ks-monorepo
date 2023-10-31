@@ -145,7 +145,7 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 }
 
 // @title 4ks API
-// @version 1.0
+// @version 2.0
 // @description This is the 4ks api
 
 // @securityDefinitions.apikey ApiKeyAuth

@@ -2,9 +2,9 @@
 version_settings(constraint='>=0.22.2')
 
 local_resource(
-    'pnpm_install',
-    cmd='pnpm install',
-    deps=['package.json', 'pnpm-lock.yaml']
+    'package_json',
+    cmd='./tools/package_json.sh',
+    deps=['pnpm-lock.yaml']
 )
 
 # resources

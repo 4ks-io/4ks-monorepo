@@ -1,6 +1,6 @@
 {
   "name": "4ks",
-  "version": "0.0.0",
+  "version": "0.0.4",
   "license": "4ks 2022. all rights reserved",
   "engines": {
     "node": ">= 18.1.0",

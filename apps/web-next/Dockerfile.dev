@@ -1,21 +1,22 @@
-FROM node:20-alpine3.17
+FROM node:20-alpine3.17 as build
 RUN apk --no-cache add git bash
 RUN npm install -g pnpm
 
 WORKDIR /code
-
-# Copy all dependency related files and install dependencies
-COPY /package.json .
+COPY /PACKAGE_JSON /code
 COPY /pnpm* .
-COPY /apps/web-next/package.json ./apps/web-next/
-COPY /apps/web-next/pnpm* ./apps/web-next/
-COPY /libs/ts/api-fetch/package.json ./libs/ts/api-fetch/
+RUN pnpm install
+
+FROM build
+WORKDIR /code
+COPY /PACKAGE_JSON /code
+COPY /pnpm* .
 RUN pnpm install
 
 COPY ./libs/ts/api-fetch ./libs/ts/api-fetch
-COPY ./apps/web-next ./apps/web-next
-
 RUN pnpm --filter @4ks/api-fetch build
+
+COPY ./apps/web-next ./apps/web-next
 
 CMD [ "pnpm", "--filter", "@4ks/web-next", "dev" ]
 EXPOSE 3000
