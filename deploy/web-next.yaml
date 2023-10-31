@@ -54,6 +54,12 @@ spec:
               value: /app/auth/login
             - name: NEXT_PUBLIC_AUTH0_PROFILE
               value: /app/auth/me
+            - name: TYPESENSE_URL
+              value: local.4ks.io
+            - name: TYPESENSE_PATH
+              value: /search
+            - name: TYPESENSE_API_KEY
+              value: local-4ks-api-key
           ports:
             - containerPort: 3000
           # readinessProbe:
