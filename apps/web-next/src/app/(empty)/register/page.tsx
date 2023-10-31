@@ -42,7 +42,7 @@ function NewInputMap() {
   } as Input;
 }
 
-export default function NewUser() {
+export default function RegisterPage() {
   const { user, error, isLoading } = useUser();
 
   // validation hooks

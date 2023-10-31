@@ -27,10 +27,10 @@ async function RootLayoutBody({ children }: RootLayoutProps) {
     const data = await serverClient.users.exists();
 
     if (data.Status == 204) {
-      if (pathname != '/new') {
-        redirect('/new');
+      if (pathname != '/register') {
+        redirect('/register');
       }
-    } else if (pathname == '/new') {
+    } else if (pathname == '/register') {
       redirect('/');
     }
   }

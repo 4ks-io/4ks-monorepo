@@ -23,7 +23,7 @@ export default function AppBarUnauthenticated() {
       setShowSearchInput(true);
       return;
     }
-    if (['/new'].includes(pathname)) {
+    if (['/register'].includes(pathname)) {
       setShowExploreLink(false);
       setShowSearchInput(false);
       return;
@@ -50,7 +50,7 @@ export default function AppBarUnauthenticated() {
         <Box sx={{ flexGrow: 1 }} />
         {showExploreLink && (
           <Tooltip title="Explore">
-            <a href="/r">
+            <a href="/explore">
               <IconButton aria-label="explore" size="large">
                 <ExploreIcon fontSize="inherit" />
               </IconButton>

@@ -29,7 +29,7 @@ export default async function DefaultPage() {
         alignItems="center"
         spacing={2}
       >
-        <a href="/r">
+        <a href="/explore">
           <Box
             component="img"
             sx={{ height: 96, paddingRight: 1 }}
