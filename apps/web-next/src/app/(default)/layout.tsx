@@ -1,9 +1,8 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import { getSession } from '@auth0/nextjs-auth0';
-
+import AppBarUnauthenticated from '@/components/AppBarUnauthenticated';
+import AppBarAuthenticated from '@/components/AppBarAuthenticated';
 export default async function DefaultLayout({
   children,
 }: {
@@ -13,21 +12,7 @@ export default async function DefaultLayout({
 
   return (
     <>
-      <AppBar position="static" sx={{ zIndex: 2000 }}>
-        <Toolbar sx={{ backgroundColor: 'background.paper' }}>
-          <Box
-            component="img"
-            sx={{
-              height: 36,
-              paddingRight: 1,
-            }}
-            alt="4ks.io"
-            src={'/logo.svg'}
-          />
-          {session?.user && <a href="/app/auth/logout">Logout</a>}
-          {!session?.user && <a href="/app/auth/login">Login</a>}
-        </Toolbar>
-      </AppBar>
+      {session ? <AppBarAuthenticated /> : <AppBarUnauthenticated />}
       <Box
         component="main"
         sx={{
