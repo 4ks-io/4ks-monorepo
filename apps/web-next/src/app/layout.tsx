@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { UserProvider } from '@auth0/nextjs-auth0/client';
 import type { Metadata } from 'next';
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { redirect } from 'next/navigation';
-import { headers, cookies } from 'next/headers';
+import { headers } from 'next/headers';
 import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
 import TrpcProvider from '@/trpc/Provider';
 
@@ -27,10 +27,10 @@ async function RootLayoutBody({ children }: RootLayoutProps) {
     const data = await serverClient.users.exists();
 
     if (data.Status == 204) {
-      if (pathname != '/register') {
-        redirect('/register');
+      if (pathname != '/new') {
+        redirect('/new');
       }
-    } else if (pathname == '/register') {
+    } else if (pathname == '/new') {
       redirect('/');
     }
   }
