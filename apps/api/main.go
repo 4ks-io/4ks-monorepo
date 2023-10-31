@@ -135,11 +135,11 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 		}
 
 		// admin
-		admin := api.Group("/_admin/recipes/")
+		admin := api.Group("/_admin/")
 		{
-			admin.POST("", middleware.Authorize("/recipes/*", "create"), c.Recipe.BotCreateRecipe)
-			admin.GET(":id/media", middleware.Authorize("/recipes/*", "list"), c.Recipe.GetAdminRecipeMedias)
-			admin.POST("collection-init-recipe", middleware.Authorize("/search/*", "create"), c.Search.CreateSearchRecipeCollection)
+			admin.POST("recipes", middleware.Authorize("/recipes/*", "create"), c.Recipe.BotCreateRecipe)
+			admin.GET("recipes/:id/media", middleware.Authorize("/recipes/*", "list"), c.Recipe.GetAdminRecipeMedias)
+			admin.POST("init-search-collections", middleware.Authorize("/search/*", "create"), c.Search.CreateSearchRecipeCollection)
 		}
 	}
 }

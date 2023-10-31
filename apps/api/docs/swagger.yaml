@@ -293,8 +293,49 @@ info:
   contact: {}
   description: This is the 4ks api
   title: 4ks API
-  version: "1.0"
+  version: "2.0"
 paths:
+  /api/_admin/init-search-collections:
+    post:
+      consumes:
+      - application/json
+      description: Initialize Search Recipe Collection
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Initialize Search Recipe Collection
+      tags:
+      - Admin
+  /api/_admin/recipes:
+    post:
+      consumes:
+      - application/json
+      description: Bot Create a new Recipe
+      parameters:
+      - description: Recipe Data
+        in: body
+        name: recipe
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateRecipe'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Recipe'
+      security:
+      - ApiKeyAuth: []
+      summary: Bot Create a new Recipe
+      tags:
+      - Admin
   /api/_admin/recipes/{recipeID}/media:
     get:
       consumes:
@@ -318,30 +359,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get all medias for a Recipe
-      tags:
-      - Admin
-  /api/api/_admin/recipes:
-    post:
-      consumes:
-      - application/json
-      description: Bot Create a new Recipe
-      parameters:
-      - description: Recipe Data
-        in: body
-        name: recipe
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.CreateRecipe'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Recipe'
-      security:
-      - ApiKeyAuth: []
-      summary: Bot Create a new Recipe
       tags:
       - Admin
   /api/healthcheck:
@@ -372,6 +389,24 @@ paths:
       tags:
       - System
   /api/recipes:
+    get:
+      consumes:
+      - application/json
+      description: Get All Recipes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Recipe'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Recipes
+      tags:
+      - Recipes
     post:
       consumes:
       - application/json
@@ -393,6 +428,77 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Create a new Recipe
+      tags:
+      - Recipes
+  /api/recipes/{recipeID}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Recipe
+      parameters:
+      - description: Recipe ID
+        in: path
+        name: recipeID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Recipe
+      tags:
+      - Recipes
+    get:
+      consumes:
+      - application/json
+      description: Get a Recipe (by ID)
+      parameters:
+      - description: Recipe ID
+        in: path
+        name: recipeID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Recipe'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a Recipe (by ID)
+      tags:
+      - Recipes
+    patch:
+      consumes:
+      - application/json
+      description: Update Recipe
+      parameters:
+      - description: Recipe ID
+        in: path
+        name: recipeID
+        required: true
+        type: string
+      - description: Recipe Data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdateRecipe'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Recipe'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Recipe
       tags:
       - Recipes
   /api/recipes/{recipeID}/fork:
@@ -517,200 +623,7 @@ paths:
       summary: Star Recipe
       tags:
       - Recipes
-  /api/recipes/revisions/{revisionID}:
-    get:
-      consumes:
-      - application/json
-      description: Get a Revision By ID
-      parameters:
-      - description: Revision ID
-        in: path
-        name: revisionID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.RecipeRevision'
-      security:
-      - ApiKeyAuth: []
-      summary: Get a Recipe Revision
-      tags:
-      - Recipes
-  /api/search/init/recipe-collection:
-    post:
-      consumes:
-      - application/json
-      description: Initialize Search Recipe Collection
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Initialize Search Recipe Collection
-      tags:
-      - Search
-  /api/user:
-    post:
-      consumes:
-      - application/json
-      description: Create a new User
-      parameters:
-      - description: User Data
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.CreateUser'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.User'
-      security:
-      - ApiKeyAuth: []
-      summary: Create a new User
-      tags:
-      - Users
-  /api/users/username:
-    post:
-      consumes:
-      - application/json
-      description: Returns username validity and availability
-      parameters:
-      - description: Username Data
-        in: body
-        name: username
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.TestUsernameRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dtos.TestUsernameResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Returns username validity and availability
-      tags:
-      - Users
-  /api/version:
-    get:
-      consumes:
-      - application/json
-      description: Get API Version
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      summary: Get API Version
-      tags:
-      - System
-  /recipes:
-    get:
-      consumes:
-      - application/json
-      description: Get All Recipes
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Recipe'
-            type: array
-      security:
-      - ApiKeyAuth: []
-      summary: Get All Recipes
-      tags:
-      - Recipes
-  /recipes/{recipeID}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete Recipe
-      parameters:
-      - description: Recipe ID
-        in: path
-        name: recipeID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-      security:
-      - ApiKeyAuth: []
-      summary: Delete Recipe
-      tags:
-      - Recipes
-    get:
-      consumes:
-      - application/json
-      description: Get a Recipe (by ID)
-      parameters:
-      - description: Recipe ID
-        in: path
-        name: recipeID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Recipe'
-      security:
-      - ApiKeyAuth: []
-      summary: Get a Recipe (by ID)
-      tags:
-      - Recipes
-    patch:
-      consumes:
-      - application/json
-      description: Update Recipe
-      parameters:
-      - description: Recipe ID
-        in: path
-        name: recipeID
-        required: true
-        type: string
-      - description: Recipe Data
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.UpdateRecipe'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Recipe'
-      security:
-      - ApiKeyAuth: []
-      summary: Update Recipe
-      tags:
-      - Recipes
-  /recipes/author/{username}:
+  /api/recipes/author/{username}:
     get:
       consumes:
       - application/json
@@ -735,7 +648,30 @@ paths:
       summary: Get All Recipes by Author
       tags:
       - Recipes
-  /user:
+  /api/recipes/revisions/{revisionID}:
+    get:
+      consumes:
+      - application/json
+      description: Get a Revision By ID
+      parameters:
+      - description: Revision ID
+        in: path
+        name: revisionID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.RecipeRevision'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a Recipe Revision
+      tags:
+      - Recipes
+  /api/user:
     get:
       consumes:
       - application/json
@@ -752,7 +688,30 @@ paths:
       summary: Get Current User
       tags:
       - Users
-  /user/:
+    post:
+      consumes:
+      - application/json
+      description: Create a new User
+      parameters:
+      - description: User Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new User
+      tags:
+      - Users
+  /api/user/:
     head:
       description: Head Authenticated user
       produces:
@@ -796,7 +755,7 @@ paths:
       summary: Update User
       tags:
       - Users
-  /users/:
+  /api/users/:
     get:
       consumes:
       - application/json
@@ -815,7 +774,7 @@ paths:
       summary: Get All Users
       tags:
       - Users
-  /users/{userID}:
+  /api/users/{userID}:
     delete:
       consumes:
       - application/json
@@ -858,7 +817,7 @@ paths:
       summary: Get a User (by ID)
       tags:
       - Users
-  /users/exist:
+  /api/users/exist:
     get:
       description: Get Current User Exist
       produces:
@@ -873,6 +832,45 @@ paths:
       summary: Get Current User Exist
       tags:
       - Users
+  /api/users/username:
+    post:
+      consumes:
+      - application/json
+      description: Returns username validity and availability
+      parameters:
+      - description: Username Data
+        in: body
+        name: username
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.TestUsernameRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.TestUsernameResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Returns username validity and availability
+      tags:
+      - Users
+  /api/version:
+    get:
+      consumes:
+      - application/json
+      description: Get API Version
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get API Version
+      tags:
+      - System
 securityDefinitions:
   ApiKeyAuth:
     in: header

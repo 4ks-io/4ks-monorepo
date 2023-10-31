@@ -37,6 +37,7 @@ export default async function DefaultLayout({
           p: 3,
         }}
       >
+        <>Bearer {session?.accessToken}</>
         {children}
       </Box>
     </>

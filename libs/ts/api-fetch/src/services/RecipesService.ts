@@ -17,6 +17,19 @@ export class RecipesService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
+     * Get All Recipes
+     * Get All Recipes
+     * @returns models_Recipe OK
+     * @throws ApiError
+     */
+    public getApiRecipes(): CancelablePromise<Array<models_Recipe>> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/recipes',
+        });
+    }
+
+    /**
      * Create a new Recipe
      * Create a new Recipe
      * @param recipe Recipe Data
@@ -30,6 +43,25 @@ export class RecipesService {
             method: 'POST',
             url: '/api/recipes',
             body: recipe,
+        });
+    }
+
+    /**
+     * Get All Recipes by Author
+     * Get All Recipes by Author
+     * @param username Username
+     * @returns models_Recipe OK
+     * @throws ApiError
+     */
+    public getApiRecipesAuthor(
+        username: string,
+    ): CancelablePromise<Array<models_Recipe>> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/recipes/author/{username}',
+            path: {
+                'username': username,
+            },
         });
     }
 
@@ -49,6 +81,66 @@ export class RecipesService {
             path: {
                 'revisionID': revisionId,
             },
+        });
+    }
+
+    /**
+     * Get a Recipe (by ID)
+     * Get a Recipe (by ID)
+     * @param recipeId Recipe ID
+     * @returns models_Recipe OK
+     * @throws ApiError
+     */
+    public getApiRecipes1(
+        recipeId: string,
+    ): CancelablePromise<models_Recipe> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/recipes/{recipeID}',
+            path: {
+                'recipeID': recipeId,
+            },
+        });
+    }
+
+    /**
+     * Delete Recipe
+     * Delete Recipe
+     * @param recipeId Recipe ID
+     * @returns any OK
+     * @throws ApiError
+     */
+    public deleteApiRecipes(
+        recipeId: string,
+    ): CancelablePromise<any> {
+        return this.httpRequest.request({
+            method: 'DELETE',
+            url: '/api/recipes/{recipeID}',
+            path: {
+                'recipeID': recipeId,
+            },
+        });
+    }
+
+    /**
+     * Update Recipe
+     * Update Recipe
+     * @param recipeId Recipe ID
+     * @param payload Recipe Data
+     * @returns models_Recipe OK
+     * @throws ApiError
+     */
+    public patchApiRecipes(
+        recipeId: string,
+        payload: dtos_UpdateRecipe,
+    ): CancelablePromise<models_Recipe> {
+        return this.httpRequest.request({
+            method: 'PATCH',
+            url: '/api/recipes/{recipeID}',
+            path: {
+                'recipeID': recipeId,
+            },
+            body: payload,
         });
     }
 
@@ -147,98 +239,6 @@ export class RecipesService {
             path: {
                 'recipeID': recipeId,
             },
-        });
-    }
-
-    /**
-     * Get All Recipes
-     * Get All Recipes
-     * @returns models_Recipe OK
-     * @throws ApiError
-     */
-    public getRecipes(): CancelablePromise<Array<models_Recipe>> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/recipes',
-        });
-    }
-
-    /**
-     * Get All Recipes by Author
-     * Get All Recipes by Author
-     * @param username Username
-     * @returns models_Recipe OK
-     * @throws ApiError
-     */
-    public getRecipesAuthor(
-        username: string,
-    ): CancelablePromise<Array<models_Recipe>> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/recipes/author/{username}',
-            path: {
-                'username': username,
-            },
-        });
-    }
-
-    /**
-     * Get a Recipe (by ID)
-     * Get a Recipe (by ID)
-     * @param recipeId Recipe ID
-     * @returns models_Recipe OK
-     * @throws ApiError
-     */
-    public getRecipes1(
-        recipeId: string,
-    ): CancelablePromise<models_Recipe> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/recipes/{recipeID}',
-            path: {
-                'recipeID': recipeId,
-            },
-        });
-    }
-
-    /**
-     * Delete Recipe
-     * Delete Recipe
-     * @param recipeId Recipe ID
-     * @returns any OK
-     * @throws ApiError
-     */
-    public deleteRecipes(
-        recipeId: string,
-    ): CancelablePromise<any> {
-        return this.httpRequest.request({
-            method: 'DELETE',
-            url: '/recipes/{recipeID}',
-            path: {
-                'recipeID': recipeId,
-            },
-        });
-    }
-
-    /**
-     * Update Recipe
-     * Update Recipe
-     * @param recipeId Recipe ID
-     * @param payload Recipe Data
-     * @returns models_Recipe OK
-     * @throws ApiError
-     */
-    public patchRecipes(
-        recipeId: string,
-        payload: dtos_UpdateRecipe,
-    ): CancelablePromise<models_Recipe> {
-        return this.httpRequest.request({
-            method: 'PATCH',
-            url: '/recipes/{recipeID}',
-            path: {
-                'recipeID': recipeId,
-            },
-            body: payload,
         });
     }
 

@@ -32,6 +32,5 @@ export type { models_UserSummary } from './models/models_UserSummary';
 
 export { AdminService } from './services/AdminService';
 export { RecipesService } from './services/RecipesService';
-export { SearchService } from './services/SearchService';
 export { SystemService } from './services/SystemService';
 export { UsersService } from './services/UsersService';

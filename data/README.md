@@ -13,7 +13,7 @@ export IO_4KS_API_TOKEN=<bearer token goes here>
 export IO_4KS_API_HOSTNAME=local.4ks.io
 
 curl -k -X 'POST' \
-  "https://${IO_4KS_API_HOSTNAME}/api/_admin/search/collection-init-recipe" \
+  "https://${IO_4KS_API_HOSTNAME}/api/_admin/init-search-collections" \
   -H 'accept: application/json' \
   -H "Authorization: Bearer ${IO_4KS_API_TOKEN}" \
   -d ''

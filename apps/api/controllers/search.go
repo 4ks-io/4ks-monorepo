@@ -27,14 +27,13 @@ func NewSearchController() SearchController {
 // @Schemes
 // @Summary 		Initialize Search Recipe Collection
 // @Description Initialize Search Recipe Collection
-// @Tags 				Search
+// @Tags 				Admin
 // @Accept 			json
 // @Produce 		json
 // @Success 		200 		 {string} value
-// @Router		 	/api/search/init/recipe-collection  [post]
+// @Router		 	/api/_admin/init-search-collections  [post]
 // @Security 		ApiKeyAuth
 func (sc *searchController) CreateSearchRecipeCollection(c *gin.Context) {
-
 	err := sc.searchService.CreateSearchRecipeCollection()
 
 	if err != nil {

@@ -13,6 +13,36 @@ export class AdminService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
+     * Initialize Search Recipe Collection
+     * Initialize Search Recipe Collection
+     * @returns string OK
+     * @throws ApiError
+     */
+    public postApiAdminInitSearchCollections(): CancelablePromise<string> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/_admin/init-search-collections',
+        });
+    }
+
+    /**
+     * Bot Create a new Recipe
+     * Bot Create a new Recipe
+     * @param recipe Recipe Data
+     * @returns models_Recipe OK
+     * @throws ApiError
+     */
+    public postApiAdminRecipes(
+        recipe: dtos_CreateRecipe,
+    ): CancelablePromise<models_Recipe> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/_admin/recipes',
+            body: recipe,
+        });
+    }
+
+    /**
      * Get all medias for a Recipe
      * Get all medias for a Recipe
      * @param recipeId Recipe ID
@@ -28,23 +58,6 @@ export class AdminService {
             path: {
                 'recipeID': recipeId,
             },
-        });
-    }
-
-    /**
-     * Bot Create a new Recipe
-     * Bot Create a new Recipe
-     * @param recipe Recipe Data
-     * @returns models_Recipe OK
-     * @throws ApiError
-     */
-    public postApiApiAdminRecipes(
-        recipe: dtos_CreateRecipe,
-    ): CancelablePromise<models_Recipe> {
-        return this.httpRequest.request({
-            method: 'POST',
-            url: '/api/api/_admin/recipes',
-            body: recipe,
         });
     }
 
