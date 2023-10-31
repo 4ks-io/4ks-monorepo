@@ -28,7 +28,7 @@ var (
 	// ErrUserNotFound is returned when a user is not found
 	ErrUserNotFound = errors.New("user not found")
 	// ErrReservedWord is returned when a username is a reserved word
-	ErrReservedWord  = errors.New("reserved word")
+	ErrReservedWord = errors.New("reserved word")
 )
 
 // Service is the interface for the user service
@@ -42,10 +42,10 @@ type Service interface {
 	DeleteUser(context.Context, string) error
 
 	// test username
-	TestName( context.Context, string) error
+	TestName(context.Context, string) error
 	TestValidName(string) bool
 	TestReservedWord(string) bool
-	TestAvailableName( context.Context, string) (bool, error)
+	TestAvailableName(context.Context, string) (bool, error)
 }
 
 type userService struct {

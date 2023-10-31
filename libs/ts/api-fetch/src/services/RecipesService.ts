@@ -3,6 +3,7 @@
 /* eslint-disable */
 import type { dtos_CreateRecipe } from '../models/dtos_CreateRecipe';
 import type { dtos_CreateRecipeMedia } from '../models/dtos_CreateRecipeMedia';
+import type { dtos_GetRecipesByUsername } from '../models/dtos_GetRecipesByUsername';
 import type { dtos_UpdateRecipe } from '../models/dtos_UpdateRecipe';
 import type { models_CreateRecipeMedia } from '../models/models_CreateRecipeMedia';
 import type { models_Recipe } from '../models/models_Recipe';
@@ -50,12 +51,12 @@ export class RecipesService {
      * Get All Recipes by Author
      * Get All Recipes by Author
      * @param username Username
-     * @returns models_Recipe OK
+     * @returns dtos_GetRecipesByUsername OK
      * @throws ApiError
      */
     public getApiRecipesAuthor(
         username: string,
-    ): CancelablePromise<Array<models_Recipe>> {
+    ): CancelablePromise<dtos_GetRecipesByUsername> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/recipes/author/{username}',

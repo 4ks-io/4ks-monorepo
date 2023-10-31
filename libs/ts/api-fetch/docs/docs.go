@@ -261,10 +261,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Recipe"
-                            }
+                            "$ref": "#/definitions/dtos.GetRecipesByUsername"
                         }
                     }
                 }
@@ -994,6 +991,17 @@ const docTemplate = `{
                 "username": {
                     "type": "string",
                     "example": "BobDylan"
+                }
+            }
+        },
+        "dtos.GetRecipesByUsername": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Recipe"
+                    }
                 }
             }
         },

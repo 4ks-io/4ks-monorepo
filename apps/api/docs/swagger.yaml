@@ -37,6 +37,13 @@ definitions:
     - displayName
     - username
     type: object
+  dtos.GetRecipesByUsername:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Recipe'
+        type: array
+    type: object
   dtos.TestUsernameRequest:
     properties:
       username:
@@ -640,9 +647,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.Recipe'
-            type: array
+            $ref: '#/definitions/dtos.GetRecipesByUsername'
       security:
       - ApiKeyAuth: []
       summary: Get All Recipes by Author

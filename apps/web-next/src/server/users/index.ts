@@ -5,9 +5,13 @@ import { getAPIClient } from '..';
 import { headAuthenticatedUser } from './headAuthenticatedUser';
 
 export const usersRouter = router({
-  getCurrent: publicProcedure.query(async () => {
+  get: publicProcedure.input(z.string()).query(async (opts) => {
     const api = await getAPIClient();
-    return await api.users.getUser();
+    return await api.users.getApiUsers1(opts.input);
+  }),
+  getAuthenticated: publicProcedure.query(async () => {
+    const api = await getAPIClient();
+    return await api.users.getApiUser();
   }),
   exists: publicProcedure.query(async () => {
     const { accessToken } = await getAccessToken();

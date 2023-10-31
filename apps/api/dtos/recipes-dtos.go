@@ -27,3 +27,8 @@ type UpdateRecipe struct {
 type CreateRecipeMedia struct {
 	Filename string `json:"filename" binding:"required"`
 }
+
+// GetRecipesByUsernameResponse
+type GetRecipesByUsername struct {
+	Data []*models.Recipe `json:"data"`
+}

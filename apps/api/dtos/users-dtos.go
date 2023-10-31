@@ -22,5 +22,5 @@ type TestUsernameResponse struct {
 	Available bool   `json:"available" binding:"required"`
 	Valid     bool   `json:"valid" binding:"required"`
 	Message   string `json:"msg" binding:"required"`
-	Username      string `json:"username" binding:"required"`
+	Username  string `json:"username" binding:"required"`
 }

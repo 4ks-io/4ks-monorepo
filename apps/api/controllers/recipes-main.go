@@ -1,7 +1,8 @@
 package controllers
 
 import (
-	recipeService "4ks/apps/api/services/recipe"
+	recipesvc "4ks/apps/api/services/recipe"
+	usersvc "4ks/apps/api/services/user"
 
 	"net/http"
 
@@ -51,7 +52,7 @@ func (c *recipeController) CreateRecipe(ctx *gin.Context) {
 	payload.Banner = createMockBanner(f, u)
 
 	createdRecipe, err := c.recipeService.CreateRecipe(ctx, &payload)
-	if err == recipeService.ErrUnableToCreateRecipe {
+	if err == recipesvc.ErrUnableToCreateRecipe {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	} else if err != nil {
@@ -88,10 +89,10 @@ func (c *recipeController) DeleteRecipe(ctx *gin.Context) {
 
 	err := c.recipeService.DeleteRecipe(ctx, recipeID, sub)
 
-	if err == recipeService.ErrRecipeNotFound {
+	if err == recipesvc.ErrRecipeNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return
-	} else if err == recipeService.ErrUnauthorized {
+	} else if err == recipesvc.ErrUnauthorized {
 		ctx.AbortWithError(http.StatusUnauthorized, err)
 		return
 	} else if err != nil {
@@ -123,7 +124,7 @@ func (c *recipeController) GetRecipe(ctx *gin.Context) {
 	recipeID := ctx.Param("id")
 	recipe, err := c.recipeService.GetRecipeByID(ctx, recipeID)
 
-	if err == recipeService.ErrRecipeNotFound {
+	if err == recipesvc.ErrRecipeNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
@@ -142,11 +143,12 @@ func (c *recipeController) GetRecipe(ctx *gin.Context) {
 // @Accept 	   	json
 // @Produce   	json
 // @Param       username 			path      string             true  "Username"
-// @Success 		200 			{array} 		models.Recipe
+// @Success 		200 			   {object}   dtos.GetRecipesByUsername
 // @Router 			/api/recipes/author/{username}   [get]
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipesByUsername(ctx *gin.Context) {
 	username := ctx.Param("username")
+	log.Debug().Str("username", username).Msg("GetRecipesByUsername")
 
 	var id string
 	// get user id
@@ -154,26 +156,40 @@ func (c *recipeController) GetRecipesByUsername(ctx *gin.Context) {
 		id = "bot"
 	} else {
 		u, err := c.userService.GetUserByUsername(ctx, username)
-		if err == recipeService.ErrRecipeNotFound {
-			ctx.AbortWithError(http.StatusNotFound, err)
-			return
+		if err != nil {
+			log.Error().Err(err).Msg("GetUserByUsername")
+			switch e := err; e {
+			case usersvc.ErrUserNotFound:
+				ctx.AbortWithError(http.StatusNotFound, err)
+				return
+			default:
+				ctx.AbortWithError(http.StatusInternalServerError, err)
+				return
+			}
 		}
+
 		id = u.ID
 	}
 
-	// hardcode limit for now
+	// todo: hardcode limit for now
 	limit := 40
-	recipes, err := c.recipeService.GetRecipesByUserID(ctx, id, limit)
+	var res dtos.GetRecipesByUsername
 
-	if err == recipeService.ErrRecipeNotFound {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
+	recipes, err := c.recipeService.GetRecipesByUserID(ctx, id, limit)
+	res.Data = recipes
+	if err != nil {
+		if err == recipesvc.ErrRecipeNotFound {
+			ctx.JSON(http.StatusOK, recipes)
+			return
+		}
+		log.Error().Err(err).Msg("GetRecipesByUserID")
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, recipes)
+	// utils.PrintStruct(recipes)
+
+	ctx.JSON(http.StatusOK, res)
 }
 
 // GetRecipes		godoc
@@ -191,7 +207,7 @@ func (c *recipeController) GetRecipes(ctx *gin.Context) {
 	limit := 40
 	recipes, err := c.recipeService.GetRecipes(ctx, limit)
 
-	if err == recipeService.ErrRecipeNotFound {
+	if err == recipesvc.ErrRecipeNotFound {
 		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	} else if err != nil {
@@ -237,10 +253,10 @@ func (c *recipeController) UpdateRecipe(ctx *gin.Context) {
 
 	createdRecipe, err := c.recipeService.UpdateRecipeByID(ctx, recipeID, &payload)
 
-	if err == recipeService.ErrUnableToCreateRecipe {
+	if err == recipesvc.ErrUnableToCreateRecipe {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
-	} else if err == recipeService.ErrUnauthorized {
+	} else if err == recipesvc.ErrUnauthorized {
 		ctx.AbortWithError(http.StatusUnauthorized, err)
 		return
 	} else if err != nil {

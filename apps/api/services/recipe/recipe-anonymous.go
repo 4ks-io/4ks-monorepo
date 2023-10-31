@@ -4,6 +4,7 @@ import (
 	"context"
 
 	firestore "cloud.google.com/go/firestore"
+	"github.com/rs/zerolog/log"
 	"google.golang.org/api/iterator"
 
 	models "4ks/libs/go/models"
@@ -53,7 +54,9 @@ func (s recipeService) GetRecipes(ctx context.Context, limit int) ([]*models.Rec
 	return all, nil
 }
 
+// GetRecipesByUsername gets all recipes for a given username
 func (s recipeService) GetRecipesByUsername(ctx context.Context, username string, limit int) ([]*models.Recipe, error) {
+	log.Debug().Str("username", username).Msg("GetRecipesByUsername")
 	var all []*models.Recipe
 	iter := s.recipeCollection.Where("author.username", "==", &username).Limit(limit).Documents(ctx)
 
@@ -82,7 +85,10 @@ func (s recipeService) GetRecipesByUsername(ctx context.Context, username string
 	return all, nil
 }
 
+// GetRecipesByUserID
 func (s recipeService) GetRecipesByUserID(ctx context.Context, id string, limit int) ([]*models.Recipe, error) {
+	log.Debug().Str("id", id).Msg("GetRecipesByUserID")
+
 	var all []*models.Recipe
 	iter := s.recipeCollection.Where("author.id", "==", &id).Limit(limit).Documents(ctx)
 
