@@ -1,22 +1,34 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import AppBar from '@mui/material/AppBar';
+import { default as MuiAppBar } from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import { usePathname } from 'next/navigation';
 import Tooltip from '@mui/material/Tooltip';
 import ExploreIcon from '@mui/icons-material/Explore';
 import IconButton from '@mui/material/IconButton';
+import { models_User } from '@4ks/api-fetch';
+
 import AppBarAvatarUnauthenticated from './AppBarAvatarUnauthenticated';
+import AppBarAvatarAuthenticated from './AppBarAvatarAuthenticated';
 
-export default function AppBarUnauthenticated() {
+interface AppBarProps {
+  user: models_User | undefined;
+}
+
+export default function AppBar({ user }: AppBarProps) {
   const pathname = usePathname();
+  const isAuthenticated = !!user;
+  const noExplorePaths = ['/explore'];
 
+  function hideExplore(pathname: string) {
+    return noExplorePaths.includes(pathname);
+  }
   const [showSearchInput, setShowSearchInput] = useState(true);
   const [showExploreLink, setShowExploreLink] = useState(true);
 
   useEffect(() => {
-    if (['/explore'].includes(pathname)) {
+    if (hideExplore(pathname)) {
       setShowExploreLink(false);
       setShowSearchInput(true);
       return;
@@ -27,7 +39,7 @@ export default function AppBarUnauthenticated() {
   }, [pathname]);
 
   return (
-    <AppBar position="static" sx={{ zIndex: 2000 }}>
+    <MuiAppBar position="static" sx={{ zIndex: 2000 }}>
       <Toolbar sx={{ backgroundColor: 'background.paper' }}>
         <a href="/">
           <Box
@@ -50,8 +62,12 @@ export default function AppBarUnauthenticated() {
             </a>
           </Tooltip>
         )}
-        <AppBarAvatarUnauthenticated />
+        {isAuthenticated ? (
+          <AppBarAvatarAuthenticated username={`${user.username}`} />
+        ) : (
+          <AppBarAvatarUnauthenticated />
+        )}
       </Toolbar>
-    </AppBar>
+    </MuiAppBar>
   );
 }

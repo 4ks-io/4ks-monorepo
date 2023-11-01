@@ -1,18 +1,20 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import { getSession } from '@auth0/nextjs-auth0';
-import AppBarUnauthenticated from '@/components/AppBarUnauthenticated';
-import AppBarAuthenticated from '@/components/AppBarAuthenticated';
-export default async function DefaultLayout({
-  children,
-}: {
+import { serverClient } from '@/trpc/serverClient';
+import AppBar from '@/components/AppBar';
+import Box from '@mui/material/Box';
+
+type DefaultLayoutProps = {
   children: React.ReactNode;
-}) {
+};
+export default async function DefaultLayout({ children }: DefaultLayoutProps) {
   const session = await getSession();
+  const user =
+    (session && (await serverClient.users.getAuthenticated())) || undefined;
 
   return (
     <>
-      {session ? <AppBarAuthenticated /> : <AppBarUnauthenticated />}
+      <AppBar user={user} />
       <Box
         component="main"
         sx={{

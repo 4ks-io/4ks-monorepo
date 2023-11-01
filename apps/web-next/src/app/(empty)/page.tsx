@@ -5,24 +5,16 @@ import AppBarAvatarAuthenticated from '@/components/AppBarAvatarAuthenticated';
 import AppBarAvatarUnauthenticated from '@/components/AppBarAvatarUnauthenticated';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import SearchIcon from '@mui/icons-material/Search';
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
-import Chip from '@mui/material/Chip';
 import Toolbar from '@mui/material/Toolbar';
 import { models_User } from '@4ks/api-fetch';
+import { SearchContextProvider } from '@/providers/search-context';
+import LandingPageSearchBox from '@/components/LandingPageSearchBox';
 
 export default async function DefaultPage() {
   const session = await getSession();
   const data =
     (session && (await serverClient.users.getAuthenticated())) ||
     ({} as models_User);
-  console.log(data);
-
-  // const apikey = `${process.env.NEXT_PUBLICTYPESENSE_API_KEY}`;
-  // const host = `${process.env.NEXT_PUBLICTYPESENSE_URL}`;
-  // const path = `${process.env.NEXT_PUBLICTYPESENSE_PATH}`;
-  // console.log('DefaultPage', { apikey, host, path });
 
   return (
     <Box height="92vh" display="flex" flexDirection="column">
@@ -34,6 +26,7 @@ export default async function DefaultPage() {
           <AppBarAvatarUnauthenticated />
         )}
       </Toolbar>
+
       <Stack
         height={'100%'}
         direction="column"
@@ -49,22 +42,9 @@ export default async function DefaultPage() {
             src={'/logo.svg'}
           />
         </a>
-        <TextField
-          id="searchBox"
-          placeholder="Search..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <Chip label="Ctrl+K" />
-              </InputAdornment>
-            ),
-          }}
-        />
+        <SearchContextProvider>
+          <LandingPageSearchBox />
+        </SearchContextProvider>
       </Stack>
     </Box>
   );
