@@ -16,32 +16,27 @@ import (
 	"time"
 )
 
-var tokenVarName = "IO_4KS_API_TOKEN"
-var hostVarName = "IO_4KS_API_HOSTNAME"
-
 var index = 0
 
 func parseArgs() (string, string, string) {
 	var f string
 	flag.StringVar(&f, "f", "", "input filename")
+	var t string
+	flag.StringVar(&t, "t", "", "token")
+	var u string
+	flag.StringVar(&u, "u", "", "url")
 	flag.Parse()
+
 	if f == "" {
-		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("No input filename provided. Use flag -f"))
+		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("filename required. Use flag -f"))
 		os.Exit(1)
 	}
-
-	t := os.Getenv(tokenVarName)
-	h := os.Getenv(hostVarName)
-
-	if h == "" {
-		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("API hostname must be provided. Set env var %s", hostVarName))
+	if u == "" {
+		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("API url must be provided. Use flag -u"))
 		os.Exit(1)
 	}
-
-	u := "https://" + h + "/api/_admin/recipes"
-
 	if t == "" {
-		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("Bearer API Token must be provided. Set env var %s", tokenVarName))
+		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("bearer API Token must be provided. Use flag -t"))
 		os.Exit(1)
 	}
 

@@ -85,6 +85,15 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 			api.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, swaggerURL))
 		}
 
+		// speed up data seeding
+		if sysFlags.Development {
+			develop := api.Group("/_dev/")
+			{
+				develop.POST("recipes", c.Recipe.BotCreateRecipe)
+				develop.POST("init-search-collections", c.Search.CreateSearchRecipeCollection)
+			}
+		}
+
 		// recipes
 		recipes := api.Group("/recipes/")
 		{

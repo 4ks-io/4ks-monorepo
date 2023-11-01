@@ -20,7 +20,6 @@ export default async function ProfilePage() {
   try {
     d = (await serverClient.recipes.getAllByAuthor(username)) ?? {};
   } catch (e) {
-    console.log('client error client error client error');
     if (e instanceof TRPCError && getHTTPStatusCodeFromError(e) === 404) {
       return notFound();
     }
