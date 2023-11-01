@@ -5,7 +5,6 @@ import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
 import TrpcProvider from '@/trpc/Provider';
-
 import { serverClient } from '@/trpc/serverClient';
 import { getSession } from '@auth0/nextjs-auth0';
 

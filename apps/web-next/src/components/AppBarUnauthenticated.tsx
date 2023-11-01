@@ -4,7 +4,6 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/navigation';
 import Tooltip from '@mui/material/Tooltip';
 import ExploreIcon from '@mui/icons-material/Explore';
 import IconButton from '@mui/material/IconButton';
@@ -12,20 +11,14 @@ import AppBarAvatarUnauthenticated from './AppBarAvatarUnauthenticated';
 
 export default function AppBarUnauthenticated() {
   const pathname = usePathname();
-  const router = useRouter();
 
   const [showSearchInput, setShowSearchInput] = useState(true);
   const [showExploreLink, setShowExploreLink] = useState(true);
 
   useEffect(() => {
-    if (pathname.startsWith('/r')) {
+    if (['/explore'].includes(pathname)) {
       setShowExploreLink(false);
       setShowSearchInput(true);
-      return;
-    }
-    if (['/register'].includes(pathname)) {
-      setShowExploreLink(false);
-      setShowSearchInput(false);
       return;
     }
     // else

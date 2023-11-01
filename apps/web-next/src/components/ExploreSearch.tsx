@@ -1,7 +1,38 @@
 'use client';
 import * as React from 'react';
-import { InstantSearch, SearchBox, Hits } from 'react-instantsearch';
+import { useRouter } from 'next/navigation';
+
+import { InstantSearch, SearchBox, Hits, useHits } from 'react-instantsearch';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Unstable_Grid2';
+import AddIcon from '@mui/icons-material/Add';
+import Fab from '@mui/material/Fab';
+import ExploreRecipeCard from '@/components/ExploreRecipeCard';
+
+function NewRecipeButton() {
+  const router = useRouter();
+
+  return (
+    <Fab
+      color="primary"
+      aria-label="add"
+      sx={{
+        margin: 0,
+        top: 'auto',
+        right: 20,
+        bottom: 20,
+        left: 'auto',
+        position: 'fixed',
+      }}
+      onClick={() => {
+        router.push('/recipe/0');
+      }}
+    >
+      <AddIcon />
+    </Fab>
+  );
+}
 
 type ExploreSearchProps = {
   host: string;
@@ -28,7 +59,32 @@ function makeTypesenseServerConfig({ host, path, apikey }: ExploreSearchProps) {
       query_by: 'name,author,ingredients',
       per_page: 21,
     },
+    future: {
+      // https://www.algolia.com/doc/api-reference/widgets/instantsearch/js/#widget-param-future
+      preserveSharedStateOnUnmount: true,
+    },
   };
+}
+
+function ExploreSearchResults() {
+  const { hits } = useHits();
+  return (
+    <Container style={{ marginTop: 20 }}>
+      <Grid container spacing={1}>
+        {hits.map((h) => (
+          <Grid xs={12} md={6} lg={4} key={h.objectID}>
+            <ExploreRecipeCard
+              key={h.objectID}
+              id={`${h['id']}`}
+              title={`${h['name']}`}
+              chef={`${h['author']}`}
+              imageUrl={`${h['imageURL']}`}
+            />
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+  );
 }
 
 export default function ExploreSearch({
@@ -36,7 +92,7 @@ export default function ExploreSearch({
   path,
   apikey,
 }: ExploreSearchProps) {
-  console.log('ExploreSearch', { host, path, apikey });
+  // console.log('ExploreSearch', { host, path, apikey });
 
   const tcfg = makeTypesenseServerConfig({ host, path, apikey });
   const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter(tcfg);
@@ -45,7 +101,8 @@ export default function ExploreSearch({
   return (
     <InstantSearch indexName="recipes" searchClient={searchClient}>
       <SearchBox />
-      <Hits />
+      {/* <Hits /> */}
+      <ExploreSearchResults />
     </InstantSearch>
   );
 }

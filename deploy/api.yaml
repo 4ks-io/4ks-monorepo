@@ -59,7 +59,7 @@ spec:
             - name: STATIC_MEDIA_BUCKET
               value: static.dev.4ks.io
             - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: /app/google-app-creds.json
+              value: /code/google-app-creds.json
             - name: TYPESENSE_URL
               value: http://typesense.default.svc.cluster.local:8108
             - name: TYPESENSE_API_KEY

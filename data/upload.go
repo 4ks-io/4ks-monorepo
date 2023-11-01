@@ -130,13 +130,12 @@ func getRecipeFromLine(line string) dtos.CreateRecipe {
 	return r
 }
 
-func postRecipe(u string, t string, r dtos.CreateRecipe) {
+func postRecipe(client  http.Client, u string, t string, r dtos.CreateRecipe) {
 	fmt.Println(index, " => ", r.Name)
 	index += 1
-	data, err := json.Marshal(r)
+	data, _ := json.Marshal(r)
 
 	req, err := http.NewRequest(http.MethodPost, u, bytes.NewBuffer(data))
-
 	if err != nil {
 		fmt.Printf("client: could not create request: %s\n", err)
 		os.Exit(1)
@@ -144,10 +143,6 @@ func postRecipe(u string, t string, r dtos.CreateRecipe) {
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+t)
-
-	client := http.Client{
-		Timeout: 30 * time.Second,
-	}
 
 	_, err = client.Do(req)
 	if err != nil {
@@ -159,6 +154,10 @@ func postRecipe(u string, t string, r dtos.CreateRecipe) {
 func main() {
 	filename, t, u := parseArgs()
 	fmt.Println("Uploading:", filename)
+
+	client := http.Client{
+		Timeout: 30 * time.Second,
+	}
 
 	file, err := os.Open(filename)
 	check(err)
@@ -177,8 +176,7 @@ func main() {
 		}
 
 		r := getRecipeFromLine(scanner.Text())
-		postRecipe(u, t, r)
-
+		postRecipe(client, u, t, r)
 	}
 
 	if err := scanner.Err(); err != nil {
