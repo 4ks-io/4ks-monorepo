@@ -8,7 +8,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab';
-import ExploreRecipeCard from '@/components/ExploreRecipeCard';
+import RecipeCard from '@/components/RecipeCard';
 
 function NewRecipeButton() {
   const router = useRouter();
@@ -66,14 +66,14 @@ function makeTypesenseServerConfig({ host, path, apikey }: ExploreSearchProps) {
   };
 }
 
-function ExploreSearchResults() {
+export function ExploreSearchResults() {
   const { hits } = useHits();
   return (
     <Container style={{ marginTop: 20 }}>
       <Grid container spacing={1}>
         {hits.map((h) => (
           <Grid xs={12} md={6} lg={4} key={h.objectID}>
-            <ExploreRecipeCard
+            <RecipeCard
               key={h.objectID}
               id={`${h['id']}`}
               title={`${h['name']}`}

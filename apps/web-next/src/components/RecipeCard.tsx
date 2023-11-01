@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import Link from 'next/link';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
@@ -29,22 +30,38 @@ interface MediaProps {
   imageUrl?: string;
 }
 
-export default function ExploreRecipeCard(props: MediaProps) {
+function normalizeForURL(s: string) {
+  // Convert i18n characters like é, ü, etc. to their base
+  const normalizedStr = s
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+
+  // Replace spaces with hyphens, remove special characters, and convert to lowercase
+  return normalizedStr.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '');
+}
+
+export default function RecipeCard(props: MediaProps) {
   const { loading = false, id, title, description, chef, imageUrl } = props;
+  let recipeURL = `/recipe/${id}`;
+  if (title) {
+    recipeURL = `/recipe/${normalizeForURL(title)}/${id}`;
+  }
 
   return (
     <Card>
       {loading ? (
         <Skeleton sx={{ height: 280 }} animation="wave" variant="rectangular" />
       ) : (
-        <a href={`/recipe/${id}`}>
+        <Link key={id} href={recipeURL} style={{ textDecoration: 'none' }}>
           <CardMedia
             component="img"
             height="280"
             image={imageUrl}
             alt="recipe image"
           />
-        </a>
+        </Link>
       )}
       <StyledCardHeader
         // style={{ padding: 4 }}
@@ -70,24 +87,18 @@ export default function ExploreRecipeCard(props: MediaProps) {
               style={{ marginBottom: 6 }}
             />
           ) : (
-            <a
-              // style={{ textDecoration: 'none', color: 'black' }}
-              href={`/recipe/${id}`}
-            >
+            <Link href={recipeURL} style={{ textDecoration: 'none' }}>
               {title}
-            </a>
+            </Link>
           )
         }
         subheader={
           loading ? (
             <Skeleton animation="wave" height={20} width="40%" />
           ) : (
-            <a
-              // style={{ textDecoration: 'none', color: 'black' }}
-              href={`/${chef}`}
-            >
+            <Link href={`/${chef}`} style={{ textDecoration: 'none' }}>
               {chef}
-            </a>
+            </Link>
           )
         }
       />

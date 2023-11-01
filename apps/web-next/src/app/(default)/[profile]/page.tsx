@@ -6,8 +6,11 @@ import { dtos_GetRecipesByUsername } from '@4ks/api-fetch';
 import { getHTTPStatusCodeFromError } from '@trpc/server/http';
 import { TRPCError } from '@trpc/server';
 import { notFound } from 'next/navigation';
+import { getSession } from '@auth0/nextjs-auth0';
 
 export default async function ProfilePage() {
+  const session = await getSession();
+
   const headersList = headers();
   const pathname = headersList.get('x-url-pathname') || '';
   const username = pathname.split('/')[1];
@@ -24,7 +27,15 @@ export default async function ProfilePage() {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box
+      component="main"
+      sx={{
+        flexGrow: 1,
+        bgcolor: 'background.default',
+        mt: ['12px', '18px', '24px'],
+        p: 3,
+      }}
+    >
       <div>
         <h2>@{username}</h2>
         <br />
@@ -39,6 +50,7 @@ export default async function ProfilePage() {
             );
           })}
         </ul>
+        <div>Bearer {session?.accessToken}</div>
       </div>
     </Box>
   );

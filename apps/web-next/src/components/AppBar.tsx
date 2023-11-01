@@ -1,13 +1,17 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { models_User } from '@4ks/api-fetch';
+import { usePathname } from 'next/navigation';
 import { default as MuiAppBar } from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import { usePathname } from 'next/navigation';
 import Tooltip from '@mui/material/Tooltip';
 import ExploreIcon from '@mui/icons-material/Explore';
 import IconButton from '@mui/material/IconButton';
-import { models_User } from '@4ks/api-fetch';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
+import SearchIcon from '@mui/icons-material/Search';
+import Chip from '@mui/material/Chip';
 
 import AppBarAvatarUnauthenticated from './AppBarAvatarUnauthenticated';
 import AppBarAvatarAuthenticated from './AppBarAvatarAuthenticated';
@@ -53,6 +57,27 @@ export default function AppBar({ user }: AppBarProps) {
           />
         </a>
         <Box sx={{ flexGrow: 1 }} />
+
+        <TextField
+          id="searchBox"
+          // value={search.value || ''}
+          size="small"
+          placeholder="Search..."
+          // onClick={handleOpenSearch}
+          sx={{ width: 300 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <Chip label="Ctrl+K" />
+              </InputAdornment>
+            ),
+          }}
+        />
         {showExploreLink && (
           <Tooltip title="Explore">
             <a href="/explore">

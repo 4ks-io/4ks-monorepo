@@ -72,6 +72,9 @@ importers:
       react-instantsearch:
         specifier: ^7.2.1
         version: 7.2.1(algoliasearch@4.20.0)(react-dom@18.2.0)(react@18.2.0)
+      typesense:
+        specifier: ^1.7.2
+        version: 1.7.2(@babel/runtime@7.23.2)
       typesense-instantsearch-adapter:
         specifier: ^2.7.1
         version: 2.7.1(@babel/runtime@7.23.2)

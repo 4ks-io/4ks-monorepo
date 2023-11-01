@@ -26,13 +26,20 @@ export default function SearchBox(props: UseSearchBoxProps) {
   });
 
   function handleChange(event: any) {
+    console.log('handleChange', event.target.value);
     refine(event.target.value);
     setValue(event.target.value);
   }
 
-  function handleSubmit() {
-    handleClose();
-    router.push('/explore');
+  function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    // console.log(e);
+    // if (e.keyCode == 13) {
+    if (e.key == 'Enter') {
+      console.log('value', value);
+      // put the login here
+    }
+    router.push('/search?q=' + value);
+    // handleClose();
   }
 
   return (
@@ -41,7 +48,7 @@ export default function SearchBox(props: UseSearchBoxProps) {
       variant="standard"
       value={value || ''}
       onChange={handleChange}
-      onSubmit={handleSubmit}
+      onKeyDown={handleKeyDown}
       placeholder={'Search...'}
       sx={{ width: '100%' }}
       InputProps={{

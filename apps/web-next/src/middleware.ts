@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(req: NextRequest) {
+  // this is essentially a hack because next-url isn't working upon initial page load
+  // https://github.com/vercel/next.js/issues/57762
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set('x-url-pathname', req.nextUrl.pathname);
 

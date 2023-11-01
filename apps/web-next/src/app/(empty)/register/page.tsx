@@ -175,7 +175,7 @@ export default function RegisterPage() {
       return;
     }
     if (isSuccess) {
-      redirect('/' + data.username);
+      redirect('/explore');
     }
     if (!isError) {
       return;
