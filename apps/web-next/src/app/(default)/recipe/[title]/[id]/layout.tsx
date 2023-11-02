@@ -72,8 +72,6 @@ export default async function RecipeLayout({
     getRecipeMedia(recipeID),
   ]);
 
-  console.log(head);
-
   return (
     <RecipeContextProvider
       isAuthenticated={!!user}

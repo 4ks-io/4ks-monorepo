@@ -30,8 +30,6 @@ export default async function RecipeHeaderPage() {
     }
   }
 
-  console.log('recipe', recipe);
-
   return (
     <>
       <RecipeHeader user={user} recipe={recipe} />

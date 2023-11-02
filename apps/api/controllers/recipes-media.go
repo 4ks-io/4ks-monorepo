@@ -99,14 +99,19 @@ func (c *recipeController) CreateRecipeMedia(ctx *gin.Context) {
 func (c *recipeController) GetRecipeMedia(ctx *gin.Context) {
 	recipeID := ctx.Param("id")
 	recipeMedias, err := c.recipeService.GetRecipeMedia(ctx, recipeID)
-	log.Error().Err(err).Caller().Msg("client: could not create request")
+	if err != nil {
+		log.Error().Err(err).
+			Caller().
+			Str("recipeID", recipeID).
+			Msg("client: could not create request")
 
-	if err == recipeService.ErrRecipeNotFound {
-		ctx.AbortWithError(http.StatusNotFound, err)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusInternalServerError, err)
-		return
+		if err == recipeService.ErrRecipeNotFound {
+			ctx.AbortWithError(http.StatusNotFound, err)
+			return
+		} else if err != nil {
+			ctx.AbortWithError(http.StatusInternalServerError, err)
+			return
+		}
 	}
 
 	ctx.JSON(http.StatusOK, recipeMedias)

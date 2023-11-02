@@ -9,6 +9,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/rs/zerolog/log"
+
 	firestore "cloud.google.com/go/firestore"
 	"cloud.google.com/go/storage"
 )
@@ -98,16 +100,19 @@ func (s recipeService) CreateRecipeMediaSignedURL(mp *utils.MediaProps, wg *sync
 	return url, nil
 }
 
+// GetRecipeMedia retreives recipe media
 func (s recipeService) GetRecipeMedia(ctx context.Context, recipeID string) ([]*models.RecipeMedia, error) {
 	var status [2]int
 	status[0] = int(models.MediaStatusReady)
+
 	// workaround to see images locally; upload-media status update callback only works in hosted firestore
 	if s.sysFlags.Development {
 		status[1] = int(models.MediaStatusRequested)
 	}
-	recipeMediasDocs, err := s.recipeMediasCollection.Where("rootRecipeId", "==", recipeID).Where("status", "in", status).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
 
+	recipeMediasDocs, err := s.recipeMediasCollection.Where("rootRecipeId", "==", recipeID).Where("status", "in", status).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
 	if err != nil {
+		log.Error().Err(err).Caller().Msg("failed to get recipe media")
 		return nil, err
 	}
 
