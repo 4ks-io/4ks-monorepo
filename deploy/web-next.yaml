@@ -60,6 +60,8 @@ spec:
               value: /search
             - name: NEXT_PUBLIC_TYPESENSE_API_KEY
               value: local-4ks-api-key
+            - name: NEXT_PUBLIC_MEDIA_FALLBACK_URL
+              value: https://storage.googleapis.com/static.dev.4ks.io/fallback
           ports:
             - containerPort: 3000
           # readinessProbe:

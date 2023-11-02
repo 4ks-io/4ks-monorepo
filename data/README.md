@@ -7,6 +7,10 @@ https://github.com/Glorf/recipenlg
 ## local
 
 ```
+# script
+./data/seed-tiny.sh
+
+# manual
 url=https://local.4ks.io/api/_dev
 
 curl -k -X 'POST' "$url/init-search-collections" \

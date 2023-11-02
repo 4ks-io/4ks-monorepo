@@ -13,16 +13,15 @@ import Tooltip from '@mui/material/Tooltip';
 
 export default async function DefaultPage() {
   const session = await getSession();
-  const data =
-    (session && (await serverClient.users.getAuthenticated())) ||
-    ({} as models_User);
+  const user =
+    (session && (await serverClient.users.getAuthenticated())) ?? undefined;
 
   return (
     <Box height="92vh" display="flex" flexDirection="column">
       <Toolbar sx={{ backgroundColor: 'background.paper' }}>
         <Box sx={{ flexGrow: 1 }} />
-        {session ? (
-          <AppBarAvatarAuthenticated username={`${data.username}`} />
+        {session && user ? (
+          <AppBarAvatarAuthenticated username={`${user.username}`} />
         ) : (
           <AppBarAvatarUnauthenticated />
         )}

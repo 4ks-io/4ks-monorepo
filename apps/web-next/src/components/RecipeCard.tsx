@@ -9,6 +9,7 @@ import Skeleton from '@mui/material/Skeleton';
 import StarIcon from '@mui/icons-material/Star';
 import ShareIcon from '@mui/icons-material/Share';
 import { styled } from '@mui/material/styles';
+import { normalizeForURL } from '@/libs/navigation';
 
 // https://css.glass/
 const StyledCardHeader = styled(CardHeader)({
@@ -28,18 +29,6 @@ interface MediaProps {
   description?: string;
   chef?: string;
   imageUrl?: string;
-}
-
-function normalizeForURL(s: string) {
-  // Convert i18n characters like é, ü, etc. to their base
-  const normalizedStr = s
-    .toLowerCase()
-    .trim()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-
-  // Replace spaces with hyphens, remove special characters, and convert to lowercase
-  return normalizedStr.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '');
 }
 
 export default function RecipeCard(props: MediaProps) {

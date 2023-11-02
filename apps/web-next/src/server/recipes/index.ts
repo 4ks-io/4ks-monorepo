@@ -20,6 +20,7 @@ export const recipesRouter = router({
       handleAPIError(e);
     }
   }),
+  // todo: only mutation?
   getByID: publicProcedure.input(z.string()).query(async (opts) => {
     const api = await getAPIClient();
     try {
@@ -28,6 +29,35 @@ export const recipesRouter = router({
       handleAPIError(e);
     }
   }),
+  getByIDMutation: publicProcedure.input(z.string()).mutation(async (opts) => {
+    const api = await getAPIClient();
+    console.log('getByIDMutation', opts.input);
+    try {
+      const recipe = await api.recipes.getApiRecipes1(opts.input);
+      console.log(recipe);
+      return recipe;
+    } catch (e) {
+      handleAPIError(e);
+    }
+  }),
+  getMediaByID: publicProcedure.input(z.string()).query(async (opts) => {
+    const api = await getAPIClient();
+    try {
+      return await api.recipes.getApiRecipesMedia(opts.input);
+    } catch (e) {
+      handleAPIError(e);
+    }
+  }),
+  getMediaByIDMutation: publicProcedure
+    .input(z.string())
+    .mutation(async (opts) => {
+      const api = await getAPIClient();
+      try {
+        return await api.recipes.getApiRecipesMedia(opts.input);
+      } catch (e) {
+        handleAPIError(e);
+      }
+    }),
 });
 
 export type RecipesRouter = typeof recipesRouter;

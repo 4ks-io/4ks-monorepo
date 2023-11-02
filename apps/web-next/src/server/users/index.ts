@@ -3,6 +3,7 @@ import { publicProcedure, router } from '@/server/trpc';
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { getAPIClient } from '..';
 import { headAuthenticatedUser } from './headAuthenticatedUser';
+import { models_User } from '@4ks/api-fetch';
 
 export const usersRouter = router({
   get: publicProcedure.input(z.string()).query(async (opts) => {

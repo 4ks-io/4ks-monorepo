@@ -43,7 +43,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <ThemeRegistry>
         <TrpcProvider>
           <UserProvider>
-            {/* @ts-expect-error Server Component */}
             <RootLayoutBody>{children}</RootLayoutBody>
           </UserProvider>
         </TrpcProvider>

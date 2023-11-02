@@ -58,7 +58,7 @@ export default function AppBar({ user }: AppBarProps) {
         </a>
         <Box sx={{ flexGrow: 1 }} />
 
-        <TextField
+        {/* <TextField
           id="searchBox"
           // value={search.value || ''}
           size="small"
@@ -77,7 +77,7 @@ export default function AppBar({ user }: AppBarProps) {
               </InputAdornment>
             ),
           }}
-        />
+        /> */}
         {showExploreLink && (
           <Tooltip title="Explore">
             <a href="/explore">

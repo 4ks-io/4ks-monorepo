@@ -1,11 +1,11 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
 import { headers } from 'next/headers';
 import { serverClient } from '@/trpc/serverClient';
 import { models_Recipe } from '@4ks/api-fetch';
 import { TRPCError } from '@trpc/server';
 import { getHTTPStatusCodeFromError } from '@trpc/server/http';
 import { notFound } from 'next/navigation';
+import { normalizeForURL } from '@/libs/navigation';
+import { redirect } from 'next/navigation';
 
 export default async function RecipePage() {
   const headersList = headers();
@@ -22,11 +22,7 @@ export default async function RecipePage() {
     }
   }
 
-  return (
-    <Box sx={{ display: 'flex' }}>
-      <div>
-        <div>{JSON.stringify(data)}</div>
-      </div>
-    </Box>
-  );
+  const title = normalizeForURL(data.currentRevision?.name);
+
+  redirect('/recipe/' + title + '/' + recipeID);
 }
