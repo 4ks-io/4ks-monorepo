@@ -32,11 +32,13 @@ type RecipeHeaderProps = {
   recipe: models_Recipe;
 };
 
+// todo: better SSR with recipe
 export function RecipeHeader({ user, recipe }: RecipeHeaderProps) {
-  const GENERIC_TITLE = `INSERT TITLE HERE`;
-
   const rtx = useRecipeContext();
   const router = useRouter();
+
+  // todo: i18n
+  const GENERIC_TITLE = `INSERT TITLE HERE`;
 
   const [isLoading, setIsLoading] = useState(true);
   const [isNew, setIsNew] = useState(false);

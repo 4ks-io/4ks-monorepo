@@ -46,12 +46,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 type RecipeLayoutProps = {
-  top: React.ReactNode;
+  head: React.ReactNode;
   children: React.ReactNode;
 };
 
 export default async function RecipeLayout({
-  top,
+  head,
   children,
 }: RecipeLayoutProps) {
   const headersList = headers();
@@ -72,6 +72,8 @@ export default async function RecipeLayout({
     getRecipeMedia(recipeID),
   ]);
 
+  console.log(head);
+
   return (
     <RecipeContextProvider
       isAuthenticated={!!user}
@@ -81,7 +83,7 @@ export default async function RecipeLayout({
       {/* <Container style={{ paddingTop: 16, paddingBottom: 100 }}> */}
       <Container>
         <Stack>
-          {top}
+          {head}
           {!session && (
             <Container style={{ paddingTop: 16, paddingBottom: 16 }}>
               <Alert severity="warning">
@@ -91,7 +93,6 @@ export default async function RecipeLayout({
               </Alert>
             </Container>
           )}
-          {/* <RecipeControls /> */}
           {children}
         </Stack>
       </Container>

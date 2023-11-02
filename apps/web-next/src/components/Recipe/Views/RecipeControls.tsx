@@ -1,14 +1,14 @@
+'use client';
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
-import { useRecipeContext } from '../../../providers';
-import { useSessionContext } from '../../../providers';
+import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { useRecipeContext } from '@/providers/recipe-context';
 import { models_UserSummary } from '@4ks/api-fetch';
 import Stack from '@mui/material/Stack';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-
+import { models_User, models_Recipe } from '@4ks/api-fetch';
 export enum RecipeViews {
   Recipe = '',
   Media = '/m',
@@ -19,38 +19,42 @@ export enum RecipeViews {
   Settings = '/s',
 }
 
-export function RecipeControls() {
-  const { isAuthenticated } = useAuth0();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const ctx = useSessionContext();
+type RecipeControlsProps = {
+  user: models_User | undefined;
+  recipe: models_Recipe;
+};
+
+export function RecipeControls({ user, recipe }: RecipeControlsProps) {
+  const isAuthenticated = !!user?.id;
+  const pathname = usePathname();
+  const router = useRouter();
   const rtx = useRecipeContext();
   const [value, setValue] = React.useState(0);
 
   const [isRecipeContributor, setIsRecipeContributor] = useState(false);
 
   const isNewRecipe = rtx?.recipeId && rtx?.recipeId != '0' ? false : true;
-  const base = `/r/${rtx?.recipeId}`;
+  const base = `/recipe/${rtx?.recipeId}`;
 
   useEffect(() => {
     setIsRecipeContributor(
       (isAuthenticated &&
         rtx?.recipe?.contributors
           ?.map((c: models_UserSummary) => c.id)
-          .includes(ctx.user?.id)) ||
+          .includes(user?.id)) ||
         false
     );
-  }, [rtx, ctx.user]);
+  }, [rtx, user]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
     if (newValue == 0) {
-      location.pathname != '/r/0' && navigate(base + RecipeViews.Recipe);
+      pathname != '/recipe/0' && router.push(base + RecipeViews.Recipe);
     }
-    newValue == 1 && navigate(base + RecipeViews.Forks);
-    newValue == 2 && navigate(base + RecipeViews.Media);
-    newValue == 3 && navigate(base + RecipeViews.Versions);
-    newValue == 4 && navigate(base + RecipeViews.Settings);
+    newValue == 1 && router.push(base + RecipeViews.Forks);
+    newValue == 2 && router.push(base + RecipeViews.Media);
+    newValue == 3 && router.push(base + RecipeViews.Versions);
+    newValue == 4 && router.push(base + RecipeViews.Settings);
   };
 
   return (

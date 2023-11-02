@@ -6,9 +6,8 @@ import { TRPCError } from '@trpc/server';
 import { getHTTPStatusCodeFromError } from '@trpc/server/http';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
-import RecipeComponent from '@/components/Recipe';
-import { RecipeContextProvider } from '@/providers/recipe-context';
 import { RecipeHeader } from '@/components/Recipe/Views/RecipeHeader';
+import { RecipeControls } from '@/components/Recipe/Views/RecipeControls';
 
 export default async function RecipeHeaderPage() {
   const headersList = headers();
@@ -31,5 +30,12 @@ export default async function RecipeHeaderPage() {
     }
   }
 
-  return <RecipeHeader user={user} recipe={recipe} />;
+  console.log('recipe', recipe);
+
+  return (
+    <>
+      <RecipeHeader user={user} recipe={recipe} />
+      <RecipeControls user={user} recipe={recipe} />
+    </>
+  );
 }
