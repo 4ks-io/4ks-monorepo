@@ -1,34 +1,29 @@
 import * as React from 'react';
 import type { Metadata, ResolvingMetadata } from 'next';
-import Box from '@mui/material/Box';
 import { getSession } from '@auth0/nextjs-auth0';
 import { serverClient } from '@/trpc/serverClient';
-import { models_Recipe } from '@4ks/api-fetch';
-import { TRPCError } from '@trpc/server';
-import { getHTTPStatusCodeFromError } from '@trpc/server/http';
-import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
-import RecipeComponent from '@/components/Recipe';
 import { RecipeContextProvider } from '@/providers/recipe-context';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
-import { getRecipeData, getUserData, getRecipeMedia } from './data';
+import getRecipePageInfo, {
+  getRecipeData,
+  getUserData,
+  getRecipeMedia,
+} from '../data';
+import { caller } from '@/libs/debug';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const headersList = headers();
-  const pathname = headersList.get('x-url-pathname') || '';
-  const recipeID = pathname.split('/').slice(-1)[0];
+  const page = getRecipePageInfo();
 
   const [recipe, media] = await Promise.all([
-    serverClient.recipes.getByID(recipeID),
-    serverClient.recipes.getMediaByID(recipeID),
+    serverClient.recipes.getByID(page.recipeID),
+    serverClient.recipes.getMediaByID(page.recipeID),
   ]);
 
   // todo: add recipe as jsondl
 
-  const m = media?.map((m) => {
+  const m = media?.data?.map((m) => {
     return m.variants?.map((v) => {
       return v.url;
     });
@@ -54,14 +49,13 @@ export default async function RecipeLayout({
   head,
   children,
 }: RecipeLayoutProps) {
-  const headersList = headers();
-  const pathname = headersList.get('x-url-pathname') || '';
-  const recipeID = pathname.split('/').slice(-1)[0];
+  const page = getRecipePageInfo();
 
   // first fetch recipe
-  const recipe = await getRecipeData(recipeID);
+  const recipe = await getRecipeData(page.recipeID);
 
   if (!recipe) {
+    console.log('caller', caller(new Error()));
     return notFound();
   }
 
@@ -69,14 +63,14 @@ export default async function RecipeLayout({
   const [session, user, media] = await Promise.all([
     getSession(),
     getUserData(),
-    getRecipeMedia(recipeID),
+    getRecipeMedia(page.recipeID),
   ]);
 
   return (
     <RecipeContextProvider
       isAuthenticated={!!user}
       recipe={recipe}
-      media={media}
+      media={media?.data || []}
     >
       {/* <Container style={{ paddingTop: 16, paddingBottom: 100 }}> */}
       <Container>

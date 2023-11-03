@@ -37,6 +37,13 @@ definitions:
     - displayName
     - username
     type: object
+  dtos.GetRecipeMediaResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.RecipeMedia'
+        type: array
+    type: object
   dtos.GetRecipesByUsername:
     properties:
       data:
@@ -548,9 +555,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.RecipeMedia'
-            type: array
+            $ref: '#/definitions/dtos.GetRecipeMediaResponse'
       security:
       - ApiKeyAuth: []
       summary: Get all medias for a Recipe

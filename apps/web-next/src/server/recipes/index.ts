@@ -1,10 +1,12 @@
 import { z } from 'zod';
 import { publicProcedure, router } from '@/server/trpc';
-import { getAPIClient, getSearchClient, handleAPIError } from '..';
+import { getAPIClient, getSearchClient, handleAPIError, debug } from '..';
 import SearchRecipes from './searchRecipes';
 
 export const recipesRouter = router({
   search: publicProcedure.input(z.string()).query(async (opts) => {
+    debug && console.log('trpc.recipes.search', opts.input);
+
     const client = await getSearchClient();
     try {
       return await SearchRecipes(client, opts.input);
@@ -13,6 +15,7 @@ export const recipesRouter = router({
     }
   }),
   getAllByAuthor: publicProcedure.input(z.string()).query(async (opts) => {
+    debug && console.log('trpc.recipes.getAllByAuthor', opts.input);
     const api = await getAPIClient();
     try {
       return await api.recipes.getApiRecipesAuthor(opts.input);
@@ -22,6 +25,7 @@ export const recipesRouter = router({
   }),
   // todo: only mutation?
   getByID: publicProcedure.input(z.string()).query(async (opts) => {
+    debug && console.log('trpc.recipes.getByIDMutation', opts.input);
     const api = await getAPIClient();
     try {
       return await api.recipes.getApiRecipes1(opts.input);
@@ -31,7 +35,7 @@ export const recipesRouter = router({
   }),
   getByIDMutation: publicProcedure.input(z.string()).mutation(async (opts) => {
     const api = await getAPIClient();
-    console.log('getByIDMutation', opts.input);
+    debug && console.log('trpc.recipes.getByIDMutation', opts.input);
     try {
       const recipe = await api.recipes.getApiRecipes1(opts.input);
       console.log(recipe);
@@ -41,6 +45,7 @@ export const recipesRouter = router({
     }
   }),
   getMediaByID: publicProcedure.input(z.string()).query(async (opts) => {
+    debug && console.log('trpc.recipes.getMediaByID', opts.input);
     const api = await getAPIClient();
     try {
       return await api.recipes.getApiRecipesMedia(opts.input);
@@ -51,6 +56,7 @@ export const recipesRouter = router({
   getMediaByIDMutation: publicProcedure
     .input(z.string())
     .mutation(async (opts) => {
+      debug && console.log('trpc.recipes.getMediaByIDMutation', opts.input);
       const api = await getAPIClient();
       try {
         return await api.recipes.getApiRecipesMedia(opts.input);

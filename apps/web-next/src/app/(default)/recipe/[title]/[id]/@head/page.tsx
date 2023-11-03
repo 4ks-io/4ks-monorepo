@@ -8,11 +8,10 @@ import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { RecipeHeader } from '@/components/Recipe/RecipeHeader';
 import { RecipeControls } from '@/components/Recipe/RecipeControls';
+import getRecipePageInfo from '../../data';
 
 export default async function RecipeHeaderPage() {
-  const headersList = headers();
-  const pathname = headersList.get('x-url-pathname') || '';
-  const recipeID = pathname.split('/').slice(-1)[0];
+  const page = getRecipePageInfo();
 
   // user data
   const session = await getSession();
@@ -23,7 +22,7 @@ export default async function RecipeHeaderPage() {
   const emptyRecipe = {} as models_Recipe;
   let recipe = emptyRecipe;
   try {
-    recipe = (await serverClient.recipes.getByID(recipeID)) ?? {};
+    recipe = (await serverClient.recipes.getByID(page.recipeID)) ?? {};
   } catch (e) {
     if (e instanceof TRPCError && getHTTPStatusCodeFromError(e) === 404) {
       return notFound();

@@ -3,11 +3,11 @@
 /* eslint-disable */
 import type { dtos_CreateRecipe } from '../models/dtos_CreateRecipe';
 import type { dtos_CreateRecipeMedia } from '../models/dtos_CreateRecipeMedia';
+import type { dtos_GetRecipeMediaResponse } from '../models/dtos_GetRecipeMediaResponse';
 import type { dtos_GetRecipesByUsername } from '../models/dtos_GetRecipesByUsername';
 import type { dtos_UpdateRecipe } from '../models/dtos_UpdateRecipe';
 import type { models_CreateRecipeMedia } from '../models/models_CreateRecipeMedia';
 import type { models_Recipe } from '../models/models_Recipe';
-import type { models_RecipeMedia } from '../models/models_RecipeMedia';
 import type { models_RecipeRevision } from '../models/models_RecipeRevision';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -168,12 +168,12 @@ export class RecipesService {
      * Get all medias for a Recipe
      * Get all medias for a Recipe
      * @param recipeId Recipe ID
-     * @returns models_RecipeMedia OK
+     * @returns dtos_GetRecipeMediaResponse OK
      * @throws ApiError
      */
     public getApiRecipesMedia(
         recipeId: string,
-    ): CancelablePromise<Array<models_RecipeMedia>> {
+    ): CancelablePromise<dtos_GetRecipeMediaResponse> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/recipes/{recipeID}/media',

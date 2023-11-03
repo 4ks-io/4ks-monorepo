@@ -93,11 +93,14 @@ func (c *recipeController) CreateRecipeMedia(ctx *gin.Context) {
 // @Accept 			json
 // @Produce 		json
 // @Param       recipeID 	path      	string  true  "Recipe ID"
-// @Success 		200 		  {array} 	  models.RecipeMedia
+// @Success 		200 		  {object} 	  dtos.GetRecipeMediaResponse
 // @Router 			/api/recipes/{recipeID}/media [get]
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipeMedia(ctx *gin.Context) {
+	// binding
 	recipeID := ctx.Param("id")
+
+	// data
 	recipeMedias, err := c.recipeService.GetRecipeMedia(ctx, recipeID)
 	if err != nil {
 		log.Error().Err(err).
@@ -114,7 +117,9 @@ func (c *recipeController) GetRecipeMedia(ctx *gin.Context) {
 		}
 	}
 
-	ctx.JSON(http.StatusOK, recipeMedias)
+	ctx.JSON(http.StatusOK, dtos.GetRecipeMediaResponse{
+		Data: recipeMedias,
+	})
 }
 
 // GetAdminRecipeMedias godoc

@@ -15,7 +15,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import RecipeMediaBannerImagePreview from './RecipeMediaBannerImagePreview';
-import Image from 'next/image';
 
 export function getBannerVariantUrl(
   variants: models_RecipeMediaVariant[] | undefined,
@@ -148,7 +147,6 @@ const RecipeMediaBanner = ({ isNew }: RecipeMediaBannerProps) => {
             alt="banner image"
             src={imageSrc}
             onLoad={() => {
-              console.log('banner loaded');
               setBannerImageReady(true);
             }}
           />
@@ -158,7 +156,15 @@ const RecipeMediaBanner = ({ isNew }: RecipeMediaBannerProps) => {
       <Button
         variant="text"
         onClick={toggleBanner}
-        sx={{ paddingBottom: 2, width: '100%' }}
+        sx={{
+          paddingBottom: 2,
+          marginBottom: 2,
+          width: '100%',
+          backgroundColor: '#f6fafd',
+          '&:hover': {
+            backgroundColor: '#ffffff',
+          },
+        }}
       >
         {showBanner ? <ExpandLessIcon /> : <ExpandMoreIcon />}
       </Button>

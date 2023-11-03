@@ -485,10 +485,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.RecipeMedia"
-                            }
+                            "$ref": "#/definitions/dtos.GetRecipeMediaResponse"
                         }
                     }
                 }
@@ -991,6 +988,17 @@ const docTemplate = `{
                 "username": {
                     "type": "string",
                     "example": "BobDylan"
+                }
+            }
+        },
+        "dtos.GetRecipeMediaResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.RecipeMedia"
+                    }
                 }
             }
         },

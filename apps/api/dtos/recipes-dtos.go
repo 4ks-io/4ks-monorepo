@@ -32,3 +32,8 @@ type CreateRecipeMedia struct {
 type GetRecipesByUsername struct {
 	Data []*models.Recipe `json:"data"`
 }
+
+// GetRecipeMediaResponse is return by the GetRecipeMedia endpoint
+type GetRecipeMediaResponse struct {
+	Data []*models.RecipeMedia `json:"data"`
+}

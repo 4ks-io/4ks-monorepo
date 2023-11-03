@@ -79,7 +79,6 @@ export function RecipeContextProvider({
   }
 
   async function setRecipe() {
-    console.log('setRecipe', recipeID);
     const recipe = await recipeData.mutate(recipeID);
     await dispatch({ type: RecipeContextAction.SET_CONTENT, payload: recipe });
   }

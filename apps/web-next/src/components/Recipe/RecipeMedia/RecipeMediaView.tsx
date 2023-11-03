@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useFilePicker, FileContent } from 'use-file-picker';
-import { useRecipeContext } from '../../../../providers';
-import { useSessionContext } from '../../../../providers';
+import { useRecipeContext } from '@/providers/recipe-context';
 import { models_UserSummary } from '@4ks/api-fetch';
 import { RecipeMediaViewImage } from './RecipeMediaViewImage';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -13,7 +12,6 @@ import CloseIcon from '@mui/icons-material/Close';
 
 export const RecipeMediaView = () => {
   const { isAuthenticated } = useAuth0();
-  const ctx = useSessionContext();
   const rtx = useRecipeContext();
 
   useEffect(() => {

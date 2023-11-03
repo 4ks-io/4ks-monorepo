@@ -3,20 +3,23 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { useRecipeContext } from '@/providers/recipe-context';
-import { models_UserSummary } from '@4ks/api-fetch';
+import { models_UserSummary, models_User, models_Recipe } from '@4ks/api-fetch';
+import { normalizeForURL } from '@/libs/navigation';
 import Stack from '@mui/material/Stack';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { models_User, models_Recipe } from '@4ks/api-fetch';
+import {} from '@4ks/api-fetch';
+
+// todo: i18n
 export enum RecipeViews {
   Recipe = '',
-  Media = '/m',
-  Forks = '/f',
-  Comments = '/c',
-  // Story = "/s",
-  Versions = '/v',
-  Settings = '/s',
+  Media = '/media',
+  Forks = '/forks',
+  Comments = '/comments',
+  // Story = "/story",
+  Versions = '/versions',
+  Settings = '/settings',
 }
 
 type RecipeControlsProps = {
@@ -29,12 +32,13 @@ export function RecipeControls({ user, recipe }: RecipeControlsProps) {
   const pathname = usePathname();
   const router = useRouter();
   const rtx = useRecipeContext();
-  const [value, setValue] = React.useState(0);
 
+  const [value, setValue] = React.useState(0);
   const [isRecipeContributor, setIsRecipeContributor] = useState(false);
 
   const isNewRecipe = rtx?.recipeId && rtx?.recipeId != '0' ? false : true;
-  const base = `/recipe/${rtx?.recipeId}`;
+  const titleURL = normalizeForURL(rtx?.recipe?.currentRevision?.name);
+  const base = `/recipe/${titleURL}/${rtx?.recipeId}`;
 
   useEffect(() => {
     setIsRecipeContributor(
