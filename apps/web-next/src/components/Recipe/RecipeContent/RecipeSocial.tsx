@@ -1,12 +1,13 @@
+'use client';
 import React from 'react';
-import { useRecipeContext } from '../../../../providers';
-import { SectionTitle } from '../components';
+import { useRecipeContext } from '@/providers/recipe-context';
+import { SectionTitle } from '../SectionTitle';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 interface RecipeSocialProps {}
 
-export function RecipeSocial(props: RecipeSocialProps) {
+export default function RecipeSocial(props: RecipeSocialProps) {
   const rtx = useRecipeContext();
 
   return (

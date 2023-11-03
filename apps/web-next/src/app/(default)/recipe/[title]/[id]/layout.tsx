@@ -82,15 +82,6 @@ export default async function RecipeLayout({
       <Container>
         <Stack>
           {head}
-          {!session && (
-            <Container style={{ paddingTop: 16, paddingBottom: 16 }}>
-              <Alert severity="warning">
-                <AlertTitle>
-                  <strong>Login</strong> to edit and save!
-                </AlertTitle>
-              </Alert>
-            </Container>
-          )}
           {children}
         </Stack>
       </Container>

@@ -11,6 +11,12 @@ import { RecipeContextProvider } from '@/providers/recipe-context';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import { getRecipeData, getUserData, getRecipeMedia } from './data';
+import RecipeEditingControls from '@/components/Recipe/RecipeContent/RecipeEditingControls';
+import RecipeIngredients from '@/components/Recipe/RecipeContent/RecipeIngredients';
+import RecipeInstructions from '@/components/Recipe/RecipeContent/RecipeInstructions';
+import RecipeSocial from '@/components/Recipe/RecipeContent/RecipeSocial';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 export default async function RecipePage() {
   const headersList = headers();
@@ -30,5 +36,25 @@ export default async function RecipePage() {
     getRecipeMedia(recipeID),
   ]);
 
-  return <RecipeComponent recipe={recipe} user={user} />;
+  // return <RecipeComponent recipe={recipe} user={user} />;
+  return (
+    <>
+      {!user?.id && (
+        <Container style={{ paddingTop: 16, paddingBottom: 16 }}>
+          <Alert severity="warning">
+            <AlertTitle>
+              <strong>Login</strong> to edit and save!
+            </AlertTitle>
+          </Alert>
+        </Container>
+      )}
+      {/* todo: create */}
+      <RecipeEditingControls user={user} create={false} />
+      <RecipeIngredients />
+      <div style={{ paddingBottom: 30 }} />
+      <RecipeInstructions />
+      <div style={{ paddingBottom: 30 }} />
+      <RecipeSocial />
+    </>
+  );
 }

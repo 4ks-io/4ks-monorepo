@@ -1,10 +1,11 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import { models_Instruction } from '@4ks/api-fetch';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { useRecipeContext } from '../../../../providers';
+import { useRecipeContext } from '@/providers/recipe-context';
 import { RecipeInstruction } from './RecipeInstruction';
-import { SectionTitle } from '../components';
+import { SectionTitle } from '../SectionTitle';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import {
@@ -14,7 +15,7 @@ import {
   handleListDragEnd,
 } from './dnd-functions';
 
-export function RecipeInstructions() {
+export default function RecipeInstructions() {
   const rtx = useRecipeContext();
 
   const [instructions, setInstructions] = useState(

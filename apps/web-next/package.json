@@ -21,6 +21,7 @@
     "@trpc/server": "^10.43.0",
     "next": "14.0.0",
     "react": "^18",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18",
     "react-instantsearch": "^7.2.1",
     "typesense": "^1.7.2",

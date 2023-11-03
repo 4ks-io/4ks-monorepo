@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useRecipeContext } from '@/providers/recipe-context';
-import { RecipeMediaBanner } from './components';
+import { RecipeMediaBanner } from './RecipeMediaBanner';
 import { models_Recipe, models_User } from '@4ks/api-fetch';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
