@@ -50,11 +50,6 @@ export function RecipeContextProvider({
     makeInitialState(recipe, media)
   );
 
-  // verbose logging
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
-
   function setBanner(banner: Array<models_RecipeMediaVariant>) {
     dispatch({
       type: RecipeContextAction.SET_BANNER,

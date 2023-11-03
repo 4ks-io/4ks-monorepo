@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import { models_Instruction } from '@4ks/api-fetch';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable } from 'react-beautiful-dnd';
+import { default as Droppable } from '@/components/StrictModeDroppable';
 import { useRecipeContext } from '@/providers/recipe-context';
 import { RecipeInstruction } from './RecipeInstruction';
 import { SectionTitle } from '../SectionTitle';
