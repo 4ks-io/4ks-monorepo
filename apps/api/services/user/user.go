@@ -1,4 +1,4 @@
-// Package user is the user service
+// Package usersvc is the user service
 package usersvc
 
 import (

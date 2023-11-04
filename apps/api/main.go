@@ -241,6 +241,7 @@ func main() {
 	}
 }
 
+// ReadWordsFromFile reads words from a file
 func ReadWordsFromFile(filename string) ([]string, error) {
 	file, err := os.Open(filename)
 	if err != nil {

@@ -6,6 +6,7 @@ import (
 	"strconv"
 )
 
+// SystemFlags is a struct for system flags
 type SystemFlags struct {
 	Debug         bool
 	Development   bool

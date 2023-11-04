@@ -12,7 +12,7 @@ type UpdateUser struct {
 	DisplayName string `json:"displayName"`
 }
 
-// TestUserName godoc
+// TestUsernameRequest godoc
 type TestUsernameRequest struct {
 	Username string `json:"username" binding:"required"`
 }

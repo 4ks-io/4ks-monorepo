@@ -143,7 +143,7 @@ func (c *recipeController) GetRecipe(ctx *gin.Context) {
 // @Accept 	   	json
 // @Produce   	json
 // @Param       username 			path      string             true  "Username"
-// @Success 		200 			   {object}   dtos.GetRecipesByUsername
+// @Success 		200 			   {object}   dtos.GetRecipesByUsernameResponse
 // @Router 			/api/recipes/author/{username}   [get]
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipesByUsername(ctx *gin.Context) {
@@ -173,7 +173,7 @@ func (c *recipeController) GetRecipesByUsername(ctx *gin.Context) {
 
 	// todo: hardcode limit for now
 	limit := 40
-	var res dtos.GetRecipesByUsername
+	var res dtos.GetRecipesByUsernameResponse
 
 	recipes, err := c.recipeService.GetRecipesByUserID(ctx, id, limit)
 	res.Data = recipes

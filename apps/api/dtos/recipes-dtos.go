@@ -28,8 +28,8 @@ type CreateRecipeMedia struct {
 	Filename string `json:"filename" binding:"required"`
 }
 
-// GetRecipesByUsernameResponse
-type GetRecipesByUsername struct {
+// GetRecipesByUsernameResponse is return by the GetRecipesByUsername endpoint
+type GetRecipesByUsernameResponse struct {
 	Data []*models.Recipe `json:"data"`
 }
 
