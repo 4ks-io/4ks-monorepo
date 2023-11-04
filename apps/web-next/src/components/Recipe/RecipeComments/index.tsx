@@ -1,8 +1,5 @@
 import React from 'react';
 
-const RecipeCommentsView = () => {
+export default function RecipeCommentsView() {
   return <>Comments!</>;
-};
-
-export { RecipeCommentsView };
-export default { RecipeCommentsView };
+}

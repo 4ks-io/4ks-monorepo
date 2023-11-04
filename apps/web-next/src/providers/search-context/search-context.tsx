@@ -19,6 +19,7 @@ export function SearchContextProvider({
 
   useEffect(() => {
     window.addEventListener('keydown', keyDownHandler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function keyDownHandler(event: KeyboardEvent) {
@@ -94,6 +95,7 @@ export function SearchContextProvider({
         setValue,
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

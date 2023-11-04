@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import log from '@/libs/logger';
 
 export interface APIError {
   url: string;
@@ -45,9 +46,11 @@ export const HttpStatusCode: HttpStatusCodeType = {
 
 export function handleAPIError(e: any) {
   const err = e as APIError;
-  throw new TRPCError({
+  const msg = {
     code: HttpStatusCode[err.status],
     message: err.statusText,
     cause: err.body,
-  });
+  };
+  log().Error(new Error(), JSON.stringify(msg));
+  throw new TRPCError(msg);
 }

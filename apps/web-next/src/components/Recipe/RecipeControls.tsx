@@ -4,41 +4,59 @@ import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { useRecipeContext } from '@/providers/recipe-context';
 import { models_UserSummary, models_User, models_Recipe } from '@4ks/api-fetch';
-import { normalizeForURL } from '@/libs/navigation';
+import Skeleton from '@mui/material/Skeleton';
+import {
+  RecipeView,
+  RecipeViewPaths,
+  normalizeForURL,
+  RecipePageInfo,
+} from '@/libs/navigation';
+import log from '@/libs/logger';
 import Stack from '@mui/material/Stack';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import {} from '@4ks/api-fetch';
 
-// todo: i18n
-export enum RecipeViews {
-  Recipe = '',
-  Media = '/media',
-  Forks = '/forks',
-  Comments = '/comments',
-  // Story = "/story",
-  Versions = '/versions',
-  Settings = '/settings',
-}
-
 type RecipeControlsProps = {
+  page: RecipePageInfo;
   user: models_User | undefined;
   recipe: models_Recipe;
 };
 
-export function RecipeControls({ user, recipe }: RecipeControlsProps) {
+export function RecipeControls({ page, user, recipe }: RecipeControlsProps) {
   const isAuthenticated = !!user?.id;
   const pathname = usePathname();
   const router = useRouter();
   const rtx = useRecipeContext();
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(selectTab());
   const [isRecipeContributor, setIsRecipeContributor] = useState(false);
 
   const isNewRecipe = rtx?.recipeId && rtx?.recipeId != '0' ? false : true;
   const titleURL = normalizeForURL(rtx?.recipe?.currentRevision?.name);
-  const base = `/recipe/${titleURL}/${rtx?.recipeId}`;
+  const base = `/recipe/${rtx?.recipeId}-${titleURL}`;
+
+  function selectTab() {
+    switch (page.recipePageName) {
+      case 'forks':
+        return 1;
+      case 'media':
+        return 2;
+      case 'versions':
+        return 3;
+      case 'settings':
+        return 4;
+      default:
+        return 0;
+    }
+  }
+
+  useEffect(() => {
+    log().Debug(new Error(), 'RecipeControls: ' + page);
+    setValue(selectTab());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
   useEffect(() => {
     setIsRecipeContributor(
@@ -48,17 +66,24 @@ export function RecipeControls({ user, recipe }: RecipeControlsProps) {
           .includes(user?.id)) ||
         false
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rtx, user]);
+
+  if (!page) {
+    return (
+      <Skeleton sx={{ height: 280 }} animation="wave" variant="rectangular" />
+    );
+  }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
     if (newValue == 0) {
-      pathname != '/recipe/0' && router.push(base + RecipeViews.Recipe);
+      pathname != '/recipe/0' && router.push(base + RecipeViewPaths.Recipe);
     }
-    newValue == 1 && router.push(base + RecipeViews.Forks);
-    newValue == 2 && router.push(base + RecipeViews.Media);
-    newValue == 3 && router.push(base + RecipeViews.Versions);
-    newValue == 4 && router.push(base + RecipeViews.Settings);
+    newValue == 1 && router.push(base + RecipeViewPaths.Forks);
+    newValue == 2 && router.push(base + RecipeViewPaths.Media);
+    newValue == 3 && router.push(base + RecipeViewPaths.Versions);
+    newValue == 4 && router.push(base + RecipeViewPaths.Settings);
   };
 
   return (

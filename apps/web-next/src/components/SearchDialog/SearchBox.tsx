@@ -19,6 +19,7 @@ export default function SearchBox(props: UseSearchBoxProps) {
   const { handleClose, setValue, value } = useSearchContext();
   const router = useRouter();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => refine(value), [value]);
 
   const { refine } = useSearchBox({

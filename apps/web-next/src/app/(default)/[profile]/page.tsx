@@ -7,6 +7,7 @@ import { getHTTPStatusCodeFromError } from '@trpc/server/http';
 import { TRPCError } from '@trpc/server';
 import { notFound } from 'next/navigation';
 import { getSession } from '@auth0/nextjs-auth0';
+import { logger } from '@/libs/logger';
 
 export default async function ProfilePage() {
   const session = await getSession();
@@ -21,6 +22,11 @@ export default async function ProfilePage() {
     d = (await serverClient.recipes.getAllByAuthor(username)) ?? {};
   } catch (e) {
     if (e instanceof TRPCError && getHTTPStatusCodeFromError(e) === 404) {
+      logger.Error(
+        'client',
+        new Error(),
+        'ProfilePage: failed to fetch recipes'
+      );
       return notFound();
     }
   }

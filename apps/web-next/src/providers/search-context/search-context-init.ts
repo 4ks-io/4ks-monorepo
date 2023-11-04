@@ -1,6 +1,5 @@
 import { SearchContextState } from './search-context-types';
 
-/* eslint-disable  @typescript-eslint/no-empty-function */
 function handleEmpty() {}
 
 export const initialState: SearchContextState = {

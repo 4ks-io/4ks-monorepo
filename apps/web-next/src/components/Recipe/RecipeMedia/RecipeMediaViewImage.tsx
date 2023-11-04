@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { models_RecipeMedia } from '@4ks/api-fetch';
-import { RecipeMediaSize } from '../../../../types';
-import { useAppConfigContext } from '../../../../providers';
+import { RecipeMediaSize } from '../types';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
@@ -12,7 +11,6 @@ interface RecipeMediaViewImageProps {
 }
 
 export function RecipeMediaViewImage({ media }: RecipeMediaViewImageProps) {
-  const atx = useAppConfigContext();
   const [imageSrc, setImageSrc] = useState<string>();
   const [filename, setFilename] = useState('unknown');
 
@@ -24,12 +22,13 @@ export function RecipeMediaViewImage({ media }: RecipeMediaViewImageProps) {
     } else {
       setRandomImage();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const random = useMemo(() => Math.floor(Math.random() * 27), []);
 
   function setRandomImage() {
-    setImageSrc(`${atx.MEDIA_FALLBACK_URL}/f${random}.jpg`);
+    setImageSrc(`${process.env.NEXT_PUBLIC_MEDIA_FALLBACK_URL}/f${random}.jpg`);
   }
 
   // function handleError(loadState: ImageLoadState) {

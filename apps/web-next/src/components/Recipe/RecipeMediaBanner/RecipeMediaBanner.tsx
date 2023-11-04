@@ -27,7 +27,7 @@ interface RecipeMediaBannerProps {
   isNew: boolean;
 }
 
-const RecipeMediaBanner = ({ isNew }: RecipeMediaBannerProps) => {
+export default function RecipeMediaBanner({ isNew }: RecipeMediaBannerProps) {
   const rtx = useRecipeContext();
 
   const fallbackMediaURL = process.env.NEXT_PUBLIC_MEDIA_FALLBACK_URL;
@@ -59,6 +59,7 @@ const RecipeMediaBanner = ({ isNew }: RecipeMediaBannerProps) => {
     } else {
       setRandomImage();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rtx]);
 
   useEffect(() => {
@@ -71,6 +72,7 @@ const RecipeMediaBanner = ({ isNew }: RecipeMediaBannerProps) => {
         setImageSrc(bannerImg?.url || undefined);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showBannerSelectModal, selectingMedia]);
 
   // todo: save currently happens in RecipeControls. Fix flow.
@@ -170,6 +172,4 @@ const RecipeMediaBanner = ({ isNew }: RecipeMediaBannerProps) => {
       </Button>
     </>
   );
-};
-
-export default RecipeMediaBanner;
+}

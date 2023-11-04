@@ -1,8 +1,5 @@
 import React from 'react';
 
-const RecipeVersionsView = () => {
+export default function RecipeVersionsView() {
   return <>Versions!</>;
-};
-
-export { RecipeVersionsView };
-export default { RecipeVersionsView };
+}

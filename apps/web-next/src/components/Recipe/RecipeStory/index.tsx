@@ -1,8 +1,5 @@
 import React from 'react';
 
-const RecipeStoryView = () => {
+export default function RecipeStoryView() {
   return <>Story!</>;
-};
-
-export { RecipeStoryView };
-export default { RecipeStoryView };
+}

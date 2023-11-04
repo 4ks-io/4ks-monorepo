@@ -32,7 +32,7 @@ spec:
           env:
             - name: IO_4KS_API_URL
               value: http://api.default.svc.cluster.local
-            - name: NEXT_PUBLIC_TRPC_DEBUG
+            - name: NEXT_PUBLIC_DEBUG
               value: 'true'
             - name: AUTH0_BASE_URL
               value: https://local.4ks.io

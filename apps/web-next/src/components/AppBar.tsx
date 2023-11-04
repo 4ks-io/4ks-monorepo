@@ -40,6 +40,7 @@ export default function AppBar({ user }: AppBarProps) {
     // else
     setShowExploreLink(true);
     setShowSearchInput(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   return (

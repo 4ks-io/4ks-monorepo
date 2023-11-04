@@ -1,18 +1,19 @@
 import * as React from 'react';
-import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
-import Container from '@mui/material/Container';
-import { getRecipeData, getUserData, getRecipeMedia } from '../data';
+import { getRecipePageInfo } from '@/libs/navigation';
+import { getRecipeData, getUserData } from './data';
 import RecipeEditingControls from '@/components/Recipe/RecipeContent/RecipeEditingControls';
 import RecipeIngredients from '@/components/Recipe/RecipeContent/RecipeIngredients';
 import RecipeInstructions from '@/components/Recipe/RecipeContent/RecipeInstructions';
 import RecipeSocial from '@/components/Recipe/RecipeContent/RecipeSocial';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import getRecipePageInfo from '../data';
+import log from '@/libs/logger';
+import { headers } from 'next/headers';
 
 export default async function RecipePage() {
-  const page = getRecipePageInfo();
+  const page = getRecipePageInfo(headers());
+  log().Debug(new Error(), 'page: RecipePage ' + page.pathname);
 
   // data
   const [user, recipe] = await Promise.all([
@@ -21,6 +22,7 @@ export default async function RecipePage() {
   ]);
 
   if (!recipe) {
+    log().Error(new Error(), 'RecipePage: failed to fetch recipe');
     return notFound();
   }
 

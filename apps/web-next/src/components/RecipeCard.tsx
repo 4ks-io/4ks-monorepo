@@ -32,10 +32,10 @@ interface MediaProps {
 }
 
 export default function RecipeCard(props: MediaProps) {
-  const { loading = false, id, title, description, chef, imageUrl } = props;
+  const { loading = false, id, title, chef, imageUrl } = props;
   let recipeURL = `/recipe/${id}`;
   if (title) {
-    recipeURL = `/recipe/${normalizeForURL(title)}/${id}`;
+    recipeURL = `/recipe/${id}-${normalizeForURL(title)}`;
   }
 
   return (

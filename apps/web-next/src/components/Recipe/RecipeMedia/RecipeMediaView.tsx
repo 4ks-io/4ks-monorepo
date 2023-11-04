@@ -1,8 +1,8 @@
+'use client';
 import React, { useEffect } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
 import { useFilePicker, FileContent } from 'use-file-picker';
 import { useRecipeContext } from '@/providers/recipe-context';
-import { models_UserSummary } from '@4ks/api-fetch';
+import { models_User, models_UserSummary } from '@4ks/api-fetch';
 import { RecipeMediaViewImage } from './RecipeMediaViewImage';
 import Grid from '@mui/material/Unstable_Grid2';
 import Button from '@mui/material/Button';
@@ -10,12 +10,16 @@ import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
 import CloseIcon from '@mui/icons-material/Close';
 
-export const RecipeMediaView = () => {
-  const { isAuthenticated } = useAuth0();
+type RecipeMediaViewProps = {
+  user: models_User | undefined;
+};
+
+export default function RecipeMediaView({ user }: RecipeMediaViewProps) {
   const rtx = useRecipeContext();
 
   useEffect(() => {
     rtx.resetMedia();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [openFileSelector, { filesContent, loading, errors, clear }] =
@@ -55,10 +59,11 @@ export const RecipeMediaView = () => {
         alert('invalid file type!');
         return;
       }
-      const m = await ctx.api?.recipes.postRecipesMedia(`${rtx?.recipeId}`, {
-        // contentType: ct,
-        filename: filesContent[0].name,
-      });
+      // const m = await ctx.api?.recipes.postRecipesMedia(`${rtx?.recipeId}`, {
+      //   // contentType: ct,
+      //   filename: filesContent[0].name,
+      // });
+      const m = { signedUrl: '' };
 
       if (!m?.signedUrl) {
         alert('unexpected error. reload image');
@@ -91,7 +96,7 @@ export const RecipeMediaView = () => {
     rtx?.recipe?.contributors &&
     (rtx?.recipe?.contributors as models_UserSummary[])
       .map((c) => c.id)
-      .includes(ctx.user?.id);
+      .includes(user?.id);
 
   function SelectMediaButton() {
     return (
@@ -118,7 +123,7 @@ export const RecipeMediaView = () => {
   }
 
   function newMediaControls() {
-    if (isAuthenticated) {
+    if (!!user?.id) {
       if (isContributor) {
         return (
           <>
@@ -131,6 +136,7 @@ export const RecipeMediaView = () => {
             {filesContent.map((file, index) => {
               return (
                 <Grid
+                  key={index}
                   xs
                   display="flex"
                   justifyContent="center"
@@ -178,4 +184,4 @@ export const RecipeMediaView = () => {
       </Grid>
     </>
   );
-};
+}

@@ -98,6 +98,7 @@ export default function RegisterPage() {
 
     // trigger server-side validation
     nameData.mutate({ username: username });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
   // client-side input validation: email
@@ -109,6 +110,7 @@ export default function RegisterPage() {
     }
     // handle error
     setInputError('email', 'Invalid email address (c)');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [email]);
 
   function isValidHumanName(name: string): boolean {
@@ -139,6 +141,7 @@ export default function RegisterPage() {
       'displayName',
       'Invalid Display Name. Min 1 char. Max 48. Alphabetic and hyphens only. (c)'
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayName]);
 
   function setInputError(f: keyof Input, msg: string) {
@@ -218,6 +221,7 @@ export default function RegisterPage() {
 
     // set
     safeSetInput(i);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData]);
 
   // handle username query mutation effects
@@ -255,6 +259,7 @@ export default function RegisterPage() {
     }
 
     clearInputError('username');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nameData]);
 
   // newCSV will return or append strings

@@ -1,8 +1,5 @@
 import React from 'react';
 
-const RecipeForksView = () => {
+export default function RecipeForksView() {
   return <>Forks!</>;
-};
-
-export { RecipeForksView };
-export default { RecipeForksView };
+}

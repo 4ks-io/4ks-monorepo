@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useRecipeContext } from '@/providers/recipe-context';
-import { RecipeMediaBanner } from './RecipeMediaBanner';
+import RecipeMediaBanner from './RecipeMediaBanner/RecipeMediaBanner';
 import { models_Recipe, models_User } from '@4ks/api-fetch';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -17,7 +17,6 @@ import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import Badge from '@mui/material/Badge';
 import Snackbar from '@mui/material/Snackbar';
-import CircularProgress from '@mui/material/CircularProgress';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
@@ -74,7 +73,7 @@ export function RecipeHeader({ user, recipe }: RecipeHeaderProps) {
     } else if (rtx?.recipe?.createdDate != '') {
       setIsLoading(false);
     }
-  }, [rtx?.recipeId, rtx?.recipe?.createdDate]);
+  }, [GENERIC_TITLE, rtx?.recipeId, rtx?.recipe?.createdDate]);
 
   useEffect(() => {
     if (rtx?.recipe?.currentRevision?.name != '') {

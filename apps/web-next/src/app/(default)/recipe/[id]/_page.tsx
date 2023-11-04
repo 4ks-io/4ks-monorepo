@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation';
 import { normalizeForURL } from '@/libs/navigation';
 import { redirect } from 'next/navigation';
 import getRecipePageInfo from './data';
-import { caller } from '@/libs/debug';
+import { logger } from '@/libs/logger';
 
 export default async function RecipePage() {
   const page = getRecipePageInfo();
@@ -18,7 +18,7 @@ export default async function RecipePage() {
     data = (await serverClient.recipes.getByID(page.recipeID)) ?? {};
   } catch (e) {
     if (e instanceof TRPCError && getHTTPStatusCodeFromError(e) === 404) {
-      console.log(caller(new Error()));
+      logger.Error('client', new Error(), 'RecipePage: failed to fetch recipe');
       return notFound();
     }
   }

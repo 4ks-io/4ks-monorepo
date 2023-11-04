@@ -33,14 +33,8 @@ export function RecipeContextProvider({
   isAuthenticated,
   children,
 }: RecipeContextProviderProps) {
-  // safety check
-  if (!recipe.id) {
-    console.log('ERROR: recipe id required');
-    return;
-  }
-
   const NO_RECIPE_ID = '-1';
-  const recipeID = recipe.id;
+  const recipeID = `${recipe.id}`;
 
   const recipeData = trpc.recipes.getByIDMutation.useMutation();
   const mediaData = trpc.recipes.getMediaByIDMutation.useMutation();
@@ -124,6 +118,7 @@ export function RecipeContextProvider({
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state?.recipe?.id]);
 
   return (
