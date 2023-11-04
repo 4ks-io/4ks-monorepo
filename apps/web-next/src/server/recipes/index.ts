@@ -7,7 +7,6 @@ import log from '@/libs/logger';
 export const recipesRouter = router({
   search: publicProcedure.input(z.string()).query(async (opts) => {
     log().Debug(new Error(), 'trpc.recipes.search ' + opts.input);
-
     const client = await getSearchClient();
     try {
       return await SearchRecipes(client, opts.input);
@@ -39,7 +38,6 @@ export const recipesRouter = router({
     const api = await getAPIClient();
     try {
       const recipe = await api.recipes.getApiRecipes1(opts.input);
-      console.log(recipe);
       return recipe;
     } catch (e) {
       handleAPIError(e);
@@ -68,6 +66,15 @@ export const recipesRouter = router({
         handleAPIError(e);
       }
     }),
+  fork: publicProcedure.input(z.string()).mutation(async (opts) => {
+    log().Debug(new Error(), 'trpc.recipes.fork ' + opts.input);
+    const api = await getAPIClient();
+    try {
+      return await api.recipes.postApiRecipesFork(opts.input);
+    } catch (e) {
+      handleAPIError(e);
+    }
+  }),
 });
 
 export type RecipesRouter = typeof recipesRouter;

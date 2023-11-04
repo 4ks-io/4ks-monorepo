@@ -122,7 +122,7 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 		user := api.Group("/user/")
 		{
 			user.HEAD("", c.User.HeadAuthenticatedUser)
-			user.GET("", c.User.GetCurrentUser)
+			user.GET("", c.User.GetAuthenticatedUser)
 			user.POST("", c.User.CreateUser)
 			user.PATCH(":id", c.User.UpdateUser)
 		}
@@ -131,8 +131,8 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 			users.DELETE(":id", middleware.Authorize("/users/*", "delete"), c.User.DeleteUser)
 			users.POST("username", c.User.TestUsername)
 			users.POST("", c.User.CreateUser)
-			users.GET("profile", c.User.GetCurrentUser)
-			users.GET("exist", c.User.GetCurrentUserExist)
+			// users.GET("profile", c.User.GetAuthenticatedUser)
+			// users.GET("exist", c.User.GetAuthenticatedUserExist)
 			users.GET("", middleware.Authorize("/users/*", "list"), c.User.GetUsers)
 			users.GET(":id", c.User.GetUser)
 			users.PATCH(":id", c.User.UpdateUser)

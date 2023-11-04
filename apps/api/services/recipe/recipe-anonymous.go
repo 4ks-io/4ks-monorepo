@@ -56,7 +56,7 @@ func (s recipeService) GetRecipes(ctx context.Context, limit int) ([]*models.Rec
 
 // GetRecipesByUsername gets all recipes for a given username
 func (s recipeService) GetRecipesByUsername(ctx context.Context, username string, limit int) ([]*models.Recipe, error) {
-	log.Debug().Str("username", username).Msg("GetRecipesByUsername")
+	log.Debug().Caller().Str("username", username).Msg("GetRecipesByUsername")
 	var all []*models.Recipe
 	iter := s.recipeCollection.Where("author.username", "==", &username).Limit(limit).Documents(ctx)
 

@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useRecipeContext } from '@/providers/recipe-context';
 import { models_RecipeMediaVariant } from '@4ks/api-fetch';
@@ -118,14 +119,14 @@ export default function RecipeMediaBanner({ isNew }: RecipeMediaBannerProps) {
         </DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={1}>
-            {rtx.media.map((m) =>
+            {/* {rtx.media.map((m) =>
               RecipeMediaBannerImagePreview({
                 media: m,
                 selectingMediaId,
                 setSelectingMedia,
                 setSelectingMediaId,
               })
-            )}
+            )} */}
           </Grid>
         </DialogContent>
         <DialogActions>

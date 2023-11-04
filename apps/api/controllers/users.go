@@ -3,7 +3,6 @@ package controllers
 import (
 	"4ks/apps/api/dtos"
 	usersvc "4ks/apps/api/services/user"
-	"4ks/libs/go/models"
 
 	"net/http"
 
@@ -15,8 +14,7 @@ import (
 type UserController interface {
 	CreateUser(*gin.Context)
 	HeadAuthenticatedUser(*gin.Context)
-	GetCurrentUserExist(*gin.Context)
-	GetCurrentUser(*gin.Context)
+	GetAuthenticatedUser(*gin.Context)
 	GetUser(*gin.Context)
 	GetUsers(*gin.Context)
 	DeleteUser(*gin.Context)
@@ -119,17 +117,17 @@ func (c *userController) GetUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, user)
 }
 
-// GetCurrentUser	godoc
+// GetAuthenticatedUser	godoc
 // @Schemes
-// @Summary 	  Get Current User
-// @Description Get Current User
+// @Summary 	  Get Authenticated User
+// @Description Get Authenticated User
 // @Tags 		    Users
 // @Accept 	   	json
 // @Produce   	json
 // @Success 		200 		{object} 	models.User
 // @Router 			/api/user [get]
 // @Security 		ApiKeyAuth
-func (c *userController) GetCurrentUser(ctx *gin.Context) {
+func (c *userController) GetAuthenticatedUser(ctx *gin.Context) {
 	userID := ctx.GetString("id")
 	user, err := c.usersvc.GetUserByID(ctx, userID)
 
@@ -142,34 +140,6 @@ func (c *userController) GetCurrentUser(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, user)
-}
-
-// GetCurrentUserExist godoc
-// @Schemes
-// @Summary 	  Get Current User Exist
-// @Description Get Current User Exist
-// @Tags 		    Users
-// @Produce   	json
-// @Success 		200 		{object} 	models.UserExist
-// @Router 			/api/users/exist [get]
-// @Security 		ApiKeyAuth
-func (c *userController) GetCurrentUserExist(ctx *gin.Context) {
-	userID := ctx.GetString("id")
-	_, err := c.usersvc.GetUserByID(ctx, userID)
-
-	data := models.UserExist{}
-
-	if err == usersvc.ErrUserNotFound {
-		data.Exist = false
-		ctx.JSON(http.StatusOK, data)
-		return
-	} else if err != nil {
-		ctx.AbortWithError(http.StatusInternalServerError, err)
-		return
-	}
-
-	data.Exist = true
-	ctx.JSON(http.StatusOK, data)
 }
 
 // HeadAuthenticatedUser godoc

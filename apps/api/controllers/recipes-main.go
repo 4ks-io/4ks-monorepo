@@ -117,7 +117,7 @@ func (c *recipeController) DeleteRecipe(ctx *gin.Context) {
 // @Accept 	   	json
 // @Produce   	json
 // @Param       recipeID 	path      	string  true  "Recipe ID"
-// @Success 		200 		{object} 	models.Recipe
+// @Success 		200 		{object} 	dtos.GetRecipeResponse
 // @Router 			/api/recipes/{recipeID} [get]
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipe(ctx *gin.Context) {
@@ -132,7 +132,9 @@ func (c *recipeController) GetRecipe(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, recipe)
+	ctx.JSON(http.StatusOK, dtos.GetRecipeResponse{
+		Data: recipe,
+	})
 }
 
 // GetRecipesByUsername		godoc
@@ -148,7 +150,7 @@ func (c *recipeController) GetRecipe(ctx *gin.Context) {
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipesByUsername(ctx *gin.Context) {
 	username := ctx.Param("username")
-	log.Debug().Str("username", username).Msg("GetRecipesByUsername")
+	log.Debug().Caller().Str("username", username).Msg("GetRecipesByUsername")
 
 	var id string
 	// get user id

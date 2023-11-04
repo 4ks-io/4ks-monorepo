@@ -4,7 +4,8 @@
 import type { dtos_CreateRecipe } from '../models/dtos_CreateRecipe';
 import type { dtos_CreateRecipeMedia } from '../models/dtos_CreateRecipeMedia';
 import type { dtos_GetRecipeMediaResponse } from '../models/dtos_GetRecipeMediaResponse';
-import type { dtos_GetRecipesByUsername } from '../models/dtos_GetRecipesByUsername';
+import type { dtos_GetRecipeResponse } from '../models/dtos_GetRecipeResponse';
+import type { dtos_GetRecipesByUsernameResponse } from '../models/dtos_GetRecipesByUsernameResponse';
 import type { dtos_UpdateRecipe } from '../models/dtos_UpdateRecipe';
 import type { models_CreateRecipeMedia } from '../models/models_CreateRecipeMedia';
 import type { models_Recipe } from '../models/models_Recipe';
@@ -51,12 +52,12 @@ export class RecipesService {
      * Get All Recipes by Author
      * Get All Recipes by Author
      * @param username Username
-     * @returns dtos_GetRecipesByUsername OK
+     * @returns dtos_GetRecipesByUsernameResponse OK
      * @throws ApiError
      */
     public getApiRecipesAuthor(
         username: string,
-    ): CancelablePromise<dtos_GetRecipesByUsername> {
+    ): CancelablePromise<dtos_GetRecipesByUsernameResponse> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/recipes/author/{username}',
@@ -89,12 +90,12 @@ export class RecipesService {
      * Get a Recipe (by ID)
      * Get a Recipe (by ID)
      * @param recipeId Recipe ID
-     * @returns models_Recipe OK
+     * @returns dtos_GetRecipeResponse OK
      * @throws ApiError
      */
     public getApiRecipes1(
         recipeId: string,
-    ): CancelablePromise<models_Recipe> {
+    ): CancelablePromise<dtos_GetRecipeResponse> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/recipes/{recipeID}',

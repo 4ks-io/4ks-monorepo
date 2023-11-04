@@ -1,5 +1,12 @@
 package dtos
 
+// import "4ks/libs/go/models"
+
+// GetAuthenticatedUser godoc
+// type GetAuthenticatedUserResponse struct {
+// 	Data *models.User `json:"data"`
+// }
+
 // CreateUser godoc
 type CreateUser struct {
 	Username    string `json:"username"    binding:"required" example:"BobDylan"`

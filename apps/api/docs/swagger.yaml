@@ -44,7 +44,12 @@ definitions:
           $ref: '#/definitions/models.RecipeMedia'
         type: array
     type: object
-  dtos.GetRecipesByUsername:
+  dtos.GetRecipeResponse:
+    properties:
+      data:
+        $ref: '#/definitions/models.Recipe'
+    type: object
+  dtos.GetRecipesByUsernameResponse:
     properties:
       data:
         items:
@@ -287,13 +292,6 @@ definitions:
       usernameLower:
         type: string
     type: object
-  models.UserExist:
-    properties:
-      exist:
-        type: boolean
-    required:
-    - exist
-    type: object
   models.UserSummary:
     properties:
       displayName:
@@ -481,7 +479,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Recipe'
+            $ref: '#/definitions/dtos.GetRecipeResponse'
       security:
       - ApiKeyAuth: []
       summary: Get a Recipe (by ID)
@@ -652,7 +650,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dtos.GetRecipesByUsername'
+            $ref: '#/definitions/dtos.GetRecipesByUsernameResponse'
       security:
       - ApiKeyAuth: []
       summary: Get All Recipes by Author
@@ -825,21 +823,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get a User (by ID)
-      tags:
-      - Users
-  /api/users/exist:
-    get:
-      description: Get Current User Exist
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.UserExist'
-      security:
-      - ApiKeyAuth: []
-      summary: Get Current User Exist
       tags:
       - Users
   /api/users/username:

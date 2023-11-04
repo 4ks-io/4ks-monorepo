@@ -18,6 +18,8 @@ import Container from '@mui/material/Container';
 import Badge from '@mui/material/Badge';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { trpc } from '@/trpc/client';
+import { normalizeForURL } from '@/libs/navigation';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -35,6 +37,8 @@ type RecipeHeaderProps = {
 export function RecipeHeader({ user, recipe }: RecipeHeaderProps) {
   const rtx = useRecipeContext();
   const router = useRouter();
+
+  const forkData = trpc.recipes.fork.useMutation();
 
   // todo: i18n
   const GENERIC_TITLE = `INSERT TITLE HERE`;
@@ -81,11 +85,19 @@ export function RecipeHeader({ user, recipe }: RecipeHeaderProps) {
     }
   }, [rtx?.recipe?.currentRevision]);
 
+  useEffect(() => {
+    if (forkData.isSuccess) {
+      router.push(`/recipe/${forkData.data?.id}-${normalizeForURL(title)}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forkData]);
+
   function forkThisRecipe() {
+    forkData.mutate(rtx?.recipeId);
     // ctx.api?.recipes.postRecipesFork(`${rtx?.recipeId}`).then((r) => {
     //   router.push(`/r/${r.id}`);
     // });
-    window.alert('todo => fork this recipe');
+    // window.alert('todo => fork this recipe');
   }
 
   function starThisRecipe() {

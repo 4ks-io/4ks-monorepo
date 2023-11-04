@@ -53,7 +53,7 @@ export function RecipeControls({ page, user, recipe }: RecipeControlsProps) {
   }
 
   useEffect(() => {
-    log().Debug(new Error(), 'RecipeControls: ' + page);
+    log().Debug(new Error(), 'RecipeControls: ' + JSON.stringify(page));
     setValue(selectTab());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);

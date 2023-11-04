@@ -2,12 +2,13 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { headers } from 'next/headers';
 import { serverClient } from '@/trpc/serverClient';
-import { dtos_GetRecipesByUsername } from '@4ks/api-fetch';
+import { dtos_GetRecipesByUsernameResponse } from '@4ks/api-fetch';
 import { getHTTPStatusCodeFromError } from '@trpc/server/http';
 import { TRPCError } from '@trpc/server';
 import { notFound } from 'next/navigation';
 import { getSession } from '@auth0/nextjs-auth0';
-import { logger } from '@/libs/logger';
+import log from '@/libs/logger';
+import { normalizeForURL } from '@/libs/navigation';
 
 export default async function ProfilePage() {
   const session = await getSession();
@@ -17,16 +18,12 @@ export default async function ProfilePage() {
   const username = pathname.split('/')[1];
 
   // fetch
-  let d = {} as dtos_GetRecipesByUsername;
+  let r = {} as dtos_GetRecipesByUsernameResponse;
   try {
-    d = (await serverClient.recipes.getAllByAuthor(username)) ?? {};
+    r = (await serverClient.recipes.getAllByAuthor(username)) ?? {};
   } catch (e) {
     if (e instanceof TRPCError && getHTTPStatusCodeFromError(e) === 404) {
-      logger.Error(
-        'client',
-        new Error(),
-        'ProfilePage: failed to fetch recipes'
-      );
+      log().Error(new Error(), 'ProfilePage: failed to fetch recipes');
       return notFound();
     }
   }
@@ -47,10 +44,16 @@ export default async function ProfilePage() {
         <h3>Recipes</h3>
         <br />
         <ul>
-          {d?.data?.map((r) => {
+          {r?.data?.map(({ id, currentRevision }) => {
             return (
-              <li key={r.id}>
-                <a href={`r/${r.id}`}>{r.currentRevision?.name || r.id}</a>
+              <li key={id}>
+                <a
+                  href={`/recipe/${id}-${normalizeForURL(
+                    currentRevision?.name
+                  )}`}
+                >
+                  {currentRevision?.name || id}
+                </a>
               </li>
             );
           })}

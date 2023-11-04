@@ -29,7 +29,7 @@ type RecipeContextProviderProps = {
 
 export function RecipeContextProvider({
   recipe,
-  media,
+  media = [],
   isAuthenticated,
   children,
 }: RecipeContextProviderProps) {
@@ -43,6 +43,28 @@ export function RecipeContextProvider({
     recipeContextReducer,
     makeInitialState(recipe, media)
   );
+
+  // update media
+  useEffect(() => {
+    const { isLoading, data, isError, isSuccess } = mediaData;
+    if (isLoading || isError || !isSuccess) {
+      return;
+    }
+    if (data?.data && state.media.length != data?.data.length) {
+      dispatch({ type: RecipeContextAction.SET_MEDIA, payload: data?.data });
+    }
+  }, [mediaData, state.media]);
+
+  // update recipe
+  useEffect(() => {
+    const { isLoading, data, isError, isSuccess } = recipeData;
+    if (isLoading || isError || !isSuccess) {
+      return;
+    }
+    if (data?.data && state.recipe != data?.data) {
+      dispatch({ type: RecipeContextAction.SET_CONTENT, payload: data.data });
+    }
+  }, [recipeData, state.recipe]);
 
   function setBanner(banner: Array<models_RecipeMediaVariant>) {
     dispatch({
@@ -73,25 +95,19 @@ export function RecipeContextProvider({
   }
 
   async function setRecipe() {
-    const recipe = await recipeData.mutate(recipeID);
-    await dispatch({ type: RecipeContextAction.SET_CONTENT, payload: recipe });
+    recipeData.mutate(recipeID);
   }
 
   async function setMedia() {
-    if (state?.recipe?.root) {
-      const media = await mediaData.mutate(recipeID);
-      dispatch({ type: RecipeContextAction.SET_MEDIA, payload: media });
-    }
+    mediaData.mutate(recipeID);
   }
 
-  // useEffect(() => {
-  //   if (state?.recipe?.id != NO_RECIPE_ID && state?.recipe?.root != '') {
-  //     setMedia();
-  //   }
-  // }, [state?.recipe?.root]);
-
   useEffect(() => {
-    if (isAuthenticated && state?.recipe?.id != NO_RECIPE_ID) {
+    if (recipe?.id == NO_RECIPE_ID) {
+      return;
+    }
+
+    if (isAuthenticated) {
       dispatch({
         type: RecipeContextAction.SET_CONTROLS,
         payload: {
@@ -103,23 +119,23 @@ export function RecipeContextProvider({
           setBanner,
         },
       });
-    } else {
-      if (state?.recipe?.id != NO_RECIPE_ID) {
-        dispatch({
-          type: RecipeContextAction.SET_CONTROLS,
-          payload: {
-            resetMedia: setMedia,
-            resetRecipe: setRecipe,
-            setBanner,
-            setTitle: () => {},
-            setIngredients: () => {},
-            setInstructions: () => {},
-          },
-        });
-      }
+      return;
     }
+
+    dispatch({
+      type: RecipeContextAction.SET_CONTROLS,
+      payload: {
+        resetMedia: setMedia,
+        resetRecipe: setRecipe,
+        setBanner,
+        setTitle: () => {},
+        setIngredients: () => {},
+        setInstructions: () => {},
+      },
+    });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state?.recipe?.id]);
+  }, [recipe]);
 
   return (
     <RecipeContext.Provider value={state}>{children}</RecipeContext.Provider>

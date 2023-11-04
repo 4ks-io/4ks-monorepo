@@ -21,7 +21,7 @@ export default async function RecipePage() {
     getRecipeData(page.recipeID),
   ]);
 
-  if (!recipe) {
+  if (!recipe?.data) {
     log().Error(new Error(), 'RecipePage: failed to fetch recipe');
     return notFound();
   }

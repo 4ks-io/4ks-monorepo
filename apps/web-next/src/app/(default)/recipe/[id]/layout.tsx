@@ -32,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
   // todo: add media to metatada
 
   return {
-    title: recipe?.currentRevision?.name,
+    title: recipe?.data?.currentRevision?.name,
     description: '4ks',
     // openGraph: {
     //   images: m as string[],
@@ -51,7 +51,7 @@ export default async function RecipeLayout({ children }: RecipeLayoutProps) {
   // first fetch recipe
   const recipe = await getRecipeData(page.recipeID);
 
-  if (!recipe) {
+  if (!recipe?.data) {
     log().Error(new Error(), 'RecipeLayout: failed to fetch recipe');
     return notFound();
   }
@@ -65,14 +65,14 @@ export default async function RecipeLayout({ children }: RecipeLayoutProps) {
   return (
     <RecipeContextProvider
       isAuthenticated={!!user}
-      recipe={recipe}
+      recipe={recipe.data}
       media={media?.data || []}
     >
       {/* <Container style={{ paddingTop: 16, paddingBottom: 100 }}> */}
       <Container>
         <Stack>
-          <RecipeHeader user={user} recipe={recipe} />
-          <RecipeControls page={page} user={user} recipe={recipe} />
+          <RecipeHeader user={user} recipe={recipe.data} />
+          <RecipeControls page={page} user={user} recipe={recipe.data} />
           {children}
         </Stack>
       </Container>

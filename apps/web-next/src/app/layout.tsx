@@ -34,7 +34,12 @@ async function RootLayoutBody({ children }: RootLayoutProps) {
     }
   }
 
-  return <body>{children}</body>;
+  return (
+    <body>
+      {/* <div> {session?.accessToken} </div> */}
+      {children}
+    </body>
+  );
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
