@@ -125,7 +125,7 @@ func getRecipeFromLine(line string) dtos.CreateRecipe {
 	return r
 }
 
-func postRecipe(client  http.Client, u string, t string, r dtos.CreateRecipe) {
+func postRecipe(client http.Client, u string, t string, r dtos.CreateRecipe) {
 	fmt.Println(index, " => ", r.Name)
 	index += 1
 	data, _ := json.Marshal(r)

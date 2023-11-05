@@ -125,7 +125,7 @@ func (c *userController) GetUser(ctx *gin.Context) {
 // @Accept 	   	json
 // @Produce   	json
 // @Success 		200 		{object} 	models.User
-// @Router 			/api/user [get]
+// @Router 			/api/user/ [get]
 // @Security 		ApiKeyAuth
 func (c *userController) GetAuthenticatedUser(ctx *gin.Context) {
 	userID := ctx.GetString("id")

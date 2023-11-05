@@ -121,8 +121,8 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 
 		user := api.Group("/user/")
 		{
-			user.HEAD("", c.User.HeadAuthenticatedUser)
-			user.GET("", c.User.GetAuthenticatedUser)
+			user.HEAD("/", c.User.HeadAuthenticatedUser)
+			user.GET("/", c.User.GetAuthenticatedUser)
 			user.POST("", c.User.CreateUser)
 			user.PATCH(":id", c.User.UpdateUser)
 		}

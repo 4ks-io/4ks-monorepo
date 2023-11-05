@@ -15,19 +15,6 @@ export class UsersService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
-     * Get Current User
-     * Get Current User
-     * @returns models_User OK
-     * @throws ApiError
-     */
-    public getApiUser(): CancelablePromise<models_User> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/api/user',
-        });
-    }
-
-    /**
      * Create a new User
      * Create a new User
      * @param user User Data
@@ -41,6 +28,19 @@ export class UsersService {
             method: 'POST',
             url: '/api/user',
             body: user,
+        });
+    }
+
+    /**
+     * Get Authenticated User
+     * Get Authenticated User
+     * @returns models_User OK
+     * @throws ApiError
+     */
+    public getApiUser(): CancelablePromise<models_User> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/user/',
         });
     }
 

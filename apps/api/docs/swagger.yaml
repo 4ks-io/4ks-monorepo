@@ -109,7 +109,7 @@ definitions:
     properties:
       recipeMedia:
         $ref: '#/definitions/models.RecipeMedia'
-      signedUrl:
+      signedURL:
         type: string
     type: object
   models.Ingredient:
@@ -680,22 +680,6 @@ paths:
       tags:
       - Recipes
   /api/user:
-    get:
-      consumes:
-      - application/json
-      description: Get Current User
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.User'
-      security:
-      - ApiKeyAuth: []
-      summary: Get Current User
-      tags:
-      - Users
     post:
       consumes:
       - application/json
@@ -720,6 +704,22 @@ paths:
       tags:
       - Users
   /api/user/:
+    get:
+      consumes:
+      - application/json
+      description: Get Authenticated User
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Authenticated User
+      tags:
+      - Users
     head:
       description: Head Authenticated user
       produces:

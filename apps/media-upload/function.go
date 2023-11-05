@@ -9,6 +9,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strconv"
 	"sync"
 	"time"
 
@@ -25,8 +26,12 @@ func init() {
 	functions.CloudEvent("UploadImage", uploadImage)
 }
 
-func updateRecipeMedia(c *firestore.CollectionRef, ctx context.Context, id string) func(MediaStatus) {
+func updateRecipeMedia(isDevelopment bool, c *firestore.CollectionRef, ctx context.Context, id string) func(MediaStatus) {
 	return func(s MediaStatus) {
+		if isDevelopment {
+			log.Printf("mock action: update status %s (%d): %s", id, s, firstoreProjectId)
+			return
+		}
 		_, err := c.Doc(id).Update(ctx, []firestore.Update{
 			{
 				Path:  "updatedDate",
@@ -38,17 +43,18 @@ func updateRecipeMedia(c *firestore.CollectionRef, ctx context.Context, id strin
 			},
 		})
 		if err != nil {
-			log.Fatal("error updating recipe-media %s", err)
+			log.Fatalf("error updating recipe-medias %s", err)
 		}
-		log.Printf("Update status %s (%s): %s", id, s, firstoreProjectId)
+		log.Printf("update status %s (%d): %s", id, s, firstoreProjectId)
 	}
 }
 
 // creates size variants of an uploaded image
 func uploadImage(ctx context.Context, e event.Event) error {
-
 	var s, _ = firestore.NewClient(ctx, firstoreProjectId)
 	var c = s.Collection("recipe-medias")
+
+	isDevelopment := GetBoolEnv("IO_4KS_DEVELOPMENT", false)
 
 	// init
 	var data StorageObjectData
@@ -59,7 +65,7 @@ func uploadImage(ctx context.Context, e event.Event) error {
 	f := getFilenameDetails(data.Name)
 
 	// update status
-	var up = updateRecipeMedia(c, ctx, f.Basename)
+	var up = updateRecipeMedia(isDevelopment, c, ctx, f.Basename)
 	up(MediaStatusProcessing)
 
 	// storage client
@@ -109,16 +115,14 @@ func uploadImage(ctx context.Context, e event.Event) error {
 	rc, err := src.NewReader(ctx)
 	if err != nil {
 		up(MediaStatusErrorFailedResize)
-		fmt.Errorf("unable to read file %s in %s (%v)", data.Name, distributionBucket, err)
-		return err
+		return fmt.Errorf("unable to read file %s in %s (%v)", data.Name, distributionBucket, err)
 	}
 	// read as []byte
 	slurp, err := io.ReadAll(rc)
 	rc.Close()
 	if err != nil {
 		up(MediaStatusErrorFailedResize)
-		fmt.Errorf("unable to slurp: %v", err)
-		return err
+		return fmt.Errorf("unable to slurp: %v", err)
 	}
 	i, ifmt, _ := image.Decode(bytes.NewReader(slurp))
 
@@ -130,8 +134,7 @@ func uploadImage(ctx context.Context, e event.Event) error {
 		o, err := createVariant(ctx, dstbkt, i, ifmt, f, s, &wg)
 		if err != nil {
 			up(MediaStatusErrorFailedVariant)
-			fmt.Errorf("failed to create %s variant %d: %v", o, s, err)
-			return err
+			return fmt.Errorf("failed to create %s variant %d: %v", o, s, err)
 		}
 	}
 
@@ -146,8 +149,26 @@ func uploadImage(ctx context.Context, e event.Event) error {
 
 	// terminate ctx
 	if err := client.Close(); err != nil {
-		fmt.Errorf("client.Close: %v", err)
+		return fmt.Errorf("client.Close: %v", err)
 	}
 
 	return nil
+}
+
+// GetStrEnvVar returns a string from an environment variable
+func GetStrEnvVar(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
+}
+
+// GetBoolEnv returns a bool from an environment variable
+func GetBoolEnv(key string, fallback bool) bool {
+	val := GetStrEnvVar(key, strconv.FormatBool(fallback))
+	ret, err := strconv.ParseBool(val)
+	if err != nil {
+		return fallback
+	}
+	return ret
 }

@@ -68,6 +68,8 @@ func (s recipeService) CreateRecipeMedia(ctx context.Context, mp *utils.MediaPro
 	if err != nil {
 		return nil, err
 	}
+	log.Info().Msgf("created recipe media %s", recipeMedia.ID)
+	utils.PrintStruct(recipeMedia)
 
 	return recipeMedia, nil
 }

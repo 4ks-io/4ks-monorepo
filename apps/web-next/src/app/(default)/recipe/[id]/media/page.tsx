@@ -1,28 +1,8 @@
-// import * as React from 'react';
-// import Box from '@mui/material/Box';
-// import RecipeMediaView from '@/components/Recipe/RecipeMedia/RecipeMediaView';
-// import { getUserData } from '../data';
-// import log from '@/libs/logger';
-
-// export default async function RecipeMediaPage() {
-//   log().Debug(new Error(), 'RecipeMediaPage: root');
-//   // data
-//   const [user] = await Promise.all([getUserData()]);
-//   // return (
-//   //   <Box sx={{ display: 'flex' }}>
-//   //     <div>Recipe Media</div>
-//   //   </Box>
-//   // );
-//   return <RecipeMediaView user={user} />;
-// }
-
 'use client';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useFilePicker, FileContent } from 'use-file-picker';
 import { useRecipeContext } from '@/providers/recipe-context';
-import { models_User, models_UserSummary } from '@4ks/api-fetch';
 import { RecipeMediaViewImage } from '@/components/Recipe/RecipeMedia/RecipeMediaViewImage';
-// import RecipeMediaView from '@/components/Recipe/RecipeMedia/RecipeMediaView';
 import Grid from '@mui/material/Unstable_Grid2';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -32,14 +12,12 @@ import log from '@/libs/logger';
 import { trpc } from '@/trpc/client';
 
 export default function RecipeMediaPage() {
-  log().Debug(new Error(), 'RecipeMediaPage');
   const rtx = useRecipeContext();
   const user = trpc.users.getAuthenticated.useQuery().data;
+  // const signedURLData = trpc.recipes.getSignedURL.useMutation();
+  const signedURLData = trpc.recipes.getSignedURL.useMutation();
 
-  useEffect(() => {
-    rtx.resetMedia();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [fetchingSignedURL, setFetchingSignedURL] = React.useState(false);
 
   const [openFileSelector, { filesContent, loading, errors, clear }] =
     useFilePicker({
@@ -50,6 +28,63 @@ export default function RecipeMediaPage() {
       // minFileSize: 1,
       maxFileSize: 5, // in megabytes
     });
+
+  useEffect(() => {
+    rtx.resetMedia();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const uploadFile = useCallback(
+    async (signedURL: string) => {
+      if (!signedURL) {
+        log().Error(new Error(), 'signedURL is undefined');
+        alert('unexpected error. invalid signed url');
+        return;
+      }
+
+      const file = filesContent[0];
+      const ct = getContentTypeFromFileExt(file.name);
+      if (!ct) {
+        log().Error(new Error(), 'invalid content type: ' + file.name);
+        alert('unexpected error. failed to get content type');
+        return;
+      }
+
+      // https://stackoverflow.com/questions/59836220/how-to-get-the-equivalent-data-format-of-curl-t-upload-data-option-from-inpu
+      const r = await fetch(file.content);
+      const blob = await r.blob();
+      const buf = await blob.arrayBuffer();
+
+      fetch(signedURL, {
+        method: 'PUT',
+        headers: new Headers({ 'Content-Type': ct }),
+        body: buf,
+      }).then((r) => {
+        // todo: UX user feedback
+        log().Debug(new Error(), 'uploaded: ' + JSON.stringify(r));
+      });
+    },
+    [filesContent]
+  );
+
+  useEffect(() => {
+    const { isLoading, isError, isSuccess, data } = signedURLData;
+
+    if (isLoading || !fetchingSignedURL) {
+      return;
+    }
+
+    setFetchingSignedURL(false);
+
+    if (isError || !data?.signedURL || !isSuccess) {
+      alert('unexpected error. failed to get signed url');
+      return;
+    }
+
+    uploadFile(data.signedURL);
+  }, [signedURLData, fetchingSignedURL, uploadFile]);
+
+  // async function putMedia(file: FileContent) {}
 
   function getContentTypeFromFileExt(filename: string): string | undefined {
     var ext = filename.split('.').pop() || '';
@@ -71,40 +106,21 @@ export default function RecipeMediaPage() {
     return <div>Error...</div>;
   }
 
-  async function putMedia(file: FileContent) {
-    if (filesContent && filesContent.length == 1) {
-      const ct = getContentTypeFromFileExt(filesContent[0].name);
-      if (!ct) {
-        alert('invalid file type!');
-        return;
-      }
-      // const m = await ctx.api?.recipes.postRecipesMedia(`${rtx?.recipeId}`, {
-      //   // contentType: ct,
-      //   filename: filesContent[0].name,
-      // });
-      const m = { signedUrl: '' };
-
-      if (!m?.signedUrl) {
-        alert('unexpected error. reload image');
-      }
-
-      // https://stackoverflow.com/questions/59836220/how-to-get-the-equivalent-data-format-of-curl-t-upload-data-option-from-inpu
-      const r = await fetch(file.content);
-      const blob = await r.blob();
-      const buf = await blob.arrayBuffer();
-
-      if (m?.signedUrl) {
-        fetch(m.signedUrl, {
-          method: 'PUT',
-          headers: new Headers({ 'Content-Type': ct }),
-          body: buf,
-        });
-      }
+  async function handleUploadMedia() {
+    if (!filesContent || filesContent.length != 1) {
+      return;
     }
-  }
-
-  function handleUploadMedia() {
-    putMedia(filesContent[0]);
+    const filename = filesContent[0].name;
+    const ct = getContentTypeFromFileExt(filename);
+    if (!ct) {
+      alert('invalid file type!');
+      return;
+    }
+    setFetchingSignedURL(true);
+    signedURLData.mutate({
+      recipeID: rtx?.recipeId,
+      payload: { filename: filename },
+    });
   }
 
   function handleSelectMedia() {
@@ -187,8 +203,6 @@ export default function RecipeMediaPage() {
       </>
     );
   }
-
-  console.log(user);
 
   return (
     <>

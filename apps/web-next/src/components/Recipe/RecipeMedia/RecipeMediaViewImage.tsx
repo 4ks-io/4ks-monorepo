@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState, useMemo } from 'react';
 import { models_RecipeMedia } from '@4ks/api-fetch';
 import { RecipeMediaSize } from '../types';

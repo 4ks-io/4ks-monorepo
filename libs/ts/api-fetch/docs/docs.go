@@ -610,32 +610,6 @@ const docTemplate = `{
             }
         },
         "/api/user": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get Current User",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Get Current User",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.User"
-                        }
-                    }
-                }
-            },
             "post": {
                 "security": [
                     {
@@ -675,6 +649,32 @@ const docTemplate = `{
             }
         },
         "/api/user/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get Authenticated User",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get Authenticated User",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                }
+            },
             "head": {
                 "security": [
                     {
@@ -1076,7 +1076,7 @@ const docTemplate = `{
                 "recipeMedia": {
                     "$ref": "#/definitions/models.RecipeMedia"
                 },
-                "signedUrl": {
+                "signedURL": {
                     "type": "string"
                 }
             }

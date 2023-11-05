@@ -5,6 +5,27 @@ import SearchRecipes from './searchRecipes';
 import log from '@/libs/logger';
 
 export const recipesRouter = router({
+  getSignedURL: publicProcedure
+    .input(
+      z.object({
+        recipeID: z.string().trim(),
+        payload: z.object({
+          filename: z.string(),
+        }),
+      })
+    )
+    .mutation(async (opts) => {
+      log().Debug(new Error(), 'trpc.recipes.getSignedURL ' + opts.input);
+      const api = await getAPIClient();
+      try {
+        return await api.recipes.postApiRecipesMedia(
+          opts.input.recipeID,
+          opts.input.payload
+        );
+      } catch (e) {
+        handleAPIError(e);
+      }
+    }),
   search: publicProcedure.input(z.string()).query(async (opts) => {
     log().Debug(new Error(), 'trpc.recipes.search ' + opts.input);
     const client = await getSearchClient();
