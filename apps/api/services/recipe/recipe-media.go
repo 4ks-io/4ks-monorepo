@@ -112,7 +112,11 @@ func (s recipeService) GetRecipeMedia(ctx context.Context, recipeID string) ([]*
 		status[1] = int(models.MediaStatusRequested)
 	}
 
-	recipeMediasDocs, err := s.recipeMediasCollection.Where("rootRecipeId", "==", recipeID).Where("status", "in", status).OrderBy("createdDate", firestore.Desc).Documents(ctx).GetAll()
+	recipeMediasDocs, err := s.recipeMediasCollection.
+		Where("rootRecipeId", "==", recipeID).
+		Where("status", "in", status).
+		OrderBy("createdDate", firestore.Desc).
+		Documents(ctx).GetAll()
 	if err != nil {
 		log.Error().Err(err).Caller().Msg("failed to get recipe media")
 		return nil, err

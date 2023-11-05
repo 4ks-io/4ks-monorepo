@@ -59,7 +59,7 @@ export default async function RecipeLayout({ children }: RecipeLayoutProps) {
   // data
   const [user, media] = await Promise.all([
     getUserData(),
-    getRecipeMedia(page.recipeID),
+    recipe?.data?.root ? getRecipeMedia(recipe?.data?.root) : { data: [] },
   ]);
 
   return (
