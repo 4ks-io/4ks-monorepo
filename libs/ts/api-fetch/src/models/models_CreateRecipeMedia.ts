@@ -6,5 +6,5 @@ import type { models_RecipeMedia } from './models_RecipeMedia';
 
 export type models_CreateRecipeMedia = {
     recipeMedia?: models_RecipeMedia;
-    signedUrl?: string;
+    signedURL?: string;
 };

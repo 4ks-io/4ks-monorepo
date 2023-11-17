@@ -1,39 +1,35 @@
-import React from 'react';
-import { useSearchContext } from '../../providers';
-import { useNavigate } from 'react-router-dom';
-import { useHits } from 'react-instantsearch-hooks-web';
+'use client';
+import React, { useState } from 'react';
+import { useSearchContext } from '@/providers/search-context';
+import { useRouter } from 'next/navigation';
+import { useHits } from 'react-instantsearch';
 import Button from '@mui/material/Button';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
-import SearchBox from './SearchBox';
+import SearchDialogBox from './SearchDialogBox';
 
 import { FormattedHits } from './CustomHits';
 import { Hit } from './types';
 
 export default function SearchDialog() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { open, handleClose } = useSearchContext();
   const { hits } = useHits();
 
   // todo: true for mobile
-  const [fullScreen, setFullScreen] = React.useState(true);
+  const [fullScreen, setFullScreen] = useState(true);
   // else
-  const [fullWidth, setFullWidth] = React.useState(true);
-  const [maxWidth, setMaxWidth] = React.useState<DialogProps['maxWidth']>('xl');
-
-  function handleExploreClick() {
-    handleClose();
-    navigate('/r');
-  }
+  const [fullWidth, setFullWidth] = useState(true);
+  const [maxWidth, setMaxWidth] = useState<DialogProps['maxWidth']>('xl');
 
   function GenericHits() {
     if (hits.length === 0 || hits[0].hasOwnProperty('text_match')) {
       return null;
     }
 
-    return FormattedHits(hits, 'Explore', handleClose);
+    return FormattedHits(hits, 'Search Results', handleClose);
   }
 
   function TitleHits() {
@@ -58,6 +54,7 @@ export default function SearchDialog() {
 
   return (
     <Dialog
+      // sx={{ zIndex: 1100 }}
       fullScreen={fullScreen}
       maxWidth={maxWidth}
       fullWidth={fullWidth}
@@ -65,10 +62,9 @@ export default function SearchDialog() {
       onClose={handleClose}
     >
       <DialogTitle>
-        <SearchBox />
+        <SearchDialogBox />
       </DialogTitle>
       <Divider />
-      <Button onClick={handleExploreClick}>Explore</Button>
 
       <DialogContent>
         <GenericHits />

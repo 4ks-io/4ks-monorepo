@@ -9,11 +9,17 @@ import (
 func ErrorHandler(ctx *gin.Context) {
 	ctx.Next()
 
+	// don't log some system routes
+	path := ctx.Request.URL.Path
+	if path == "/api/healthcheck" || path == "/api/ready" {
+		return
+	}
+
 	if ctx.Errors != nil {
 		for _, err := range ctx.Errors {
 			log.Error().Caller().Err(err).Str("path", ctx.Request.URL.Path)
 		}
-
-		ctx.JSON(-1, ctx.Errors)
+		// frequently causes json responses to be followed by a null
+		// ctx.JSON(-1, ctx.Errors)
 	}
 }

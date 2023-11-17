@@ -3,10 +3,12 @@
 /* eslint-disable */
 import type { dtos_CreateRecipe } from '../models/dtos_CreateRecipe';
 import type { dtos_CreateRecipeMedia } from '../models/dtos_CreateRecipeMedia';
+import type { dtos_GetRecipeMediaResponse } from '../models/dtos_GetRecipeMediaResponse';
+import type { dtos_GetRecipeResponse } from '../models/dtos_GetRecipeResponse';
+import type { dtos_GetRecipesByUsernameResponse } from '../models/dtos_GetRecipesByUsernameResponse';
 import type { dtos_UpdateRecipe } from '../models/dtos_UpdateRecipe';
 import type { models_CreateRecipeMedia } from '../models/models_CreateRecipeMedia';
 import type { models_Recipe } from '../models/models_Recipe';
-import type { models_RecipeMedia } from '../models/models_RecipeMedia';
 import type { models_RecipeRevision } from '../models/models_RecipeRevision';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -22,10 +24,10 @@ export class RecipesService {
      * @returns models_Recipe OK
      * @throws ApiError
      */
-    public getRecipes(): CancelablePromise<Array<models_Recipe>> {
+    public getApiRecipes(): CancelablePromise<Array<models_Recipe>> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/recipes',
+            url: '/api/recipes',
         });
     }
 
@@ -36,12 +38,12 @@ export class RecipesService {
      * @returns models_Recipe OK
      * @throws ApiError
      */
-    public postRecipes(
+    public postApiRecipes(
         recipe: dtos_CreateRecipe,
     ): CancelablePromise<models_Recipe> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/recipes',
+            url: '/api/recipes',
             body: recipe,
         });
     }
@@ -50,15 +52,15 @@ export class RecipesService {
      * Get All Recipes by Author
      * Get All Recipes by Author
      * @param username Username
-     * @returns models_Recipe OK
+     * @returns dtos_GetRecipesByUsernameResponse OK
      * @throws ApiError
      */
-    public getRecipesAuthor(
+    public getApiRecipesAuthor(
         username: string,
-    ): CancelablePromise<Array<models_Recipe>> {
+    ): CancelablePromise<dtos_GetRecipesByUsernameResponse> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/recipes/author/{username}',
+            url: '/api/recipes/author/{username}',
             path: {
                 'username': username,
             },
@@ -72,12 +74,12 @@ export class RecipesService {
      * @returns models_RecipeRevision OK
      * @throws ApiError
      */
-    public getRecipesRevisions(
+    public getApiRecipesRevisions(
         revisionId: string,
     ): CancelablePromise<models_RecipeRevision> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/recipes/revisions/{revisionID}',
+            url: '/api/recipes/revisions/{revisionID}',
             path: {
                 'revisionID': revisionId,
             },
@@ -88,15 +90,15 @@ export class RecipesService {
      * Get a Recipe (by ID)
      * Get a Recipe (by ID)
      * @param recipeId Recipe ID
-     * @returns models_Recipe OK
+     * @returns dtos_GetRecipeResponse OK
      * @throws ApiError
      */
-    public getRecipes1(
+    public getApiRecipes1(
         recipeId: string,
-    ): CancelablePromise<models_Recipe> {
+    ): CancelablePromise<dtos_GetRecipeResponse> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/recipes/{recipeID}',
+            url: '/api/recipes/{recipeID}',
             path: {
                 'recipeID': recipeId,
             },
@@ -110,12 +112,12 @@ export class RecipesService {
      * @returns any OK
      * @throws ApiError
      */
-    public deleteRecipes(
+    public deleteApiRecipes(
         recipeId: string,
     ): CancelablePromise<any> {
         return this.httpRequest.request({
             method: 'DELETE',
-            url: '/recipes/{recipeID}',
+            url: '/api/recipes/{recipeID}',
             path: {
                 'recipeID': recipeId,
             },
@@ -130,13 +132,13 @@ export class RecipesService {
      * @returns models_Recipe OK
      * @throws ApiError
      */
-    public patchRecipes(
+    public patchApiRecipes(
         recipeId: string,
         payload: dtos_UpdateRecipe,
     ): CancelablePromise<models_Recipe> {
         return this.httpRequest.request({
             method: 'PATCH',
-            url: '/recipes/{recipeID}',
+            url: '/api/recipes/{recipeID}',
             path: {
                 'recipeID': recipeId,
             },
@@ -151,12 +153,12 @@ export class RecipesService {
      * @returns models_Recipe OK
      * @throws ApiError
      */
-    public postRecipesFork(
+    public postApiRecipesFork(
         recipeId: string,
     ): CancelablePromise<models_Recipe> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/recipes/{recipeID}/fork',
+            url: '/api/recipes/{recipeID}/fork',
             path: {
                 'recipeID': recipeId,
             },
@@ -167,15 +169,15 @@ export class RecipesService {
      * Get all medias for a Recipe
      * Get all medias for a Recipe
      * @param recipeId Recipe ID
-     * @returns models_RecipeMedia OK
+     * @returns dtos_GetRecipeMediaResponse OK
      * @throws ApiError
      */
-    public getRecipesMedia(
+    public getApiRecipesMedia(
         recipeId: string,
-    ): CancelablePromise<Array<models_RecipeMedia>> {
+    ): CancelablePromise<dtos_GetRecipeMediaResponse> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/recipes/{recipeID}/media',
+            url: '/api/recipes/{recipeID}/media',
             path: {
                 'recipeID': recipeId,
             },
@@ -190,13 +192,13 @@ export class RecipesService {
      * @returns models_CreateRecipeMedia OK
      * @throws ApiError
      */
-    public postRecipesMedia(
+    public postApiRecipesMedia(
         recipeId: string,
         payload: dtos_CreateRecipeMedia,
     ): CancelablePromise<models_CreateRecipeMedia> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/recipes/{recipeID}/media',
+            url: '/api/recipes/{recipeID}/media',
             path: {
                 'recipeID': recipeId,
             },
@@ -211,12 +213,12 @@ export class RecipesService {
      * @returns models_RecipeRevision OK
      * @throws ApiError
      */
-    public getRecipesRevisions1(
+    public getApiRecipesRevisions1(
         recipeId: string,
     ): CancelablePromise<Array<models_RecipeRevision>> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/recipes/{recipeID}/revisions',
+            url: '/api/recipes/{recipeID}/revisions',
             path: {
                 'recipeID': recipeId,
             },
@@ -230,12 +232,12 @@ export class RecipesService {
      * @returns any OK
      * @throws ApiError
      */
-    public postRecipesStar(
+    public postApiRecipesStar(
         recipeId: string,
     ): CancelablePromise<any> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/recipes/{recipeID}/star',
+            url: '/api/recipes/{recipeID}/star',
             path: {
                 'recipeID': recipeId,
             },

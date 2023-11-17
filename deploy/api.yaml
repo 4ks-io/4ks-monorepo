@@ -35,7 +35,7 @@ spec:
             - name: GIN_MODE
               value: debug
             - name: JAEGER_ENABLED
-              value: 'true'
+              value: 'false'
             - name: SWAGGER_ENABLED
               value: 'true'
             - name: SWAGGER_URL_PREFIX
@@ -59,12 +59,12 @@ spec:
             - name: STATIC_MEDIA_BUCKET
               value: static.dev.4ks.io
             - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: /app/google-app-creds.json
+              value: /code/google-app-creds.json
             - name: TYPESENSE_URL
               value: http://typesense.default.svc.cluster.local:8108
             - name: TYPESENSE_API_KEY
               value: local-4ks-api-key
-            - name: IO_4KS_DEVING
+            - name: IO_4KS_DEVELOPMENT
               value: 'true'
             - name: MEDIA_FALLBACK_URL
               value: https://storage.googleapis.com/static.dev.4ks.io
@@ -73,4 +73,4 @@ spec:
           readinessProbe:
             httpGet:
               port: 5000
-              path: '/ready'
+              path: '/api/ready'

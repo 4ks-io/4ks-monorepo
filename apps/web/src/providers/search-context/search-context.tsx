@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useContext, useReducer } from 'react';
 import { initialState } from './search-context-init';
 import { SearchContextState } from './search-context-types';
@@ -5,7 +6,6 @@ import {
   searchContextReducer,
   SearchContextAction,
 } from './search-context-reducer';
-import { useAppConfigContext } from '..';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 
 const SearchContext = React.createContext<SearchContextState>(initialState);
@@ -15,11 +15,11 @@ type SearchContextProviderProps = { children: React.ReactNode };
 export function SearchContextProvider({
   children,
 }: SearchContextProviderProps) {
-  const atx = useAppConfigContext();
   const [state, dispatch] = useReducer(searchContextReducer, initialState);
 
   useEffect(() => {
     window.addEventListener('keydown', keyDownHandler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function keyDownHandler(event: KeyboardEvent) {
@@ -44,6 +44,13 @@ export function SearchContextProvider({
     });
   }
 
+  function clear() {
+    dispatch({
+      type: SearchContextAction.CLEAR,
+      payload: null,
+    });
+  }
+
   function clearResults() {
     setResults([]);
   }
@@ -65,11 +72,11 @@ export function SearchContextProvider({
   useEffect(() => {
     const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
       server: {
-        apiKey: atx.TYPESENSE_API_KEY,
+        apiKey: `${process.env.NEXT_PUBLIC_TYPESENSE_API_KEY}`,
         nodes: [
           {
-            host: atx.TYPESENSE_URL,
-            path: atx.TYPESENSE_PATH,
+            host: `${process.env.NEXT_PUBLIC_TYPESENSE_URL}`,
+            path: `${process.env.NEXT_PUBLIC_TYPESENSE_PATH}`,
             port: 443,
             protocol: 'https',
           },
@@ -92,9 +99,11 @@ export function SearchContextProvider({
         handleOpen,
         setResults,
         clearResults,
+        clear,
         setValue,
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

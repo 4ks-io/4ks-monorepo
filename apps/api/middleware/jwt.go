@@ -59,11 +59,11 @@ func AppendCustomClaims() gin.HandlerFunc {
 		ctx.Set("id", customClaims.ID)
 		ctx.Set("email", customClaims.Email)
 
-		log.Debug().Caller().
-			Str("authID", claims.RegisteredClaims.Subject).
-			Str("id", customClaims.ID).
-			Str("email", customClaims.Email).
-			Msg("claims")
+		// log.Debug().Caller().
+		// 	Str("authID", claims.RegisteredClaims.Subject).
+		// 	Str("id", customClaims.ID).
+		// 	Str("email", customClaims.Email).
+		// 	Msg("claims")
 
 		ctx.Next()
 	}

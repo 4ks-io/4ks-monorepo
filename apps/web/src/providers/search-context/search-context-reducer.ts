@@ -11,6 +11,7 @@ export enum SearchContextAction {
   OPEN_DIALOG = 'openDialog',
   CLOSE_DIALOG = 'closeDialog',
   SET_VALUE = 'setValue',
+  CLEAR = 'clear',
 }
 
 export function searchContextReducer(
@@ -20,6 +21,9 @@ export function searchContextReducer(
   switch (action.type) {
     case SearchContextAction.INIT:
       return { ...state, ...action.payload };
+    //
+    case SearchContextAction.CLEAR:
+      return { ...state, value: '', results: [] };
     //
     case SearchContextAction.SET_VALUE:
       return { ...state, value: action.payload };

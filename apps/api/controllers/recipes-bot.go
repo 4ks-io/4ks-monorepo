@@ -22,12 +22,12 @@ import (
 // @Produce 		json
 // @Param       recipe   body  	   	dtos.CreateRecipe  true  "Recipe Data"
 // @Success 		200 		 {object}		models.Recipe
-// @Router		 	/_admin/recipes [post]
+// @Router		 	/api/_admin/recipes [post]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) BotCreateRecipe(c *gin.Context) {
+func (c *recipeController) BotCreateRecipe(ctx *gin.Context) {
 	payload := dtos.CreateRecipe{}
-	if err := c.BindJSON(&payload); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+	if err := ctx.BindJSON(&payload); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
@@ -37,27 +37,27 @@ func (rc *recipeController) BotCreateRecipe(c *gin.Context) {
 		DisplayName: "4ks bot",
 	}
 
-	f, err := rc.staticService.GetRandomFallbackImage(c)
+	f, err := c.staticService.GetRandomFallbackImage(ctx)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to get random fallback image")
 	}
-	u := rc.staticService.GetRandomFallbackImageURL(f)
+	u := c.staticService.GetRandomFallbackImageURL(f)
 	payload.Banner = createMockBanner(f, u)
 
-	createdRecipe, err := rc.recipeService.CreateRecipe(&payload)
+	createdRecipe, err := c.recipeService.CreateRecipe(ctx, &payload)
 	if err == recipeService.ErrUnableToCreateRecipe {
-		c.AbortWithError(http.StatusBadRequest, err)
+		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	err = rc.searchService.UpsertSearchRecipeDocument(createdRecipe)
+	err = c.searchService.UpsertSearchRecipeDocument(createdRecipe)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, createdRecipe)
+	ctx.JSON(http.StatusOK, createdRecipe)
 }

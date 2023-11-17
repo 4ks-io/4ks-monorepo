@@ -1,13 +1,16 @@
 import { SearchContextState } from './search-context-types';
 
+function handleEmpty() {}
+
 export const initialState: SearchContextState = {
   client: undefined,
   open: false,
-  handleOpen: () => {},
-  handleClose: () => {},
+  handleOpen: handleEmpty,
+  handleClose: handleEmpty,
   results: [],
-  setResults: () => {},
-  clearResults: () => {},
+  setResults: handleEmpty,
+  clearResults: handleEmpty,
+  clear: handleEmpty,
   value: '',
-  setValue: () => {},
+  setValue: handleEmpty,
 };

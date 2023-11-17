@@ -16,32 +16,27 @@ import (
 	"time"
 )
 
-var tokenVarName = "IO_4KS_API_TOKEN"
-var hostVarName = "IO_4KS_API_HOSTNAME"
-
 var index = 0
 
 func parseArgs() (string, string, string) {
 	var f string
 	flag.StringVar(&f, "f", "", "input filename")
+	var t string
+	flag.StringVar(&t, "t", "", "token")
+	var u string
+	flag.StringVar(&u, "u", "", "url")
 	flag.Parse()
+
 	if f == "" {
-		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("No input filename provided. Use flag -f"))
+		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("filename required. Use flag -f"))
 		os.Exit(1)
 	}
-
-	t := os.Getenv(tokenVarName)
-	h := os.Getenv(hostVarName)
-
-	if h == "" {
-		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("API hostname must be provided. Set env var %s", hostVarName))
+	if u == "" {
+		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("API url must be provided. Use flag -u"))
 		os.Exit(1)
 	}
-
-	u := "https://" + h + "/api/_admin/recipes"
-
 	if t == "" {
-		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("Bearer API Token must be provided. Set env var %s", tokenVarName))
+		fmt.Fprintf(os.Stderr, "error: %v\n", fmt.Errorf("bearer API Token must be provided. Use flag -t"))
 		os.Exit(1)
 	}
 
@@ -130,13 +125,12 @@ func getRecipeFromLine(line string) dtos.CreateRecipe {
 	return r
 }
 
-func postRecipe(u string, t string, r dtos.CreateRecipe) {
+func postRecipe(client http.Client, u string, t string, r dtos.CreateRecipe) {
 	fmt.Println(index, " => ", r.Name)
 	index += 1
-	data, err := json.Marshal(r)
+	data, _ := json.Marshal(r)
 
 	req, err := http.NewRequest(http.MethodPost, u, bytes.NewBuffer(data))
-
 	if err != nil {
 		fmt.Printf("client: could not create request: %s\n", err)
 		os.Exit(1)
@@ -144,10 +138,6 @@ func postRecipe(u string, t string, r dtos.CreateRecipe) {
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+t)
-
-	client := http.Client{
-		Timeout: 30 * time.Second,
-	}
 
 	_, err = client.Do(req)
 	if err != nil {
@@ -159,6 +149,10 @@ func postRecipe(u string, t string, r dtos.CreateRecipe) {
 func main() {
 	filename, t, u := parseArgs()
 	fmt.Println("Uploading:", filename)
+
+	client := http.Client{
+		Timeout: 30 * time.Second,
+	}
 
 	file, err := os.Open(filename)
 	check(err)
@@ -177,8 +171,7 @@ func main() {
 		}
 
 		r := getRecipeFromLine(scanner.Text())
-		postRecipe(u, t, r)
-
+		postRecipe(client, u, t, r)
 	}
 
 	if err := scanner.Err(); err != nil {

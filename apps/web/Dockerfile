@@ -1,63 +1,47 @@
-# stage: prd (base)
-# this will only have value once SSR is enabled and prd node_mods are required on final image
-FROM node:18-alpine as prd
+# stage: deps (base)
+FROM node:20-alpine3.17 as deps
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 RUN npm install -g pnpm
-WORKDIR /app
-COPY ./pnpm-lock.yaml .
-COPY ./pnpm-workspace.yaml .
-COPY ./PACKAGE_JSON/ ./
-RUN pnpm install --production && rm -rf /app
-  # output -> /root/.local/share/pnpm/store/v3
 
-# stage: dev (base)
-FROM prd as dev
-WORKDIR /app
-COPY ./pnpm-lock.yaml .
-COPY ./pnpm-workspace.yaml .
-COPY ./PACKAGE_JSON/ ./
-RUN pnpm install && rm -rf /app
+WORKDIR /code
+COPY /PACKAGE_JSON /code
+COPY /pnpm* .
+RUN pnpm install --frozen-lockfile && rm -rf /code
   # output -> /root/.local/share/pnpm/store/v3
 
 # stage: build
-FROM dev as build
-RUN apk --no-cache add bash jq
-WORKDIR /app
-COPY ./.npmrc .
-COPY ./pnpm-lock.yaml .
-COPY ./pnpm-workspace.yaml .
-COPY ./tsconfig.base.json .
-COPY ./PACKAGE_JSON/ ./
-RUN pnpm install
+FROM deps as build
+WORKDIR /code
+COPY /PACKAGE_JSON /code
+COPY /pnpm* .
+RUN pnpm install --frozen-lockfile
 
-COPY ./libs/ts ./libs/ts
-COPY ./apps/web/ ./apps/web
+COPY ./libs/ts/api-fetch /code/libs/ts/api-fetch
+RUN pnpm --filter @4ks/api-fetch build
 
-# 
-WORKDIR /app/libs/ts/api-fetch
-RUN pnpm --filter @4ks/api-fetch codegen && pnpm --filter @4ks/api-fetch build
+WORKDIR /code/apps/web
+COPY ./apps/web /code/apps/web
+RUN npx next build
+  # output -> /app/apps/web/.next
 
-# app
-WORKDIR /app/apps/web
-RUN npx vite build
-  # output -> /app/apps/web/dist
+# EXPOSE 3000
+# WORKDIR /code/apps/web
+# CMD [ "npm", "run", "start" ]
 
-# configs
-ARG VERSION=0.0.0
-ENV VERSION=$VERSION
-RUN find /app/apps/web/configs -type f -exec sh -c 'V=$2; jq --arg variable "$V" ".VERSION = \"$V\"" $1 > $1.tmp && mv $1.tmp $1' -- {} $VERSION \;
-
-FROM yobasystems/alpine:3.15.4-amd64 as app
-COPY --from=amd64/caddy:2-alpine /usr/bin/caddy /app/caddy
-COPY --from=build /etc/passwd /etc/passwd
-COPY --from=build /app/apps/web/dist/ /app
-COPY --from=build /app/apps/web/Caddyfile /app/Caddyfile
-COPY --from=build /app/apps/web/configs /app/configs
+# runtime
+FROM yobasystems/alpine-nodejs:current
 RUN mkdir /home/appuser && chmod 777 /home/appuser
-
 USER appuser
-EXPOSE 5000
-WORKDIR /app
-CMD ./caddy run
 
+COPY --from=build /etc/passwd                      /etc/passwd
+COPY --from=build /root/.local/share/pnpm          /root/.local/share/pnpm
+COPY --from=build /code/package.json               /app/package.json
+COPY --from=build /code/node_modules               /app/node_modules
+COPY --from=build /code/apps/web/package.json /app/apps/web/package.json
+COPY --from=build /code/apps/web/node_modules /app/apps/web/node_modules
+COPY --from=build /code/apps/web/public       /app/apps/web/public
+COPY --from=build /code/apps/web/.next        /app/apps/web/.next
 
+EXPOSE 3000
+WORKDIR /app/apps/web
+CMD [ "npx", "next", "start" ]

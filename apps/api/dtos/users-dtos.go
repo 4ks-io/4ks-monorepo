@@ -1,5 +1,12 @@
 package dtos
 
+// import "4ks/libs/go/models"
+
+// GetAuthenticatedUser godoc
+// type GetAuthenticatedUserResponse struct {
+// 	Data *models.User `json:"data"`
+// }
+
 // CreateUser godoc
 type CreateUser struct {
 	Username    string `json:"username"    binding:"required" example:"BobDylan"`
@@ -12,7 +19,15 @@ type UpdateUser struct {
 	DisplayName string `json:"displayName"`
 }
 
-// TestUserName godoc
-type TestUserName struct {
+// TestUsernameRequest godoc
+type TestUsernameRequest struct {
 	Username string `json:"username" binding:"required"`
+}
+
+// TestUsernameResponse godoc
+type TestUsernameResponse struct {
+	Available bool   `json:"available" binding:"required"`
+	Valid     bool   `json:"valid" binding:"required"`
+	Message   string `json:"msg" binding:"required"`
+	Username  string `json:"username" binding:"required"`
 }

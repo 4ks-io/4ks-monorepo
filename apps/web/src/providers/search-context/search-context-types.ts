@@ -6,6 +6,7 @@ export type SearchContextState = {
   results: any;
   setResults: (r: any) => void;
   clearResults: () => void;
+  clear: () => void;
   value: string;
   setValue: (v: string) => void;
 };

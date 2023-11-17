@@ -6,6 +6,13 @@ import (
 	"strconv"
 )
 
+// SystemFlags is a struct for system flags
+type SystemFlags struct {
+	Debug         bool
+	Development   bool
+	JaegerEnabled bool
+}
+
 // GetStrEnvVar returns a string from an environment variable
 func GetStrEnvVar(key, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {

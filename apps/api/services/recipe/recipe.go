@@ -1,28 +1,20 @@
-// Package recipe is the interface for the recipe service
-package recipe
+// Package recipesvc is the interface for the recipe service
+package recipesvc
 
 import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"sync"
-
-	firestore "cloud.google.com/go/firestore"
 
 	"4ks/apps/api/dtos"
 	"4ks/apps/api/utils"
 	models "4ks/libs/go/models"
-)
 
-var firstoreProjectID = os.Getenv("FIRESTORE_PROJECT_ID")
-var ctx = context.Background()
-var s, _ = firestore.NewClient(ctx, firstoreProjectID)
-var recipeCollection = s.Collection("recipes")
-var recipeMediasCollection = s.Collection("recipe-medias")
-var recipeRevisionsCollection = s.Collection("recipe-revisions")
-var recipeStarsCollection = s.Collection("recipe-stars")
+	firestore "cloud.google.com/go/firestore"
+	"github.com/go-playground/validator/v10"
+)
 
 var distributionBucket = os.Getenv("DISTRIBUTION_BUCKET")
 var uploadableBucket = os.Getenv("UPLOADABLE_BUCKET")
@@ -56,34 +48,46 @@ var (
 // Service is the interface for the recipe service
 type Service interface {
 	// create
-	CreateRecipe(recipe *dtos.CreateRecipe) (*models.Recipe, error)
-	CreateRecipeMedia(mp *utils.MediaProps, recipeID *string, userID *string, wg *sync.WaitGroup) (*models.RecipeMedia, error)
-	CreateRecipeMediaSignedURL(mp *utils.MediaProps, wg *sync.WaitGroup) (*string, error)
+	CreateRecipe(context.Context, *dtos.CreateRecipe) (*models.Recipe, error)
+	CreateRecipeMedia(context.Context, *utils.MediaProps, string, string, *sync.WaitGroup) (*models.RecipeMedia, error)
+	CreateRecipeMediaSignedURL(*utils.MediaProps, *sync.WaitGroup) (string, error)
 	// delete
-	DeleteRecipe(id string, usrSub string) error
+	DeleteRecipe(context.Context, string, string) error
 	// get
-	GetAdminRecipeMedias(recipeID *string) ([]*models.RecipeMedia, error)
-	GetRecipes(limit int) ([]*models.Recipe, error)
-	GetRecipeByID(id *string) (*models.Recipe, error)
-	GetRecipesByUsername(username *string, limit int) ([]*models.Recipe, error)
-	GetRecipesByUserID(id *string, limit int) ([]*models.Recipe, error)
-	GetRecipeMedia(recipeID *string) ([]*models.RecipeMedia, error)
-	GetRecipeRevisions(recipeID *string) ([]*models.RecipeRevision, error)
-	GetRecipeRevisionByID(revisionID *string) (*models.RecipeRevision, error)
+	GetAdminRecipeMedias(context.Context, string) ([]*models.RecipeMedia, error)
+	GetRecipes(context.Context, int) ([]*models.Recipe, error)
+	GetRecipeByID(context.Context, string) (*models.Recipe, error)
+	GetRecipesByUsername(context.Context, string, int) ([]*models.Recipe, error)
+	GetRecipesByUserID(context.Context, string, int) ([]*models.Recipe, error)
+	GetRecipeMedia(context.Context, string) ([]*models.RecipeMedia, error)
+	GetRecipeRevisions(context.Context, string) ([]*models.RecipeRevision, error)
+	GetRecipeRevisionByID(context.Context, string) (*models.RecipeRevision, error)
 	// set
-	ForkRecipeByID(id *string, forkAuthor models.UserSummary) (*models.Recipe, error)
-	StarRecipeByID(id *string, user models.UserSummary) (bool, error)
+	ForkRecipeByID(context.Context, string, models.UserSummary) (*models.Recipe, error)
+	StarRecipeByID(context.Context, string, models.UserSummary) (bool, error)
 	// update
-	UpdateRecipeByID(id *string, recipeUpdate *dtos.UpdateRecipe) (*models.Recipe, error)
+	UpdateRecipeByID(context.Context, string, *dtos.UpdateRecipe) (*models.Recipe, error)
 }
 
 type recipeService struct {
+	store                     *firestore.Client
+	recipeCollection          *firestore.CollectionRef
+	recipeMediasCollection    *firestore.CollectionRef
+	recipeRevisionsCollection *firestore.CollectionRef
+	recipeStarsCollection     *firestore.CollectionRef
+	validator                 *validator.Validate
+	sysFlags                  *utils.SystemFlags
 }
 
 // New returns a new RecipeService
-func New() Service {
-	if value, ok := os.LookupEnv("FIRESTORE_EMULATOR_HOST"); ok {
-		log.Printf("Using Firestore Emulator: '%s'", value)
+func New(sysFlags *utils.SystemFlags, store *firestore.Client, validator *validator.Validate) Service {
+	return &recipeService{
+		store:                     store,
+		validator:                 validator,
+		recipeCollection:          store.Collection("recipes"),
+		recipeMediasCollection:    store.Collection("recipe-medias"),
+		recipeRevisionsCollection: store.Collection("recipe-revisions"),
+		recipeStarsCollection:     store.Collection("recipe-stars"),
+		sysFlags:                  sysFlags,
 	}
-	return &recipeService{}
 }

@@ -2,11 +2,10 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { dtos_CreateUser } from '../models/dtos_CreateUser';
-import type { dtos_TestUserName } from '../models/dtos_TestUserName';
+import type { dtos_TestUsernameRequest } from '../models/dtos_TestUsernameRequest';
+import type { dtos_TestUsernameResponse } from '../models/dtos_TestUsernameResponse';
 import type { dtos_UpdateUser } from '../models/dtos_UpdateUser';
 import type { models_User } from '../models/models_User';
-import type { models_UserExist } from '../models/models_UserExist';
-import type { models_Username } from '../models/models_Username';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
@@ -16,32 +15,32 @@ export class UsersService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
-     * Get Current User
-     * Get Current User
-     * @returns models_User OK
-     * @throws ApiError
-     */
-    public getUser(): CancelablePromise<models_User> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/user',
-        });
-    }
-
-    /**
      * Create a new User
      * Create a new User
      * @param user User Data
      * @returns models_User OK
      * @throws ApiError
      */
-    public postUser(
+    public postApiUser(
         user: dtos_CreateUser,
     ): CancelablePromise<models_User> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/user',
+            url: '/api/user',
             body: user,
+        });
+    }
+
+    /**
+     * Get Authenticated User
+     * Get Authenticated User
+     * @returns models_User OK
+     * @throws ApiError
+     */
+    public getApiUser(): CancelablePromise<models_User> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/api/user/',
         });
     }
 
@@ -51,10 +50,10 @@ export class UsersService {
      * @returns any OK
      * @throws ApiError
      */
-    public headUser(): CancelablePromise<any> {
+    public headApiUser(): CancelablePromise<any> {
         return this.httpRequest.request({
             method: 'HEAD',
-            url: '/user',
+            url: '/api/user/',
             errors: {
                 400: `Invalid Request`,
                 404: `Record Not Found`,
@@ -70,12 +69,12 @@ export class UsersService {
      * @returns models_User OK
      * @throws ApiError
      */
-    public patchUser(
+    public patchApiUser(
         payload: dtos_UpdateUser,
     ): CancelablePromise<models_User> {
         return this.httpRequest.request({
             method: 'PATCH',
-            url: '/user',
+            url: '/api/user/',
             body: payload,
         });
     }
@@ -86,39 +85,26 @@ export class UsersService {
      * @returns models_User OK
      * @throws ApiError
      */
-    public getUsers(): CancelablePromise<Array<models_User>> {
+    public getApiUsers(): CancelablePromise<Array<models_User>> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/users',
+            url: '/api/users/',
         });
     }
 
     /**
-     * Get Current User Exist
-     * Get Current User Exist
-     * @returns models_UserExist OK
-     * @throws ApiError
-     */
-    public getUsersExist(): CancelablePromise<models_UserExist> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/users/exist',
-        });
-    }
-
-    /**
-     * Test if a username exists
-     * Test if a username exists
+     * Returns username validity and availability
+     * Returns username validity and availability
      * @param username Username Data
-     * @returns models_Username OK
+     * @returns dtos_TestUsernameResponse OK
      * @throws ApiError
      */
-    public postUsersUsername(
-        username: dtos_TestUserName,
-    ): CancelablePromise<models_Username> {
+    public postApiUsersUsername(
+        username: dtos_TestUsernameRequest,
+    ): CancelablePromise<dtos_TestUsernameResponse> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/users/username',
+            url: '/api/users/username',
             body: username,
         });
     }
@@ -130,12 +116,12 @@ export class UsersService {
      * @returns models_User OK
      * @throws ApiError
      */
-    public getUsers1(
+    public getApiUsers1(
         userId: string,
     ): CancelablePromise<models_User> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/users/{userID}',
+            url: '/api/users/{userID}',
             path: {
                 'userID': userId,
             },
@@ -149,12 +135,12 @@ export class UsersService {
      * @returns any OK
      * @throws ApiError
      */
-    public deleteUsers(
+    public deleteApiUsers(
         userId: string,
     ): CancelablePromise<any> {
         return this.httpRequest.request({
             method: 'DELETE',
-            url: '/users/{userID}',
+            url: '/api/users/{userID}',
             path: {
                 'userID': userId,
             },

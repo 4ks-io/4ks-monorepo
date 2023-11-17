@@ -8,9 +8,9 @@ import (
 
 // SystemController is the interface for the systemController
 type SystemController interface {
-	CheckReadiness(c *gin.Context)
-	Healthcheck(c *gin.Context)
-	GetAPIVersion(string) func(c *gin.Context)
+	CheckReadiness(*gin.Context)
+	Healthcheck(*gin.Context)
+	GetAPIVersion(string) func(*gin.Context)
 }
 
 // systemController is the controller for the System endpoints
@@ -29,11 +29,11 @@ func NewSystemController() SystemController {
 //	@Accept 			json
 //	@Produce 		  json
 //	@Success 		  200 		 {string} value
-//	@Router 			/ready [get]
+//	@Router       /api/ready [get]
 func (sysCtlr *systemController) CheckReadiness(ctx *gin.Context) {
 	// todo: check database connection
 	ctx.JSON(http.StatusOK, gin.H{
-		"data": "ok",
+		"status": "ok",
 	})
 }
 
@@ -45,10 +45,10 @@ func (sysCtlr *systemController) CheckReadiness(ctx *gin.Context) {
 //	@Tags 			 System
 //	@Accept 		 json
 //	@Produce 		 json
-//	@Router		 	 /healthcheck [get]
+//	@Router      /api/healthcheck [get]
 func (sysCtlr *systemController) Healthcheck(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
-		"Status": "Ok",
+		"status": "Ok",
 	})
 }
 
@@ -60,7 +60,7 @@ func (sysCtlr *systemController) Healthcheck(ctx *gin.Context) {
 //	@Accept 		 json
 //	@Produce 		 json
 //	@Success 		 200 		 {string} value
-//	@Router 		 /version [get]
+//	@Router      /api/version [get]
 func (sysCtlr *systemController) GetAPIVersion(version string) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{

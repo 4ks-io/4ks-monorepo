@@ -1,0 +1,19 @@
+FROM node:18-alpine
+RUN apk --no-cache add git bash
+RUN npm install -g pnpm
+
+WORKDIR /app
+
+# Copy all dependency related files and install dependencies
+COPY package.json ./
+COPY pnpm* ./
+COPY apps/web/package.json ./apps/web/
+COPY libs/ts/api-fetch/package.json ./libs/ts/api-fetch/
+
+RUN pnpm install
+
+COPY ./ .
+RUN pnpm --filter @4ks/api-fetch build
+
+CMD [ "pnpm", "--filter", "@4ks/web", "dev" ]
+

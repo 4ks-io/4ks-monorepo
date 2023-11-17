@@ -16,9 +16,13 @@ export interface IRecipeContext {
   setBanner: (banner: Array<models_RecipeMediaVariant>) => void;
   setIngredients: (ingredients: models_Ingredient[]) => void;
   setInstructions: (instructions: models_Instruction[]) => void;
+  actionInProgress: boolean;
+  setActionInProgress: (value: boolean) => void;
+  editInProgress: boolean;
+  setEditInProgress: (value: boolean) => void;
 }
 
-const initialRecipe: models_Recipe = {
+export const initialRecipe: models_Recipe = {
   author: {
     displayName: '',
     id: '',
@@ -41,7 +45,7 @@ const initialRecipe: models_Recipe = {
     recipeId: '',
     updatedDate: '',
   },
-  id: '',
+  id: '0',
   metadata: { forks: 0, stars: 0 },
   root: '',
   branch: '',
@@ -55,7 +59,22 @@ export const initialState: IRecipeContext = {
   setIngredients: () => {},
   setInstructions: () => {},
   setBanner: () => {},
+  actionInProgress: false,
+  setActionInProgress: () => {},
+  editInProgress: false,
+  setEditInProgress: () => {},
   recipeId: '-1',
   media: [],
   recipe: initialRecipe,
 };
+
+export function makeInitialState(
+  recipe: models_Recipe,
+  media: models_RecipeMedia[]
+) {
+  let i = initialState;
+  i.recipeId = `${recipe.id}`;
+  i.recipe = recipe;
+  i.media = media;
+  return i;
+}

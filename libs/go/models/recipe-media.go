@@ -32,5 +32,5 @@ type RecipeMedia struct {
 
 type CreateRecipeMedia struct {
 	RecipeMedia RecipeMedia `json:"recipeMedia"`
-	SignedUrl   string      `json:"signedUrl"`
+	SignedURL   string      `json:"signedURL"`
 }

@@ -27,3 +27,18 @@ type UpdateRecipe struct {
 type CreateRecipeMedia struct {
 	Filename string `json:"filename" binding:"required"`
 }
+
+// GetRecipeResponse is return by the GetRecipe endpoint
+type GetRecipeResponse struct {
+	Data *models.Recipe `json:"data"`
+}
+
+// GetRecipesByUsernameResponse is return by the GetRecipesByUsername endpoint
+type GetRecipesByUsernameResponse struct {
+	Data []*models.Recipe `json:"data"`
+}
+
+// GetRecipeMediaResponse is return by the GetRecipeMedia endpoint
+type GetRecipeMediaResponse struct {
+	Data []*models.RecipeMedia `json:"data"`
+}

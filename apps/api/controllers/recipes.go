@@ -11,20 +11,20 @@ import (
 
 // RecipeController is the interface for the recipe controller
 type RecipeController interface {
-	BotCreateRecipe(c *gin.Context)
-	CreateRecipe(c *gin.Context)
-	DeleteRecipe(c *gin.Context)
-	GetRecipe(c *gin.Context)
-	GetRecipes(c *gin.Context)
-	GetRecipesByUsername(c *gin.Context)
-	UpdateRecipe(c *gin.Context)
-	ForkRecipe(c *gin.Context)
-	StarRecipe(c *gin.Context)
-	GetRecipeRevisions(c *gin.Context)
-	GetRecipeRevision(c *gin.Context)
-	CreateRecipeMedia(c *gin.Context)
-	GetRecipeMedia(c *gin.Context)
-	GetAdminRecipeMedias(c *gin.Context)
+	BotCreateRecipe(*gin.Context)
+	CreateRecipe(*gin.Context)
+	DeleteRecipe(*gin.Context)
+	GetRecipe(*gin.Context)
+	GetRecipes(*gin.Context)
+	GetRecipesByUsername(*gin.Context)
+	UpdateRecipe(*gin.Context)
+	ForkRecipe(*gin.Context)
+	StarRecipe(*gin.Context)
+	GetRecipeRevisions(*gin.Context)
+	GetRecipeRevision(*gin.Context)
+	CreateRecipeMedia(*gin.Context)
+	GetRecipeMedia(*gin.Context)
+	GetAdminRecipeMedias(*gin.Context)
 }
 
 type recipeController struct {
@@ -35,11 +35,11 @@ type recipeController struct {
 }
 
 // NewRecipeController creates a new recipe controller
-func NewRecipeController() RecipeController {
+func NewRecipeController(u userService.Service, r recipeService.Service) RecipeController {
 	return &recipeController{
-		recipeService: recipeService.New(),
+		recipeService: r,
 		searchService: searchService.New(),
-		userService:   userService.New(),
+		userService:   u,
 		staticService: staticService.New(),
 	}
 }

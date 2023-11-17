@@ -19,39 +19,39 @@ import (
 // @Produce 		json
 // @Param       recipeID 	path      	string  true  "Recipe ID"
 // @Success 		200 		{object} 	models.Recipe
-// @Router 			/recipes/{recipeID}/fork [post]
+// @Router 			/api/recipes/{recipeID}/fork [post]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) ForkRecipe(c *gin.Context) {
-	recipeID := c.Param("id")
+func (c *recipeController) ForkRecipe(ctx *gin.Context) {
+	recipeID := ctx.Param("id")
 
-	userID := c.GetString("id")
-	author, err := rc.userService.GetUserByID(&userID)
+	userID := ctx.GetString("id")
+	author, err := c.userService.GetUserByID(ctx, userID)
 
 	if err == userService.ErrUserNotFound {
-		c.AbortWithError(http.StatusBadRequest, err)
+		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	newRecipe, err := rc.recipeService.ForkRecipeByID(&recipeID, models.UserSummary{
+	newRecipe, err := c.recipeService.ForkRecipeByID(ctx, recipeID, models.UserSummary{
 		ID:          userID,
 		Username:    author.Username,
 		DisplayName: author.DisplayName,
 	})
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	err = rc.searchService.UpsertSearchRecipeDocument(newRecipe)
+	err = c.searchService.UpsertSearchRecipeDocument(newRecipe)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, newRecipe)
+	ctx.JSON(http.StatusOK, newRecipe)
 }
 
 // StarRecipe		godoc
@@ -62,40 +62,40 @@ func (rc *recipeController) ForkRecipe(c *gin.Context) {
 // @Produce 		json
 // @Param       recipeID 	path      	string  true  "Recipe ID"
 // @Success 		200
-// @Router 			/recipes/{recipeID}/star [post]
+// @Router 			/api/recipes/{recipeID}/star [post]
 // @Security 		ApiKeyAuth
-func (rc *recipeController) StarRecipe(c *gin.Context) {
-	recipeID := c.Param("id")
+func (c *recipeController) StarRecipe(ctx *gin.Context) {
+	recipeID := ctx.Param("id")
 
-	userID := c.GetString("id")
-	author, err := rc.userService.GetUserByID(&userID)
+	userID := ctx.GetString("id")
+	author, err := c.userService.GetUserByID(ctx, userID)
 
 	if err == userService.ErrUserNotFound {
-		c.AbortWithStatus(http.StatusBadRequest)
+		ctx.AbortWithStatus(http.StatusBadRequest)
 		return
 	} else if err != nil {
-		c.AbortWithStatus(http.StatusInternalServerError)
+		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
-	_, err = rc.recipeService.StarRecipeByID(&recipeID, models.UserSummary{
+	_, err = c.recipeService.StarRecipeByID(ctx, recipeID, models.UserSummary{
 		ID:          userID,
 		Username:    author.Username,
 		DisplayName: author.DisplayName,
 	})
 
 	if err == recipeService.ErrRecipeNotFound {
-		c.AbortWithStatus(http.StatusNotFound)
+		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	} else if err == recipeService.ErrRecipeAlreadyStarred {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "Recipe is already starred",
 		})
 		return
 	} else if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{})
+	ctx.JSON(http.StatusOK, gin.H{})
 }

@@ -1,7 +1,7 @@
 FROM golang:1.20-alpine as build
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-WORKDIR /app
 
+WORKDIR /app
 COPY ./go.mod .
 COPY ./go.sum .
 RUN go mod download
@@ -17,6 +17,7 @@ RUN echo "${VERSION}" > /VERSION
 FROM scratch
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY ./libs/reserved-words/reserved-words ./reserved-words
 COPY ./apps/api/casbin /apps/api/casbin
 COPY --from=build /app/4ksapi /4ksapi
 COPY --from=build /VERSION /VERSION

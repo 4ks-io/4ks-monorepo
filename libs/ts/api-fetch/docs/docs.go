@@ -16,7 +16,35 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/_admin/recipes": {
+        "/api/_admin/init-search-collections": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Initialize Search Recipe Collection",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Initialize Search Recipe Collection",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/_admin/recipes": {
             "post": {
                 "security": [
                     {
@@ -55,7 +83,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/_admin/recipes/{recipeID}/media": {
+        "/api/_admin/recipes/{recipeID}/media": {
             "get": {
                 "security": [
                     {
@@ -95,7 +123,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/healthcheck": {
+        "/api/healthcheck": {
             "get": {
                 "description": "healthcheck",
                 "consumes": [
@@ -111,7 +139,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/ready": {
+        "/api/ready": {
             "get": {
                 "description": "Check system readiness by probing downstream services such as the database.",
                 "consumes": [
@@ -134,7 +162,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipes": {
+        "/api/recipes": {
             "get": {
                 "security": [
                     {
@@ -202,7 +230,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipes/author/{username}": {
+        "/api/recipes/author/{username}": {
             "get": {
                 "security": [
                     {
@@ -233,16 +261,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Recipe"
-                            }
+                            "$ref": "#/definitions/dtos.GetRecipesByUsernameResponse"
                         }
                     }
                 }
             }
         },
-        "/recipes/revisions/{revisionID}": {
+        "/api/recipes/revisions/{revisionID}": {
             "get": {
                 "security": [
                     {
@@ -279,7 +304,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipes/{recipeID}": {
+        "/api/recipes/{recipeID}": {
             "get": {
                 "security": [
                     {
@@ -310,7 +335,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Recipe"
+                            "$ref": "#/definitions/dtos.GetRecipeResponse"
                         }
                     }
                 }
@@ -392,7 +417,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipes/{recipeID}/fork": {
+        "/api/recipes/{recipeID}/fork": {
             "post": {
                 "security": [
                     {
@@ -429,7 +454,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipes/{recipeID}/media": {
+        "/api/recipes/{recipeID}/media": {
             "get": {
                 "security": [
                     {
@@ -460,10 +485,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.RecipeMedia"
-                            }
+                            "$ref": "#/definitions/dtos.GetRecipeMediaResponse"
                         }
                     }
                 }
@@ -513,7 +535,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipes/{recipeID}/revisions": {
+        "/api/recipes/{recipeID}/revisions": {
             "get": {
                 "security": [
                     {
@@ -553,7 +575,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/recipes/{recipeID}/star": {
+        "/api/recipes/{recipeID}/star": {
             "post": {
                 "security": [
                     {
@@ -587,61 +609,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/search/init/recipe-collection": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Initialize Search Recipe Collection",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Search"
-                ],
-                "summary": "Initialize Search Recipe Collection",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/user": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get Current User",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Get Current User",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.User"
-                        }
-                    }
-                }
-            },
+        "/api/user": {
             "post": {
                 "security": [
                     {
@@ -670,6 +638,34 @@ const docTemplate = `{
                         }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get Authenticated User",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get Authenticated User",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -749,7 +745,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users": {
+        "/api/users/": {
             "get": {
                 "security": [
                     {
@@ -780,39 +776,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/exist": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get Current User Exist",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Get Current User Exist",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.UserExist"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/username": {
+        "/api/users/username": {
             "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Test if a username exists",
+                "description": "Returns username validity and availability",
                 "consumes": [
                     "application/json"
                 ],
@@ -822,7 +793,7 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
-                "summary": "Test if a username exists",
+                "summary": "Returns username validity and availability",
                 "parameters": [
                     {
                         "description": "Username Data",
@@ -830,7 +801,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dtos.TestUserName"
+                            "$ref": "#/definitions/dtos.TestUsernameRequest"
                         }
                     }
                 ],
@@ -838,13 +809,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Username"
+                            "$ref": "#/definitions/dtos.TestUsernameResponse"
                         }
                     }
                 }
             }
         },
-        "/users/{userID}": {
+        "/api/users/{userID}": {
             "get": {
                 "security": [
                     {
@@ -913,7 +884,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/version": {
+        "/api/version": {
             "get": {
                 "description": "Get API Version",
                 "consumes": [
@@ -995,7 +966,37 @@ const docTemplate = `{
                 }
             }
         },
-        "dtos.TestUserName": {
+        "dtos.GetRecipeMediaResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.RecipeMedia"
+                    }
+                }
+            }
+        },
+        "dtos.GetRecipeResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/models.Recipe"
+                }
+            }
+        },
+        "dtos.GetRecipesByUsernameResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Recipe"
+                    }
+                }
+            }
+        },
+        "dtos.TestUsernameRequest": {
             "type": "object",
             "required": [
                 "username"
@@ -1003,6 +1004,29 @@ const docTemplate = `{
             "properties": {
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "dtos.TestUsernameResponse": {
+            "type": "object",
+            "required": [
+                "available",
+                "msg",
+                "username",
+                "valid"
+            ],
+            "properties": {
+                "available": {
+                    "type": "boolean"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "valid": {
+                    "type": "boolean"
                 }
             }
         },
@@ -1052,7 +1076,7 @@ const docTemplate = `{
                 "recipeMedia": {
                     "$ref": "#/definitions/models.RecipeMedia"
                 },
-                "signedUrl": {
+                "signedURL": {
                     "type": "string"
                 }
             }
@@ -1314,17 +1338,6 @@ const docTemplate = `{
                 }
             }
         },
-        "models.UserExist": {
-            "type": "object",
-            "required": [
-                "exist"
-            ],
-            "properties": {
-                "exist": {
-                    "type": "boolean"
-                }
-            }
-        },
         "models.UserSummary": {
             "type": "object",
             "properties": {
@@ -1336,21 +1349,6 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
-                }
-            }
-        },
-        "models.Username": {
-            "type": "object",
-            "required": [
-                "msg",
-                "valid"
-            ],
-            "properties": {
-                "msg": {
-                    "type": "string"
-                },
-                "valid": {
-                    "type": "boolean"
                 }
             }
         }
@@ -1366,9 +1364,9 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
+	Version:          "2.0",
 	Host:             "",
-	BasePath:         "/api",
+	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "4ks API",
 	Description:      "This is the 4ks api",

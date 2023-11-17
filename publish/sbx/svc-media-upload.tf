@@ -58,6 +58,13 @@ resource "google_project_iam_member" "bucket" {
   depends_on = [google_project_iam_member.artifactregistry_reader]
 }
 
+resource "google_project_iam_member" "datastore_reader" {
+  project    = local.project
+  role       = "roles/datastore.user"
+  member     = "serviceAccount:${google_service_account.media_upload.email}"
+  depends_on = [google_project_iam_member.artifactregistry_reader]
+}
+
 resource "google_cloudfunctions2_function" "media_upload" {
   depends_on = [
     google_project_iam_member.bucket,
@@ -92,6 +99,7 @@ resource "google_cloudfunctions2_function" "media_upload" {
     environment_variables = {
       DISTRIBUTION_BUCKET  = google_storage_bucket.media_read.name
       FIRESTORE_PROJECT_ID = "${var.stage}-${local.org}"
+      IO_4KS_DEVELOPMENT = "true"
     }
   }
 

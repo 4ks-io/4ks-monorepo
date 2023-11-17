@@ -2,8 +2,9 @@ FROM golang:1.20-alpine
 
 RUN go install github.com/mitranim/gow@latest
 
-WORKDIR /app
+WORKDIR /code
 
+COPY ./libs/reserved-words/reserved-words ./reserved-words
 COPY ./go.mod ./
 COPY ./go.sum ./
 COPY ./apps/api ./apps/api
@@ -12,4 +13,4 @@ COPY ./libs/go ./libs/go
 RUN go mod tidy
 RUN go build ./apps/api/main.go
 
-CMD ["/app/main"]
+CMD ["/code/main"]
