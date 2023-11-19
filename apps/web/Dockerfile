@@ -10,7 +10,7 @@
 #   # output -> /root/.local/share/pnpm/store/v3
 
 # stage: build
-FROM deps as build
+FROM node:20-alpine3.17 as build
 WORKDIR /code
 COPY /PACKAGE_JSON /code
 COPY /pnpm* .
