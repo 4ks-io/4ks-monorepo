@@ -8,6 +8,7 @@ type DefaultLayoutProps = {
 };
 
 export default async function DefaultLayout({ children }: DefaultLayoutProps) {
+  console.log(process.env.NEXT_PUBLIC_AUTH0_PROFILE);
   const session = await getSession();
   const user =
     (session && (await serverClient.users.getAuthenticated())) ?? undefined;
