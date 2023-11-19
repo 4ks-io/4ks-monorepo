@@ -86,10 +86,6 @@ resource "google_cloud_run_service" "web" {
           value = var.typesense_url[terraform.workspace]
         }
         env {
-          name  = "NEXT_PUBLIC_TYPESENSE_PATH"
-          value = ""
-        }
-        env {
           name  = "NEXT_PUBLIC_TYPESENSE_API_KEY"
           value = var.typesense_api_key
         }
