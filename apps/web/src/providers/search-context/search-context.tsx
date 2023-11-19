@@ -69,17 +69,32 @@ export function SearchContextProvider({
     });
   }
 
+  function getTypeseneNode() {
+    const url = process.env.NEXT_PUBLIC_TYPESENSE_URL
+    const path = process.env.NEXT_PUBLIC_TYPESENSE_PATH
+
+    if (path && path != "") {
+      return {
+        host: `${url}`,
+        path: `${path}`,
+        port: 443,
+        protocol: 'https',
+      }
+    }
+
+    return {
+      host: `${url}`,
+      port: 443,
+      protocol: 'https',
+    }
+  }
+
   useEffect(() => {
     const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
       server: {
         apiKey: `${process.env.NEXT_PUBLIC_TYPESENSE_API_KEY}`,
         nodes: [
-          {
-            host: `${process.env.NEXT_PUBLIC_TYPESENSE_URL}`,
-            path: `${process.env.NEXT_PUBLIC_TYPESENSE_PATH}`,
-            port: 443,
-            protocol: 'https',
-          },
+          getTypeseneNode(),
         ],
         // Cache search results from server. Defaults to 2 minutes. Set to 0 to disable caching.
         cacheSearchResultsForSeconds: 2 * 60,

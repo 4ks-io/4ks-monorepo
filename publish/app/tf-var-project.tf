@@ -23,9 +23,9 @@ variable "typesense_api_key" {
 variable "typesense_url" {
   type = map(string)
   default = {
-    "app-dev-us-east" = "https://m5wzvue301hkiy9gp-1.a1.typesense.net",
+    "app-dev-us-east" = "m5wzvue301hkiy9gp-1.a1.typesense.net",
     "app-tst-us-east" = ""
-    "app-prd-us-east" = "https://4d02iphk3zbtgo6jp-1.a1.typesense.net"
+    "app-prd-us-east" = "4d02iphk3zbtgo6jp-1.a1.typesense.net"
   }
 }
 

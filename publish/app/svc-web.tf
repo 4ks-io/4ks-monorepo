@@ -91,7 +91,7 @@ resource "google_cloud_run_service" "web" {
         }
         env {
           name  = "NEXT_PUBLIC_MEDIA_FALLBACK_URL"
-          value = "https://storage.googleapis.com/static.${local.web_domain}"
+          value = "${local.web_url}/fallback"
         }
       }
     }
