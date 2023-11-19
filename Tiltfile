@@ -46,7 +46,8 @@ k8s_resource('web', port_forwards='0.0.0.0:5736:3000', labels=['web','next'])
 docker_build(
     'web',
     context='.',
-    dockerfile='apps/web/Dockerfile.dev',
+    # dockerfile='apps/web/Dockerfile.dev',
+    dockerfile='apps/web/Dockerfile',
     ignore=[
         'ignore',
         'apps/media-upload',
