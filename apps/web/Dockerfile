@@ -11,6 +11,9 @@
 
 # stage: build
 FROM node:20-alpine3.17 as build
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN npm install -g pnpm
+
 WORKDIR /code
 COPY /PACKAGE_JSON /code
 COPY /pnpm* .
