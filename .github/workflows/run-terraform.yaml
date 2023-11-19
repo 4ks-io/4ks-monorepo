@@ -18,6 +18,10 @@ on:
         required: true
       typesense_api_key:
         required: true
+      auth0_secret:
+        required: true
+      auth0_client_secret:
+        required: true
 
 jobs:
   build:
@@ -84,11 +88,13 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
         env:
+          GOOGLE_CREDENTIALS: ${{ secrets.gcp_api_token }}
+          TF_WORKSPACE: app-${{ inputs.environment }}-us-east
           TF_VAR_stage: ${{ inputs.environment }}
           TF_VAR_api_build_number: ${{ inputs.build_number }}
           TF_VAR_web_build_number: ${{ inputs.build_number }}
           TF_VAR_typesense_api_key: ${{ secrets.typesense_api_key }}
-          TF_WORKSPACE: app-${{ inputs.environment }}-us-east
-          GOOGLE_CREDENTIALS: ${{ secrets.gcp_api_token }}
+          TF_VAR_auth0_client_secret: ${{ secrets.auth0_client_secret }}
+          TF_VAR_auth0_secret: ${{ secrets.auth0_secret }}
           # TF_tls_key: ${{ secrets.tls_key }}
           # TF_tls_crt: ${{ secrets.tls_crt }}

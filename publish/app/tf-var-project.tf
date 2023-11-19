@@ -29,6 +29,14 @@ variable "typesense_url" {
   }
 }
 
+variable "auth0_client_secret" {
+  type = string
+}
+
+variable "auth0_secret" {
+  type = string
+}
+
 variable "auth0_domain" {
   type = map(string)
   default = {
@@ -46,7 +54,8 @@ locals {
   project               = "${local.stage}-4ks"
   www_domain            = "${var.www_subdomain_env_map[terraform.workspace]}${local.org}.io"
   web_domain            = "${var.web_subdomain_env_map[terraform.workspace]}${local.org}.io"
-  web_api_url           = "https://${local.www_domain}/api"
+  web_url               = "https://${local.www_domain}"
+  api_url               = "https://${local.www_domain}/api"
   container_registry    = "us-east4-docker.pkg.dev/eng-${local.org}"
 
   google_compute_managed_ssl_certificate_name = "managed-certificate"

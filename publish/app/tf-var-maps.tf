@@ -40,3 +40,22 @@ variable "feat_api_swagger_enabled_map" {
   }
 }
 
+
+# auth0
+variable "auth0_client_id_env_map" {
+  type = map(string)
+  default = {
+    "app-dev-us-east" = "eM5Zyyfp6coLg3zORMFsZEnQmpqxBjHd"
+    "app-tst-us-east" = "tst"
+    "app-prd-us-east" = "vAUr50Saqug9Mf3Yu4cFvAaT2nsgNLIN"
+  }
+}
+
+variable "api_cloudrun_url_env_map" {
+  type = map(string)
+  default = {
+    "app-dev-us-east" = "https://foobar",
+    "app-tst-us-east" = "https://foobar"
+    "app-prd-us-east" = "https://api-gl2loyoupq-uk.a.run.app"
+  }
+}

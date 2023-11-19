@@ -42,7 +42,7 @@ resource "google_cloud_run_service" "api" {
         }
         env {
           name  = "AUTH0_AUDIENCE"
-          value = local.web_api_url
+          value = local.api_url
         }
         env {
           name  = "EXPORTER_TYPE"
