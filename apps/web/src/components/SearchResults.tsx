@@ -25,6 +25,8 @@ export default function SearchResults({ results }: SearchResultsProps) {
     );
   }
 
+  console.log(results);
+
   return (
     <Container style={{ marginTop: 20 }}>
       <Grid container spacing={1}>

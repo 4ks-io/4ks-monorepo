@@ -11,6 +11,10 @@ import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 const SearchContext = React.createContext<SearchContextState>(initialState);
 
 type SearchContextProviderProps = { children: React.ReactNode };
+const typesenseApikey =
+  process.env.NEXT_PUBLIC_TYPESENSE_API_KEY || 'typesense-key';
+const typesenseUrl = process.env.NEXT_PUBLIC_TYPESENSE_URL || 'typesense-url';
+const typesensePath = process.env.NEXT_PUBLIC_TYPESENSE_PATH;
 
 export function SearchContextProvider({
   children,
@@ -70,32 +74,27 @@ export function SearchContextProvider({
   }
 
   function getTypeseneNode() {
-    const url = process.env.NEXT_PUBLIC_TYPESENSE_URL
-    const path = process.env.NEXT_PUBLIC_TYPESENSE_PATH
-
-    if (path && path != "") {
+    if (typesensePath && typesensePath != '') {
       return {
-        host: `${url}`,
-        path: `${path}`,
+        host: typesenseUrl,
+        path: typesensePath,
         port: 443,
         protocol: 'https',
-      }
+      };
     }
 
     return {
-      host: `${url}`,
+      host: typesenseUrl,
       port: 443,
       protocol: 'https',
-    }
+    };
   }
 
   useEffect(() => {
     const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
       server: {
-        apiKey: `${process.env.NEXT_PUBLIC_TYPESENSE_API_KEY}`,
-        nodes: [
-          getTypeseneNode(),
-        ],
+        apiKey: typesenseApikey,
+        nodes: [getTypeseneNode()],
         // Cache search results from server. Defaults to 2 minutes. Set to 0 to disable caching.
         cacheSearchResultsForSeconds: 2 * 60,
       },

@@ -22,8 +22,13 @@ interface MediaProps {
   imageUrl?: string;
 }
 
-export default function RecipeCard(props: MediaProps) {
-  const { loading = false, id, title, chef, imageUrl } = props;
+export default function RecipeCard({
+  loading = false,
+  id,
+  title,
+  chef,
+  imageUrl,
+}: MediaProps) {
   const [raised, setRaised] = useState(false);
 
   let recipeURL = `/recipe/${id}`;
