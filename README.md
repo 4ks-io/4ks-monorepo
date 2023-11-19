@@ -8,7 +8,7 @@
 - Docker
 - minikube or k3d (try minikube; fallback to k3d)
 - tilt
-- github.com/swaggo/swag/cmd/swag
+- swaggo/swag/cmd/swag@v1.8.1 (bug in versions later than 1.8.1 as of writing this)
 
 ## Prep
 
@@ -17,7 +17,7 @@
 1. Install [tilt](https://docs.tilt.dev/install.html)
 1. Install `nodejs`, `pnpm`, and `go`
 1. Install swaggo/swag \
-   `go install github.com/swaggo/swag/cmd/swag@latest`
+   `go install github.com/swaggo/swag/cmd/swag@v1.8.12`
 
 ## Instructions
 
