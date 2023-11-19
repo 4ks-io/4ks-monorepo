@@ -32,7 +32,7 @@ RUN npx next build
 # CMD [ "npm", "run", "start" ]
 
 # runtime
-FROM yobasystems/alpine-nodejs:current
+FROM node:20-alpine3.17
 RUN mkdir /home/appuser && chmod 777 /home/appuser
 USER appuser
 
