@@ -25,8 +25,6 @@ export default function SearchResults({ results }: SearchResultsProps) {
     );
   }
 
-  console.log(results);
-
   return (
     <Container style={{ marginTop: 20 }}>
       <Grid container spacing={1}>
@@ -37,7 +35,7 @@ export default function SearchResults({ results }: SearchResultsProps) {
               id={h.document.id}
               title={h.document.name}
               chef={h.document.author}
-              imageUrl={h.document.imageURL}
+              imageUrl={h.document.imageUrl}
             />
           </Grid>
         ))}

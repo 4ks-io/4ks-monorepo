@@ -1,5 +1,4 @@
 import React from 'react';
-import { SearchContextProvider } from '@/providers/search-context';
 import LandingPageSearchBox from '@/components/LandingPageSearchBox';
 import AppHeaderAvatarAuthenticated from '@/components/AppHeaderAvatarAuthenticated';
 import AppHeaderAvatarUnauthenticated from '@/components/AppHeaderAvatarUnauthenticated';

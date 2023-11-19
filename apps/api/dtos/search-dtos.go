@@ -5,6 +5,6 @@ type CreateSearchRecipe struct {
 	ID          string   `json:"id"`
 	Author      string   `json:"author"`
 	Name        string   `json:"name"`
-	ImageURL    string   `json:"imageURL"`
+	ImageURL    string   `json:"imageUrl"`
 	Ingredients []string `json:"ingredients"`
 }

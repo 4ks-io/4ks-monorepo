@@ -48,7 +48,7 @@ export interface TypesenseSearchHit {
     id: string;
     author: string;
     name: string;
-    imageURL: string;
+    imageUrl: string;
     ingredients: string[];
   };
   highlight: {

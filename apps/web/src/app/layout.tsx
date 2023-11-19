@@ -21,12 +21,21 @@ interface RootLayoutProps {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  const typesenseApikey =
+    process.env.NEXT_PUBLIC_TYPESENSE_API_KEY || 'typesense-key';
+  const typesenseUrl = process.env.NEXT_PUBLIC_TYPESENSE_URL || 'typesense-url';
+  const typesensePath = process.env.NEXT_PUBLIC_TYPESENSE_PATH;
+
   return (
     <html lang="en" className={inter.className}>
       <ThemeRegistry>
         <TrpcProvider>
           <UserProvider>
-            <SearchContextProvider>
+            <SearchContextProvider
+              typesenseApikey={typesenseApikey}
+              typesenseUrl={typesenseUrl}
+              typesensePath={typesensePath}
+            >
               <body>{children}</body>
             </SearchContextProvider>
           </UserProvider>

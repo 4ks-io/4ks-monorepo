@@ -10,14 +10,18 @@ import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 
 const SearchContext = React.createContext<SearchContextState>(initialState);
 
-type SearchContextProviderProps = { children: React.ReactNode };
-const typesenseApikey =
-  process.env.NEXT_PUBLIC_TYPESENSE_API_KEY || 'typesense-key';
-const typesenseUrl = process.env.NEXT_PUBLIC_TYPESENSE_URL || 'typesense-url';
-const typesensePath = process.env.NEXT_PUBLIC_TYPESENSE_PATH;
+type SearchContextProviderProps = {
+  children: React.ReactNode;
+  typesenseApikey: string;
+  typesenseUrl: string;
+  typesensePath?: string | undefined;
+};
 
 export function SearchContextProvider({
   children,
+  typesenseApikey,
+  typesenseUrl,
+  typesensePath,
 }: SearchContextProviderProps) {
   const [state, dispatch] = useReducer(searchContextReducer, initialState);
 

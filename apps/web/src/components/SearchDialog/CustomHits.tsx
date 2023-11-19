@@ -30,7 +30,7 @@ function CustomHit(h: any, handleClose: () => void) {
             </Typography>
           </CardContent>
         </Box>
-        <CardMedia component="img" sx={{ width: 100 }} image={h['imageURL']} />
+        <CardMedia component="img" sx={{ width: 100 }} image={h['imageUrl']} />
       </Card>
     </Link>
   );
