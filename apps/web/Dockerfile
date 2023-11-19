@@ -1,13 +1,13 @@
-# stage: deps (base)
-FROM node:20-alpine3.17 as deps
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-RUN npm install -g pnpm
+# # stage: deps (base)
+# FROM node:20-alpine3.17 as deps
+# RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# RUN npm install -g pnpm
 
-WORKDIR /code
-COPY /PACKAGE_JSON /code
-COPY /pnpm* .
-RUN pnpm install --frozen-lockfile && rm -rf /code
-  # output -> /root/.local/share/pnpm/store/v3
+# WORKDIR /code
+# COPY /PACKAGE_JSON /code
+# COPY /pnpm* .
+# RUN pnpm install --frozen-lockfile && rm -rf /code
+#   # output -> /root/.local/share/pnpm/store/v3
 
 # stage: build
 FROM deps as build

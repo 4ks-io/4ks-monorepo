@@ -32,11 +32,11 @@ resource "google_cloud_run_service" "web" {
         }
         env {
           name  = "AUTH0_CLIENT_SECRET"
-          value = var.auth0_client_secret_env_map[terraform.workspace]
+          value = var.auth0_client_secret
         }
         env {
           name  = "AUTH0_SECRET"
-          value = var.auth0_secret_env_map[terraform.workspace]
+          value = var.auth0_secret
         }
         env {
           name  = "AUTH0_ISSUER_BASE_URL"
