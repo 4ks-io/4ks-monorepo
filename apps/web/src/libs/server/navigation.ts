@@ -4,6 +4,7 @@ import { serverClient } from '@/trpc/serverClient';
 import log from '@/libs/logger';
 import { models_User } from '@4ks/api-fetch';
 import { Page } from '../navigation';
+import { authLoginPath } from '@/libs/navigation';
 
 export type UserSession = {
   user: models_User | undefined;
@@ -21,7 +22,7 @@ export async function handleUserNavigation(page: Page): Promise<UserSession> {
   if (!session) {
     // unauthenticated
     if ([Page.REGISTER, Page.AUTHENTICATED].includes(page)) {
-      redirect('/app/auth/login');
+      redirect(authLoginPath);
     }
 
     // anonymous

@@ -1,6 +1,5 @@
-import { models_Recipe, dtos_GetRecipeMediaResponse } from '@4ks/api-fetch';
-import path from 'path';
-import log from '@/libs/logger';
+export const authLoginPath = '/app/auth/login';
+export const authLogoutPath = '/app/auth/logout';
 
 // todo: deprecated
 // https://stackoverflow.com/questions/10527983/best-way-to-detect-mac-os-x-or-windows-computers-with-javascript-or-jquery

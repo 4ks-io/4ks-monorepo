@@ -1,18 +1,19 @@
 'use client';
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { authLoginPath } from '@/libs/navigation';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { trpc } from '@/trpc/client';
 import { z } from 'zod';
-import { dtos_UpdateUser } from '@4ks/api-fetch';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Stack from '@mui/material/Stack';
-import Skeleton from '@mui/material/Skeleton';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import { models_User } from '@4ks/api-fetch';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 
 type formValidationError = {
   validation: string;
@@ -26,9 +27,13 @@ type InputValidation = {
   ErrMsg: string;
 };
 
-export default function UpdateUsername() {
+type UpdateUsernameProps = {
+  username: string;
+};
+
+export default function UpdateUsername(props: UpdateUsernameProps) {
   const router = useRouter();
-  const { user, isLoading } = useUser();
+  const auth = useUser();
 
   const nameData = trpc.users.getUsername.useMutation();
   const userData = trpc.users.getAuthenticated.useQuery();
@@ -37,7 +42,7 @@ export default function UpdateUsername() {
   const [saveError, setSaveError] = useState(false);
   const [formSubmit, setFormSubmit] = useState(false);
 
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(props.username);
   const [disableSaveUsername, setDisableSaveUsername] = useState(true);
   const [input, setInput] = useState({
     Err: false,
@@ -85,6 +90,9 @@ export default function UpdateUsername() {
 
   // input validation: username
   useEffect(() => {
+    // return if init
+    if (!userData?.data) return;
+
     // return if no change
     if (username == userData?.data?.username) {
       setInput({
@@ -133,15 +141,22 @@ export default function UpdateUsername() {
     setSaveError(false);
   }
 
-  if (isLoading) {
-    return <>loading</>;
-  }
-  // anonymous users have no business here
-  if (!isLoading && !user) {
-    router.push('/app/auth/login');
-  }
-
-  const disableSave = !user || disableSaveUsername;
+  if (auth.isLoading)
+    return (
+      <Container maxWidth="sm" style={{ paddingTop: 40 }}>
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
+  if (auth.error || !auth.user) return <>enexpected error</>;
 
   return (
     <>
@@ -167,7 +182,7 @@ export default function UpdateUsername() {
       </Typography>
       <Button
         variant="contained"
-        disabled={disableSave}
+        disabled={disableSaveUsername}
         onClick={handleUpdateUsername}
       >
         Save
