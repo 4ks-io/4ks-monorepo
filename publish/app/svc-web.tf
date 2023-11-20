@@ -18,7 +18,7 @@ resource "google_cloud_run_service" "web" {
           value = var.api_cloudrun_url_env_map[terraform.workspace]
         }
         env {
-          name  = "NEXT_PUBLIC_DEBUG"
+          name  = "LOG_DEBUG"
           value = "false"
         }
         # auth0
@@ -60,10 +60,10 @@ resource "google_cloud_run_service" "web" {
           name  = "AUTH0_CALLBACK"
           value = "/app/auth/callback"
         }
-        env {
-          name  = "NEXT_PUBLIC_AUTH0_LOGIN"
-          value = "/app/auth/login"
-        }
+        # env {
+        #   name  = "NEXT_PUBLIC_AUTH0_LOGIN"
+        #   value = "/app/auth/login"
+        # }
         env {
           name  = "NEXT_PUBLIC_AUTH0_PROFILE"
           value = "/app/auth/me"
@@ -82,15 +82,15 @@ resource "google_cloud_run_service" "web" {
           value = "443"
         }
         env {
-          name  = "NEXT_PUBLIC_TYPESENSE_URL"
+          name  = "TYPESENSE_URL_CLIENT"
           value = var.typesense_url[terraform.workspace]
         }
         env {
-          name  = "NEXT_PUBLIC_TYPESENSE_API_KEY"
+          name  = "TYPESENSE_API_KEY"
           value = var.typesense_api_key
         }
         env {
-          name  = "NEXT_PUBLIC_MEDIA_FALLBACK_URL"
+          name  = "MEDIA_FALLBACK_URL"
           value = "${local.web_url}/fallback"
         }
       }

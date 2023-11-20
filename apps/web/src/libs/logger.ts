@@ -1,3 +1,5 @@
+import { unstable_noStore as noStore } from 'next/cache';
+
 /**
  * @packageDocumentation
  * @module libs/logging
@@ -24,8 +26,8 @@ type KV = {
 };
 
 function NewLogger(): Logger {
-  const debug = process.env.NEXT_PUBLIC_DEBUG === 'true';
-
+  noStore();
+  const debug = process.env.LOG_DEBUG === 'true';
   const src = typeof window === 'undefined' ? 'server' : 'client';
 
   return {

@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useState, useMemo } from 'react';
+import { unstable_noStore as noStore } from 'next/cache';
 import { models_RecipeMedia } from '@4ks/api-fetch';
 import { RecipeMediaSize } from '../types';
 import Box from '@mui/material/Box';
@@ -12,6 +13,7 @@ interface RecipeMediaViewImageProps {
 }
 
 export function RecipeMediaViewImage({ media }: RecipeMediaViewImageProps) {
+  noStore();
   const [imageSrc, setImageSrc] = useState<string>();
   const [filename, setFilename] = useState('unknown');
 
@@ -29,7 +31,7 @@ export function RecipeMediaViewImage({ media }: RecipeMediaViewImageProps) {
   const random = useMemo(() => Math.floor(Math.random() * 27), []);
 
   function setRandomImage() {
-    setImageSrc(`${process.env.NEXT_PUBLIC_MEDIA_FALLBACK_URL}/f${random}.jpg`);
+    setImageSrc(`${process.env.MEDIA_FALLBACK_URL}/f${random}.jpg`);
   }
 
   // function handleError(loadState: ImageLoadState) {

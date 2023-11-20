@@ -32,7 +32,7 @@ spec:
           env:
             - name: IO_4KS_API_URL
               value: http://api.default.svc.cluster.local
-            - name: NEXT_PUBLIC_DEBUG
+            - name: LOG_DEBUG
               value: 'true'
             - name: AUTH0_BASE_URL
               value: https://local.4ks.io
@@ -54,15 +54,15 @@ spec:
               value: 'false'
             - name: NEXT_PUBLIC_AUTH0_LOGIN
               value: /app/auth/login
-            - name: NEXT_PUBLIC_AUTH0_PROFILE
-              value: /app/auth/me
-            - name: NEXT_PUBLIC_TYPESENSE_URL
+            # - name: NEXT_PUBLIC_AUTH0_PROFILE
+            #   value: /app/auth/me
+            - name: TYPESENSE_URL_CLIENT
               value: local.4ks.io
-            - name: NEXT_PUBLIC_TYPESENSE_PATH
+            - name: TYPESENSE_PATH_CLIENT
               value: /search
-            - name: NEXT_PUBLIC_TYPESENSE_API_KEY
+            - name: TYPESENSE_API_KEY
               value: local-4ks-api-key
-            - name: NEXT_PUBLIC_MEDIA_FALLBACK_URL
+            - name: MEDIA_FALLBACK_URL
               value: https://storage.googleapis.com/static.dev.4ks.io/fallback
             - name: TYPESENSE_URL
               value: typesense.default.svc.cluster.local

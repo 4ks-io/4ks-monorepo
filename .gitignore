@@ -46,3 +46,5 @@ PACKAGE_JSON/
 re.sh
 
 .env
+
+ignore

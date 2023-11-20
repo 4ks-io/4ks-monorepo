@@ -16,8 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import RecipeMediaBannerImagePreview from './RecipeMediaBannerImagePreview';
-import Badge from '@mui/material/Badge';
-import HideImageIcon from '@mui/icons-material/HideImage';
+import { unstable_noStore as noStore } from 'next/cache';
 
 export function getBannerVariantUrl(
   variants: models_RecipeMediaVariant[] | undefined,
@@ -31,9 +30,10 @@ interface RecipeMediaBannerProps {
 }
 
 export default function RecipeMediaBanner({ isNew }: RecipeMediaBannerProps) {
+  noStore();
   const rtx = useRecipeContext();
 
-  const fallbackMediaURL = process.env.NEXT_PUBLIC_MEDIA_FALLBACK_URL;
+  const fallbackMediaURL = process.env.MEDIA_FALLBACK_URL;
 
   const [imageSrc, setImageSrc] = useState<string>();
   const [showBanner, setShowBanner] = useState(true);

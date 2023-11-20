@@ -1,14 +1,17 @@
 import { unstable_noStore as noStore } from 'next/cache';
+import log from '@/libs/logger';
 
 // import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import Typesense from 'typesense';
-
-const apikey = `${process.env.NEXT_PUBLIC_TYPESENSE_API_KEY}`;
 
 let searchClient: any;
 
 function NewTypesenseInstantSearchClient() {
   noStore();
+  log().Debug(new Error(), [
+    { k: 'typesenseApikey', v: `${process.env.TYPESENSE_API_KEY}` },
+  ]);
+
   const client = new Typesense.Client({
     nodes: [
       {
@@ -17,7 +20,7 @@ function NewTypesenseInstantSearchClient() {
         protocol: process.env.TYPESENSE_PROTOCOL || 'http',
       },
     ],
-    apiKey: apikey,
+    apiKey: `${process.env.TYPESENSE_API_KEY}`,
     numRetries: 3, // A total of 4 tries (1 original try + 3 retries)
     connectionTimeoutSeconds: 10,
     // logLevel: 'debug',

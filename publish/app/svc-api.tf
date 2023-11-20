@@ -76,7 +76,7 @@ resource "google_cloud_run_service" "api" {
         }
         env {
           name  = "MEDIA_FALLBACK_URL"
-          value = "https://storage.googleapis.com/static.${local.web_domain}"
+          value = "${local.web_url}/fallback"
         }
 
       }

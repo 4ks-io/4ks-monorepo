@@ -1,0 +1,45 @@
+# docker pull us-east4-docker.pkg.dev/eng-4ks/web/app:6922851090.216.1
+version: '3.9'
+services:
+  nginx:
+    container_name: www-4ks-alb
+    build: ./apps-dev/nginx
+    image: 4ks/alb
+    ports:
+      - '443:4433'
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ./apps-dev/nginx-prd-debug/www.4ks.io.pem:/etc/nginx/conf.d/www.4ks.io.pem
+      - ./apps-dev/nginx-prd-debug/www.4ks.io.key:/etc/nginx/conf.d/www.4ks.io.key
+      - ./apps-dev/nginx-prd-debug/local.conf:/etc/nginx/conf.d/local.conf
+  web:
+    container_name: 4ks-web
+    image: us-east4-docker.pkg.dev/eng-4ks/web/app:6922851090.216.1
+    ports:
+      - '5736:3000'
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ./ignore/prd-build/.next:/app/apps/web/.next
+    environment:
+      - AUTH0_BASE_URL=https://www.4ks.io
+      - TYPESENSE_PORT=443
+      - TYPESENSE_PORT_CLIENT=443
+      - TYPESENSE_URL_CLIENT=4d02iphk3zbtgo6jp-1.a1.typesense.net
+      - MEDIA_FALLBACK_URL=https://www.4ks.io/fallback
+      - LOG_DEBUG='true'
+      - AUTH0_ISSUER_BASE_URL=https://4ks.us.auth0.com
+      # - NEXT_PUBLIC_AUTH0_PROFILE=/app/auth/me
+      - AUTH0_PROFILE=/app/auth/me
+      - TYPESENSE_PROTOCOL=https
+      - TYPESENSE_URL=4d02iphk3zbtgo6jp-1.a1.typesense.net
+      - AUTH0_SECRET=0acd2ee98a63043f51cc4e28c3cf1209687428e98a98f9c171710e9958ca27df
+      - AUTH0_CALLBACK=/app/auth/callback
+      - APP_ENV=prd
+      - TYPESENSE_API_KEY=miLDPM8OXwODyfBVSO6aG78qSjGR6UZc
+      - IO_4KS_API_URL=https://api-gl2loyoupq-uk.a.run.app
+      - AUTH0_CLIENT_SECRET=GV79-kQl9jlXE-dL2wJfPf86Kbltp5oVri9VzN7jlMD_wpaaffcX9bPIlc13O60c
+      - AUTH0_CLIENT_ID=vAUr50Saqug9Mf3Yu4cFvAaT2nsgNLIN
+      - AUTH0_AUDIENCE=https://www.4ks.io/api
+      - NEXT_PUBLIC_AUTH0_LOGIN=/app/auth/login

@@ -24,6 +24,9 @@ RUN pnpm --filter @4ks/api-fetch build
 
 WORKDIR /code/apps/web
 COPY ./apps/web /code/apps/web
+
+# NEXT_PUBLIC_AUTH0_PROFILE bug?
+ENV NEXT_PUBLIC_AUTH0_PROFILE=/app/auth/me
 RUN npx next build
   # output -> /app/apps/web/.next
 

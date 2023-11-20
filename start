@@ -44,7 +44,7 @@ done
 echo "api running"
 
 # ./data/seed-tiny.sh
-# ) &
+) &
 # bg_pid=$!
 
 tilt up --stream=true
