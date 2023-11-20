@@ -67,7 +67,7 @@ resource "google_cloud_run_service" "api" {
 
         env {
           name  = "TYPESENSE_URL"
-          value = var.typesense_url_env_map[terraform.workspace]
+          value = "https://${var.typesense_url_env_map[terraform.workspace]}"
         }
 
         env {
@@ -76,7 +76,7 @@ resource "google_cloud_run_service" "api" {
         }
         env {
           name  = "MEDIA_FALLBACK_URL"
-          value = "${local.web_url}/fallback"
+          value = "${local.web_url}/static"
         }
 
       }
