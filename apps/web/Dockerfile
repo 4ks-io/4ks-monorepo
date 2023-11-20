@@ -27,6 +27,7 @@ COPY ./apps/web /code/apps/web
 
 # NEXT_PUBLIC_AUTH0_PROFILE bug?
 ENV NEXT_PUBLIC_AUTH0_PROFILE=/app/auth/me
+ENV NEXT_PUBLIC_AUTH0_LOGIN=/app/auth/login
 RUN npx next build
   # output -> /app/apps/web/.next
 

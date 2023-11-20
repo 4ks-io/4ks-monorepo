@@ -107,6 +107,7 @@ export default function RecipeCard({
           ) : (
             <Tooltip title={title}>
               <Link
+                prefetch={false}
                 href={recipeURL}
                 style={{ textDecoration: 'none', color: '#fff' }}
               >
@@ -130,6 +131,7 @@ export default function RecipeCard({
             <Skeleton animation="wave" height={20} width="40%" />
           ) : (
             <Link
+              prefetch={false}
               href={`/${chef}`}
               style={{ textDecoration: 'none', color: '#fff' }}
             >

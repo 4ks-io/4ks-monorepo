@@ -221,6 +221,7 @@ export function RecipeHeader({ user, recipe }: RecipeHeaderProps) {
         </Link> */}
       <Link
         href={`/${chefName}`}
+        prefetch={false}
         style={{ textDecoration: 'none', color: '#000' }}
       >
         {userIsChef ? (

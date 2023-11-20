@@ -33,6 +33,7 @@ export default function RecipeSocial(props: RecipeSocialProps) {
             <SectionTitle value={'Source'} />
             {rtx.recipe?.branch && (
               <Link
+                prefetch={false}
                 href={`/recipe/${rtx.recipe?.branch}`}
                 style={{ textDecoration: 'none', color: '#000' }}
               >
@@ -43,6 +44,7 @@ export default function RecipeSocial(props: RecipeSocialProps) {
             )}
             <Typography variant="body1" gutterBottom>
               <Link
+                prefetch={false}
                 href={'https://' + rtx.recipe.currentRevision?.link}
                 style={{ textDecoration: 'none', color: '#000' }}
               >
