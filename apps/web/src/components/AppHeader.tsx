@@ -51,7 +51,7 @@ export default function AppHeader({ user }: AppHeaderProps) {
     <>
       {rtx.actionInProgress && <LinearProgress />}
       <Toolbar variant="dense" sx={{ backgroundColor: 'background.paper' }}>
-        <Link href="/">
+        <Link prefetch={false} href="/">
           <Box
             component="img"
             sx={{
@@ -86,7 +86,7 @@ export default function AppHeader({ user }: AppHeaderProps) {
 
         {showExploreLink && (
           <Tooltip title="Explore">
-            <Link href="/explore">
+            <Link prefetch={false} href="/explore">
               <IconButton aria-label="explore">
                 <ExploreIcon fontSize="inherit" />
               </IconButton>

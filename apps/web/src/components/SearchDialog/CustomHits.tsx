@@ -14,7 +14,12 @@ function CustomHit(h: any, handleClose: () => void) {
   const id = h['id'];
 
   return (
-    <Link key={id} href={`/recipe/${id}`} style={{ textDecoration: 'none' }}>
+    <Link
+      prefetch={false}
+      key={id}
+      href={`/recipe/${id}`}
+      style={{ textDecoration: 'none' }}
+    >
       <Card sx={{ display: 'flex' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
           <CardContent sx={{ flex: '1 0 auto' }}>

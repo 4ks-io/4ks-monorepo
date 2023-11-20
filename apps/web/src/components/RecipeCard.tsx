@@ -67,7 +67,12 @@ export default function RecipeCard({
       {loading ? (
         <Skeleton sx={{ height: 320 }} animation="wave" variant="rectangular" />
       ) : (
-        <Link key={id} href={recipeURL} style={{ textDecoration: 'none' }}>
+        <Link
+          prefetch={false}
+          key={id}
+          href={recipeURL}
+          style={{ textDecoration: 'none' }}
+        >
           <CardMedia
             component="img"
             height="320"

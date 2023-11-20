@@ -39,7 +39,11 @@ export default async function DefaultPage({ params, searchParams }: PageProps) {
         alignItems="center"
         spacing={2}
       >
-        <Link href="/explore" style={{ textDecoration: 'none', color: '#000' }}>
+        <Link
+          prefetch={false}
+          href="/explore"
+          style={{ textDecoration: 'none', color: '#000' }}
+        >
           <Tooltip title="Explore">
             <Box
               component="img"
