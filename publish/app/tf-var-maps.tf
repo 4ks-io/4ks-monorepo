@@ -40,6 +40,24 @@ variable "feat_api_swagger_enabled_map" {
   }
 }
 
+# typesense
+variable "typesense_client_api_key_env_map" {
+  type = map(string)
+  default = {
+    "app-dev-us-east" = "dev"
+    "app-tst-us-east" = "tst"
+    "app-prd-us-east" = "UE4c7kk7n369UJFIGz1od1uc0V9WFRt8"
+  }
+}
+
+variable "typesense_url_env_map" {
+  type = map(string)
+  default = {
+    "app-dev-us-east" = "m5wzvue301hkiy9gp-1.a1.typesense.net",
+    "app-tst-us-east" = ""
+    "app-prd-us-east" = "4d02iphk3zbtgo6jp-1.a1.typesense.net"
+  }
+}
 
 # auth0
 variable "auth0_client_id_env_map" {

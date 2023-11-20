@@ -4,7 +4,6 @@ package search
 import (
 	"4ks/apps/api/dtos"
 	"4ks/libs/go/models"
-	"errors"
 	"os"
 
 	"github.com/rs/zerolog/log"
@@ -59,7 +58,7 @@ func (us searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
 
 	_, err := tsc.Collection("recipes").Documents().Upsert(document)
 	if err != nil {
-		return errors.New("failed to create search document")
+		return err
 	}
 
 	return nil
@@ -68,7 +67,7 @@ func (us searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
 func (us searchService) RemoveSearchRecipeDocument(id string) error {
 	_, err := tsc.Collection("recipes").Document(id).Delete()
 	if err != nil {
-		return errors.New("failed to create search document")
+		return err
 	}
 
 	return nil

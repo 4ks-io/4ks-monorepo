@@ -71,7 +71,7 @@ resource "google_cloud_run_service" "web" {
         # typesense
         env {
           name  = "TYPESENSE_URL"
-          value = var.typesense_url[terraform.workspace]
+          value = var.typesense_url_env_map[terraform.workspace]
         }
         env {
           name  = "TYPESENSE_PROTOCOL"
@@ -83,11 +83,11 @@ resource "google_cloud_run_service" "web" {
         }
         env {
           name  = "TYPESENSE_URL_CLIENT"
-          value = var.typesense_url[terraform.workspace]
+          value = var.typesense_url_env_map[terraform.workspace]
         }
         env {
           name  = "TYPESENSE_API_KEY"
-          value = var.typesense_api_key
+          value = var.typesense_client_api_key_env_map[terraform.workspace]
         }
         env {
           name  = "MEDIA_FALLBACK_URL"
