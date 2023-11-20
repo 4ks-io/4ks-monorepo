@@ -1,5 +1,4 @@
-import { unstable_noStore as noStore } from 'next/cache';
-import log from '@/libs/logger';
+// import { unstable_noStore as noStore } from 'next/cache';
 
 // import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import Typesense from 'typesense';
@@ -7,11 +6,7 @@ import Typesense from 'typesense';
 let searchClient: any;
 
 function NewTypesenseInstantSearchClient() {
-  noStore();
-  log().Debug(new Error(), [
-    { k: 'typesenseApikey', v: `${process.env.TYPESENSE_API_KEY}` },
-  ]);
-
+  // noStore();
   const client = new Typesense.Client({
     nodes: [
       {

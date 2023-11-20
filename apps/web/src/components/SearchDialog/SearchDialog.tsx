@@ -1,20 +1,16 @@
 'use client';
 import React, { useState } from 'react';
 import { useSearchContext } from '@/providers/search-context';
-import { useRouter } from 'next/navigation';
 import { useHits } from 'react-instantsearch';
-import Button from '@mui/material/Button';
+import SearchDialogBox from './SearchDialogBox';
+import { FormattedHits } from './CustomHits';
+import { Hit } from './types';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
-import SearchDialogBox from './SearchDialogBox';
-
-import { FormattedHits } from './CustomHits';
-import { Hit } from './types';
 
 export default function SearchDialog() {
-  const router = useRouter();
   const { open, handleClose } = useSearchContext();
   const { hits } = useHits();
 

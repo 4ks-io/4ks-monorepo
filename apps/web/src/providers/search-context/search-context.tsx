@@ -7,6 +7,7 @@ import {
   SearchContextAction,
 } from './search-context-reducer';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
+import log from '@/libs/logger';
 
 const SearchContext = React.createContext<SearchContextState>(initialState);
 
@@ -26,6 +27,7 @@ export function SearchContextProvider({
   const [state, dispatch] = useReducer(searchContextReducer, initialState);
 
   useEffect(() => {
+    log().Debug(new Error(), [{ k: 'SearchContextProvider', v: 'init' }]);
     window.addEventListener('keydown', keyDownHandler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

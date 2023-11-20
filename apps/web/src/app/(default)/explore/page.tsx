@@ -27,7 +27,7 @@ export default async function ExplorePage() {
       sx={{
         flexGrow: 1,
         bgcolor: 'background.default',
-        mt: ['2px', '2px', '2px'],
+        // mt: ['2px', '2px', '2px'],
         p: 3,
       }}
     >

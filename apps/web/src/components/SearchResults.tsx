@@ -17,7 +17,7 @@ export default function SearchResults({ results }: SearchResultsProps) {
 
   if (!results || (results.hits && results.hits.length === 0)) {
     return (
-      <Container style={{ marginTop: 20 }}>
+      <Container>
         <Typography variant="h5" component="h2" gutterBottom>
           No results
         </Typography>
@@ -26,7 +26,7 @@ export default function SearchResults({ results }: SearchResultsProps) {
   }
 
   return (
-    <Container style={{ marginTop: 20 }}>
+    <Container>
       <Grid container spacing={1}>
         {results.hits.map((h) => (
           <Grid xs={12} md={6} lg={4} key={h.document.id}>

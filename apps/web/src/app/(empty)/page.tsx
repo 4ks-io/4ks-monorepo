@@ -17,13 +17,7 @@ export default async function DefaultPage({ params, searchParams }: PageProps) {
   return (
     <Box height="92vh" display="flex" flexDirection="column">
       <NewRecipeButton />
-      <Toolbar
-        variant="dense"
-        sx={{
-          borderBottom: '1px solid #F7F9FB',
-          // backgroundColor: 'background.paper'
-        }}
-      >
+      <Toolbar variant="dense">
         <Box sx={{ flexGrow: 1 }} />
         {user ? (
           <AppHeaderAvatarAuthenticated username={`${user.username}`} />

@@ -1,43 +1,43 @@
 'use client';
 import React from 'react';
+import { Hit } from './types';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import Skeleton from '@mui/material/Skeleton';
-import { Hit } from './types';
-import Link from 'next/link';
 
 function CustomHit(h: any, handleClose: () => void) {
   const id = h['id'];
+  const router = useRouter();
 
   return (
-    <Link
-      prefetch={false}
-      key={id}
-      href={`/recipe/${id}`}
-      style={{ textDecoration: 'none' }}
+    <Card
+      sx={{ display: 'flex', cursor: 'pointer' }}
+      onClick={() => {
+        handleClose();
+        router.push(`/recipe/${id}`);
+      }}
     >
-      <Card sx={{ display: 'flex' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-          <CardContent sx={{ flex: '1 0 auto' }}>
-            <Typography component="div" variant="h6">
-              {h['name'] as string}
-            </Typography>
-            <Typography
-              variant="subtitle1"
-              color="text.secondary"
-              component="div"
-            >
-              {h['author'] as string}
-            </Typography>
-          </CardContent>
-        </Box>
-        <CardMedia component="img" sx={{ width: 100 }} image={h['imageUrl']} />
-      </Card>
-    </Link>
+      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+        <CardContent sx={{ flex: '1 0 auto' }}>
+          <Typography component="div" variant="h6">
+            {h['name'] as string}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            color="text.secondary"
+            component="div"
+          >
+            {h['author'] as string}
+          </Typography>
+        </CardContent>
+      </Box>
+      <CardMedia component="img" sx={{ width: 100 }} image={h['imageUrl']} />
+    </Card>
   );
 }
 
