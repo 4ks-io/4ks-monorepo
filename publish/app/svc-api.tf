@@ -67,7 +67,7 @@ resource "google_cloud_run_service" "api" {
 
         env {
           name  = "TYPESENSE_URL"
-          value = var.typesense_url[terraform.workspace]
+          value = var.typesense_url_env_map[terraform.workspace]
         }
 
         env {
