@@ -13,13 +13,6 @@ import Container from '@mui/material/Container';
 import Snackbar from '@mui/material/Snackbar';
 import Box from '@mui/material/Box';
 
-type formValidationError = {
-  validation: string;
-  code: string;
-  message: string;
-  path: string[];
-};
-
 type InputValidation = {
   Err: boolean;
   ErrMsg: string;
