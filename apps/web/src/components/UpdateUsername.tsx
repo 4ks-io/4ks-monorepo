@@ -155,8 +155,7 @@ export default function UpdateUsername(props: UpdateUsernameProps) {
       </Container>
     );
 
-  if (auth?.error || !auth.user)
-    return <>unexpected error: {auth?.error?.message}</>;
+  if (auth?.error) return <>unexpected error: {auth?.error?.message}</>;
 
   return (
     <>
