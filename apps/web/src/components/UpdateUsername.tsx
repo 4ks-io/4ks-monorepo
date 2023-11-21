@@ -1,7 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { authLoginPath } from '@/libs/navigation';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { trpc } from '@/trpc/client';
 import { z } from 'zod';
@@ -9,11 +8,10 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
-import { models_User } from '@4ks/api-fetch';
 import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import Snackbar from '@mui/material/Snackbar';
+import Box from '@mui/material/Box';
 
 type formValidationError = {
   validation: string;
@@ -156,7 +154,9 @@ export default function UpdateUsername(props: UpdateUsernameProps) {
         </Box>
       </Container>
     );
-  if (auth.error || !auth.user) return <>enexpected error</>;
+
+  if (auth?.error || !auth.user)
+    return <>unexpected error: {auth?.error?.message}</>;
 
   return (
     <>
