@@ -17,6 +17,7 @@ COPY /PACKAGE_JSON /code
 COPY /pnpm* .
 RUN pnpm install
 
+COPY ./libs/reserved-words ./apps/web/public
 COPY ./libs/ts/api-fetch ./libs/ts/api-fetch
 RUN pnpm --filter @4ks/api-fetch build
 

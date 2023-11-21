@@ -19,6 +19,7 @@ COPY /PACKAGE_JSON /code
 COPY /pnpm* .
 RUN pnpm install --frozen-lockfile
 
+COPY ./libs/reserved-words ./apps/web/public
 COPY ./libs/ts/api-fetch /code/libs/ts/api-fetch
 RUN pnpm --filter @4ks/api-fetch build
 

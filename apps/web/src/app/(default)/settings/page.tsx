@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: '4ks Settings',
@@ -68,7 +69,13 @@ export default async function SettingsPage({
                 hyphens.
               </li>
               <li>It cannot begin or end with a hyphen.</li>
-              <li>It cannot be a reserved word.</li>
+              <li>
+                It cannot be a{' '}
+                <Link href="/reserved-words" passHref>
+                  reserved words
+                </Link>
+                .
+              </li>
             </ul>
           </Typography>
         </Stack>
