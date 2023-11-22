@@ -11,16 +11,16 @@ import IconButton from '@mui/material/IconButton';
 interface RecipeIngredientProps {
   index: number;
   data: models_Ingredient;
-  handleIngredientDelete: (index: number) => void;
-  handleIngredientChange: (index: number, data: models_Ingredient) => void;
+  handleIngredientDelete?: (index: number) => void;
+  handleIngredientChange?: (index: number, data: models_Ingredient) => void;
   isDragging: boolean;
 }
 
-export function RecipeIngredient({
+export default function RecipeIngredient({
   data,
   index,
-  handleIngredientDelete,
-  handleIngredientChange,
+  handleIngredientDelete = () => {},
+  handleIngredientChange = () => {},
   isDragging,
 }: RecipeIngredientProps) {
   const [quantity, setQuantity] = useState(data.quantity || '');

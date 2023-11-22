@@ -1,6 +1,8 @@
 export const authLoginPath = '/app/auth/login';
 export const authLogoutPath = '/app/auth/logout';
 
+export const isSSR = typeof window === 'undefined';
+
 // todo: deprecated
 // https://stackoverflow.com/questions/10527983/best-way-to-detect-mac-os-x-or-windows-computers-with-javascript-or-jquery
 export const isMac = () => {

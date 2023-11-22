@@ -1,22 +1,11 @@
 'use client';
-import React, { useEffect, useState, Suspense } from 'react';
-import Stack from '@mui/material/Stack';
+import React from 'react';
 import { models_Ingredient } from '@4ks/api-fetch';
 import { DragDropContext, Draggable } from 'react-beautiful-dnd';
 import { default as Droppable } from '@/components/StrictModeDroppable';
-import { useRecipeContext } from '@/providers/recipe-context';
-import { RecipeIngredient } from './RecipeIngredient';
-import { SectionTitle } from '../SectionTitle';
-import AddIcon from '@mui/icons-material/Add';
-import IconButton from '@mui/material/IconButton';
 import { DropResult } from 'react-beautiful-dnd';
 
-import {
-  handleListAdd,
-  handleListChange,
-  handleListDelete,
-  handleListDragEnd,
-} from './dnd-functions';
+const RecipeIngredient = React.lazy(() => import('./RecipeIngredient'));
 
 type RecipeIngredientsProps = {
   data: models_Ingredient[];
@@ -31,42 +20,6 @@ export default function RecipeDraggableIngredients({
   onChange,
   onDelete,
 }: RecipeIngredientsProps) {
-  // const [ingredients, setIngredients] = useState(data);
-  // const rtx = useRecipeContext();
-
-  // useEffect(() => {
-  //   // skip if undefined
-  //   if (!rtx?.recipe.currentRevision?.ingredients) {
-  //     return;
-  //   }
-  //   // skip if no change
-  //   if (rtx?.recipe.currentRevision?.ingredients == ingredients) {
-  //     return;
-  //   }
-  //   setIngredients(rtx?.recipe.currentRevision?.ingredients);
-  // }, [ingredients, rtx?.recipe.currentRevision?.ingredients]);
-
-  // function refreshIngredients(i: models_Ingredient[]) {
-  //   rtx?.setIngredients(i);
-  //   setIngredients(i);
-  // }
-
-  // const onDragEnd = handleListDragEnd<models_Ingredient>(
-  //   ingredients,
-  //   refreshIngredients
-  // );
-
-  // const handleIngredientAdd = () =>
-  //   handleListAdd<models_Ingredient>(ingredients, refreshIngredients);
-
-  // const handleIngredientDelete = (index: number) =>
-  //   handleListDelete<models_Ingredient>(index, ingredients, refreshIngredients);
-
-  // const handleIngredientChange = handleListChange<models_Ingredient>(
-  //   ingredients,
-  //   refreshIngredients
-  // );
-
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="ingredients">

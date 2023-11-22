@@ -1,18 +1,14 @@
-// 'use client';
+'use client';
 import React, { useEffect, useState, Suspense } from 'react';
+import { isSSR } from '@/libs/navigation';
 import Stack from '@mui/material/Stack';
 import { models_Ingredient } from '@4ks/api-fetch';
-import { DragDropContext, Draggable } from 'react-beautiful-dnd';
-import { default as Droppable } from '@/components/StrictModeDroppable';
 import { useRecipeContext } from '@/providers/recipe-context';
-import { RecipeIngredient } from './RecipeIngredient';
+import RecipeIngredient from './RecipeIngredient';
 import { SectionTitle } from '../SectionTitle';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
-
-const RecipeDraggableIngredients = React.lazy(
-  () => import('./RecipeDraggableIngredients')
-);
+import RecipeDraggableIngredients from './RecipeDraggableIngredients';
 
 import {
   handleListAdd,
@@ -67,20 +63,15 @@ export default function RecipeIngredients(props: RecipeIngredientsProps) {
       style={{ listStyleType: 'none', paddingInlineStart: '0px' }}
       className="ingredients"
     >
-      {props.ingredients.map((ingredient, index) => {
-        const key = `ingredient_${index}_${ingredient.id}`;
-        return (
-          <li key={key}>
-            <RecipeIngredient
-              index={index}
-              data={ingredient}
-              isDragging={false}
-              handleIngredientDelete={() => {}}
-              handleIngredientChange={() => {}}
-            />
-          </li>
-        );
-      })}
+      {props.ingredients.map((ingredient, index) => (
+        <li key={`ingredient_${index}_${ingredient.id}`}>
+          <RecipeIngredient
+            index={index}
+            data={ingredient}
+            isDragging={false}
+          />
+        </li>
+      ))}
     </ul>
   );
 
@@ -93,14 +84,16 @@ export default function RecipeIngredients(props: RecipeIngredientsProps) {
         </IconButton>
       </Stack>
 
-      <Suspense fallback={fallback}>
+      {isSSR ? (
+        fallback
+      ) : (
         <RecipeDraggableIngredients
           data={ingredients}
           onDragEnd={onDragEnd}
           onDelete={handleIngredientDelete}
           onChange={handleIngredientChange}
         />
-      </Suspense>
+      )}
     </Stack>
   );
 }

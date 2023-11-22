@@ -46,15 +46,15 @@ export const HttpStatusCode: HttpStatusCodeType = {
 
 export function handleAPIError(e: any) {
   const err = e as APIError;
-  const msg = {
-    code: HttpStatusCode[err.status],
-    message: err.statusText,
-    cause: err.body,
-  };
   log().Error(new Error(), [
     { k: 'code', v: HttpStatusCode[err.status] },
     { k: 'message', v: err.statusText },
     { k: 'cause', v: err.body },
+    { k: 'error', v: err as unknown as string },
   ]);
-  throw new TRPCError(msg);
+  throw new TRPCError({
+    code: HttpStatusCode[err.status],
+    message: err.statusText,
+    cause: err.body,
+  });
 }
