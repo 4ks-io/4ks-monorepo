@@ -72,7 +72,7 @@ export default async function SettingsPage({
               <li>
                 It cannot be a{' '}
                 <Link href="/reserved-words" passHref>
-                  reserved words
+                  reserved word
                 </Link>
                 .
               </li>

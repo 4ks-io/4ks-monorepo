@@ -8,17 +8,14 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import CloseIcon from '@mui/icons-material/Close';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import log from '@/libs/logger';
 import { trpc } from '@/trpc/client';
-import IconButton from '@mui/material/IconButton';
-import { RecipeProps } from '@/types/recipe';
+import { RecipeMediaProps } from '@/types/recipe';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
 import { green } from '@mui/material/colors';
 
-export default function RecipeMedia({ user, recipe, media }: RecipeProps) {
+export default function RecipeMedia({ user, recipe, media }: RecipeMediaProps) {
   const rtx = useRecipeContext();
   // const user = trpc.users.getAuthenticated.useQuery().data;
   // const signedURLData = trpc.recipes.getSignedURL.useMutation();

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { notFound } from 'next/navigation';
-import { models_Recipe, models_User, models_RecipeMedia } from '@4ks/api-fetch';
 import { RecipeContextProvider } from '@/providers/recipe-context';
 import Container from '@mui/material/Container';
 import type { Metadata } from 'next';
@@ -8,16 +7,14 @@ import AppHeader from '@/components/AppHeader';
 import RecipeToolbar from './recipe-toolbar';
 import RecipeEditingControls from '@/components/Recipe/RecipeContent/RecipeEditingControls';
 import { RecipeHeader } from '@/components/Recipe/RecipeHeader';
+import { RecipeMediaProps } from '@/types/recipe';
 
 export const metadata: Metadata = {
   title: '4ks Recipe',
   description: '4ks Recipe',
 };
 
-type RecipeLayoutProps = {
-  recipe: models_Recipe;
-  user: models_User | undefined;
-  media: models_RecipeMedia[];
+type RecipeLayoutProps = RecipeMediaProps & {
   children: React.ReactNode;
 };
 

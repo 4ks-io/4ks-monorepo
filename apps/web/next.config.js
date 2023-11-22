@@ -7,14 +7,14 @@ const nextConfig = {
       transform: '@mui/icons-material/{{member}}',
     },
   },
-  async rewrites() {
-    return [
-      {
-        source: '/recipe/:id/(forks|media|settings|versions)',
-        destination: '/recipe/:id',
-      },
-    ];
-  },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/recipe/:id/(forks|media|settings|versions)',
+  //       destination: '/recipe/:id',
+  //     },
+  //   ];
+  // },
   images: {
     remotePatterns: [
       {

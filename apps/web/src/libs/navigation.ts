@@ -26,40 +26,9 @@ export type PageProps = {
 };
 
 export type RecipePropsParams = { id: string };
-
 export type PagePropsParams = { slug: string };
 export type PagePropsSearchParams = {
   [key: string]: string | string[] | undefined;
-};
-
-// todo: i18n
-export enum RecipeViewPaths {
-  Recipe = '',
-  Media = '/media',
-  Forks = '/forks',
-  Comments = '/comments',
-  // Story = "/story",
-  Versions = '/versions',
-  Settings = '/settings',
-}
-
-// getData
-export enum RecipeView {
-  '' = 0, // content
-  'versions' = 2,
-  'forks' = 3,
-  'media' = 5,
-  'comments' = 6,
-  // 'story' = 8,
-  'settings' = 9,
-}
-
-export type RecipePageInfo = {
-  segment: string;
-  title: string;
-  recipeID: string;
-  recipePage: number;
-  recipePageName: string;
 };
 
 export function normalizeForURL(s: string | undefined) {

@@ -2,12 +2,12 @@ import * as React from 'react';
 import { notFound } from 'next/navigation';
 import { Page, PageProps } from '@/libs/navigation';
 import { handleUserNavigation } from '@/libs/server/navigation';
-import { getRecipeIdFromPageParams } from './navigation';
-import { getRecipeData, getRecipeMedia } from './data';
+import { getRecipeIdFromPageParams } from '../navigation';
+import { getRecipeData, getRecipeMedia } from '../data';
 import log from '@/libs/logger';
 import type { Metadata } from 'next';
-import RecipeLayout from './recipe-layout';
-import RecipeContent from '@/components/Recipe/RecipeContent';
+import RecipeLayout from '../recipe-layout';
+import RecipeForks from '@/components/Recipe/RecipeForks';
 
 export async function generateMetadata({
   params,
@@ -17,46 +17,22 @@ export async function generateMetadata({
     return notFound();
   }
 
-  if (id === '0') {
-    return {
-      title: '4ks New Recipe',
-      description: '4ks',
-    };
-  }
-
   // data
   const recipeData = await getRecipeData(id);
   if (!recipeData?.data) {
     return {
-      title: '4ks Recipe',
+      title: '4ks Forks',
       description: '4ks',
     };
   }
 
-  // const mediaData = recipeData?.data?.root
-  //   ? (await getRecipeMedia(recipeData?.data?.root)) ?? { data: [] }
-  //   : { data: [] };
-
-  // todo: add recipe as jsondl
-
-  // const m = media?.data?.map((m) => {
-  //   return m.variants?.map((v) => {
-  //     return v.url;
-  //   });
-  // });
-  // console.log(m);
-  // todo: add media to metatada
-
   return {
     title: recipeData?.data?.currentRevision?.name,
     description: '4ks',
-    // openGraph: {
-    //   images: m as string[],
-    // },
   };
 }
 
-export default async function RecipeContentPage({
+export default async function RecipeForksPage({
   params,
   searchParams,
 }: PageProps) {
@@ -86,7 +62,7 @@ export default async function RecipeContentPage({
       user={userData.user}
       media={mediaData.data || []}
     >
-      <RecipeContent user={userData.user} recipe={recipeData.data} />
+      <RecipeForks user={userData.user} recipe={recipeData.data} />
     </RecipeLayout>
   );
 }

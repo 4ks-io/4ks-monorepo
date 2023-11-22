@@ -1,8 +1,8 @@
 'use client';
 import React from 'react';
-import RecipeIngredients from '@/components/Recipe/RecipeContent/RecipeIngredients';
-import RecipeInstructions from '@/components/Recipe/RecipeContent/RecipeInstructions';
-import RecipeSocial from '@/components/Recipe/RecipeContent/RecipeSocial';
+import RecipeIngredients from './RecipeIngredients';
+import RecipeInstructions from './RecipeInstructions';
+import RecipeSocial from './RecipeSocial';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { RecipeProps } from '@/types/recipe';
