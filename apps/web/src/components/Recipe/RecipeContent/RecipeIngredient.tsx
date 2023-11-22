@@ -1,3 +1,4 @@
+'use client';
 import React, { useState } from 'react';
 import Stack from '@mui/material/Stack';
 import { models_Ingredient } from '@4ks/api-fetch';
@@ -52,8 +53,8 @@ export function RecipeIngredient({
     } as models_Ingredient);
   }
 
-  // todo : remove readonly
   const inputProps = { disableUnderline: true, readOnly: false };
+  const ssr = typeof window === 'undefined';
 
   return (
     <Stack style={isDragging ? { backgroundColor: '#E65100' } : {}}>
@@ -68,11 +69,11 @@ export function RecipeIngredient({
           size="small"
           variant="standard"
           placeholder="-"
-          value={quantity}
+          value={quantity || data.quantity}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={handleQuantityChange}
-          multiline
+          multiline={!ssr}
           InputProps={inputProps}
           sx={{ paddingLeft: 1, width: '96px', paddingTop: '0.5em' }}
           inputProps={{ style: { fontSize: 20 } }}
@@ -82,11 +83,11 @@ export function RecipeIngredient({
           size="small"
           variant="standard"
           placeholder="-"
-          value={name}
+          value={name || data.name}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={handleNameChange}
-          multiline
+          multiline={!ssr}
           InputProps={inputProps}
           sx={{ paddingLeft: 1, paddingTop: '8px' }}
           inputProps={{ style: { fontSize: 20 } }}
