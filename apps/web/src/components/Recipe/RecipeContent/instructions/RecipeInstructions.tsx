@@ -6,7 +6,7 @@ import { models_Instruction } from '@4ks/api-fetch';
 import { useRecipeContext } from '@/providers/recipe-context';
 import RecipeDraggableInstructions from './RecipeDraggableInstructions';
 import RecipeInstruction from './RecipeInstruction';
-import { SectionTitle } from '../SectionTitle';
+import { SectionTitle } from '../../SectionTitle';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import {
@@ -14,7 +14,7 @@ import {
   handleListChange,
   handleListDelete,
   handleListDragEnd,
-} from './dnd-functions';
+} from '../dnd-functions';
 
 type RecipeInstructionsProps = {
   instructions: models_Instruction[];

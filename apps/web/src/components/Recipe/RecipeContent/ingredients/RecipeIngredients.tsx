@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import { models_Ingredient } from '@4ks/api-fetch';
 import { useRecipeContext } from '@/providers/recipe-context';
 import RecipeIngredient from './RecipeIngredient';
-import { SectionTitle } from '../SectionTitle';
+import { SectionTitle } from '../../SectionTitle';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import RecipeDraggableIngredients from './RecipeDraggableIngredients';
@@ -14,7 +14,7 @@ import {
   handleListChange,
   handleListDelete,
   handleListDragEnd,
-} from './dnd-functions';
+} from '../dnd-functions';
 
 type RecipeIngredientsProps = {
   ingredients: models_Ingredient[];

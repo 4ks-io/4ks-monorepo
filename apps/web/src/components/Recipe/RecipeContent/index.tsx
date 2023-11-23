@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
-import RecipeIngredients from './RecipeIngredients';
-import RecipeInstructions from './RecipeInstructions';
+import RecipeIngredients from './ingredients/RecipeIngredients';
+import RecipeInstructions from './instructions/RecipeInstructions';
 import RecipeSocial from './RecipeSocial';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
