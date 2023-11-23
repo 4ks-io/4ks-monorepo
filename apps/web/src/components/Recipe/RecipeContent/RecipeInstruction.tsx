@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { isSSR } from '@/libs/navigation';
 import { models_Instruction } from '@4ks/api-fetch';
 import Stack from '@mui/material/Stack';
 import DragHandleIcon from '@mui/icons-material/DragIndicator';
@@ -9,17 +10,17 @@ import IconButton from '@mui/material/IconButton';
 interface RecipeInstructionProps {
   index: number;
   data: models_Instruction;
-  handleInstructionDelete: (index: number) => void;
-  handleInstructionChange: (index: number, data: models_Instruction) => void;
   isDragging: boolean;
+  handleInstructionDelete?: (index: number) => void;
+  handleInstructionChange?: (index: number, data: models_Instruction) => void;
 }
 
-export function RecipeInstruction({
+export default function RecipeInstruction({
   data,
   index,
-  handleInstructionDelete,
-  handleInstructionChange,
   isDragging,
+  handleInstructionDelete = () => {},
+  handleInstructionChange = () => {},
 }: RecipeInstructionProps) {
   const [active, setActive] = useState(false);
   const [text, setText] = useState(data.text || '');
@@ -46,7 +47,6 @@ export function RecipeInstruction({
     } as models_Instruction);
   }
 
-  // todo: remove readOnly
   const inputProps = { disableUnderline: true, readOnly: false };
 
   return (
@@ -75,7 +75,7 @@ export function RecipeInstruction({
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={handleTextChange}
-          multiline
+          multiline={!isSSR}
           InputProps={inputProps}
           sx={{ paddingLeft: 1, paddingTop: '0.5em' }}
           inputProps={{ style: { fontSize: 20 } }}

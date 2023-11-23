@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState } from 'react';
 import { isSSR } from '@/libs/navigation';
 import Stack from '@mui/material/Stack';
 import { models_Ingredient } from '@4ks/api-fetch';
@@ -9,7 +9,6 @@ import { SectionTitle } from '../SectionTitle';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import RecipeDraggableIngredients from './RecipeDraggableIngredients';
-
 import {
   handleListAdd,
   handleListChange,

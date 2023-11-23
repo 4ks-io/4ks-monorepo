@@ -1,7 +1,8 @@
 'use client';
 import React, { useState } from 'react';
-import Stack from '@mui/material/Stack';
+import { isSSR } from '@/libs/navigation';
 import { models_Ingredient } from '@4ks/api-fetch';
+import Stack from '@mui/material/Stack';
 import DragHandleIcon from '@mui/icons-material/DragIndicator';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TextField from '@mui/material/TextField';
@@ -11,17 +12,17 @@ import IconButton from '@mui/material/IconButton';
 interface RecipeIngredientProps {
   index: number;
   data: models_Ingredient;
+  isDragging: boolean;
   handleIngredientDelete?: (index: number) => void;
   handleIngredientChange?: (index: number, data: models_Ingredient) => void;
-  isDragging: boolean;
 }
 
 export default function RecipeIngredient({
   data,
   index,
+  isDragging,
   handleIngredientDelete = () => {},
   handleIngredientChange = () => {},
-  isDragging,
 }: RecipeIngredientProps) {
   const [quantity, setQuantity] = useState(data.quantity || '');
   const [name, setName] = useState(data.name || '');
@@ -54,7 +55,6 @@ export default function RecipeIngredient({
   }
 
   const inputProps = { disableUnderline: true, readOnly: false };
-  const ssr = typeof window === 'undefined';
 
   return (
     <Stack style={isDragging ? { backgroundColor: '#E65100' } : {}}>
@@ -73,7 +73,7 @@ export default function RecipeIngredient({
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={handleQuantityChange}
-          multiline={!ssr}
+          multiline={!isSSR}
           InputProps={inputProps}
           sx={{ paddingLeft: 1, width: '96px', paddingTop: '0.5em' }}
           inputProps={{ style: { fontSize: 20 } }}
@@ -87,7 +87,7 @@ export default function RecipeIngredient({
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={handleNameChange}
-          multiline={!ssr}
+          multiline={!isSSR}
           InputProps={inputProps}
           sx={{ paddingLeft: 1, paddingTop: '8px' }}
           inputProps={{ style: { fontSize: 20 } }}
