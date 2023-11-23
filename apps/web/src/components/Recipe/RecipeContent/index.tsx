@@ -30,7 +30,7 @@ export default function Recipe({ user, recipe }: RecipeProps) {
       {isAuthenticated && !isNew && !isContributor && rtx.editInProgress && (
         <Alert severity="warning">
           <AlertTitle>
-            <strong>Fork</strong> to saveee {JSON.stringify(rtx.editInProgress)}
+            <strong>Fork</strong> to save
           </AlertTitle>
         </Alert>
       )}
