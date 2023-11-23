@@ -25,7 +25,9 @@ function getIsEditing(
   recipe: models_Recipe | undefined
 ) {
   const differences = diff(current, recipe);
-  return differences && Array.isArray(differences) && differences.length > 0;
+  return differences && Array.isArray(differences) && differences.length > 0
+    ? true
+    : false;
 }
 
 export function recipeContextReducer(
