@@ -63,9 +63,6 @@ importers:
       '@trpc/server':
         specifier: ^10.43.2
         version: 10.43.2
-      '@types/deep-diff':
-        specifier: ^1.0.5
-        version: 1.0.5
       '@types/react-beautiful-dnd':
         specifier: ^13.1.6
         version: 13.1.6
@@ -103,6 +100,9 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
+      '@types/deep-diff':
+        specifier: ^1.0.5
+        version: 1.0.5
       '@types/node':
         specifier: ^20
         version: 20.8.9
@@ -977,7 +977,7 @@ packages:
 
   /@types/deep-diff@1.0.5:
     resolution: {integrity: sha512-PQyNSy1YMZU1hgZA5tTYfHPpUAo9Dorn1PZho2/budQLfqLu3JIP37JAavnwYpR1S2yFZTXa3hxaE4ifGW5jaA==}
-    dev: false
+    dev: true
 
   /@types/dom-speech-recognition@0.0.1:
     resolution: {integrity: sha512-udCxb8DvjcDKfk1WTBzDsxFbLgYxmQGKrE/ricoMqHRNjSlSUCcamVTA5lIQqzY10mY5qCY0QDwBfFEwhfoDPw==}
