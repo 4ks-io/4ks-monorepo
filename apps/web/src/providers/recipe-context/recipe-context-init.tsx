@@ -4,11 +4,13 @@ import {
   models_Instruction,
   models_RecipeMediaVariant,
   models_RecipeMedia,
+  models_RecipeRevision,
 } from '@4ks/api-fetch';
 
 export interface IRecipeContext {
   recipeId: string;
   recipe: models_Recipe;
+  immutableRecipe: models_Recipe;
   media: Array<models_RecipeMedia>;
   resetMedia: () => void;
   resetRecipe: () => void;
@@ -22,6 +24,22 @@ export interface IRecipeContext {
   setEditInProgress: (value: boolean) => void;
 }
 
+const initialRecipeRevision: models_RecipeRevision = {
+  author: {
+    displayName: '',
+    id: '',
+    username: '',
+  },
+  createdDate: '',
+  id: '',
+  ingredients: [],
+  instructions: [],
+  banner: [],
+  name: '',
+  recipeId: '',
+  updatedDate: '',
+};
+
 export const initialRecipe: models_Recipe = {
   author: {
     displayName: '',
@@ -30,21 +48,7 @@ export const initialRecipe: models_Recipe = {
   },
   contributors: [],
   createdDate: '',
-  currentRevision: {
-    author: {
-      displayName: '',
-      id: '',
-      username: '',
-    },
-    createdDate: '',
-    id: '',
-    ingredients: [],
-    instructions: [],
-    banner: [],
-    name: '',
-    recipeId: '',
-    updatedDate: '',
-  },
+  currentRevision: initialRecipeRevision,
   id: '0',
   metadata: { forks: 0, stars: 0 },
   root: '',
@@ -66,6 +70,7 @@ export const initialState: IRecipeContext = {
   recipeId: '-1',
   media: [],
   recipe: initialRecipe,
+  immutableRecipe: initialRecipeRevision,
 };
 
 export function makeInitialState(
@@ -75,6 +80,7 @@ export function makeInitialState(
   let i = initialState;
   i.recipeId = `${recipe.id}`;
   i.recipe = recipe;
+  i.immutableRecipe = recipe.currentRevision as models_RecipeRevision;
   i.media = media;
   return i;
 }

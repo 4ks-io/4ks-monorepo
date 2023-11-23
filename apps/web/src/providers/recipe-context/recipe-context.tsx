@@ -37,6 +37,8 @@ export function RecipeContextProvider({
   const recipeID = `${recipe.id}`;
 
   const recipeData = trpc.recipes.getByIDMutation.useMutation();
+  const [recipeMutex, setRecipeMutex] = useState(false);
+
   const mediaData = trpc.recipes.getMediaByIDMutation.useMutation();
   const [mediaMutex, setMediaMutex] = useState(false);
 
@@ -48,14 +50,13 @@ export function RecipeContextProvider({
   // update media
   useEffect(() => {
     // prevent infinite loop
-    if (!mediaMutex) {
-      return;
-    }
-    const { isLoading, data, isError, isSuccess } = mediaData;
+    if (!mediaMutex) return;
 
+    const { isLoading, isError, isSuccess, data } = mediaData;
     if (isLoading || isError || !isSuccess) {
       return;
     }
+    setMediaMutex(false);
     if (data?.data && state.media.length != data?.data.length) {
       dispatch({ type: RecipeContextAction.SET_MEDIA, payload: data?.data });
     }
@@ -64,13 +65,17 @@ export function RecipeContextProvider({
 
   // update recipe
   useEffect(() => {
-    const { isLoading, data, isError, isSuccess } = recipeData;
+    // prevent infinite loop
+    if (!recipeMutex) return;
+
+    const { isLoading, isError, isSuccess, data } = recipeData;
     if (isLoading || isError || !isSuccess) {
       return;
     }
+    setRecipeMutex(false);
     if (data?.data && state.recipe != data?.data) {
       setEditInProgress(false);
-      dispatch({ type: RecipeContextAction.SET_CONTENT, payload: data.data });
+      dispatch({ type: RecipeContextAction.SET_RECIPE, payload: data.data });
     }
   }, [recipeData, state.recipe]);
 
@@ -117,7 +122,14 @@ export function RecipeContextProvider({
   }
 
   async function setRecipe() {
+    setRecipeMutex(true);
     recipeData.mutate(recipeID);
+  }
+
+  async function resetRecipe() {
+    dispatch({
+      type: RecipeContextAction.RESET_RECIPE,
+    });
   }
 
   async function setMedia() {
@@ -138,7 +150,7 @@ export function RecipeContextProvider({
         type: RecipeContextAction.SET_CONTROLS,
         payload: {
           resetMedia: setMedia,
-          resetRecipe: setRecipe,
+          resetRecipe,
           setTitle,
           setIngredients,
           setInstructions,

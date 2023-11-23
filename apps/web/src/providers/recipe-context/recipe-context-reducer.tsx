@@ -1,5 +1,6 @@
 import { IRecipeContext } from './recipe-context-init';
-
+import { models_Recipe, models_RecipeRevision } from '@4ks/api-fetch';
+import diff from 'deep-diff';
 interface IAction {
   type: RecipeContextAction;
   payload?: any;
@@ -7,7 +8,8 @@ interface IAction {
 
 export enum RecipeContextAction {
   SET_ID = 'setRecipeId',
-  SET_CONTENT = 'setRecipeContent',
+  SET_RECIPE = 'setRecipe',
+  RESET_RECIPE = 'resetRecipeContent',
   SET_CONTROLS = 'setRecipeControls',
   SET_INGREDIENTS = 'setRecipeIngredients',
   SET_INSTRUCTIONS = 'setRecipeInstructions',
@@ -18,10 +20,20 @@ export enum RecipeContextAction {
   SET_EDIT_IN_PROGRESS = 'setEditInProgress',
 }
 
+function getIsEditing(
+  current: models_Recipe | undefined,
+  recipe: models_Recipe | undefined
+) {
+  const differences = diff(current, recipe);
+  return differences && Array.isArray(differences) && differences.length > 0;
+}
+
 export function recipeContextReducer(
   state: IRecipeContext,
   action: IAction
 ): IRecipeContext {
+  let recipe: models_Recipe;
+
   switch (action.type) {
     //
     case RecipeContextAction.SET_ACTION_IN_PROGRESS:
@@ -33,8 +45,23 @@ export function recipeContextReducer(
     case RecipeContextAction.SET_ID:
       return { ...state, recipeId: action.payload };
     //
-    case RecipeContextAction.SET_CONTENT:
-      return { ...state, recipe: action.payload };
+    case RecipeContextAction.SET_RECIPE:
+      return {
+        ...state,
+        recipe: action.payload,
+        immutableRecipe: (action.payload as models_Recipe)
+          .currentRevision as models_RecipeRevision,
+      };
+    //
+    case RecipeContextAction.RESET_RECIPE:
+      return {
+        ...state,
+        recipe: {
+          ...state.recipe,
+          currentRevision: state.immutableRecipe,
+        },
+        editInProgress: false,
+      };
     //
     case RecipeContextAction.SET_MEDIA:
       return { ...state, media: action.payload };
@@ -62,57 +89,74 @@ export function recipeContextReducer(
         setTitle,
         setBanner,
       };
-    //
-    case RecipeContextAction.SET_INGREDIENTS:
-      return {
-        ...state,
-        editInProgress: true,
-        recipe: {
-          ...state.recipe,
-          currentRevision: {
-            ...state.recipe.currentRevision,
-            ingredients: action.payload,
-          },
-        },
-      };
+
     //
     case RecipeContextAction.SET_BANNER:
-      return {
-        ...state,
-        editInProgress: true,
-        recipe: {
-          ...state.recipe,
-          currentRevision: {
-            ...state.recipe.currentRevision,
-            banner: action.payload,
-          },
+      recipe = {
+        ...state.recipe,
+        currentRevision: {
+          ...state.recipe.currentRevision,
+          banner: action.payload,
         },
       };
-    //
-    case RecipeContextAction.SET_INSTRUCTIONS:
       return {
         ...state,
-        editInProgress: true,
-        recipe: {
-          ...state.recipe,
-          currentRevision: {
-            ...state.recipe.currentRevision,
-            instructions: action.payload,
-          },
-        },
+        editInProgress: getIsEditing(
+          state.immutableRecipe,
+          recipe?.currentRevision
+        ),
+        recipe,
       };
     //
     case RecipeContextAction.SET_TITLE:
+      recipe = {
+        ...state.recipe,
+        currentRevision: {
+          ...state.recipe.currentRevision,
+          name: action.payload,
+        },
+      };
       return {
         ...state,
-        editInProgress: true,
-        recipe: {
-          ...state.recipe,
-          currentRevision: {
-            ...state.recipe.currentRevision,
-            name: action.payload,
-          },
+        editInProgress: getIsEditing(
+          state.immutableRecipe,
+          recipe?.currentRevision
+        ),
+        recipe,
+      };
+    //
+    case RecipeContextAction.SET_INSTRUCTIONS:
+      recipe = {
+        ...state.recipe,
+        currentRevision: {
+          ...state.recipe.currentRevision,
+          instructions: action.payload,
         },
+      };
+      return {
+        ...state,
+        editInProgress: getIsEditing(
+          state.immutableRecipe,
+          recipe?.currentRevision
+        ),
+        recipe,
+      };
+    //
+    case RecipeContextAction.SET_INGREDIENTS:
+      recipe = {
+        ...state.recipe,
+        currentRevision: {
+          ...state.recipe.currentRevision,
+          ingredients: action.payload,
+        },
+      };
+      return {
+        ...state,
+        editInProgress: getIsEditing(
+          state.immutableRecipe,
+          recipe?.currentRevision
+        ),
+        recipe,
       };
     //
     default:

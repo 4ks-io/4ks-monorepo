@@ -39,7 +39,7 @@ export default function RecipeEditingControls({
   const [updateSubmit, setUpdateSubmit] = useState(false);
   const [createSubmit, setCreateSubmit] = useState(false);
   const [saveError, setSaveError] = useState(false);
-  const [saveDisabled, setSaveDisabled] = useState(false);
+  const [saveDisabled, setSaveDisabled] = useState(true);
 
   const isAuthenticated = !!user?.id;
   const isContributor = isRecipeContributor();
@@ -112,18 +112,14 @@ export default function RecipeEditingControls({
   }, [forkData]);
 
   function isRecipeContributor() {
-    if (!user || !user.id) {
-      return false;
-    }
-    if (!recipe?.contributors) {
-      return false;
-    }
+    if (!user || !user.id) return false;
+    if (!recipe?.contributors) return false;
+
     const isContributor = recipe.contributors?.some((c) => {
       return user.id == c.id;
     });
-    if (isContributor) {
-      return true;
-    }
+    if (isContributor) return true;
+
     return false;
   }
 
