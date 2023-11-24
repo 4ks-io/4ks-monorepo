@@ -1,4 +1,4 @@
-import { getSession, touchSession } from '@auth0/nextjs-auth0';
+import { getSession } from '@auth0/nextjs-auth0';
 import { notFound, redirect } from 'next/navigation';
 import { serverClient } from '@/trpc/serverClient';
 import log from '@/libs/logger';
@@ -32,9 +32,6 @@ export async function handleUserNavigation(page: Page): Promise<UserSession> {
       isRegistered: false,
     };
   }
-
-  // refresh is session but no user (expired)
-  await touchSession();
 
   // check user exists
   const data = await serverClient.users.exists();

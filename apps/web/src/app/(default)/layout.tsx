@@ -17,7 +17,7 @@ type DefaultLayoutProps = {
 };
 
 export default async function DefaultLayout({ children }: DefaultLayoutProps) {
-  log().Debug(new Error(), [{ k: 'msg', v: 'DefaultLayout' }]);
+  // log().Debug(new Error(), [{ k: 'msg', v: 'DefaultLayout' }]);
   const user = await getUserData();
 
   return (

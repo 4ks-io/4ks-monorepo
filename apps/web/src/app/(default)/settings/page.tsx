@@ -1,5 +1,5 @@
 import React from 'react';
-import Stack from '@mui/material/Stack';
+import Link from 'next/link';
 import UpdateUsername from '@/components/UpdateUsername';
 import { Page, PageProps } from '@/libs/navigation';
 import { handleUserNavigation } from '@/libs/server/navigation';
@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
-import Link from 'next/link';
+import Stack from '@mui/material/Stack';
 
 export const metadata: Metadata = {
   title: '4ks Settings',
