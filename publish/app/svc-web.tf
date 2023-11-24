@@ -1,8 +1,11 @@
-resource "google_cloud_run_service" "web" {
+resource "google_cloud_run_v2_service" "web" {
   name     = "web"
   location = var.region
 
   template {
+    scaling {
+      min_instance_count = 1
+    }
     spec {
       containers {
         image = "${local.container_registry}/web/app:${var.web_build_number}"
