@@ -1,5 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import log from '@/libs/logger';
+import { redirect } from 'next/navigation';
 
 export interface APIError {
   url: string;
@@ -52,6 +53,9 @@ export function handleAPIError(e: any) {
     { k: 'cause', v: err.body },
     { k: 'error', v: err as unknown as string },
   ]);
+  if (err.status == 401) {
+    redirect('/app/auth/login');
+  }
   throw new TRPCError({
     code: HttpStatusCode[err.status],
     message: err.statusText,
