@@ -1,11 +1,8 @@
-resource "google_cloud_run_v2_service" "api" {
+resource "google_cloud_run_service" "api" {
   name     = "api"
   location = var.region
 
   template {
-    scaling {
-      min_instance_count = 1
-    }
     spec {
       service_account_name = google_service_account.api.email
       containers {
@@ -13,6 +10,7 @@ resource "google_cloud_run_v2_service" "api" {
         ports {
           container_port = 5000
         }
+
         env {
           name  = "SERVICE_ACCOUNT_EMAIL"
           value = google_service_account.api.email
@@ -33,6 +31,7 @@ resource "google_cloud_run_v2_service" "api" {
           name  = "GOOGLE_CLOUD_PROJECT"
           value = data.google_project.project.number
         }
+
         env {
           name  = "FIRESTORE_PROJECT_ID"
           value = "${local.stage}-${local.org}"
@@ -65,10 +64,12 @@ resource "google_cloud_run_v2_service" "api" {
           name  = "SWAGGER_URL_PREFIX"
           value = "/api"
         }
+
         env {
           name  = "TYPESENSE_URL"
           value = "https://${var.typesense_url_env_map[terraform.workspace]}"
         }
+
         env {
           name  = "TYPESENSE_API_KEY"
           value = var.typesense_api_key
@@ -142,9 +143,9 @@ data "google_iam_policy" "api_token_creator" {
   }
 }
 
-resource "google_cloud_run_v2_service_iam_member" "api_anonymous_access" {
-  service  = google_cloud_run_v2_service.api.name
-  location = google_cloud_run_v2_service.api.location
+resource "google_cloud_run_service_iam_member" "api_anonymous_access" {
+  service  = google_cloud_run_service.api.name
+  location = google_cloud_run_service.api.location
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
@@ -154,7 +155,7 @@ resource "google_compute_region_network_endpoint_group" "api_neg" {
   network_endpoint_type = "SERVERLESS"
   region                = var.region
   cloud_run {
-    service = google_cloud_run_v2_service.api.name
+    service = google_cloud_run_service.api.name
   }
 }
 
@@ -171,5 +172,5 @@ resource "google_compute_region_network_endpoint_group" "api_neg" {
 # }
 
 output "api_service_url" {
-  value = google_cloud_run_v2_service.api.status[0].url
+  value = google_cloud_run_service.api.status[0].url
 }
