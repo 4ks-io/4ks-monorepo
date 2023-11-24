@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { serverClient } from '@/trpc/serverClient';
+import { Page } from '@/libs/navigation';
+import { handleUserNavigation } from '@/libs/server/navigation';
 import SearchResults from '@/components/SearchResults';
 import type { Metadata } from 'next';
 import Box from '@mui/material/Box';
@@ -11,6 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ExplorePage() {
+  await handleUserNavigation(Page.ANONYMOUS);
   const data = await serverClient.search.recipes('');
 
   if (!data) {

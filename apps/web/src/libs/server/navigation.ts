@@ -33,6 +33,9 @@ export async function handleUserNavigation(page: Page): Promise<UserSession> {
     };
   }
 
+  // refresh is session but no user (expired)
+  if (!session.user) redirect(authLoginPath);
+
   // check user exists
   const data = await serverClient.users.exists();
 
