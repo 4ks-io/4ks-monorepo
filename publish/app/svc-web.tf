@@ -107,15 +107,15 @@ resource "google_cloud_run_v2_service" "web" {
 
 }
 
-resource "google_cloud_run_service_iam_member" "web_anonymous_access" {
-  service  = google_cloud_run_service.web.name
-  location = google_cloud_run_service.web.location
+resource "google_cloud_run_v2_service_iam_member" "web_anonymous_access" {
+  service  = google_cloud_run_v2_service.web.name
+  location = google_cloud_run_v2_service.web.location
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
 
 output "web_service_url" {
-  value = google_cloud_run_service.web.status[0].url
+  value = google_cloud_run_v2_service.web.status[0].url
 }
 
 
@@ -124,7 +124,7 @@ resource "google_compute_region_network_endpoint_group" "web_neg" {
   network_endpoint_type = "SERVERLESS"
   region                = var.region
   cloud_run {
-    service = google_cloud_run_service.web.name
+    service = google_cloud_run_v2_service.web.name
   }
 }
 
