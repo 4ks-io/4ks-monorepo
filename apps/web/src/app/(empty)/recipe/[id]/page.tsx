@@ -9,6 +9,7 @@ import log from '@/libs/logger';
 import type { Metadata } from 'next';
 import RecipeLayout from './recipe-layout';
 import RecipeContent from '@/components/Recipe/RecipeContent';
+import { Recipe, HowToStep } from 'schema-dts';
 
 export async function generateMetadata({
   params,
@@ -85,17 +86,20 @@ export default async function RecipeContentPage({
   const md = getRecipeBannerVariantUrl(
     recipeData?.data?.currentRevision?.banner
   );
-  let jsonLd = {
-    '@context': 'https://schema.org',
+  let jsonLd: Recipe = {
     '@type': 'Recipe',
     name: recipeData?.data?.currentRevision?.name,
     recipeIngredient: recipeData?.data?.currentRevision?.ingredients?.map(
       (i) => `${i.quantity} ${i.name}`
     ),
-    RecipeInstructions: recipeData?.data?.currentRevision?.instructions?.map(
-      (i) => i.text
+    recipeInstructions: recipeData?.data?.currentRevision?.instructions?.map(
+      (i) =>
+        ({
+          '@type': 'HowToStep',
+          text: i.text || '',
+        } as HowToStep)
     ),
-    image: [md?.url],
+    image: md?.url,
     // description: product.description,
   };
 
