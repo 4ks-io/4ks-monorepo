@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { notFound } from 'next/navigation';
 import { Page, PageProps } from '@/libs/navigation';
+import { getRecipeBannerVariantUrl } from '@/libs/media';
 import { handleUserNavigation } from '@/libs/server/navigation';
 import { getRecipeIdFromPageParams } from './navigation';
 import { getRecipeData, getRecipeMedia } from './data';
@@ -80,13 +81,37 @@ export default async function RecipeContentPage({
     ? (await getRecipeMedia(recipeData?.data?.root)) ?? { data: [] }
     : { data: [] };
 
+  //jsonLd
+  const md = getRecipeBannerVariantUrl(
+    recipeData?.data?.currentRevision?.banner
+  );
+  let jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Recipe',
+    name: recipeData?.data?.currentRevision?.name,
+    recipeIngredient: recipeData?.data?.currentRevision?.ingredients?.map(
+      (i) => `${i.quantity} ${i.name}`
+    ),
+    RecipeInstructions: recipeData?.data?.currentRevision?.instructions?.map(
+      (i) => i.text
+    ),
+    image: [md?.url],
+    // description: product.description,
+  };
+
   return (
-    <RecipeLayout
-      recipe={recipeData.data}
-      user={userData.user}
-      media={mediaData.data || []}
-    >
-      <RecipeContent user={userData.user} recipe={recipeData.data} />
-    </RecipeLayout>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <RecipeLayout
+        recipe={recipeData.data}
+        user={userData.user}
+        media={mediaData.data || []}
+      >
+        <RecipeContent user={userData.user} recipe={recipeData.data} />
+      </RecipeLayout>
+    </>
   );
 }

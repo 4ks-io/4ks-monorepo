@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useRecipeContext } from '@/providers/recipe-context';
 import { models_RecipeMediaVariant } from '@4ks/api-fetch';
-import { RecipeMediaSize } from '../types';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -17,13 +16,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import RecipeMediaBannerImagePreview from './RecipeMediaBannerImagePreview';
 import { unstable_noStore as noStore } from 'next/cache';
-
-export function getBannerVariantUrl(
-  variants: models_RecipeMediaVariant[] | undefined,
-  size: RecipeMediaSize = RecipeMediaSize.MD
-): models_RecipeMediaVariant | undefined {
-  return variants && variants.filter((v) => v.alias == size)[0];
-}
+import { getRecipeBannerVariantUrl } from '@/libs/media';
 
 interface RecipeMediaBannerProps {
   isNew: boolean;
@@ -57,7 +50,7 @@ export default function RecipeMediaBanner({ isNew }: RecipeMediaBannerProps) {
 
   useEffect(() => {
     if (rtx?.recipe?.currentRevision?.banner) {
-      const md = getBannerVariantUrl(rtx.recipe.currentRevision.banner);
+      const md = getRecipeBannerVariantUrl(rtx.recipe.currentRevision.banner);
       md?.url && typeof md.url == 'string' && setImageSrc(md.url);
     } else {
       setRandomImage();
@@ -67,9 +60,11 @@ export default function RecipeMediaBanner({ isNew }: RecipeMediaBannerProps) {
 
   useEffect(() => {
     if (rtx?.recipe?.currentRevision?.banner) {
-      const bannerImg = getBannerVariantUrl(rtx.recipe.currentRevision.banner);
+      const bannerImg = getRecipeBannerVariantUrl(
+        rtx.recipe.currentRevision.banner
+      );
       if (showBannerSelectModal) {
-        const newBannerImg = getBannerVariantUrl(selectingMedia);
+        const newBannerImg = getRecipeBannerVariantUrl(selectingMedia);
         setImageSrc(newBannerImg?.url || bannerImg?.url);
       } else {
         setImageSrc(bannerImg?.url || undefined);

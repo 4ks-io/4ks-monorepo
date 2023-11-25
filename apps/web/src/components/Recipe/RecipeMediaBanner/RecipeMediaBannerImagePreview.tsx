@@ -1,12 +1,10 @@
 import React from 'react';
 import { models_RecipeMediaVariant } from '@4ks/api-fetch';
-import { RecipeMediaSize } from '../types';
-import Box from '@mui/material/Box';
 import { models_RecipeMedia } from '@4ks/api-fetch';
-import { getBannerVariantUrl } from './RecipeMediaBanner';
+import { getRecipeBannerVariantUrl, RecipeMediaSize } from '@/libs/media';
 import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
+
 interface RecipeMediaBannerImagePreviewProps {
   media: models_RecipeMedia;
   selectingMediaId: string | undefined;
@@ -22,7 +20,7 @@ export default function RecipeMediaBannerImagePreview({
   setSelectingMedia,
   setSelectingMediaId,
 }: RecipeMediaBannerImagePreviewProps) {
-  let sm = getBannerVariantUrl(media?.variants, RecipeMediaSize.SM);
+  let sm = getRecipeBannerVariantUrl(media?.variants, RecipeMediaSize.SM);
   if (!sm) {
     return;
   }
