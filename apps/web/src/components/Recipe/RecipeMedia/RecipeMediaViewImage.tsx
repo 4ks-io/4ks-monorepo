@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { unstable_noStore as noStore } from 'next/cache';
 import { models_RecipeMedia } from '@4ks/api-fetch';
-import { RecipeMediaSize } from '../types';
+import { RecipeMediaSize } from '@/libs/media';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
