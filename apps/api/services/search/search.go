@@ -26,6 +26,7 @@ func New() Service {
 	return &searchService{}
 }
 
+// todo: move into New()?
 var tsURL = os.Getenv("TYPESENSE_URL")
 var tsKey = os.Getenv("TYPESENSE_API_KEY")
 var tsc = typesense.NewClient(typesense.WithServer(tsURL), typesense.WithAPIKey(tsKey))

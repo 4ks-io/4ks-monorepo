@@ -47,9 +47,11 @@ docker_build(
     'web',
     context='.',
     dockerfile='apps/web/Dockerfile.dev',
+    # todo: make only
     ignore=[
         'ignore',
         'apps/media-upload',
+        'apps/recipe-fetcher',
         'apps/api',
         'apps-dev',
         'data',

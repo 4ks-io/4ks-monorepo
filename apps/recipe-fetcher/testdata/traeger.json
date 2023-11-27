@@ -1,0 +1,95 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "BBQ Pulled Pork Sliders Recipe | Traeger Grills",
+  "description": "Traeger&apos;s BBQ Pulled Pork Sliders features a bone-in pork butt, homemade pickles and an easy to make bbq sauce on slider buns.",
+  "prepTime": "PT0H15M00S",
+  "cookTime": "PT10H0M00S",
+  "keywords": "",
+  "author": { "@type": "Person", "name": "Traeger Kitchen" },
+  "image": [
+    "https://i8.amplience.net/i/traeger/20180811_BBQ-Pulled-Pork-Sliders_RE_HE?scaleFit=poi%26%24poi2%24&amp;fmt=auto&amp;w=500&amp;sm=aspect&amp;aspect=1%3A1&amp;qlt=default"
+  ],
+  "recipeCategory": "Pork",
+  "aggregateRating": { "@type": "AggregateRating", "ratingValue": 0 },
+  "recipeIngredient": [
+    "Persian cucumbers, washed",
+    "kosher salt",
+    "Sugar",
+    "garlic cloves",
+    "dried bay leaves",
+    "whole black peppercorns",
+    "whole white peppercorns",
+    "whole fennel seeds",
+    "whole coriander seeds",
+    "red pepper flakes",
+    "white wine vinegar",
+    "ice water",
+    "fresh dill",
+    "(8-10 lb) bone-in pork butt",
+    "Traeger Pork &amp; Poultry Rub, plus more to taste",
+    "Traeger Apricot BBQ Sauce",
+    "Mayonnaise",
+    "ketchup",
+    "Traeger Apricot BBQ Sauce",
+    "sweet pickle relish",
+    "yellow mustard",
+    "Sugar",
+    "distilled white vinegar",
+    "Slider Buns"
+  ],
+  "recipeInstructions": [
+    {
+      "text": "When ready to cook, set Traeger temperature 165℉ and preheat, lid closed for 15 minutes. For optimal flavor, use Super Smoke if available.",
+      "@type": "HowToStep"
+    },
+    {
+      "text": "For the Homemade Pickles: Plan ahead, these pickles brine overnight. Place the whole, washed cucumbers directly on the grill grate and smoke for 30 to 45 minutes.",
+      "@type": "HowToStep"
+    },
+    {
+      "text": "In a medium saucepan, combine the salt, sugar, garlic, bay leaves, black and white peppercorns, fennel seeds, coriander seeds, red pepper flakes, and white wine vinegar. Bring to a boil over medium-high heat, then reduce the heat to medium-low and simmer for 5-10 minutes, stirring to dissolve the salt and sugar. Remove the brine from the heat and let steep for 20 minutes more. Pour the ice water into the brine and add the dill.",
+      "@type": "HowToStep"
+    },
+    {
+      "text": "Remove the cucumbers from the Traeger and thinly slice crosswise. Transfer to a large glass jar or non-reactive container.",
+      "@type": "HowToStep"
+    },
+    {
+      "text": "Pour the brine over the cucumbers and weigh down as needed to ensure the cucumbers are fully submerged. Cover and let sit at room temperature for 24 hours before using.",
+      "@type": "HowToStep"
+    },
+    {
+      "text": "Make the pulled pork: Generously the pork butt on all sides with Traeger Pork &amp; Poultry Rub. Let sit at room temperature for 45 minutes.",
+      "@type": "HowToStep"
+    },
+    {
+      "text": "When ready to cook, set the Traeger temperature to 225℉ and preheat with the lid closed for 15 minutes. For optimal flavor, use Super Smoke, if available.",
+      "@type": "HowToStep"
+    },
+    {
+      "text": "Place the pork butt directly on the grill grates, fat-side down. Close the lid and smoke for 3 hours.",
+      "@type": "HowToStep"
+    },
+    {
+      "text": "Transfer the pork to a disposable aluminum foil pan and cover the pan with foil. Increase the Traeger temperature to 275℉. Place the pan on the grill, close the lid, and roast until an instant-read thermometer inserted in the thickest part of the roast, but not touching bone, registers 200℉, 3-5 hours more.",
+      "@type": "HowToStep"
+    },
+    {
+      "text": "Meanwhile, make the special sauce: In a small bowl, stir together the mayonnaise, ketchup, Traeger Apricot BBQ Sauce, sweet pickle relish, mustard, sugar, and distilled white vinegar. Refrigerate until ready to use.",
+      "@type": "HowToStep"
+    },
+    {
+      "text": "Carefully transfer the pork roast to a clean disposable pan and let rest for 20 minutes. Pour the juices from the bottom of the roasting pan into a fat separator.",
+      "@type": "HowToStep"
+    },
+    {
+      "text": "With your hands (preferably protected from the heat with lined, heavy-duty rubber gloves), pull the pork into chunks. Discard the bone and any lumps of fat, including the cap. Pull each chunk into shreds and transfer to a large bowl. Season with Traeger Pork &amp; Poultry Rub to taste and moisten with the reserved pork juices, discard any fat that has floated to the top. Add the Traeger Apricot BBQ Sauce and mix well.",
+      "@type": "HowToStep"
+    },
+    {
+      "text": "Pile the pulled pork on the slider buns. Top with the pickles and special sauce. Enjoy!",
+      "@type": "HowToStep"
+    }
+  ]
+}

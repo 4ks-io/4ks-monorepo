@@ -1,0 +1,62 @@
+{
+    "@context": "https://schema.org/",
+    "@type": "Recipe",
+    "name": "Lemony Chicken and Rice Soup",
+    "author": {
+        "@type": "Person",
+        "name": "BigOvenEditorial"
+    },
+    "datePublished": "2021/03/26",
+    "image": ["https://bigoven-res.cloudinary.com/image/upload/h_640,w_640,c_fill/lemony-chicken-and-rice-soup-5e176a.png"],
+    "description": "A comforting bowl of chicken soup can be enjoyed any time of year. The addition of lemon and fresh dill in this recipe helps make this the perfect soup for transitioning into the spring season. This is the soup to make when you’re ready for the bright and fresh flavors that come with warmer months, but still dealing with days chilly enough to crave a warm bowl of soup. \r\n\r\nThis chicken soup is a simple, one-pot recipe. You don’t need any special equipment and it’s made from ingredients typically kept on hand in most kitchens. And, it all comes together fast enough that it can be an easy dinner on busy weeknights.",
+        
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "5",
+                "ratingCount": "2",
+                "reviewCount": "2",
+                "bestRating": "5",
+                "worstRating": "0"
+            },
+        
+    "prepTime": "PT1H",
+    "cookTime": "PT30M",
+    "totalTime": "PT1H30M",
+    "recipeCategory": "Soups, Stews and Chili",
+    "recipeCuisine": "not set",
+    "recipeYield": "6",
+    "keywords": "white meat free, nut free, gluten free, red meat free, shellfish free, contains dairy, pescatarian",
+    "nutrition": {
+        "@type": "NutritionInformation",
+        "calories": "821 calories",
+        "fatContent": "15.2092350110572 g",
+        "carbohydrateContent": "132.388604019098 g",
+        "cholesterolContent": "75.0033333495641 mg",
+        "fiberContent": "2.09606163644592 g",
+        "proteinContent": "37.5970933469671 g",
+        "saturatedFatContent": "5.16464970236701 g",
+        "servingSize": "1 1 Serving (916g)",
+        "sodiumContent": "1220.55700077376 mg",
+        "sugarContent": "130.292542382652 g",
+        "transFatContent": "1.19545046724474 g"
+    },
+    "recipeIngredient": ["1 tablespoon extra-virgin olive oil","1 medium onion chopped","4 celery stalks trimmed and sliced","4 carrots sliced into rounds","2 boneless, skinless chicken breasts","8 cups chicken stock homemade or store-bought","1 teaspoon kosher salt","1/4 teaspoon black pepper","1 cup long-grain white rice","1/4 cup freshly squeezed lemon juice about 1 lemon","1 teaspoon finely grated lemon zest optional","1/4 cup fresh dill (or 1 tablespoon dried) roughly chopped","1/4 cup fresh parsley (or 1 tablespoon dried) roughly chopped","2 tablespoons unsalted butter"],
+    
+    "recipeInstructions": [
+        "1. Heat olive oil in a heavy-bottomed Dutch oven set over medium-high heat.  2. Add onion, celery, and carrots and sauté until the vegetables begin to soften, about 4 minutes.  3. Add chicken stock, salt, and pepper and bring mixture to a boil. You can cover the pot to help it reach a boil faster.  4. Sprinkle chicken breasts with salt and pepper. Once stock is boiling, add the chicken breasts and reduce heat to medium-low to simmer. Cover the pot with a lid and let the chicken poach for about 15 minutes.  5. Use a meat thermometer to check the internal temperature of the chicken around the 15-minute mark. The chicken is cooked when it reaches 165 degrees Fahrenheit. The exact time to cook the chicken will depend on the size of the breasts.  6. Once the chicken has reached an internal temperature of 165 degrees Fahrenheit, remove it from the pot.  7. Add rice to the pot and cover again. Let simmer for 15 minutes more.  8. While the rice cooks, shred the chicken breasts.  9. When the rice has cooked through, return the shredded chicken to the pot. Stir in the lemon juice and zest, if using, dill, parsley, and butter. Serve once butter has melted."
+    ],
+    "video": [
+                
+                    {
+                        "@type": "VideoObject",
+                        "contentUrl": "https://cdn.jwplayer.com/videos/yQPKxUKV-wnhMYNSL.mp4",
+                        "thumbnailUrl": ["https://cdn.jwplayer.com/v2/media/yQPKxUKV/poster.jpg?width=320","https://cdn.jwplayer.com/v2/media/yQPKxUKV/poster.jpg?width=480","https://cdn.jwplayer.com/v2/media/yQPKxUKV/poster.jpg?width=640","https://cdn.jwplayer.com/v2/media/yQPKxUKV/poster.jpg?width=720","https://cdn.jwplayer.com/v2/media/yQPKxUKV/poster.jpg?width=1280","https://cdn.jwplayer.com/v2/media/yQPKxUKV/poster.jpg?width=1920"],
+                        "name": "Lemony Chicken and Rice Soup",
+                        "description": "A comforting bowl of chicken soup can be enjoyed any time of year. The addition of lemon and fresh dill in this recipe helps make this the perfect soup for transitioning into the spring season. This is the soup to make when you’re ready for the bright and fresh flavors that come with warmer months, but still dealing with days chilly enough to crave a warm bowl of soup.
+
+This chicken soup is a simple, one-pot recipe. You don’t need any special equipment and it’s made from ingredients typically kept on hand in most kitchens. And, it all comes together fast enough that it can be an easy dinner on busy weeknights.",
+                        "uploadDate": "2021-04-16T14:09:46.4530000Z"
+                    }
+                
+    ]
+}
