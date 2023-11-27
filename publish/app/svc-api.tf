@@ -3,6 +3,12 @@ resource "google_cloud_run_service" "api" {
   location = var.region
 
   template {
+    metadata{
+      annotations = {
+        "autoscaling.knative.dev/minScale" = "1"
+        "autoscaling.knative.dev/maxScale" = "10"
+      }
+    }
     spec {
       service_account_name = google_service_account.api.email
       containers {
