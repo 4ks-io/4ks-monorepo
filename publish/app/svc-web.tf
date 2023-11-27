@@ -3,6 +3,12 @@ resource "google_cloud_run_service" "web" {
   location = var.region
 
   template {
+     metadata{
+      annotations = {
+        "autoscaling.knative.dev/minScale" = "1"
+        "autoscaling.knative.dev/maxScale" = "10"
+      }
+    }
     spec {
       containers {
         image = "${local.container_registry}/web/app:${var.web_build_number}"
