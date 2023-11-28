@@ -42,7 +42,7 @@ func main() {
 	// Channel to listen for completion
 	done := make(chan bool)
 
-	s := NewFetcherService(ctx, *debug)
+	s := newFetcherService(ctx, *debug)
 
 	go func() {
 		if err := s.Visit(*target); err != nil {
@@ -63,6 +63,7 @@ func main() {
 	}
 }
 
+// PrintStruct prints a struct as json
 func PrintStruct(t interface{}) {
 	j, _ := json.MarshalIndent(t, "", "  ")
 	fmt.Println(string(j))

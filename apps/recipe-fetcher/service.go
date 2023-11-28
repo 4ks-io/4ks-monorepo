@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"html"
-	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
@@ -15,33 +14,30 @@ import (
 	"github.com/gocolly/colly/v2"
 )
 
+
+var (
+	errNotRecipe = errors.New("not a recipe")
+)
+
 const (
+	// ApplicationJSONLDType is the content type for json-ld
 	ApplicationJSONLDType      = "application/ld+json"
+	// ApplicationJSONLDScriptTag is the selector for json-ld script tags
 	ApplicationJSONLDScriptTag = `script[type="application/ld+json"]`
 )
 
+// FetcherService is the interface for the fetcher service
 type FetcherService interface{}
 
 type fetcherService struct {
 	ctx   context.Context
-	ld    LdProcessor
 	debug bool
 }
 
-func NewFetcherService(ctx context.Context, debug bool) *fetcherService {
-	// toggle debugging
-	client := http.Client{}
-	if debug {
-		client = http.Client{
-			Transport: &loggingTransport{},
-		}
-	}
-
-	ld := NewLdProcessor(client)
-
+// newFetcherService returns a new FetcherService
+func newFetcherService(ctx context.Context, debug bool) *fetcherService {
 	return &fetcherService{
 		ctx,
-		ld,
 		debug,
 	}
 }
@@ -101,7 +97,7 @@ func getRecipeFromJSONLD(l log.Logger, e *colly.HTMLElement, u string) (Recipe, 
 
 	node := searchJSON(data)
 	if node == nil {
-		return Recipe{}, notRecipe
+		return Recipe{}, errNotRecipe
 	}
 
 	ingredients, err := getIngredients(l, node["recipeIngredient"])
@@ -138,7 +134,7 @@ func removeEmptyStrings(s []string) []string {
 }
 
 // getInstructions returns a slice of strings from a slice of interface{}
-func getInstructions(l log.Logger, in interface{}) ([]string, error) {
+func getInstructions(_ log.Logger, in interface{}) ([]string, error) {
 	var o []string
 
 	// marshal
@@ -223,7 +219,7 @@ func getInstructions(l log.Logger, in interface{}) ([]string, error) {
 }
 
 // getIngredients returns a slice of strings from a slice of interface{}
-func getIngredients(l log.Logger, in interface{}) ([]string, error) {
+func getIngredients(_ log.Logger, in interface{}) ([]string, error) {
 	data, err := json.Marshal(in)
 	if err != nil {
 		return []string{}, err
@@ -250,11 +246,14 @@ type Recipe struct {
 	Instructions []string
 }
 
+
+// HowToSection is a struct to hold the scraped recipe data
 type HowToSection struct {
 	Type     string      `json:"@type"`
 	ItemList []HowToStep `json:"itemListElement"`
 }
 
+// HowToStep is a struct to hold the scraped recipe data
 type HowToStep struct {
 	Type string `json:"@type"`
 	Text string `json:"text"`

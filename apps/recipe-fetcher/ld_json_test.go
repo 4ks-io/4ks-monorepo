@@ -280,7 +280,7 @@ func TestRecipeHTML(t *testing.T) {
 				callbackCount++
 
 				r, err := getRecipeFromJSONLD(l, e, u)
-				if err == notRecipe {
+				if err == errNotRecipe {
 					return
 				}
 				if err != nil {

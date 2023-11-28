@@ -1,16 +1,14 @@
 package main
 
+// this was created while experimenting with json-ld parsing. In the end it wasn't used. KEep it here for reference.
+
 import (
-	"errors"
 	"net/http"
 
 	"github.com/piprate/json-gold/ld"
 )
 
-var (
-	notRecipe = errors.New("not a recipe")
-)
-
+// LdProcessor is a processor for json-ld
 type LdProcessor interface {
 	Parse(map[string]interface{}) (interface{}, error)
 }
@@ -20,6 +18,7 @@ type ldProcessor struct {
 	options *ld.JsonLdOptions
 }
 
+// NewLdProcessor returns a new LdProcessor
 func NewLdProcessor(client http.Client) LdProcessor {
 	proc := ld.NewJsonLdProcessor()
 	options := ld.NewJsonLdOptions("")
@@ -55,7 +54,7 @@ func (s *ldProcessor) Parse(i map[string]interface{}) (interface{}, error) {
 	}
 
 	if expanded == nil || len(expanded) != 1 {
-		return nil, notRecipe
+		return nil, errNotRecipe
 	}
 
 	// ld.PrintDocument("JSON-LD expansion succeeded", expanded)
