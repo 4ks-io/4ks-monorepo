@@ -10,10 +10,10 @@ local_resource(
 # resources
 k8s_yaml([
     'deploy/api.yaml',
-    # 'deploy/web-vite.yaml',
     'deploy/web.yaml',
     'deploy/firestore.yaml',
     'deploy/typesense.yaml',
+    'deploy/pubsub.yaml',
     # 'deploy/jaeger.yaml'
 ])
 

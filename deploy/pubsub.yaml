@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pubsub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pubsub
+  template:
+    metadata:
+      labels:
+        app: pubsub
+    spec:
+      containers:
+        - name: pubsub
+          image: google/cloud-sdk:latest
+          command: ['gcloud', 'beta', 'emulators', 'pubsub', 'start']
+          ports:
+            - containerPort: 8085
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi

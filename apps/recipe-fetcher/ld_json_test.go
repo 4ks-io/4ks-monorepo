@@ -47,8 +47,8 @@ func newUnstartedTestServer(dat []byte) *httptest.Server {
 const mockURL = "http://127.0.0.1:44245/recipe"
 
 var testCases = map[string]struct {
-	Callbacks int
-	Recipe    Recipe
+	Callbacks      int
+	Recipe         Recipe
 }{
 	"bigoven": {
 		Callbacks: 1,
@@ -70,6 +70,17 @@ var testCases = map[string]struct {
 				"1/4 cup fresh dill (or 1 tablespoon dried) roughly chopped",
 				"1/4 cup fresh parsley (or 1 tablespoon dried) roughly chopped",
 				"2 tablespoons unsalted butter",
+			},
+			Instructions: []string{
+				"Heat olive oil in a heavy-bottomed Dutch oven set over medium-high heat.",
+				"Add onion, celery, and carrots and sauté until the vegetables begin to soften, about 4 minutes.",
+				"Add chicken stock, salt, and pepper and bring mixture to a boil. You can cover the pot to help it reach a boil faster.",
+				"Sprinkle chicken breasts with salt and pepper. Once stock is boiling, add the chicken breasts and reduce heat to medium-low to simmer. Cover the pot with a lid and let the chicken poach for about 15 minutes.",
+				"Use a meat thermometer to check the internal temperature of the chicken around the 15-minute mark. The chicken is cooked when it reaches 165 degrees Fahrenheit. The exact time to cook the chicken will depend on the size of the breasts.",
+				"Once the chicken has reached an internal temperature of 165 degrees Fahrenheit, remove it from the pot.",
+				"Add rice to the pot and cover again. Let simmer for 15 minutes more.",
+				"While the rice cooks, shred the chicken breasts.",
+				"When the rice has cooked through, return the shredded chicken to the pot. Stir in the lemon juice and zest, if using, dill, parsley, and butter. Serve once butter has melted.",
 			},
 		},
 	},
@@ -99,6 +110,15 @@ var testCases = map[string]struct {
 				"Quick pickled onions",
 				"Fresh cilantro",
 			},
+			Instructions: []string{
+				"TOFU AND CAULIFLOWER: Preheat your oven to 425 degrees F (218 C) and line a baking sheet with parchment paper.",
+				"Place the bite-sized cauliflower florets and 1-inch pieces of tofu onto the baking sheet. Drizzle with oil then sprinkle with curry powder and salt. Toss to thoroughly coat. Bake for 20-25 minutes, tossing halfway through. The cauliflower will be tender and golden brown on the outside and the tofu slightly crispy.",
+				"KORMA SAUCE: Meanwhile, heat the oil in a large rimmed skillet or pot over medium heat. Once hot, add the onions, garlic, and ginger. Cook over medium heat, stirring occasionally, until the onions are soft and golden, about 10 minutes. Stir in the curry powder, tomato paste, and sea salt and continue cooking for 2-3 minutes, until fragrant. Next add 1/2 cup of water (adjust amount if altering batch size) to deglaze the pan. Stir and cook for about 3 more minutes until the water has reduced slightly.",
+				"Place the onion and spice mixture into a high-speed blender with 2 cups of water (adjust amount if altering batch size) and the cashews. Blend on high until the mixture is smooth and creamy, about 2 minutes.",
+				"Pour the contents of the blender back into the pan and bring to a simmer over medium heat. Reduce heat and simmer for 10-15 minutes, or until the sauce has thickened.",
+				"COMBINE: Once the roasted cauliflower and tofu look crispy, add them to the sauce and reduce for about 5 minutes until the consistency is to your liking (we prefer it to be almost a cheese sauce consistency). Taste and adjust as needed, adding more salt for overall flavor or optional lemon juice for brightness.",
+				"We like to serve it over rice with dairy-free yogurt, pickled onions, and cilantro (all optional, but extra delicious!). Store in a sealed container in the refrigerator for up to 4-5 days or in the freezer for 1 month (or longer).",
+			},
 		},
 	},
 	"cooking-nytimes": {
@@ -116,6 +136,13 @@ var testCases = map[string]struct {
 				"1/2 cup fresh flat-leaf parsley or dill leaves and fine stems, roughly chopped",
 				"1/4 cup grated Parmesan or pecorino (optional)",
 				"Bread or cooked pasta, for serving",
+			},
+			Instructions: []string{
+				"In a large mixing bowl, combine 2 tablespoons oil, 2 tablespoons vinegar, the honey, mustard, red-pepper flakes and 1 teaspoon salt; whisk until smooth. Pat the chicken dry and season with salt and pepper, then add to the mixture, coating it well. Set aside at room temperature, stirring it once while you make the onions.",
+				"Heat a 12-inch cast-iron or heavy skillet over medium-high until very hot, 1 1/2 to 2 minutes, then add the onions in an even layer. Season with salt, then cook, mostly undisturbed, for 4 minutes more, stirring every minute or so. Add the mushrooms, season with salt, and stir to combine. (It will look crowded, and that’s OK.) Allow to cook mostly undisturbed until the mushrooms shrink and start to brown, about 4 minutes, stirring every minute or so.",
+				"Stir in the remaining 3 tablespoons olive oil and allow the onions to cook until they start to color, stirring and lowering the heat as necessary to avoid burning, about 2 minutes. Push the onions and mushrooms to the edges of the skillet, then add the chicken pieces to the center. Pour any remaining marinade (there will be very little) over the onions and mushrooms. Cook undisturbed for 4 to 5 minutes, then combine the chicken and vegetables and cook, stirring occasionally, until the chicken is cooked through, about 10 minutes more. (Reduce the heat to medium if the onions look like they are burning at any point.)",
+				"Add the remaining 2 teaspoons sherry vinegar, stirring and scraping up anything on the bottom of the skillet. Season to taste with salt.",
+				"Remove from the heat and top with the parsley and cheese, if using. Serve with bread or pasta.",
 			},
 		},
 	},
@@ -139,6 +166,12 @@ var testCases = map[string]struct {
 				"15 ml  (1 c. à soupe) de miel",
 				"Sel et poivre",
 			},
+			Instructions: []string{
+				"Placer la grille au centre du four. Préchauffer le four \r\nà 180\u00a0°C (350\u00a0°F).",
+				"Dans une grande casserole allant au four, dorer le r\u00f4ti sur toutes les faces dans la moiti\u00e9 de l\u2019huile (30 ml/2 c. \u00e0 soupe). Saler et poivrer. R\u00e9server la viande sur une assiette. Dans la m\u00eame casserole, dorer les oignons et l\u2019ail. Ajouter le bouillon, \r\nla compote de pommes et la moutarde. Remettre le r\u00f4ti dans la casserole c\u00f4t\u00e9 couenne vers le haut et porter \u00e0 \u00e9bullition.",
+				"Couvrir et cuire au four 1\u00a0h\u00a030. Ajouter les pommes de \r\nterre autour de la viande et poursuivre la cuisson \u00e0 couvert 1\u00a0heure. Retirer le couvercle et poursuivre la cuisson 1\u00a0heure ou jusqu\u2019\u00e0 ce que la viande soit tendre et se d\u00e9fasse \u00e0 la fourchette. Ajouter les herbes.",
+				"Entre-temps, dans une po\u00eale antiadh\u00e9sive, dorer les pommes dans le reste de l\u2019huile (30 ml/2 c. \u00e0 soupe) et le miel. Au moment de servir, placer les pommes autour du r\u00f4ti.",
+			},
 		},
 	},
 	"traeger": {
@@ -151,7 +184,7 @@ var testCases = map[string]struct {
 				"dried bay leaves", "whole black peppercorns", "whole white peppercorns",
 				"whole fennel seeds", "whole coriander seeds", "red pepper flakes",
 				"white wine vinegar", "ice water", "fresh dill", "(8-10 lb) bone-in pork butt",
-				"Traeger Pork &amp; Poultry Rub, plus more to taste",
+				"Traeger Pork & Poultry Rub, plus more to taste",
 				"Traeger Apricot BBQ Sauce",
 				"Mayonnaise",
 				"ketchup",
@@ -162,22 +195,65 @@ var testCases = map[string]struct {
 				"distilled white vinegar",
 				"Slider Buns",
 			},
+			Instructions: []string{
+				"When ready to cook, set Traeger temperature 165℉ and preheat, lid closed for 15 minutes. For optimal flavor, use Super Smoke if available.",
+				"For the Homemade Pickles: Plan ahead, these pickles brine overnight. Place the whole, washed cucumbers directly on the grill grate and smoke for 30 to 45 minutes.",
+				"In a medium saucepan, combine the salt, sugar, garlic, bay leaves, black and white peppercorns, fennel seeds, coriander seeds, red pepper flakes, and white wine vinegar. Bring to a boil over medium-high heat, then reduce the heat to medium-low and simmer for 5-10 minutes, stirring to dissolve the salt and sugar. Remove the brine from the heat and let steep for 20 minutes more. Pour the ice water into the brine and add the dill.",
+				"Remove the cucumbers from the Traeger and thinly slice crosswise. Transfer to a large glass jar or non-reactive container.",
+				"Pour the brine over the cucumbers and weigh down as needed to ensure the cucumbers are fully submerged. Cover and let sit at room temperature for 24 hours before using.",
+				"Make the pulled pork: Generously the pork butt on all sides with Traeger Pork & Poultry Rub. Let sit at room temperature for 45 minutes.",
+				"When ready to cook, set the Traeger temperature to 225℉ and preheat with the lid closed for 15 minutes. For optimal flavor, use Super Smoke, if available.",
+				"Place the pork butt directly on the grill grates, fat-side down. Close the lid and smoke for 3 hours.",
+				"Transfer the pork to a disposable aluminum foil pan and cover the pan with foil. Increase the Traeger temperature to 275℉. Place the pan on the grill, close the lid, and roast until an instant-read thermometer inserted in the thickest part of the roast, but not touching bone, registers 200℉, 3-5 hours more.",
+				"Meanwhile, make the special sauce: In a small bowl, stir together the mayonnaise, ketchup, Traeger Apricot BBQ Sauce, sweet pickle relish, mustard, sugar, and distilled white vinegar. Refrigerate until ready to use.",
+				"Carefully transfer the pork roast to a clean disposable pan and let rest for 20 minutes. Pour the juices from the bottom of the roasting pan into a fat separator.",
+				"With your hands (preferably protected from the heat with lined, heavy-duty rubber gloves), pull the pork into chunks. Discard the bone and any lumps of fat, including the cap. Pull each chunk into shreds and transfer to a large bowl. Season with Traeger Pork & Poultry Rub to taste and moisten with the reserved pork juices, discard any fat that has floated to the top. Add the Traeger Apricot BBQ Sauce and mix well.",
+				"Pile the pulled pork on the slider buns. Top with the pickles and special sauce. Enjoy!",
+			},
 		},
 	},
+	"4ks": {
+		Callbacks: 1,
+		Recipe: Recipe{
+			SourceURL: mockURL,
+			Title:     "Overnight chocolate oats",
+			Ingredients: []string{
+				"1 container Silken tofu",
+				"1 cup Steal cut oats",
+				"2 tbsp Coco powder",
+				"2 tbsp Maple syrup",
+				" ",
+				"1 Banana",
+				"1 tbsp Cinamon",
+				"2 tbsp Chia seeds",
+				"2 tbsp Flax seed",
+				" Peanut butter",
+			},
+			Instructions: []string{
+				"Put everything in the blinder except peanut butter.",
+				"Blend like it's nobody's business.",
+				"Put in container.",
+				"Drizzle your peanut butter on it.",
+				"Make some design lines with a nife (it's to mix the PB lightly).",
+				"Leave it until tomorrow.",
+			},
+		},
+	},
+	// "recettes.qc.ca": {
+	// 	Callbacks:      1,
+	// 	Recipe: Recipe{
+	// 		SourceURL:    mockURL,
+	// 		Title:        "Overnight chocolate oats",
+	// 		Ingredients:  []string{},
+	// 		Instructions: []string{},
+	// 	},
+	// },
 }
 
 func TestRecipeHTML(t *testing.T) {
 	// logger
 	l := log.NewLogfmtLogger(log.NewSyncWriter(os.Stderr))
 	l = level.NewFilter(l, level.Allow(level.ErrorValue()))
-
-	// http client
-	client := http.Client{
-		Transport: &loggingTransport{},
-	}
-
-	// ld processor
-	ld := NewLdProcessor(client)
 
 	// run through test cases
 	for name, tc := range testCases {
@@ -194,16 +270,16 @@ func TestRecipeHTML(t *testing.T) {
 			// start mock html server
 			ts := newTestHTTPServer(dat)
 			defer ts.Close()
-
-			c := colly.NewCollector()
-
 			u := ts.URL + "/recipe"
+
+			// create colly collector
+			c := colly.NewCollector()
 
 			// onHTML callback
 			c.OnHTML(ApplicationJSONLDScriptTag, func(e *colly.HTMLElement) {
 				callbackCount++
 
-				r, err := getRecipeFromJSONLD(l, ld, e, u)
+				r, err := getRecipeFromJSONLD(l, e, u)
 				if err == notRecipe {
 					return
 				}
@@ -214,9 +290,7 @@ func TestRecipeHTML(t *testing.T) {
 				if diff != "" {
 					t.Errorf("(%s) unexpected number ld+json scripts detected. %v", name, diff)
 				}
-
-				PrintStruct(r)
-
+				// PrintStruct(r)
 			})
 
 			// visit
@@ -232,57 +306,3 @@ func TestRecipeHTML(t *testing.T) {
 	}
 
 }
-
-// func TestJSONGold(t *testing.T) {
-// 		// Inline JSON-LD formatted recipe
-// 		jsonContent := `{
-// 			"@context": "https://schema.org",
-// 			"@type": "Recipe",
-// 			"name": "Grandma's Holiday Apple Pie",
-// 			"author": {
-// 				"@type": "Person",
-// 				"name": "Carol Smith"
-// 			},
-// 			"datePublished": "2009-11-05",
-// 			"description": "A classic apple pie."
-// 		}`
-
-// 		// jsonContent := `{
-// 		// 	"@context": {
-// 		// 		"t1": "http://example.com/t1",
-// 		// 		"t2": "http://example.com/t2",
-// 		// 		"term1": "http://example.com/term1",
-// 		// 		"term2": "http://example.com/term2",
-// 		// 		"term3": "http://example.com/term3",
-// 		// 		"term4": "http://example.com/term4",
-// 		// 		"term5": "http://example.com/term5"
-// 		// 	},
-// 		// 	"@id": "http://example.com/id1",
-// 		// 	"@type": "t1",
-// 		// 	"term1": "v1",
-// 		// 	"term2": {"@value": "v2", "@type": "t2"},
-// 		// 	"term3": {"@value": "v3", "@language": "en"},
-// 		// 	"term4": 4,
-// 		// 	"term5": [50, 51]
-// 		// }`
-
-// 		var doc map[string]interface{}
-// 		err := json.Unmarshal([]byte(jsonContent), &doc)
-// 		if err != nil {
-// 			fmt.Println("Error unmarshaling JSON:", err)
-// 			return
-// 		}
-
-// 		proc := ld.NewJsonLdProcessor()
-// 		options := ld.NewJsonLdOptions("")
-
-// 		// Expanding the JSON-LD document
-// 		expanded, err := proc.Expand(doc, options)
-// 		if err != nil {
-// 			fmt.Println("Error expanding JSON-LD:", err)
-// 			return
-// 		}
-
-// 		// Printing the expanded JSON-LD
-// 		ld.PrintDocument("Expanded JSON-LD", expanded)
-// }

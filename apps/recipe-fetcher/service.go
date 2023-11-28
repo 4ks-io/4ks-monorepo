@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"html"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 
 	"github.com/go-kit/log"
@@ -76,8 +78,7 @@ func (s *fetcherService) Visit(target string) error {
 	// process 'application/ld+json' scripts
 	c.OnHTML(ApplicationJSONLDScriptTag, func(e *colly.HTMLElement) {
 		// level.Debug(l).Log("msg", ApplicationJSONLDType+"script detected")
-		// data, err := getRecipeFromJSONLD(l, e)
-		_, _ = getRecipeFromJSONLD(l, s.ld, e, target)
+		_, _ = getRecipeFromJSONLD(l, e, target)
 	})
 
 	if err := c.Visit(target); err != nil {
@@ -88,7 +89,7 @@ func (s *fetcherService) Visit(target string) error {
 	return nil
 }
 
-func getRecipeFromJSONLD(l log.Logger, ld LdProcessor, e *colly.HTMLElement, u string) (Recipe, error) {
+func getRecipeFromJSONLD(l log.Logger, e *colly.HTMLElement, u string) (Recipe, error) {
 	// json scrubbing
 	jsonData := strings.TrimSpace(e.Text)
 	jsonData = strings.ReplaceAll(jsonData, "\n", "")
@@ -103,39 +104,126 @@ func getRecipeFromJSONLD(l log.Logger, ld LdProcessor, e *colly.HTMLElement, u s
 		return Recipe{}, notRecipe
 	}
 
-	ingredients, err := getIngredients(node["recipeIngredient"])
+	ingredients, err := getIngredients(l, node["recipeIngredient"])
 	if err != nil {
 		level.Debug(l).Log("msg", "failed to get ingredients", "error", err)
 	}
 
-	// PrintStruct(node["recipeIngredient"])
-	// PrintStruct(node["recipeInstructions"])
-
-	// // determine if node is a valide schema.org recipe implementation
-	// expanded, err := ld.Parse(node)
-	// if err == nil {
-	// 	PrintStruct(expanded)
-	// 	// node is a valide schema.org recipe implementation
-	// 	jsonData, err := json.Marshal(expanded)
-	// 	if err != nil {
-	// 		return Recipe{}, err
-	// 	}
-
-	// 	r, err := unmarshalToRecipe(jsonData)
-	// 	r.SourceURL = u
-	// 	return r, err
-	// }
-
-	// PrintStruct(node)
+	var instructions []string
+	if node["recipeInstructions"] != nil {
+		instructions, err = getInstructions(l, node["recipeInstructions"])
+		if err != nil {
+			level.Debug(l).Log("msg", "failed to read recipeInstructions", "error", err)
+			// todo: log this url/html
+		}
+	}
 
 	return Recipe{
-		SourceURL:   u,
-		Title:       node["name"].(string),
-		Ingredients: ingredients,
+		SourceURL:    u,
+		Title:        node["name"].(string),
+		Ingredients:  ingredients,
+		Instructions: instructions,
 	}, nil
 }
 
-func getIngredients(in interface{}) ([]string, error) {
+func removeEmptyStrings(s []string) []string {
+	re := regexp.MustCompile(`^\s*$`)
+	filteredLines := []string{}
+	for _, line := range s {
+		if line != "" || !re.MatchString(line) {
+			filteredLines = append(filteredLines, line)
+		}
+	}
+	return filteredLines
+}
+
+// getInstructions returns a slice of strings from a slice of interface{}
+func getInstructions(l log.Logger, in interface{}) ([]string, error) {
+	var o []string
+
+	// marshal
+	jsonData, err := json.Marshal(in)
+	if err != nil {
+		// todo: log this url/html
+		return o, err
+	}
+
+	// unmarsal -- confirm is array
+	var data []interface{}
+	err = json.Unmarshal(jsonData, &data)
+	if err != nil {
+		// error unmarshaling -- expected array
+		// todo: log this url/html
+		return o, err
+	}
+
+	// handle known instruction shapes
+
+	// [{
+	//   "@type": "HowToStep"
+	//   "text": "foo",
+	// }]
+	// -- OR --
+	// [{
+	// 	"@type": "HowToStep",
+	// 	"name": "foo",
+	// 	"text": "foo",
+	// },
+	var howtostep []HowToStep
+	if err = json.Unmarshal(jsonData, &howtostep); err == nil { // inverted check
+		if howtostep[0].Type == "HowToStep" {
+			for _, v := range howtostep {
+				o = append(o, html.UnescapeString(v.Text))
+			}
+			return removeEmptyStrings(o), nil
+		}
+	}
+
+	// [{
+	//   "@type": "HowToSection",
+	//   "name": "bar",
+	//   "itemListElement": [
+	//     {
+	//       "@type": "HowToStep",
+	//       "text": "foo."
+	//     },
+	var howtosection []HowToSection
+	if err = json.Unmarshal(jsonData, &howtosection); err == nil { // inverted check
+		if howtosection[0].Type == "HowToSection" {
+			for _, v := range howtosection[0].ItemList {
+				o = append(o, html.UnescapeString(v.Text))
+			}
+		}
+		return removeEmptyStrings(o), nil
+	}
+
+	// [ "1. foo 2. bar" ] || [ "foo", "bar" ]
+	var simplestring []string
+	if err = json.Unmarshal(jsonData, &simplestring); err == nil { // inverted check
+		// handle very stupid case where instructions are possibly concatenated into a single string
+		if len(simplestring) == 1 && len(simplestring[0]) >= 2 && simplestring[0][:2] == "1." {
+			re := regexp.MustCompile(`\d+\. `)
+
+			// Split the text into lines
+			o = re.Split(simplestring[0], -1)
+
+			// Trim the leading and trailing spaces from each line
+			for i, line := range o {
+				s := html.UnescapeString(line)
+				o[i] = strings.TrimSpace(s)
+			}
+
+			return removeEmptyStrings(o), nil
+		}
+
+		return simplestring, nil
+	}
+
+	return o, nil
+}
+
+// getIngredients returns a slice of strings from a slice of interface{}
+func getIngredients(l log.Logger, in interface{}) ([]string, error) {
 	data, err := json.Marshal(in)
 	if err != nil {
 		return []string{}, err
@@ -147,60 +235,11 @@ func getIngredients(in interface{}) ([]string, error) {
 		return []string{}, err
 	}
 
-	return o, nil
-}
-
-// Unmarshal and determine type
-func unmarshalToRecipe(jsonData []byte) (Recipe, error) {
-	// generic map
-	var g map[string]interface{}
-	err := json.Unmarshal(jsonData, &g)
-	if err != nil {
-		return Recipe{}, err
+	for i, v := range o {
+		o[i] = html.UnescapeString(v)
 	}
 
-	const prefix = "http://schema.org/"
-
-	r := Recipe{}
-
-	if _, ok := g[prefix+"name"].([]interface{}); ok {
-		r.Title = g[prefix+"name"].([]interface{})[0].(map[string]interface{})["@value"].(string)
-	}
-
-	if _, ok := g[prefix+"recipeIngredient"].([]interface{}); ok {
-		for _, v := range g[prefix+"recipeIngredient"].([]interface{}) {
-			r.Ingredients = append(r.Ingredients, v.(map[string]interface{})["@value"].(string))
-		}
-	}
-
-	if _, ok := g[prefix+"recipeInstructions"].([]interface{}); ok {
-		// [ "1. foo 2. bar" ],
-
-		// [{
-		//   "text": "foo.",
-		//   "@type": "HowToStep"
-		// }]
-
-		// [{
-		//   "@type": "HowToSection",
-		//   "name": "R\u00f4ti de porc brais\u00e9 aux pommes",
-		//   "itemListElement": [
-		//     {
-		//       "@type": "HowToStep",
-		//       "text": "foo."
-		//     },
-
-		// [{
-		// 	"@type": "HowToStep",
-		// 	"name": "foo",
-		// 	"text": "foo",
-		// 	"url": "https://minimalistbaker.com/creamy-vegan-tofu-cauliflower-korma-curry/#wprm-recipe-115690-step-0-0"
-		// },
-
-		// PrintStruct(g[prefix + "recipeInstructions"].([]interface{}))
-	}
-
-	return r, nil
+	return removeEmptyStrings(o), nil
 }
 
 // Recipe is a struct to hold the scraped recipe data
@@ -212,20 +251,13 @@ type Recipe struct {
 }
 
 type HowToSection struct {
-	List []HowToStep `json:"http://schema.org/itemListElement"`
+	Type     string      `json:"@type"`
+	ItemList []HowToStep `json:"itemListElement"`
 }
 
 type HowToStep struct {
-	Text []Value `json:"http://schema.org/text"`
-}
-
-type Value struct {
-	Value string `json:"@value"`
-}
-
-func searchJSON(data interface{}) map[string]interface{} {
-	return searchJSONIterative(data)
-	// return searchJSONRecursive(data)
+	Type string `json:"@type"`
+	Text string `json:"text"`
 }
 
 type searchStack struct {
@@ -233,7 +265,7 @@ type searchStack struct {
 	parent map[string]interface{}
 }
 
-func searchJSONIterative(data interface{}) map[string]interface{} {
+func searchJSON(data interface{}) map[string]interface{} {
 	stack := []searchStack{{value: data}}
 
 	for len(stack) > 0 {
@@ -260,27 +292,3 @@ func searchJSONIterative(data interface{}) map[string]interface{} {
 
 	return nil
 }
-
-// func searchJSONRecursive(data interface{}) map[string]interface{} {
-//   switch t := data.(type) {
-//   case map[string]interface{}:
-//     if t["@type"] == "Recipe" {
-//       return t
-//     }
-
-//     for _, item := range t {
-//       if node := searchJSON(item); node != nil {
-//         return node
-//       }
-//     }
-//   case []interface{}:
-//     for _, item := range t {
-//       if node := searchJSON(item); node != nil {
-//         return node
-//       }
-//     }
-//   default:
-//     // fmt.Printf("Unsupported type: %T\n", data)
-//   }
-//   return nil
-// }
