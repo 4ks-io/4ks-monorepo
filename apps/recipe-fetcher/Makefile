@@ -1,2 +1,2 @@
 build:
-	go build -o ./cook *.go
+	go build -o ./fetcher *.go
