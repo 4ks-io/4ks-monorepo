@@ -13,54 +13,88 @@ import (
 	"github.com/go-kit/log/level"
 )
 
-func main() {
-	// flags
-	debug := flag.Bool("d", false, "Enable debugging")
-	silent := flag.Bool("s", false, "Warning and Errors only")
-	target := flag.String("t", "", "Web target to scrape")
+const (
+	exitCodeSuccess   = 0
+	exitCodeErr       = 1
+	exitCodeInterrupt = 2
+)
+
+func parseCLIArgs() (bool, bool, string) {
+	// toggle debug logging
+	debug := flag.Bool("debug", false, "Debug logging level")
+	silent := flag.Bool("silent", false, "Warning and Errors only")
+
+	// port to listen on
+	port := flag.String("port", "5858", "Port to listen on")
 	flag.Parse()
 
+	return *debug, *silent, *port
+}
+
+func main() {
+	// args
+	debug, silent, port := parseCLIArgs()
+
 	// set log level
-	if *silent && *debug {
+	if silent && debug {
 		panic("Cannot use both silent and debug flags")
 	}
 	logLevel := "info"
-	if *debug {
+	if debug {
 		logLevel = "debug"
-	} else if *silent {
+	} else if silent {
 		logLevel = "warn"
 	}
 
 	// context and logger
 	ctx := context.Background()
+	ctx = contextWithDebug(ctx, debug)
+	ctx = contextWithSilent(ctx, silent)
 	ctx = contextWithLogger(ctx, newLogger(logLevel))
 	l := loggerFromContext(ctx)
-
-	// Channel to listen for interrupt signals
-	exit := make(chan os.Signal, 1)
-	signal.Notify(exit, syscall.SIGINT, syscall.SIGTERM)
-	// Channel to listen for completion
-	done := make(chan bool)
-
-	s := newFetcherService(ctx, *debug)
-
-	go func() {
-		if err := s.Visit(*target); err != nil {
-			level.Error(l).Log("msg", "failed to fetch", "target", *target)
-		}
-
-		// level.Info(l).Log("title", recipe.Title)
-		done <- true
+	ctx, cancel := context.WithCancel(ctx)
+	defer func() {
+		level.Info(l).Log("msg", "context cancelled")
+		cancel()
 	}()
 
-	select {
-	case <-exit:
-		fmt.Println("\nReceived an interrupt. Waiting for goroutine to finish...")
-		<-done
-		fmt.Println("Goroutine terminated.")
-	case <-done:
-		fmt.Println("Goroutine completed successfully.")
-	}
+	// signal handling
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, os.Interrupt)
+	defer func() {
+		signal.Stop(sig)
+		cancel()
+	}()
+
+	// interrupt handling
+	exit := make(chan error)
+	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, syscall.SIGTERM, os.Interrupt)
+	}()
+
+	svc := newFetcherService(ctx, debug)
+	go func() {
+		if err := svc.Start(); err != nil {
+			level.Error(l).Log("msg", "service failure", "error", err)
+			os.Exit(exitCodeErr)
+		}
+		os.Exit(exitCodeSuccess)
+	}()
+
+	go func() {
+		select {
+		case <-sig: // first signal, cancel context
+			cancel()
+			svc.Stop()
+		case <-ctx.Done():
+		}
+		<-sig // second signal, hard exit
+		os.Exit(exitCodeInterrupt)
+	}()
+
+	startWebServer(ctx, svc, exit, port)
+	level.Info(l).Log("exit", <-exit)
 }
 
 // PrintStruct prints a struct as json

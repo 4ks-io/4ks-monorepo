@@ -11,7 +11,33 @@ import (
 	"github.com/go-kit/log/level"
 )
 
+type ctxDebug struct{}
+type ctxSilent struct{}
 type ctxLogger struct{}
+
+// contextWithDebug adds debug flag to context
+func contextWithDebug(ctx context.Context, d bool) context.Context {
+	return context.WithValue(ctx, ctxDebug{}, d)
+}
+
+func debugFromContext(ctx context.Context) bool {
+	if d, ok := ctx.Value(ctxDebug{}).(bool); ok {
+		return d
+	}
+	return false
+}
+
+// contextWithSilent adds silent flag to context
+func contextWithSilent(ctx context.Context, s bool) context.Context {
+	return context.WithValue(ctx, ctxSilent{}, s)
+}
+
+func silentFromContext(ctx context.Context) bool {
+	if s, ok := ctx.Value(ctxSilent{}).(bool); ok {
+		return s
+	}
+	return false
+}
 
 func newLogger(logLevel string) *log.Logger {
 	var logger log.Logger
@@ -24,7 +50,7 @@ func newLogger(logLevel string) *log.Logger {
 	return &logger
 }
 
-// ContextWithLogger adds logger to context
+// contextWithLogger adds logger to context
 func contextWithLogger(ctx context.Context, l *log.Logger) context.Context {
 	return context.WithValue(ctx, ctxLogger{}, l)
 }

@@ -8,12 +8,12 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/gocolly/colly/v2"
 )
-
 
 var (
 	errNotRecipe = errors.New("not a recipe")
@@ -21,24 +21,31 @@ var (
 
 const (
 	// ApplicationJSONLDType is the content type for json-ld
-	ApplicationJSONLDType      = "application/ld+json"
+	ApplicationJSONLDType = "application/ld+json"
 	// ApplicationJSONLDScriptTag is the selector for json-ld script tags
 	ApplicationJSONLDScriptTag = `script[type="application/ld+json"]`
 )
 
 // FetcherService is the interface for the fetcher service
-type FetcherService interface{}
+type FetcherService interface {
+	IsReady() bool
+	Visit(string) (Recipe, error)
+	Start() error
+	Stop()
+}
 
 type fetcherService struct {
 	ctx   context.Context
+	ready bool
 	debug bool
 }
 
 // newFetcherService returns a new FetcherService
 func newFetcherService(ctx context.Context, debug bool) *fetcherService {
 	return &fetcherService{
-		ctx,
-		debug,
+		ctx:   ctx,
+		ready: false,
+		debug: debug,
 	}
 }
 
@@ -48,7 +55,11 @@ func collyOnRequest(l log.Logger) func(r *colly.Request) {
 	}
 }
 
-func (s *fetcherService) Visit(target string) error {
+func (s *fetcherService) IsReady() bool {
+	return s.ready
+}
+
+func (s *fetcherService) Visit(target string) (Recipe, error) {
 	l := loggerFromContext(s.ctx)
 
 	// get domain
@@ -67,6 +78,7 @@ func (s *fetcherService) Visit(target string) error {
 
 	// init colly
 	c := initCollector(hostname, s.debug)
+	var recipe Recipe
 
 	// colly onRequest
 	c.OnRequest(collyOnRequest(l))
@@ -74,15 +86,15 @@ func (s *fetcherService) Visit(target string) error {
 	// process 'application/ld+json' scripts
 	c.OnHTML(ApplicationJSONLDScriptTag, func(e *colly.HTMLElement) {
 		// level.Debug(l).Log("msg", ApplicationJSONLDType+"script detected")
-		_, _ = getRecipeFromJSONLD(l, e, target)
+		recipe, err = getRecipeFromJSONLD(l, e, target)
 	})
 
 	if err := c.Visit(target); err != nil {
 		level.Error(l).Log("msg", "failed to visit", "error", err)
-		return err
+		return recipe, err
 	}
 
-	return nil
+	return recipe, nil
 }
 
 func getRecipeFromJSONLD(l log.Logger, e *colly.HTMLElement, u string) (Recipe, error) {
@@ -246,7 +258,6 @@ type Recipe struct {
 	Instructions []string
 }
 
-
 // HowToSection is a struct to hold the scraped recipe data
 type HowToSection struct {
 	Type     string      `json:"@type"`
@@ -290,4 +301,26 @@ func searchJSON(data interface{}) map[string]interface{} {
 	}
 
 	return nil
+}
+
+// Start begins the ImgChunker service loop
+func (svc *fetcherService) Start() error {
+	// logger
+	l := loggerFromContext(svc.ctx)
+	svc.ready = true
+	level.Info(l).Log("msg", "service started")
+
+	for svc.ready {
+
+		time.Sleep(5 * time.Second)
+		level.Info(l).Log("msg", "service loop ...")
+	}
+	return nil
+}
+
+// Stop instructs the service to stop processing new messages.
+func (svc *fetcherService) Stop() {
+	l := loggerFromContext(svc.ctx)
+	level.Info(l).Log("msg", "stopping service")
+	svc.ready = false
 }

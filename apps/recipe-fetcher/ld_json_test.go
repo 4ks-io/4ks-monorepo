@@ -47,8 +47,8 @@ func newUnstartedTestServer(dat []byte) *httptest.Server {
 const mockURL = "http://127.0.0.1:44245/recipe"
 
 var testCases = map[string]struct {
-	Callbacks      int
-	Recipe         Recipe
+	Callbacks int
+	Recipe    Recipe
 }{
 	"bigoven": {
 		Callbacks: 1,
