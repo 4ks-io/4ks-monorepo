@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"html"
 	"net/url"
 	"regexp"
 	"strings"
-	"time"
 
+	"cloud.google.com/go/pubsub"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/gocolly/colly/v2"
@@ -38,14 +39,18 @@ type fetcherService struct {
 	ctx   context.Context
 	ready bool
 	debug bool
+	topic *pubsub.Topic
+	subscription *pubsub.Subscription
 }
 
 // newFetcherService returns a new FetcherService
-func newFetcherService(ctx context.Context, debug bool) *fetcherService {
+func newFetcherService(ctx context.Context, debug bool, t *pubsub.Topic, s *pubsub.Subscription) *fetcherService {
 	return &fetcherService{
 		ctx:   ctx,
 		ready: false,
 		debug: debug,
+		topic: t,
+		subscription: s,
 	}
 }
 
@@ -303,17 +308,60 @@ func searchJSON(data interface{}) map[string]interface{} {
 	return nil
 }
 
+type FetcherRequest struct {
+	URL    string `json:"url"`
+	UserID string `json:"userId"`
+}
+
+type Message struct {
+	Data string `json:"data"`
+ }
+
+
 // Start begins the ImgChunker service loop
 func (svc *fetcherService) Start() error {
-	// logger
 	l := loggerFromContext(svc.ctx)
 	svc.ready = true
 	level.Info(l).Log("msg", "service started")
 
-	for svc.ready {
+	msgHandler :=  func (ctx context.Context, m *pubsub.Message) {
+		// l := loggerFromContext(ctx)
+	
+		// Print the message data
+	
+		userID := m.Attributes["userID"]
+		// fmt.Printf("Received message: %s\n", m.Data)
+		for k, v := range m.Attributes {
+			fmt.Printf("%s: %s\n", k, v)
+		}
+	
+		u := fmt.Sprintf("%s", m.Data)
+		if _, err := url.Parse(u); err != nil {
+			m.Nack()
+			return
+		}
+	
+		// Acknowledge the message
+		m.Ack()
+	
+		r, err := svc.Visit(u)
+		if err != nil {
+			level.Error(l).Log("msg", "failed to visit", "error", err)
+		}
+		level.Info(l).Log("msg", "recipe", "recipe", r.Title, "userID", userID)
+		PrintStruct(r)
+		
+	
+		// PrintStruct(r)
+	}
 
-		time.Sleep(5 * time.Second)
-		level.Info(l).Log("msg", "service loop ...")
+	for svc.ready {
+		// level.Info(l).Log("msg", "service loop ...")
+		// time.Sleep(5 * time.Second)
+		if err := svc.subscription.Receive(svc.ctx, msgHandler); err != nil {
+			level.Error(l).Log("msg", "failed to receive message", "error", err)
+		}
+		// level.Info(l).Log("msg", "service loop ...")
 	}
 	return nil
 }

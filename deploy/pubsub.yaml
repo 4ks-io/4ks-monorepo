@@ -14,8 +14,16 @@ spec:
     spec:
       containers:
         - name: pubsub
-          image: google/cloud-sdk:latest
-          command: ['gcloud', 'beta', 'emulators', 'pubsub', 'start']
+          image: google/cloud-sdk:emulators
+          command:
+            [
+              'gcloud',
+              'beta',
+              'emulators',
+              'pubsub',
+              'start',
+              '--project=local-4ks',
+            ]
           ports:
             - containerPort: 8085
           resources:

@@ -17,6 +17,9 @@ k8s_yaml([
     # 'deploy/jaeger.yaml'
 ])
 
+# pubsub
+k8s_resource('pubsub', port_forwards='0.0.0.0:8085:8085',labels=['pubsub'])
+
 # api
 k8s_resource('api', port_forwards='0.0.0.0:5734:5000',labels=['backend'])
 docker_build(
@@ -59,7 +62,8 @@ docker_build(
         'dist',
         'node_modules',
         'publish',
-        'tools'
+        'tools',
+        'go*'
     ],
     live_update=[
         sync('libs/ts/api-fetch/dist', '/code/libs/ts/api-fetch/dist'),
