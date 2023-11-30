@@ -225,17 +225,16 @@ func main() {
 
 	// pubsub request/receiver options
 	reqo := pb.PubsubOpts{
-		ProjectID: pubsubProjectID,
-		TopicID:   "fetch-responses",
+		ProjectID:      pubsubProjectID,
+		TopicID:        "fetch-responses",
 		SubscriptionID: "fetch-responses",
 	}
 
 	// pubsub response/sender options
 	reso := pb.PubsubOpts{
-		ProjectID:      pubsubProjectID,
-		TopicID:        "fetch-requests",
+		ProjectID: pubsubProjectID,
+		TopicID:   "fetch-requests",
 	}
-
 
 	// services
 	v := validator.New()
@@ -245,7 +244,12 @@ func main() {
 	recipe := recipeService.New(&sysFlags, store, v)
 	fetcher := fetcherService.New(ctx, &sysFlags, client, reqo, reso)
 
-	// fetcher.Start()
+	go (func() {
+		if err := fetcher.Start(); err != nil {
+			log.Error().Caller().Err(err).Msg("Error starting fetcher service")
+			panic(err)
+		}
+	})()
 
 	// controllers
 	c := &Controllers{

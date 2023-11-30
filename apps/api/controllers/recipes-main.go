@@ -275,7 +275,6 @@ func (c *recipeController) UpdateRecipe(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, createdRecipe)
 }
 
-
 // FetchRecipe godoc
 // @Schemes
 // @Summary 		Request Recipe Fetch

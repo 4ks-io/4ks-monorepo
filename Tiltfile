@@ -51,9 +51,9 @@ docker_build(
     dockerfile='apps/recipe-fetcher/Dockerfile.dev',
     only=[
         'apps/recipe-fetcher',
+        'libs/go',
         'go.mod',
         'go.sum',
-        'libs/go',
     ],
     live_update=[
         sync('apps/recipe-fetcher/', '/code/apps/recipe-fetcher'),

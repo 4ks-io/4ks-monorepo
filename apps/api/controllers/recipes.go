@@ -30,20 +30,20 @@ type RecipeController interface {
 }
 
 type recipeController struct {
-	recipeService recipeService.Service
-	searchService searchService.Service
-	staticService staticService.Service
-	userService   userService.Service
+	recipeService  recipeService.Service
+	searchService  searchService.Service
+	staticService  staticService.Service
+	userService    userService.Service
 	fetcherService fetcherService.Service
 }
 
 // NewRecipeController creates a new recipe controller
 func NewRecipeController(u userService.Service, r recipeService.Service, search searchService.Service, static staticService.Service, fetcher fetcherService.Service) RecipeController {
 	return &recipeController{
-		userService:   u,
-		recipeService: r,
-		searchService: search,
-		staticService: static,
+		userService:    u,
+		recipeService:  r,
+		searchService:  search,
+		staticService:  static,
 		fetcherService: fetcher,
 	}
 }

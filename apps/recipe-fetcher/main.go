@@ -138,6 +138,8 @@ func main() {
 	}()
 
 	startWebServer(ctx, svc, exit, port)
+
+	// adds a /test route for testing that accepts json and will publish it to the pubsub topic
 	if debug {
 		// connect to receiver topic
 		t, err := pb.ConnectTopic(ctx, client, reqo)
@@ -155,3 +157,4 @@ func PrintStruct(t interface{}) {
 	j, _ := json.MarshalIndent(t, "", "  ")
 	fmt.Println(string(j))
 }
+

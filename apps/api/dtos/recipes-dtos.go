@@ -43,13 +43,12 @@ type GetRecipeMediaResponse struct {
 	Data []*models.RecipeMedia `json:"data"`
 }
 
-
 // FetchRecipeRequest godoc
 type FetchRecipeRequest struct {
-	URL         string                      `json:"url"`
+	URL string `json:"url"`
 }
 
 // FetchRecipeResponse godoc
 type FetchRecipeResponse struct {
-	ID         string                      `json:"id"`
+	ID string `json:"id"`
 }

@@ -17,4 +17,5 @@ COPY ./libs/go ./libs/go
 COPY ./apps/recipe-fetcher ./apps/recipe-fetcher
 RUN go mod tidy
 
+# CMD ["gow", "-l", "run", "./apps/recipe-fetcher"]
 CMD ["gow", "run", "./apps/recipe-fetcher"]

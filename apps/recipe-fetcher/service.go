@@ -367,6 +367,7 @@ func (svc *fetcherService) Start() error {
 			m.Nack()
 			return
 		}
+		// PrintStruct(m)
 
 		// Acknowledge the message
 		m.Ack()
@@ -380,14 +381,42 @@ func (svc *fetcherService) Start() error {
 			return
 		}
 
-		r, err := svc.Visit(u)
+		recipe, err := svc.Visit(u)
 		if err != nil {
 			level.Error(l).Log("msg", "failed to visit", "error", err)
 		}
-		level.Info(l).Log("msg", "recipe", "recipe", r.Title, "userID", f.UserID)
-		PrintStruct(r)
-
+		level.Info(l).Log("msg", "recipe", "title", recipe.Title, "userID", f.UserID)
 		// PrintStruct(r)
+
+		res := models.FetcherResponse{
+			Name:         recipe.Title,
+			Link:         recipe.SourceURL,
+			Instructions: recipe.Instructions,
+			Ingredients:  recipe.Ingredients,
+		}
+
+		d, err := pb.EncodeToBase64(res)
+		if err != nil {
+			level.Error(l).Log("msg", "failed to encode recipe", "error", err)
+			return
+		}
+
+		result := svc.sender.Topic.Publish(ctx, &pubsub.Message{
+			Data: []byte(d),
+			Attributes: map[string]string{
+				"URL":    u,
+				"UserID": f.UserID,
+			},
+		})
+
+		// Block until the result is returned and a server-generated
+		// ID is returned for the published message.
+		id, err := result.Get(ctx)
+		if err != nil {
+			level.Error(l).Log("msg", "failed to publish message", "error", err)
+		}
+
+		PrintStruct(id)
 	}
 
 	for svc.ready {
@@ -405,5 +434,6 @@ func (svc *fetcherService) Start() error {
 func (svc *fetcherService) Stop() {
 	l := loggerFromContext(svc.ctx)
 	level.Info(l).Log("msg", "stopping service")
+	svc.receiver.Subscription.Delete(svc.ctx)
 	svc.ready = false
 }

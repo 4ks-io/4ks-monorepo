@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/gocolly/colly/v2"
-	"github.com/gocolly/colly/v2/debug"
+	// "github.com/gocolly/colly/v2/debug"
 )
 
 func initCollector(domain string, verbose bool) *colly.Collector {
@@ -17,7 +17,7 @@ func initCollector(domain string, verbose bool) *colly.Collector {
 	if verbose {
 		c = colly.NewCollector(
 			colly.AllowedDomains(domain),
-			colly.Debugger(&debug.LogDebugger{}),
+			// colly.Debugger(&debug.LogDebugger{}),
 		)
 	} else {
 		c = colly.NewCollector(

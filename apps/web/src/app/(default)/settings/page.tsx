@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { getSession } from '@auth0/nextjs-auth0';
 import UpdateUsername from '@/components/UpdateUsername';
 import { Page, PageProps } from '@/libs/navigation';
 import { handleUserNavigation } from '@/libs/server/navigation';
@@ -20,6 +21,7 @@ export default async function SettingsPage({
   searchParams,
 }: PageProps) {
   const { user } = await handleUserNavigation(Page.AUTHENTICATED);
+  const session = await getSession();
 
   if (!user || !user.username) {
     return (
@@ -49,6 +51,7 @@ export default async function SettingsPage({
       }}
     >
       <Container maxWidth="sm" style={{ paddingTop: 40 }}>
+        <div>Bearer {session?.accessToken}</div>
         <Typography variant="h4" component="h2">
           Settings
         </Typography>
