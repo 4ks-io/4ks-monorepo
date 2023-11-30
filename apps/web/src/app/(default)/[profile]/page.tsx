@@ -15,6 +15,7 @@ import { Page, PageProps, RecipePropsParams } from '@/libs/navigation';
 export type ProfilePropsParams = { profile: string };
 
 export default async function ProfilePage({ params, searchParams }: PageProps) {
+  const session = await getSession();
   const username = (params as unknown as ProfilePropsParams).profile;
 
   const data =
@@ -47,7 +48,7 @@ export default async function ProfilePage({ params, searchParams }: PageProps) {
         <h2>@{username}</h2>
         <h3>Recipes</h3>
         {<SearchResults results={data} />}
-        {/* <div>Bearer {session?.accessToken}</div> */}
+        <div>Bearer {session?.accessToken}</div>
       </Container>
     </Box>
   );

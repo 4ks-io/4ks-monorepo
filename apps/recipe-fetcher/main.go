@@ -39,7 +39,15 @@ func main() {
 	debug = utils.GetBoolEnv("DEBUG", debug)
 	port := utils.GetStrEnvVar("PORT", "5858")
 	debugPort := utils.GetStrEnvVar("DEBUG_PORT", "5888")
-	projectID := utils.GetStrEnvVar("PUBSUB_PROJECT_ID", "local-4ks")
+
+	// pubsub
+	pubsubProjectID := os.Getenv("PUBSUB_PROJECT_ID")
+	if pubsubProjectID == "" {
+		panic("PUBSUB_PROJECT_ID required")
+	}
+	if value, ok := os.LookupEnv("PUBSUB_EMULATOR_HOST"); ok {
+		log.Printf("Using PubSub Emulator: '%s'", value)
+	}
 
 	// set log level
 	if silent && debug {
@@ -82,33 +90,25 @@ func main() {
 		signal.Notify(c, syscall.SIGTERM, os.Interrupt)
 	}()
 
-	// https://cloud.google.com/go/docs/reference/cloud.google.com/go/pubsub/latest
-	// export PUBSUB_EMULATOR_HOST=[::1]:8085
-	// export PUBSUB_PROJECT_ID=local-4ks
-
-	if os.Getenv("PUBSUB_EMULATOR_HOST") != "" {
-		level.Info(l).Log("msg", "connecting to pubsub emulator host", "host", os.Getenv("PUBSUB_EMULATOR_HOST"))
-	}
-
 	// Create a Pub/Sub client.
-	client, err := pubsub.NewClient(ctx, projectID)
+	client, err := pubsub.NewClient(ctx, pubsubProjectID)
 	if err != nil {
-		level.Error(l).Log("msg", "failed to create pubsub client", "project", projectID, "error", err)
+		level.Error(l).Log("msg", "failed to create pubsub client", "project", pubsubProjectID, "error", err)
 		panic(err)
 	}
 	defer client.Close()
-	level.Info(l).Log("msg", "pubsub client created", "project", projectID)
+	level.Info(l).Log("msg", "pubsub client created", "project", pubsubProjectID)
 
 	// pubsub request/receiver options
 	reqo := pb.PubsubOpts{
-		ProjectID:      projectID,
+		ProjectID:      pubsubProjectID,
 		TopicID:        "fetch-requests",
 		SubscriptionID: "fetch-requests",
 	}
 
 	// pubsub response/sender options
 	reso := pb.PubsubOpts{
-		ProjectID: projectID,
+		ProjectID: pubsubProjectID,
 		TopicID:   "fetch-responses",
 	}
 
@@ -140,7 +140,11 @@ func main() {
 	startWebServer(ctx, svc, exit, port)
 	if debug {
 		// connect to receiver topic
-		t := pb.ConnectTopic(ctx, l, client, reqo)
+		t, err := pb.ConnectTopic(ctx, client, reqo)
+		if err != nil {
+			level.Error(l).Log("msg", "failed to connect to topic", "error", err)
+			panic(err)
+		}
 		startDebugWebServer(ctx, svc, exit, debugPort, t)
 	}
 	level.Info(l).Log("exit", <-exit)

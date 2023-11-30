@@ -258,6 +258,45 @@
                 }
             }
         },
+        "/api/recipes/fetch": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Request Recipe Fetch",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "Request Recipe Fetch",
+                "parameters": [
+                    {
+                        "description": "Recipe Data",
+                        "name": "recipe",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.FetchRecipeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.FetchRecipeResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/recipes/revisions/{revisionID}": {
             "get": {
                 "security": [
@@ -954,6 +993,22 @@
                 "username": {
                     "type": "string",
                     "example": "BobDylan"
+                }
+            }
+        },
+        "dtos.FetchRecipeRequest": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.FetchRecipeResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
                 }
             }
         },

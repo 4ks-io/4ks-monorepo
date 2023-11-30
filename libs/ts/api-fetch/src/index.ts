@@ -12,6 +12,8 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 export type { dtos_CreateRecipe } from './models/dtos_CreateRecipe';
 export type { dtos_CreateRecipeMedia } from './models/dtos_CreateRecipeMedia';
 export type { dtos_CreateUser } from './models/dtos_CreateUser';
+export type { dtos_FetchRecipeRequest } from './models/dtos_FetchRecipeRequest';
+export type { dtos_FetchRecipeResponse } from './models/dtos_FetchRecipeResponse';
 export type { dtos_GetRecipeMediaResponse } from './models/dtos_GetRecipeMediaResponse';
 export type { dtos_GetRecipeResponse } from './models/dtos_GetRecipeResponse';
 export type { dtos_GetRecipesByUsernameResponse } from './models/dtos_GetRecipesByUsernameResponse';

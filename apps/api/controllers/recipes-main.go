@@ -34,7 +34,7 @@ func (c *recipeController) CreateRecipe(ctx *gin.Context) {
 	userID := ctx.GetString("id")
 	author, err := c.userService.GetUserByID(ctx, userID)
 	if err != nil {
-		ctx.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusForbidden, err)
 		return
 	}
 
@@ -243,7 +243,7 @@ func (c *recipeController) UpdateRecipe(ctx *gin.Context) {
 	userID := ctx.GetString("id")
 	author, err := c.userService.GetUserByID(ctx, userID)
 	if err != nil {
-		ctx.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusForbidden, err)
 		return
 	}
 
@@ -273,4 +273,45 @@ func (c *recipeController) UpdateRecipe(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, createdRecipe)
+}
+
+
+// FetchRecipe godoc
+// @Schemes
+// @Summary 		Request Recipe Fetch
+// @Description Request Recipe Fetch
+// @Tags 				Recipes
+// @Accept 			json
+// @Produce 		json
+// @Param       recipe   body  	   	dtos.FetchRecipeRequest  true  "Recipe Data"
+// @Success 		200 		 {object}		dtos.FetchRecipeResponse
+// @Router		 	/api/recipes/fetch [post]
+// @Security 		ApiKeyAuth
+func (c *recipeController) FetchRecipe(ctx *gin.Context) {
+	payload := dtos.FetchRecipeRequest{}
+	if err := ctx.BindJSON(&payload); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	userID := ctx.GetString("id")
+	_, err := c.userService.GetUserByID(ctx, userID)
+	if err != nil {
+		ctx.AbortWithError(http.StatusForbidden, err)
+		return
+	}
+
+	// send to pubsub
+	id, err := c.fetcherService.Send(ctx, userID, payload.URL)
+	if err != nil {
+		ctx.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	// response
+	res := dtos.FetchRecipeResponse{
+		ID: id,
+	}
+
+	ctx.JSON(http.StatusOK, res)
 }

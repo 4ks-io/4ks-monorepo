@@ -37,7 +37,6 @@ spec:
             - name: PUBSUB_PROJECT_ID
               value: local-4ks
             - name: PUBSUB_EMULATOR_HOST
-              # value: pubsub:8085
               value: pubsub.default.svc.cluster.local:8085
           ports:
             - containerPort: 5000

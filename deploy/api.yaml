@@ -41,9 +41,13 @@ spec:
             - name: SWAGGER_URL_PREFIX
               value: '/api'
             - name: FIRESTORE_EMULATOR_HOST
-              value: firestore:8200
+              value: firestore.default.svc.cluster.local:8200
             - name: FIRESTORE_PROJECT_ID
               value: local-4ks
+            - name: PUBSUB_PROJECT_ID
+              value: local-4ks
+            - name: PUBSUB_EMULATOR_HOST
+              value: pubsub.default.svc.cluster.local:8085
             - name: AUTH0_DOMAIN
               value: 4ks-dev.us.auth0.com
             - name: AUTH0_AUDIENCE

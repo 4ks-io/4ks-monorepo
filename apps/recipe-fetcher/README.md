@@ -20,12 +20,6 @@ https://dave.cheney.net/2019/05/07/prefer-table-driven-tests
 go tool cover -func=c.out
 ```
 
-## static schema file
-
-download latest from https://github.com/schemaorg/schemaorg/tree/main/data/releases/23.0
-
-preload example: https://github.com/piprate/json-gold/issues/21
-
 # testing
 
 https://ieftimov.com/posts/testing-in-go-go-test/

@@ -49,11 +49,20 @@ type fetcherService struct {
 // newFetcherService returns a new FetcherService
 func newFetcherService(ctx context.Context, debug bool, client *pubsub.Client, reqo pb.PubsubOpts, reso pb.PubsubOpts) *fetcherService {
 	l := loggerFromContext(ctx)
+
 	// connect to receiver topic
-	topreq := pb.ConnectTopic(ctx, l, client, reqo)
+	topreq, err := pb.ConnectTopic(ctx, client, reqo)
+	if err != nil {
+		level.Error(l).Log("msg", "failed to connect to topic", "project", reso.ProjectID, "topic", reso.TopicID, "error", err)
+		panic(err)
+	}
 
 	// subscribe to receiver topic
-	subreq := pb.SubscribeTopic(ctx, l, client, reqo, topreq)
+	subreq, err := pb.SubscribeTopic(ctx, client, reqo, topreq)
+	if err != nil {
+		level.Error(l).Log("msg", "failed to subscribe to topic", "project", reso.ProjectID, "topic", reso.TopicID, "subscription", reqo.SubscriptionID, "error", err)
+		panic(err)
+	}
 
 	// create receiver
 	receiver := &pb.PubSubConnection{
@@ -64,7 +73,11 @@ func newFetcherService(ctx context.Context, debug bool, client *pubsub.Client, r
 	}
 
 	// connect to sender topic
-	topres := pb.ConnectTopic(ctx, l, client, reso)
+	topres, err := pb.ConnectTopic(ctx, client, reso)
+	if err != nil {
+		level.Error(l).Log("msg", "failed to connect to topic", "project", reso.ProjectID, "topic", reso.TopicID, "error", err)
+		panic(err)
+	}
 
 	// create sender
 	sender := &pb.PubSubConnection{

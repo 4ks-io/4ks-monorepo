@@ -37,6 +37,16 @@ definitions:
     - displayName
     - username
     type: object
+  dtos.FetchRecipeRequest:
+    properties:
+      url:
+        type: string
+    type: object
+  dtos.FetchRecipeResponse:
+    properties:
+      id:
+        type: string
+    type: object
   dtos.GetRecipeMediaResponse:
     properties:
       data:
@@ -654,6 +664,30 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get All Recipes by Author
+      tags:
+      - Recipes
+  /api/recipes/fetch:
+    post:
+      consumes:
+      - application/json
+      description: Request Recipe Fetch
+      parameters:
+      - description: Recipe Data
+        in: body
+        name: recipe
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.FetchRecipeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.FetchRecipeResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Request Recipe Fetch
       tags:
       - Recipes
   /api/recipes/revisions/{revisionID}:

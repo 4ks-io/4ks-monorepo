@@ -44,7 +44,7 @@ docker_build(
 
 
 # recipe-fetcher
-# k8s_resource('fetcher', port_forwards='0.0.0.0:5737:5000',labels=['backend'])
+k8s_resource('fetcher', port_forwards='0.0.0.0:5888:5000',labels=['backend'])
 docker_build(
     'fetcher',
     context='.',
