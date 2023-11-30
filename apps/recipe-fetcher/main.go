@@ -98,27 +98,20 @@ func main() {
 	defer client.Close()
 	level.Info(l).Log("msg", "pubsub client created", "project", projectID)
 
-	topReqName := "fetch-requests"
-	topReq := connectTopic(ctx, client, projectID, topReqName)
-	// topres := connectTopic(ctx, client, projectID, "fetch-response")
-
-	subreqID := "fetch-requests"
-	var subreq *pubsub.Subscription
-	subreq = client.Subscription(subreqID)
-	exist, err := subreq.Exists(ctx)
-	if err != nil {
-		level.Error(l).Log("msg", "failed to check if pubsub subscription exist", "project", projectID, "subscriptionID", "topic", topReqName, subreqID, "error", err)
-	}
-	if !exist {
-		subreq, err = client.CreateSubscription(ctx, subreqID,
-			pubsub.SubscriptionConfig{Topic: topReq},
-		)
-		if err != nil {
-			level.Error(l).Log("msg", "failed to create pubsub subscription", "project", projectID, "subscriptionID", "topic", topReqName, subreqID, "error", err)
-		}
+	// pubsub request/receiver options
+	reqo := PubsubOpts{
+		ProjectID:      projectID,
+		TopicID:        "fetch-requests",
+		SubscriptionID: "fetch-requests",
 	}
 
-	svc := newFetcherService(ctx, debug, topReq, subreq)
+	// pubsub response/sender options
+	reso := PubsubOpts{
+		ProjectID: projectID,
+		TopicID:   "fetch-responses",
+	}
+
+	svc := newFetcherService(ctx, debug, client, reqo, reso)
 	go func() {
 		if err := svc.Start(); err != nil {
 			level.Error(l).Log("msg", "service failure", "error", err)
@@ -143,7 +136,9 @@ func main() {
 
 	startWebServer(ctx, svc, exit, port)
 	if debug {
-		startDebugWebServer(ctx, svc, exit, debugPort, topReq)
+		// connect to receiver topic
+		t := connectTopic(ctx, client, reqo)
+		startDebugWebServer(ctx, svc, exit, debugPort, t)
 	}
 	level.Info(l).Log("exit", <-exit)
 }
@@ -152,26 +147,4 @@ func main() {
 func PrintStruct(t interface{}) {
 	j, _ := json.MarshalIndent(t, "", "  ")
 	fmt.Println(string(j))
-}
-
-func connectTopic(ctx context.Context, client *pubsub.Client, projectID, topicID string) *pubsub.Topic {
-	l := loggerFromContext(ctx)
-	t := client.Topic(topicID)
-
-	exist, err := t.Exists(ctx)
-	if err != nil {
-		level.Error(l).Log("msg", "failed to check if pubsub client exist", "topicID", topicID, "error", err)
-	}
-	if !exist {
-		// Create topic if it does not exist
-		t, err = client.CreateTopic(ctx, topicID)
-		if err != nil { // && err != pubsub.Err
-			level.Error(l).Log("msg", "failed to create pubsub topic", "topicID", topicID, "error", err)
-			panic(err)
-		}
-		level.Info(l).Log("msg", "pubsub topic created", "topic", topicID)
-	}
-	level.Info(l).Log("msg", "pubsub topic", "project", projectID, "topic", topicID)
-
-	return t
 }

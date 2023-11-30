@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -36,21 +38,45 @@ type FetcherService interface {
 }
 
 type fetcherService struct {
-	ctx   context.Context
-	ready bool
-	debug bool
-	topic *pubsub.Topic
-	subscription *pubsub.Subscription
+	ctx      context.Context
+	ready    bool
+	debug    bool
+	receiver *PubSubConnection
+	sender   *PubSubConnection
 }
 
 // newFetcherService returns a new FetcherService
-func newFetcherService(ctx context.Context, debug bool, t *pubsub.Topic, s *pubsub.Subscription) *fetcherService {
+func newFetcherService(ctx context.Context, debug bool, client *pubsub.Client, reqo PubsubOpts, reso PubsubOpts) *fetcherService {
+	// connect to receiver topic
+	topreq := connectTopic(ctx, client, reqo)
+
+	// subscribe to receiver topic
+	subreq := subscribeTopic(ctx, client, reqo, topreq)
+
+	// create receiver
+	receiver := &PubSubConnection{
+		ProjectID:    reqo.ProjectID,
+		TopicID:      reqo.TopicID,
+		Topic:        topreq,
+		Subscription: subreq,
+	}
+
+	// connect to sender topic
+	topres := connectTopic(ctx, client, reso)
+
+	// create sender
+	sender := &PubSubConnection{
+		ProjectID: reso.ProjectID,
+		TopicID:   reqo.TopicID,
+		Topic:     topres,
+	}
+
 	return &fetcherService{
-		ctx:   ctx,
-		ready: false,
-		debug: debug,
-		topic: t,
-		subscription: s,
+		ctx:      ctx,
+		ready:    false,
+		debug:    debug,
+		receiver: receiver,
+		sender:   sender,
 	}
 }
 
@@ -313,10 +339,24 @@ type FetcherRequest struct {
 	UserID string `json:"userId"`
 }
 
+func encodeToBase64(v interface{}) (string, error) {
+	var buf bytes.Buffer
+	encoder := base64.NewEncoder(base64.StdEncoding, &buf)
+	err := json.NewEncoder(encoder).Encode(v)
+	if err != nil {
+		return "", err
+	}
+	encoder.Close()
+	return buf.String(), nil
+}
+
+func decodeFromBase64(v interface{}, enc string) error {
+	return json.NewDecoder(base64.NewDecoder(base64.StdEncoding, strings.NewReader(enc))).Decode(v)
+}
+
 type Message struct {
 	Data string `json:"data"`
- }
-
+}
 
 // Start begins the ImgChunker service loop
 func (svc *fetcherService) Start() error {
@@ -324,41 +364,41 @@ func (svc *fetcherService) Start() error {
 	svc.ready = true
 	level.Info(l).Log("msg", "service started")
 
-	msgHandler :=  func (ctx context.Context, m *pubsub.Message) {
+	msgHandler := func(ctx context.Context, m *pubsub.Message) {
 		// l := loggerFromContext(ctx)
-	
-		// Print the message data
-	
-		userID := m.Attributes["userID"]
-		// fmt.Printf("Received message: %s\n", m.Data)
-		for k, v := range m.Attributes {
-			fmt.Printf("%s: %s\n", k, v)
+
+		var f FetcherRequest
+		if err := decodeFromBase64(&f, string(m.Data)); err != nil {
+			m.Nack()
+			return
 		}
-	
-		u := fmt.Sprintf("%s", m.Data)
+
+		// Acknowledge the message
+		m.Ack()
+
+		// todo: after ack, errors should be written to firestore
+
+		// validate url
+		u := fmt.Sprintf("%s", f.URL)
 		if _, err := url.Parse(u); err != nil {
 			m.Nack()
 			return
 		}
-	
-		// Acknowledge the message
-		m.Ack()
-	
+
 		r, err := svc.Visit(u)
 		if err != nil {
 			level.Error(l).Log("msg", "failed to visit", "error", err)
 		}
-		level.Info(l).Log("msg", "recipe", "recipe", r.Title, "userID", userID)
+		level.Info(l).Log("msg", "recipe", "recipe", r.Title, "userID", f.UserID)
 		PrintStruct(r)
-		
-	
+
 		// PrintStruct(r)
 	}
 
 	for svc.ready {
 		// level.Info(l).Log("msg", "service loop ...")
 		// time.Sleep(5 * time.Second)
-		if err := svc.subscription.Receive(svc.ctx, msgHandler); err != nil {
+		if err := svc.receiver.Subscription.Receive(svc.ctx, msgHandler); err != nil {
 			level.Error(l).Log("msg", "failed to receive message", "error", err)
 		}
 		// level.Info(l).Log("msg", "service loop ...")
