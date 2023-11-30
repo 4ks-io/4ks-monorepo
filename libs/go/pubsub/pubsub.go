@@ -28,6 +28,7 @@ func ConnectTopic(ctx context.Context, l log.Logger, c *pubsub.Client, o PubsubO
 	exist, err := t.Exists(ctx)
 	if err != nil {
 		level.Error(l).Log("msg", "failed to check if pubsub client exist", "topicID", o.TopicID, "error", err)
+		panic(err)
 	}
 	if !exist {
 		// Create topic if it does not exist
@@ -37,8 +38,9 @@ func ConnectTopic(ctx context.Context, l log.Logger, c *pubsub.Client, o PubsubO
 			panic(err)
 		}
 		level.Info(l).Log("msg", "pubsub topic created", "topic", o.TopicID)
+
 	}
-	level.Info(l).Log("msg", "pubsub topic", "project", o.ProjectID, "topic", o.TopicID)
+	level.Info(l).Log("msg", "pubsub topic connection established", "project", o.ProjectID, "topic", o.TopicID)
 
 	return t
 }
@@ -48,7 +50,8 @@ func SubscribeTopic(ctx context.Context, l log.Logger, c *pubsub.Client, o Pubsu
 
 	ok, err := s.Exists(ctx)
 	if err != nil {
-		level.Error(l).Log("msg", "failed to check if pubsub subscription exist", "project", o.ProjectID, "subscriptionID", "topic", o.TopicID, "subscripion", o.SubscriptionID, "error", err)
+		level.Error(l).Log("msg", "failed to check if pubsub subscription exist", "project", o.ProjectID, "topic", o.TopicID, "subscripion", o.SubscriptionID, "error", err)
+		panic(err)
 	}
 
 	if !ok {
@@ -56,9 +59,13 @@ func SubscribeTopic(ctx context.Context, l log.Logger, c *pubsub.Client, o Pubsu
 			pubsub.SubscriptionConfig{Topic: t},
 		)
 		if err != nil {
-			level.Error(l).Log("msg", "failed to create pubsub subscription", "project", o.ProjectID, "subscriptionID", "topic", o.TopicID, "subscripion", o.SubscriptionID, "error", err)
+			level.Error(l).Log("msg", "failed to create pubsub subscription", "project", o.ProjectID, "topic", o.TopicID, "subscripion", o.SubscriptionID, "error", err)
+			panic(err)
 		}
+		level.Info(l).Log("msg", "pubsub subscription created", "project", o.ProjectID, "topic", o.TopicID, "subscripion", o.SubscriptionID)
+
 	}
+	level.Info(l).Log("msg", "pubsub subscription established", "project", o.ProjectID, "topic", o.TopicID, "subscripion", o.SubscriptionID)
 
 	return s
 }

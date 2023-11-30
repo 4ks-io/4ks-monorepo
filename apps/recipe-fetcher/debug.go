@@ -1,6 +1,8 @@
 package main
 
 import (
+	models "4ks/libs/go/models"
+	pb "4ks/libs/go/pubsub"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -38,14 +40,14 @@ func startDebugWebServer(ctx context.Context, svc FetcherService, exit chan erro
 			defer r.Body.Close()
 
 			// Unmarshal the JSON data into the struct
-			var data FetcherRequest
+			var data models.FetcherRequest
 			err = json.Unmarshal(body, &data)
 			if err != nil {
 				http.Error(w, "Error unmarshalling JSON", http.StatusBadRequest)
 				return
 			}
 
-			d, err := encodeToBase64(data)
+			d, err := pb.EncodeToBase64(data)
 			if err != nil {
 				http.Error(w, "Error encoding JSON", http.StatusBadRequest)
 				return

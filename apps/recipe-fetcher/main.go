@@ -12,6 +12,7 @@ import (
 	"syscall"
 
 	pb "4ks/libs/go/pubsub"
+	"4ks/libs/go/utils"
 
 	"cloud.google.com/go/pubsub"
 	"github.com/go-kit/log/level"
@@ -23,23 +24,22 @@ const (
 	exitCodeInterrupt = 2
 )
 
-func parseCLIArgs() (bool, bool, string, string) {
+func parseCLIArgs() (bool, bool) {
 	// toggle debug logging
 	debug := flag.Bool("debug", false, "Debug logging level")
 	silent := flag.Bool("silent", false, "Warning and Errors only")
-
-	// port to listen on
-	port := flag.String("port", "5858", "Port to listen on")
-	debugPort := flag.String("debugPort", "5888", "Debug port to post pubsub request")
-
 	flag.Parse()
-
-	return *debug, *silent, *port, *debugPort
+	return *debug, *silent
 }
 
 func main() {
 	// args
-	debug, silent, port, debugPort := parseCLIArgs()
+	debug, silent := parseCLIArgs()
+	silent = utils.GetBoolEnv("SILENT", silent)
+	debug = utils.GetBoolEnv("DEBUG", debug)
+	port := utils.GetStrEnvVar("PORT", "5858")
+	debugPort := utils.GetStrEnvVar("DEBUG_PORT", "5888")
+	projectID := utils.GetStrEnvVar("PUBSUB_PROJECT_ID", "local-4ks")
 
 	// set log level
 	if silent && debug {
@@ -58,6 +58,9 @@ func main() {
 	ctx = contextWithSilent(ctx, silent)
 	ctx = contextWithLogger(ctx, newLogger(logLevel))
 	l := loggerFromContext(ctx)
+	level.Info(l).Log("msg", "context and logger created")
+	level.Debug(l).Log("msg", "port", "port", port, "debugPort", debugPort)
+
 	ctx, cancel := context.WithCancel(ctx)
 	defer func() {
 		level.Info(l).Log("msg", "context cancelled")
@@ -83,13 +86,9 @@ func main() {
 	// export PUBSUB_EMULATOR_HOST=[::1]:8085
 	// export PUBSUB_PROJECT_ID=local-4ks
 
-	// Set PUBSUB_EMULATOR_HOST environment variable.
-	err := os.Setenv("PUBSUB_EMULATOR_HOST", "localhost:8085")
-	if err != nil {
-		panic(err)
+	if os.Getenv("PUBSUB_EMULATOR_HOST") != "" {
+		level.Info(l).Log("msg", "connecting to pubsub emulator host", "host", os.Getenv("PUBSUB_EMULATOR_HOST"))
 	}
-
-	projectID := "local-4ks"
 
 	// Create a Pub/Sub client.
 	client, err := pubsub.NewClient(ctx, projectID)
@@ -114,6 +113,8 @@ func main() {
 	}
 
 	svc := newFetcherService(ctx, debug, client, reqo, reso)
+	level.Info(l).Log("msg", "fetcher service created")
+
 	go func() {
 		if err := svc.Start(); err != nil {
 			level.Error(l).Log("msg", "service failure", "error", err)

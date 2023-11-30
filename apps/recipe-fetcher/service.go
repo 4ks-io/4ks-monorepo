@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bytes"
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -17,6 +15,7 @@ import (
 	"github.com/go-kit/log/level"
 	"github.com/gocolly/colly/v2"
 
+	models "4ks/libs/go/models"
 	pb "4ks/libs/go/pubsub"
 )
 
@@ -337,26 +336,6 @@ func searchJSON(data interface{}) map[string]interface{} {
 	return nil
 }
 
-type FetcherRequest struct {
-	URL    string `json:"url"`
-	UserID string `json:"userId"`
-}
-
-func encodeToBase64(v interface{}) (string, error) {
-	var buf bytes.Buffer
-	encoder := base64.NewEncoder(base64.StdEncoding, &buf)
-	err := json.NewEncoder(encoder).Encode(v)
-	if err != nil {
-		return "", err
-	}
-	encoder.Close()
-	return buf.String(), nil
-}
-
-func decodeFromBase64(v interface{}, enc string) error {
-	return json.NewDecoder(base64.NewDecoder(base64.StdEncoding, strings.NewReader(enc))).Decode(v)
-}
-
 type Message struct {
 	Data string `json:"data"`
 }
@@ -370,8 +349,8 @@ func (svc *fetcherService) Start() error {
 	msgHandler := func(ctx context.Context, m *pubsub.Message) {
 		// l := loggerFromContext(ctx)
 
-		var f FetcherRequest
-		if err := decodeFromBase64(&f, string(m.Data)); err != nil {
+		var f models.FetcherRequest
+		if err := pb.DecodeFromBase64(&f, string(m.Data)); err != nil {
 			m.Nack()
 			return
 		}

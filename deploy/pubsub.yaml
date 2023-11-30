@@ -1,7 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pubsub
+spec:
+  selector:
+    app: pubsub
+  ports:
+    - protocol: TCP
+      port: 8085
+      targetPort: 8085
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pubsub
+  labels:
+    app: pubsub
 spec:
   replicas: 1
   selector:
@@ -15,17 +29,23 @@ spec:
       containers:
         - name: pubsub
           image: google/cloud-sdk:emulators
-          command:
-            [
-              'gcloud',
-              'beta',
-              'emulators',
-              'pubsub',
-              'start',
-              '--project=local-4ks',
-            ]
+          command: ['gcloud', 'beta', 'emulators', 'pubsub', 'start']
+          args: ['--host-port=0.0.0.0:8085']
+          env:
+            - name: PUBSUB_PROJECT_ID
+              value: local-4ks
           ports:
             - containerPort: 8085
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 8085
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 10
+          # readinessProbe:
+          #   httpGet:
+          #     port: 8085
+          #     path: '/'
           resources:
             requests:
               cpu: 100m

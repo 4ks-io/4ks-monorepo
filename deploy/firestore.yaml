@@ -28,15 +28,24 @@ spec:
     spec:
       containers:
         - name: firestore
-          image: mtlynch/firestore-emulator
+          # image: mtlynch/firestore-emulator
+          image: google/cloud-sdk:emulators
+          command: ['gcloud', 'beta', 'emulators', 'firestore', 'start']
+          args: ['--host-port=0.0.0.0:8200']
           env:
             - name: FIRESTORE_PROJECT_ID
               value: 'local-4ks'
-            - name: PORT
-              value: '8200'
+            # - name: PORT
+            #   value: '8200'
           ports:
             - containerPort: 8200
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 8085
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 10
           # readinessProbe:
           #   httpGet:
-          #     port: 5000
-          #     path: '/ready'
+          #     port: 8200
+          #     path: '/'

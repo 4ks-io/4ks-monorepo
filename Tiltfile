@@ -11,14 +11,12 @@ local_resource(
 k8s_yaml([
     'deploy/api.yaml',
     'deploy/web.yaml',
+    'deploy/fetcher.yaml',
     'deploy/firestore.yaml',
     'deploy/typesense.yaml',
     'deploy/pubsub.yaml',
     # 'deploy/jaeger.yaml'
 ])
-
-# pubsub
-k8s_resource('pubsub', port_forwards='0.0.0.0:8085:8085',labels=['pubsub'])
 
 # api
 k8s_resource('api', port_forwards='0.0.0.0:5734:5000',labels=['backend'])
@@ -44,6 +42,29 @@ docker_build(
     ]
 )
 
+
+# recipe-fetcher
+# k8s_resource('fetcher', port_forwards='0.0.0.0:5737:5000',labels=['backend'])
+docker_build(
+    'fetcher',
+    context='.',
+    dockerfile='apps/recipe-fetcher/Dockerfile.dev',
+    only=[
+        'apps/recipe-fetcher',
+        'go.mod',
+        'go.sum',
+        'libs/go',
+    ],
+    live_update=[
+        sync('apps/recipe-fetcher/', '/code/apps/recipe-fetcher'),
+        sync('libs/go/', '/code/libs/go'),
+        run(
+            'go mod tidy',
+            trigger=['apps/recipe-fetcher/']
+        )
+    ]
+)
+
 # web
 k8s_resource('web', port_forwards='0.0.0.0:5736:3000', labels=['web','next'])
 docker_build(
@@ -57,6 +78,7 @@ docker_build(
         'apps/recipe-fetcher',
         'apps/api',
         'apps-dev',
+        'libs/go',
         'data',
         'deploy',
         'dist',
@@ -76,8 +98,9 @@ docker_build(
 )
 
 # more
-k8s_resource('typesense', port_forwards='0.0.0.0:8108:8108', labels=['typesense','database'])
-k8s_resource('firestore', port_forwards='8200:8200', labels=['firestore','database'])
+# k8s_resource('pubsub',    port_forwards='8085:8085', labels=['database','pubsub'])
+k8s_resource('typesense', port_forwards='0.0.0.0:8108:8108', labels=['database','typesense'])
+# k8s_resource('firestore', port_forwards='8200:8200', labels=['database','firestore'])
 # k8s_resource( 'jaeger', port_forwards=['9411:9411','5775:5775','6831:6831','6832:6832','5778:5778','16686:16686','14250:14250','14268:14268','14269:14269'], labels=['jaeger'])
 
 # config.main_path is the absolute path to the Tiltfile being run

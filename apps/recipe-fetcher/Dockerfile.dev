@@ -8,15 +8,13 @@ COPY ./go.sum ./
 RUN go mod download
 
 FROM build
-WORKDIR /code
-COPY ./libs/reserved-words/reserved-words ./reserved-words
-COPY ./deploy/sbx-4ks-google-app-creds.json ./google-app-creds.json
 
+WORKDIR /code
 COPY ./go.mod ./
 COPY ./go.sum ./
 
-COPY ./apps/api ./apps/api
 COPY ./libs/go ./libs/go
+COPY ./apps/recipe-fetcher ./apps/recipe-fetcher
 RUN go mod tidy
 
-CMD ["gow", "run", "./apps/api"]
+CMD ["gow", "run", "./apps/recipe-fetcher"]
