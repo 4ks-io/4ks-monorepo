@@ -16,6 +16,8 @@ import (
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/gocolly/colly/v2"
+
+	pb "4ks/libs/go/pubsub"
 )
 
 var (
@@ -41,20 +43,21 @@ type fetcherService struct {
 	ctx      context.Context
 	ready    bool
 	debug    bool
-	receiver *PubSubConnection
-	sender   *PubSubConnection
+	receiver *pb.PubSubConnection
+	sender   *pb.PubSubConnection
 }
 
 // newFetcherService returns a new FetcherService
-func newFetcherService(ctx context.Context, debug bool, client *pubsub.Client, reqo PubsubOpts, reso PubsubOpts) *fetcherService {
+func newFetcherService(ctx context.Context, debug bool, client *pubsub.Client, reqo pb.PubsubOpts, reso pb.PubsubOpts) *fetcherService {
+	l := loggerFromContext(ctx)
 	// connect to receiver topic
-	topreq := connectTopic(ctx, client, reqo)
+	topreq := pb.ConnectTopic(ctx, l, client, reqo)
 
 	// subscribe to receiver topic
-	subreq := subscribeTopic(ctx, client, reqo, topreq)
+	subreq := pb.SubscribeTopic(ctx, l, client, reqo, topreq)
 
 	// create receiver
-	receiver := &PubSubConnection{
+	receiver := &pb.PubSubConnection{
 		ProjectID:    reqo.ProjectID,
 		TopicID:      reqo.TopicID,
 		Topic:        topreq,
@@ -62,10 +65,10 @@ func newFetcherService(ctx context.Context, debug bool, client *pubsub.Client, r
 	}
 
 	// connect to sender topic
-	topres := connectTopic(ctx, client, reso)
+	topres := pb.ConnectTopic(ctx, l, client, reso)
 
 	// create sender
-	sender := &PubSubConnection{
+	sender := &pb.PubSubConnection{
 		ProjectID: reso.ProjectID,
 		TopicID:   reqo.TopicID,
 		Topic:     topres,

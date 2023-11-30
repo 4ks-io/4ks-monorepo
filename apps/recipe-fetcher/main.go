@@ -11,6 +11,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	pb "4ks/libs/go/pubsub"
+
 	"cloud.google.com/go/pubsub"
 	"github.com/go-kit/log/level"
 )
@@ -99,14 +101,14 @@ func main() {
 	level.Info(l).Log("msg", "pubsub client created", "project", projectID)
 
 	// pubsub request/receiver options
-	reqo := PubsubOpts{
+	reqo := pb.PubsubOpts{
 		ProjectID:      projectID,
 		TopicID:        "fetch-requests",
 		SubscriptionID: "fetch-requests",
 	}
 
 	// pubsub response/sender options
-	reso := PubsubOpts{
+	reso := pb.PubsubOpts{
 		ProjectID: projectID,
 		TopicID:   "fetch-responses",
 	}
@@ -137,7 +139,7 @@ func main() {
 	startWebServer(ctx, svc, exit, port)
 	if debug {
 		// connect to receiver topic
-		t := connectTopic(ctx, client, reqo)
+		t := pb.ConnectTopic(ctx, l, client, reqo)
 		startDebugWebServer(ctx, svc, exit, debugPort, t)
 	}
 	level.Info(l).Log("exit", <-exit)

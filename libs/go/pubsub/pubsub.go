@@ -1,9 +1,10 @@
-package main
+package pubsub
 
 import (
 	"context"
 
 	"cloud.google.com/go/pubsub"
+	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 )
 
@@ -21,8 +22,7 @@ type PubSubConnection struct {
 	Subscription   *pubsub.Subscription
 }
 
-func connectTopic(ctx context.Context, c *pubsub.Client, o PubsubOpts) *pubsub.Topic {
-	l := loggerFromContext(ctx)
+func ConnectTopic(ctx context.Context, l log.Logger, c *pubsub.Client, o PubsubOpts) *pubsub.Topic {
 	t := c.Topic(o.TopicID)
 
 	exist, err := t.Exists(ctx)
@@ -43,8 +43,7 @@ func connectTopic(ctx context.Context, c *pubsub.Client, o PubsubOpts) *pubsub.T
 	return t
 }
 
-func subscribeTopic(ctx context.Context, c *pubsub.Client, o PubsubOpts, t *pubsub.Topic) *pubsub.Subscription {
-	l := loggerFromContext(ctx)
+func SubscribeTopic(ctx context.Context, l log.Logger, c *pubsub.Client, o PubsubOpts, t *pubsub.Topic) *pubsub.Subscription {
 	s := c.Subscription(o.SubscriptionID)
 
 	ok, err := s.Exists(ctx)

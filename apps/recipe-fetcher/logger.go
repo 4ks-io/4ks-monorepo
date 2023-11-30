@@ -44,7 +44,9 @@ func newLogger(logLevel string) *log.Logger {
 	{
 		// logger = log.NewJSONLogger(log.NewSyncWriter(os.Stderr))
 		logger = log.NewLogfmtLogger(log.NewSyncWriter(os.Stderr))
-		logger = level.NewFilter(logger, level.Allow(level.ParseDefault(logLevel, level.InfoValue())))
+		if logLevel == "debug" {
+			logger = level.NewFilter(logger, level.AllowDebug())
+		}
 		logger = log.With(logger, "ts", log.DefaultTimestampUTC, "caller", log.DefaultCaller)
 	}
 	return &logger

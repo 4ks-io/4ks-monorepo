@@ -253,7 +253,7 @@ var testCases = map[string]struct {
 func TestRecipeHTML(t *testing.T) {
 	// logger
 	l := log.NewLogfmtLogger(log.NewSyncWriter(os.Stderr))
-	l = level.NewFilter(l, level.Allow(level.ErrorValue()))
+	l = level.NewFilter(l, level.AllowError())
 
 	// run through test cases
 	for name, tc := range testCases {
