@@ -11,12 +11,17 @@ import (
 
 	controllers "4ks/apps/api/controllers"
 	middleware "4ks/apps/api/middleware"
-	recipesvc "4ks/apps/api/services/recipe"
-	usersvc "4ks/apps/api/services/user"
+	fetcherService "4ks/apps/api/services/fetcher"
+	recipeService "4ks/apps/api/services/recipe"
+	searchService "4ks/apps/api/services/search"
+	staticService "4ks/apps/api/services/static"
+	userService "4ks/apps/api/services/user"
 	utils "4ks/apps/api/utils"
+	pb "4ks/libs/go/pubsub"
 	tracing "4ks/libs/go/tracer"
 
 	"cloud.google.com/go/firestore"
+	"cloud.google.com/go/pubsub"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	adapter "github.com/gwatts/gin-adapter"
@@ -108,6 +113,7 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 			EnforceAuth(recipes)
 
 			recipes.POST("/", c.Recipe.CreateRecipe)
+			recipes.POST("/fetch", c.Recipe.FetchRecipe)
 			recipes.PATCH("/:id", c.Recipe.UpdateRecipe)
 			recipes.POST("/:id/star", c.Recipe.StarRecipe)
 			recipes.POST("/:id/fork", c.Recipe.ForkRecipe)
@@ -125,6 +131,7 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 			user.GET("/", c.User.GetAuthenticatedUser)
 			user.POST("/", c.User.CreateUser)
 			user.PATCH("/", c.User.UpdateUser)
+			user.DELETE("/events/:id", c.User.RemoveUserEvent)
 		}
 		users := api.Group("/users")
 		{
@@ -171,10 +178,19 @@ func main() {
 	// firestore
 	firstoreProjectID := os.Getenv("FIRESTORE_PROJECT_ID")
 	if firstoreProjectID == "" {
-		panic("FIRESTORE_PROJECT_ID must be set")
+		panic("FIRESTORE_PROJECT_ID required")
 	}
 	if value, ok := os.LookupEnv("FIRESTORE_EMULATOR_HOST"); ok {
 		log.Printf("Using Firestore Emulator: '%s'", value)
+	}
+
+	// pubsub
+	pubsubProjectID := os.Getenv("PUBSUB_PROJECT_ID")
+	if pubsubProjectID == "" {
+		panic("PUBSUB_PROJECT_ID required")
+	}
+	if value, ok := os.LookupEnv("PUBSUB_EMULATOR_HOST"); ok {
+		log.Printf("Using PubSub Emulator: '%s'", value)
 	}
 
 	// load reserved words
@@ -199,16 +215,48 @@ func main() {
 	var ctx = context.Background()
 	var store, _ = firestore.NewClient(ctx, firstoreProjectID)
 
+	// Create a Pub/Sub client.
+	client, err := pubsub.NewClient(ctx, pubsubProjectID)
+	if err != nil {
+		log.Error().Caller().Err(err).Str("project", pubsubProjectID).Msg("failed to create pubsub client")
+		panic(err)
+	}
+	defer client.Close()
+	log.Info().Caller().Str("project", pubsubProjectID).Msg("pubsub client created")
+
+	// pubsub request/receiver options
+	reqo := pb.PubsubOpts{
+		ProjectID:      pubsubProjectID,
+		TopicID:        "fetch-responses",
+		SubscriptionID: "fetch-responses",
+	}
+
+	// pubsub response/sender options
+	reso := pb.PubsubOpts{
+		ProjectID: pubsubProjectID,
+		TopicID:   "fetch-requests",
+	}
+
 	// services
 	v := validator.New()
-	u := usersvc.New(&sysFlags, store, v, &reservedWords)
-	r := recipesvc.New(&sysFlags, store, v)
+	search := searchService.New()
+	static := staticService.New()
+	user := userService.New(&sysFlags, store, v, &reservedWords)
+	recipe := recipeService.New(&sysFlags, store, v)
+	fetcher := fetcherService.New(ctx, &sysFlags, client, reqo, reso, user, recipe, search, static)
+
+	go (func() {
+		if err := fetcher.Start(); err != nil {
+			log.Error().Caller().Err(err).Msg("Error starting fetcher service")
+			panic(err)
+		}
+	})()
 
 	// controllers
 	c := &Controllers{
 		System: controllers.NewSystemController(),
-		Recipe: controllers.NewRecipeController(u, r),
-		User:   controllers.NewUserController(u),
+		Recipe: controllers.NewRecipeController(user, recipe, search, static, fetcher),
+		User:   controllers.NewUserController(user),
 		Search: controllers.NewSearchController(),
 	}
 

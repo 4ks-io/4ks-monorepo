@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { getSession } from '@auth0/nextjs-auth0';
 import UpdateUsername from '@/components/UpdateUsername';
 import { Page, PageProps } from '@/libs/navigation';
 import { handleUserNavigation } from '@/libs/server/navigation';
@@ -9,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
+import UsernameSpecification from '@/components/UsernameSpecifications';
 
 export const metadata: Metadata = {
   title: '4ks Settings',
@@ -20,6 +22,7 @@ export default async function SettingsPage({
   searchParams,
 }: PageProps) {
   const { user } = await handleUserNavigation(Page.AUTHENTICATED);
+  const session = await getSession();
 
   if (!user || !user.username) {
     return (
@@ -49,6 +52,9 @@ export default async function SettingsPage({
       }}
     >
       <Container maxWidth="sm" style={{ paddingTop: 40 }}>
+        {/* <div>EVENTS: {JSON.stringify(user.events)}</div>
+        <br />
+        <div>TOKEN: Bearer {session?.accessToken}</div> */}
         <Typography variant="h4" component="h2">
           Settings
         </Typography>
@@ -61,23 +67,7 @@ export default async function SettingsPage({
           </Typography>
 
           <UpdateUsername username={user.username} />
-          <Typography variant="body1" component="h2">
-            <ul>
-              <li>Username must be minimum 8 and maximum 24 characters.</li>
-              <li>
-                It may only contain alphanumeric characters or non-consecutive
-                hyphens.
-              </li>
-              <li>It cannot begin or end with a hyphen.</li>
-              <li>
-                It cannot be a{' '}
-                <Link href="/reserved-words" passHref>
-                  reserved word
-                </Link>
-                .
-              </li>
-            </ul>
-          </Typography>
+          {UsernameSpecification()}
         </Stack>
       </Container>
     </Box>

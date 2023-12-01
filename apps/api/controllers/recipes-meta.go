@@ -26,9 +26,8 @@ func (c *recipeController) ForkRecipe(ctx *gin.Context) {
 
 	userID := ctx.GetString("id")
 	author, err := c.userService.GetUserByID(ctx, userID)
-
 	if err == userService.ErrUserNotFound {
-		ctx.AbortWithError(http.StatusBadRequest, err)
+		ctx.AbortWithError(http.StatusForbidden, err)
 		return
 	} else if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
@@ -69,9 +68,8 @@ func (c *recipeController) StarRecipe(ctx *gin.Context) {
 
 	userID := ctx.GetString("id")
 	author, err := c.userService.GetUserByID(ctx, userID)
-
 	if err == userService.ErrUserNotFound {
-		ctx.AbortWithStatus(http.StatusBadRequest)
+		ctx.AbortWithStatus(http.StatusForbidden)
 		return
 	} else if err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)

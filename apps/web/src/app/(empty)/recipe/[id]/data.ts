@@ -1,4 +1,3 @@
-import { getSession } from '@auth0/nextjs-auth0';
 import { serverClient } from '@/trpc/serverClient';
 import {
   dtos_GetRecipeMediaResponse,
@@ -7,14 +6,6 @@ import {
 import { TRPCError } from '@trpc/server';
 import { getHTTPStatusCodeFromError } from '@trpc/server/http';
 import { initialRecipe } from '@/providers/recipe-context/recipe-context-init';
-
-// // user
-// export async function getUserData() {
-//   const session = await getSession();
-//   return (
-//     (session && (await serverClient.users.getAuthenticated())) ?? undefined
-//   );
-// }
 
 // recipe
 export async function getRecipeData(
@@ -46,5 +37,4 @@ export async function getRecipeMedia(id: string) {
       return { data: [] } as dtos_GetRecipeMediaResponse;
     }
   }
-  // return {} as dtos_GetRecipeMediaResponse;
 }

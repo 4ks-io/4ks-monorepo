@@ -1,5 +1,11 @@
 package dtos
 
+import (
+	"4ks/libs/go/models"
+
+	"github.com/google/uuid"
+)
+
 // import "4ks/libs/go/models"
 
 // GetAuthenticatedUser godoc
@@ -30,4 +36,19 @@ type TestUsernameResponse struct {
 	Valid     bool   `json:"valid" binding:"required"`
 	Message   string `json:"msg" binding:"required"`
 	Username  string `json:"username" binding:"required"`
+}
+
+// CreateUserEvent godoc
+type CreateUserEvent struct {
+	Type   models.UserEventType   `json:"type"`
+	Status models.UserEventStatus `json:"status"`
+	Data   interface{}            `json:"data"`
+}
+
+// UpdateUserEvent godoc
+type UpdateUserEvent struct {
+	ID     uuid.UUID              `json:"id"`
+	Status models.UserEventStatus `json:"status"`
+	Error  models.UserEventError  `json:"error"`
+	Data   interface{}            `json:"data"`
 }

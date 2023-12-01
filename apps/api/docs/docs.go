@@ -267,6 +267,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/recipes/fetch": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Request Recipe Fetch",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "Request Recipe Fetch",
+                "parameters": [
+                    {
+                        "description": "Recipe Data",
+                        "name": "recipe",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.FetchRecipeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.CreateUserEvent"
+                        }
+                    }
+                }
+            }
+        },
         "/api/recipes/revisions/{revisionID}": {
             "get": {
                 "security": [
@@ -745,6 +784,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/user/events/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete User",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete User",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/api/users/": {
             "get": {
                 "security": [
@@ -815,7 +888,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/users/{userID}": {
+        "/api/users/{id}": {
             "get": {
                 "security": [
                     {
@@ -837,7 +910,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "userID",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -850,7 +923,9 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/api/users/{userID}": {
             "delete": {
                 "security": [
                     {
@@ -963,6 +1038,26 @@ const docTemplate = `{
                 "username": {
                     "type": "string",
                     "example": "BobDylan"
+                }
+            }
+        },
+        "dtos.CreateUserEvent": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "status": {
+                    "$ref": "#/definitions/models.UserEventStatus"
+                },
+                "type": {
+                    "$ref": "#/definitions/models.UserEventType"
+                }
+            }
+        },
+        "dtos.FetchRecipeRequest": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string"
                 }
             }
         },
@@ -1324,6 +1419,12 @@ const docTemplate = `{
                 "emailAddress": {
                     "type": "string"
                 },
+                "events": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserEvent"
+                    }
+                },
                 "id": {
                     "type": "string"
                 },
@@ -1337,6 +1438,77 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "models.UserEvent": {
+            "type": "object",
+            "properties": {
+                "createdDate": {
+                    "type": "string"
+                },
+                "data": {
+                    "description": "data is to be unmarshalled based on UserEventStatus ONLY"
+                },
+                "error": {
+                    "$ref": "#/definitions/models.UserEventError"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/models.UserEventStatus"
+                },
+                "type": {
+                    "$ref": "#/definitions/models.UserEventType"
+                },
+                "updatedDate": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UserEventError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UserEventStatus": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2,
+                3,
+                9,
+                60
+            ],
+            "x-enum-varnames": [
+                "UserEventCreated",
+                "UserEventProcessing",
+                "UserEventReady",
+                "UserEventAcknowledged",
+                "UserEventExpired",
+                "UserEventErrorState"
+            ]
+        },
+        "models.UserEventType": {
+            "type": "integer",
+            "enum": [
+                0,
+                2,
+                3,
+                9
+            ],
+            "x-enum-varnames": [
+                "UserEventTypeNewUser",
+                "UserEventTypeCreateRecipe",
+                "UserEventTypeForkRecipe",
+                "UserEventTypeFetchRecipe"
+            ]
         },
         "models.UserSummary": {
             "type": "object",

@@ -80,6 +80,25 @@ export class UsersService {
     }
 
     /**
+     * Delete User
+     * Delete User
+     * @param id Event ID
+     * @returns any OK
+     * @throws ApiError
+     */
+    public deleteApiUserEvents(
+        id: string,
+    ): CancelablePromise<any> {
+        return this.httpRequest.request({
+            method: 'DELETE',
+            url: '/api/user/events/{id}',
+            path: {
+                'id': id,
+            },
+        });
+    }
+
+    /**
      * Get All Users
      * Get All Users
      * @returns models_User OK
@@ -112,18 +131,18 @@ export class UsersService {
     /**
      * Get a User (by ID)
      * Get a User (by ID)
-     * @param userId User ID
+     * @param id User ID
      * @returns models_User OK
      * @throws ApiError
      */
     public getApiUsers1(
-        userId: string,
+        id: string,
     ): CancelablePromise<models_User> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/api/users/{userID}',
+            url: '/api/users/{id}',
             path: {
-                'userID': userId,
+                'id': id,
             },
         });
     }

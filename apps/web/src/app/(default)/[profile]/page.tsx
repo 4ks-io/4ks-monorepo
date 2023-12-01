@@ -1,35 +1,44 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+import Link from 'next/link';
 import { serverClient } from '@/trpc/serverClient';
+import { Page, PageProps } from '@/libs/navigation';
+import { getUserData } from '@/libs/server/data';
 import { dtos_GetRecipesByUsernameResponse } from '@4ks/api-fetch';
 import { getHTTPStatusCodeFromError } from '@trpc/server/http';
 import { TRPCError } from '@trpc/server';
 import { notFound } from 'next/navigation';
-import { getSession } from '@auth0/nextjs-auth0';
 import log from '@/libs/logger';
-import { normalizeForURL } from '@/libs/navigation';
 import SearchResults from '@/components/SearchResults';
+import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { Page, PageProps, RecipePropsParams } from '@/libs/navigation';
+import Typography from '@mui/material/Typography';
+import { normalizeForURL } from '@/libs/navigation';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 export type ProfilePropsParams = { profile: string };
 
 export default async function ProfilePage({ params, searchParams }: PageProps) {
   const username = (params as unknown as ProfilePropsParams).profile;
+  const user = await getUserData();
+
+  const isCurrent = user?.username === username;
 
   const data =
     (await serverClient.search.recipesByAuthor(username)) ?? undefined;
 
   // fetch
-  let r = {} as dtos_GetRecipesByUsernameResponse;
-  try {
-    r = (await serverClient.recipes.getAllByAuthor(username)) ?? {};
-  } catch (e) {
-    if (e instanceof TRPCError && getHTTPStatusCodeFromError(e) === 404) {
-      log().Error(new Error(), [
-        { k: 'msg', v: 'ProfilePage: failed to fetch recipes' },
-      ]);
-      return notFound();
+  // todo: should below and above calls be concurrent? the profile page needs more content. redesign
+  if (!data) {
+    let r = {} as dtos_GetRecipesByUsernameResponse;
+    try {
+      r = (await serverClient.recipes.getAllByAuthor(username)) ?? {};
+    } catch (e) {
+      if (e instanceof TRPCError && getHTTPStatusCodeFromError(e) === 404) {
+        log().Error(new Error(), [
+          { k: 'msg', v: 'ProfilePage: failed to fetch recipes' },
+        ]);
+        return notFound();
+      }
     }
   }
 
@@ -45,9 +54,45 @@ export default async function ProfilePage({ params, searchParams }: PageProps) {
     >
       <Container>
         <h2>@{username}</h2>
+        <h3>Events</h3>
+        {isCurrent && (
+          <ul style={{ listStyleType: 'none', paddingInlineStart: '0px' }}>
+            {user.events?.map((e) => {
+              if (!e || !e.data) {
+                return null;
+              }
+              // todo: handle name change
+              let recipeURL = `/recipe/${e.data.RecipeID}`;
+              if (e.data?.RecipeTitle) {
+                recipeURL = `${recipeURL}-${normalizeForURL(
+                  e.data.RecipeTitle
+                )}`;
+              }
+              return (
+                <li key={e.id}>
+                  <Link
+                    prefetch={false}
+                    style={{ textDecoration: 'none', color: '#000' }}
+                    href={recipeURL}
+                  >
+                    <Typography variant="h6" noWrap>
+                      {e.status == 2 && (
+                        <NotificationsActiveIcon
+                          fontSize="inherit"
+                          color="secondary"
+                          sx={{ paddingRight: 1 }}
+                        />
+                      )}
+                      {e?.data?.RecipeTitle}
+                    </Typography>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        )}
         <h3>Recipes</h3>
         {<SearchResults results={data} />}
-        {/* <div>Bearer {session?.accessToken}</div> */}
       </Container>
     </Box>
   );

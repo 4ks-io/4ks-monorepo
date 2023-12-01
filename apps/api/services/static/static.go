@@ -2,6 +2,7 @@
 package static
 
 import (
+	"context"
 	"fmt"
 	"math/rand"
 	"os"
@@ -9,17 +10,17 @@ import (
 
 	"cloud.google.com/go/storage"
 	"github.com/bluele/gcache"
-	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/api/iterator"
 )
 
+// todo: move to main
 var mediaFallbackURL = os.Getenv("MEDIA_FALLBACK_URL")
 var staticMediaBucket = os.Getenv("STATIC_MEDIA_BUCKET")
 
 // Service is the interface for the static service
 type Service interface {
-	GetRandomFallbackImage(*gin.Context) (string, error)
+	GetRandomFallbackImage(context.Context) (string, error)
 	GetRandomFallbackImageURL(string) string
 }
 
@@ -39,7 +40,7 @@ func (ss staticService) GetRandomFallbackImageURL(filename string) string {
 }
 
 // GetRandomFallbackImage returns a random fallback image
-func (ss staticService) GetRandomFallbackImage(c *gin.Context) (string, error) {
+func (ss staticService) GetRandomFallbackImage(c context.Context) (string, error) {
 	images, err := FetchFallbackImages(c, ss.cache)
 	if err != nil {
 		return "", err
@@ -54,7 +55,7 @@ func (ss staticService) GetRandomFallbackImage(c *gin.Context) (string, error) {
 }
 
 // FetchFallbackImages fetches fallback images from cache or bucket
-func FetchFallbackImages(c *gin.Context, cache gcache.Cache) ([]string, error) {
+func FetchFallbackImages(c context.Context, cache gcache.Cache) ([]string, error) {
 	key := "fallback"
 	images, err := cache.Get(key)
 	if err != nil {
@@ -76,7 +77,7 @@ func FetchFallbackImages(c *gin.Context, cache gcache.Cache) ([]string, error) {
 }
 
 // FetchFallbackImagesFromBucket fetches fallback images from bucket
-func FetchFallbackImagesFromBucket(c *gin.Context) ([]string, error) {
+func FetchFallbackImagesFromBucket(c context.Context) ([]string, error) {
 	client, err := storage.NewClient(c)
 	if err != nil {
 		return nil, fmt.Errorf("storage.NewClient: %v", err)

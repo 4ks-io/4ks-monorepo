@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 )
 
@@ -20,6 +21,7 @@ type UserController interface {
 	DeleteUser(*gin.Context)
 	UpdateUser(*gin.Context)
 	TestUsername(*gin.Context)
+	RemoveUserEvent(*gin.Context)
 }
 
 type userController struct {
@@ -31,6 +33,40 @@ func NewUserController(u usersvc.Service) UserController {
 	return &userController{
 		usersvc: u,
 	}
+}
+
+// RemoveUserEvent	godoc
+// @Summary 		    Delete User
+// @Description     Delete User
+// @Tags 				    Users
+// @Accept 			    json
+// @Produce 		    json
+// @Param           id 	path      string  true  "Event ID"
+// @Success 		    200
+// @Router 			    /api/user/events/{id}   [delete]
+// @Security 		    ApiKeyAuth
+func (c *userController) RemoveUserEvent(ctx *gin.Context) {
+	userID := ctx.GetString("id")
+	eventID := ctx.Param("id")
+
+	// validate eventID
+	log.Debug().Caller().Str("eventID", eventID).Msg("validating eventID")
+	eid, err := uuid.Parse(eventID)
+	if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	err = c.usersvc.RemoveUserEventByUserIDEventID(ctx, userID, eid)
+	if err == usersvc.ErrUserEventNotFound {
+		ctx.AbortWithError(http.StatusNotFound, err)
+		return
+	} else if err != nil {
+		ctx.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, "ok")
 }
 
 // CreateUser   godoc
@@ -98,9 +134,9 @@ func (c *userController) DeleteUser(ctx *gin.Context) {
 // @Tags 		    Users
 // @Accept 	   	json
 // @Produce   	json
-// @Param       userID 	path      	string  true  "User ID"
+// @Param       id 	    path      string  true  "User ID"
 // @Success 		200 		{object} 	models.User
-// @Router 			/api/users/{userID} [get]
+// @Router 			/api/users/{id} [get]
 // @Security 		ApiKeyAuth
 func (c *userController) GetUser(ctx *gin.Context) {
 	userID := ctx.Param("id")

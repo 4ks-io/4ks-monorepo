@@ -42,7 +42,7 @@ func (c *recipeController) BotCreateRecipe(ctx *gin.Context) {
 		log.Error().Err(err).Msg("failed to get random fallback image")
 	}
 	u := c.staticService.GetRandomFallbackImageURL(f)
-	payload.Banner = createMockBanner(f, u)
+	payload.Banner = c.recipeService.CreateMockBanner(f, u)
 
 	createdRecipe, err := c.recipeService.CreateRecipe(ctx, &payload)
 	if err == recipeService.ErrUnableToCreateRecipe {

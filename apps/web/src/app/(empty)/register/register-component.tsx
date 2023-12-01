@@ -15,6 +15,7 @@ import Box from '@mui/material/Box';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import UsernameSpecification from '@/components/UsernameSpecifications';
 
 type formValidationError = {
   validation: string;
@@ -393,19 +394,7 @@ export default function RegisterComponent() {
                   helperText={input.username.ErrMsg}
                   value={username}
                 />
-                <Typography component={'span'} variant={'body2'}>
-                  <ul>
-                    <li>Min length: 8 characters.</li>
-                    <li>Max length: 24 characters.</li>
-                    <li>
-                      Characters must be either a hyphen ( - ) or alphanumeric.
-                    </li>
-                    <li>Cannot start or end with a hyphen.</li>
-                    <li>Cannot include consecutive hyphens.</li>
-                    <li>Cannot be a reserved word.</li>
-                    <li>Must be globally unique.</li>
-                  </ul>
-                </Typography>
+                {UsernameSpecification()}
               </Grid>
             </Grid>
             <Button

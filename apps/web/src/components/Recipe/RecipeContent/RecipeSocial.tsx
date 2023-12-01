@@ -28,34 +28,39 @@ export default function RecipeSocial(props: RecipeSocialProps) {
       <div style={{ paddingBottom: 30 }} />
 
       <Stack>
-        {rtx?.recipe.currentRevision?.link && (
-          <>
-            <SectionTitle value={'Source'} />
-            {rtx.recipe?.branch && (
-              <Link
-                prefetch={false}
-                href={`/recipe/${rtx.recipe?.branch}`}
-                style={{ textDecoration: 'none', color: '#000' }}
-              >
-                <Typography variant="body1" gutterBottom>
-                  <LinkIcon fontSize="small" /> Parent Recipe
-                </Typography>
-              </Link>
-            )}
+        <SectionTitle value={'Source'} />
+        {rtx.recipe?.branch && (
+          <Link
+            prefetch={false}
+            href={`/recipe/${rtx.recipe?.branch}`}
+            style={{ textDecoration: 'none', color: '#000' }}
+          >
             <Typography variant="body1" gutterBottom>
-              <Link
-                prefetch={false}
-                href={'https://' + rtx.recipe.currentRevision?.link}
-                style={{ textDecoration: 'none', color: '#000' }}
-              >
-                <LinkIcon fontSize="small" />{' '}
-                {rtx.recipe.currentRevision?.link.split('/')[0]}
-              </Link>
+              <LinkIcon fontSize="small" /> Inspiration
             </Typography>
-          </>
+          </Link>
+        )}
+        {rtx?.recipe.currentRevision?.link && (
+          <Typography variant="body1" gutterBottom>
+            <Link
+              prefetch={false}
+              href={rtx.recipe.currentRevision?.link}
+              style={{ textDecoration: 'none', color: '#000' }}
+            >
+              <LinkIcon fontSize="small" />
+              {getDomain(rtx.recipe.currentRevision?.link) || 'http'}
+            </Link>
+          </Typography>
         )}
       </Stack>
       <div style={{ paddingBottom: 30 }} />
     </>
   );
+}
+
+function getDomain(url: string): string {
+  // Make 'subdomain' an optional parameter with a default value of false
+  url = url.replace(/(https?:\/\/)?/i, ''); // Remove protocol and 'www' subdomain
+  const parts = url.split('/'); // Split URL by forward slash
+  return parts[0];
 }

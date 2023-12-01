@@ -37,6 +37,19 @@ definitions:
     - displayName
     - username
     type: object
+  dtos.CreateUserEvent:
+    properties:
+      data: {}
+      status:
+        $ref: '#/definitions/models.UserEventStatus'
+      type:
+        $ref: '#/definitions/models.UserEventType'
+    type: object
+  dtos.FetchRecipeRequest:
+    properties:
+      url:
+        type: string
+    type: object
   dtos.GetRecipeMediaResponse:
     properties:
       data:
@@ -283,6 +296,10 @@ definitions:
         type: string
       emailAddress:
         type: string
+      events:
+        items:
+          $ref: '#/definitions/models.UserEvent'
+        type: array
       id:
         type: string
       updatedDate:
@@ -292,6 +309,58 @@ definitions:
       usernameLower:
         type: string
     type: object
+  models.UserEvent:
+    properties:
+      createdDate:
+        type: string
+      data:
+        description: data is to be unmarshalled based on UserEventStatus ONLY
+      error:
+        $ref: '#/definitions/models.UserEventError'
+      id:
+        type: string
+      status:
+        $ref: '#/definitions/models.UserEventStatus'
+      type:
+        $ref: '#/definitions/models.UserEventType'
+      updatedDate:
+        type: string
+    type: object
+  models.UserEventError:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  models.UserEventStatus:
+    enum:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 9
+    - 60
+    type: integer
+    x-enum-varnames:
+    - UserEventCreated
+    - UserEventProcessing
+    - UserEventReady
+    - UserEventAcknowledged
+    - UserEventExpired
+    - UserEventErrorState
+  models.UserEventType:
+    enum:
+    - 0
+    - 2
+    - 3
+    - 9
+    type: integer
+    x-enum-varnames:
+    - UserEventTypeNewUser
+    - UserEventTypeCreateRecipe
+    - UserEventTypeForkRecipe
+    - UserEventTypeFetchRecipe
   models.UserSummary:
     properties:
       displayName:
@@ -656,6 +725,30 @@ paths:
       summary: Get All Recipes by Author
       tags:
       - Recipes
+  /api/recipes/fetch:
+    post:
+      consumes:
+      - application/json
+      description: Request Recipe Fetch
+      parameters:
+      - description: Recipe Data
+        in: body
+        name: recipe
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.FetchRecipeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.CreateUserEvent'
+      security:
+      - ApiKeyAuth: []
+      summary: Request Recipe Fetch
+      tags:
+      - Recipes
   /api/recipes/revisions/{revisionID}:
     get:
       consumes:
@@ -763,6 +856,27 @@ paths:
       summary: Update User
       tags:
       - Users
+  /api/user/events/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete User
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      summary: Delete User
+      tags:
+      - Users
   /api/users/:
     get:
       consumes:
@@ -780,6 +894,29 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get All Users
+      tags:
+      - Users
+  /api/users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a User (by ID)
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a User (by ID)
       tags:
       - Users
   /api/users/{userID}:
@@ -801,28 +938,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Delete User
-      tags:
-      - Users
-    get:
-      consumes:
-      - application/json
-      description: Get a User (by ID)
-      parameters:
-      - description: User ID
-        in: path
-        name: userID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.User'
-      security:
-      - ApiKeyAuth: []
-      summary: Get a User (by ID)
       tags:
       - Users
   /api/users/username:

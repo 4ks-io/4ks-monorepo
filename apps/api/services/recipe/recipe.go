@@ -2,20 +2,20 @@
 package recipesvc
 
 import (
+	"4ks/apps/api/dtos"
+	"4ks/apps/api/utils"
+	models "4ks/libs/go/models"
 	"context"
 	"errors"
 	"fmt"
 	"os"
 	"sync"
 
-	"4ks/apps/api/dtos"
-	"4ks/apps/api/utils"
-	models "4ks/libs/go/models"
-
 	firestore "cloud.google.com/go/firestore"
 	"github.com/go-playground/validator/v10"
 )
 
+// todo: move to main
 var distributionBucket = os.Getenv("DISTRIBUTION_BUCKET")
 var uploadableBucket = os.Getenv("UPLOADABLE_BUCKET")
 var serviceAccountName = os.Getenv("SERVICE_ACCOUNT_EMAIL")
@@ -67,6 +67,9 @@ type Service interface {
 	StarRecipeByID(context.Context, string, models.UserSummary) (bool, error)
 	// update
 	UpdateRecipeByID(context.Context, string, *dtos.UpdateRecipe) (*models.Recipe, error)
+
+	// util
+	CreateMockBanner(string, string) []models.RecipeMediaVariant
 }
 
 type recipeService struct {
@@ -90,4 +93,21 @@ func New(sysFlags *utils.SystemFlags, store *firestore.Client, validator *valida
 		recipeStarsCollection:     store.Collection("recipe-stars"),
 		sysFlags:                  sysFlags,
 	}
+}
+
+func (s recipeService) CreateMockBanner(f string, u string) []models.RecipeMediaVariant {
+	a := []models.RecipeMediaVariant{}
+	a = append(a, models.RecipeMediaVariant{
+		MaxWidth: 256,
+		URL:      u,
+		Filename: f,
+		Alias:    "sm",
+	})
+	a = append(a, models.RecipeMediaVariant{
+		MaxWidth: 1024,
+		URL:      u,
+		Filename: f,
+		Alias:    "md",
+	})
+	return a
 }

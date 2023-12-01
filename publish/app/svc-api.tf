@@ -5,7 +5,7 @@ resource "google_cloud_run_service" "api" {
   template {
     metadata{
       annotations = {
-        "autoscaling.knative.dev/minScale" = "0"
+        "autoscaling.knative.dev/minScale" = "1"
         "autoscaling.knative.dev/maxScale" = "10"
       }
     }

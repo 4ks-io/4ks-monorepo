@@ -1,4 +1,5 @@
 FROM golang:1.20-alpine as build
+RUN apk --no-cache add curl busybox-extras
 RUN go install github.com/mitranim/gow@latest
 
 WORKDIR /code

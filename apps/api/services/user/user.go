@@ -10,7 +10,7 @@ import (
 
 	firestore "cloud.google.com/go/firestore"
 	"github.com/go-playground/validator/v10"
-	"github.com/rs/zerolog/log"
+	"github.com/google/uuid"
 	"google.golang.org/api/iterator"
 
 	"4ks/apps/api/dtos"
@@ -29,6 +29,8 @@ var (
 	ErrUserNotFound = errors.New("user not found")
 	// ErrReservedWord is returned when a username is a reserved word
 	ErrReservedWord = errors.New("reserved word")
+	// ErrUserEventNotFound is returned when a user event is not found
+	ErrUserEventNotFound = errors.New("user event not found")
 )
 
 // Service is the interface for the user service
@@ -40,6 +42,9 @@ type Service interface {
 	CreateUser(context.Context, string, string, *dtos.CreateUser) (*models.User, error)
 	UpdateUserByID(context.Context, string, *dtos.UpdateUser) (*models.User, error)
 	DeleteUser(context.Context, string) error
+	CreateUserEventByUserID(context.Context, string, *dtos.CreateUserEvent) (*models.UserEvent, error)
+	UpdateUserEventByUserIDEventID(context.Context, string, *dtos.UpdateUserEvent) (*models.UserEvent, error)
+	RemoveUserEventByUserIDEventID(context.Context, string, uuid.UUID) error
 
 	// test username
 	TestName(context.Context, string) error
@@ -101,9 +106,7 @@ func (s userService) GetUserByID(ctx context.Context, id string) (*models.User, 
 	}
 
 	user := new(models.User)
-	err = result.DataTo(user)
-
-	if err != nil {
+	if err = result.DataTo(user); err != nil {
 		return nil, err
 	}
 
@@ -177,7 +180,7 @@ func (s userService) UpdateUserByID(ctx context.Context, userID string, user *dt
 		return nil, err
 	}
 
-	_, err := s.userCollection.Doc(userID).Update(ctx, []firestore.Update{
+	if _, err := s.userCollection.Doc(userID).Update(ctx, []firestore.Update{
 		{
 			Path:  "username",
 			Value: user.Username,
@@ -186,9 +189,8 @@ func (s userService) UpdateUserByID(ctx context.Context, userID string, user *dt
 			Path:  "usernameLower",
 			Value: strings.ToLower(user.Username),
 		},
-	})
-	if err != nil {
-		log.Printf("An error has occurred: %s", err)
+	}); err != nil {
+		return nil, err
 	}
 
 	u, err := s.GetUserByID(ctx, userID)
@@ -197,6 +199,137 @@ func (s userService) UpdateUserByID(ctx context.Context, userID string, user *dt
 	}
 
 	return u, nil
+}
+
+// CreateUserEventByUserID creates a user event for the given user id
+func (s userService) CreateUserEventByUserID(ctx context.Context, id string, e *dtos.CreateUserEvent) (*models.UserEvent, error) {
+	result, err := s.userCollection.Doc(id).Get(ctx)
+	if err != nil {
+		return nil, ErrUserNotFound
+	}
+
+	user := new(models.User)
+	if err = result.DataTo(user); err != nil {
+		return nil, err
+	}
+
+	if user.Events == nil {
+		user.Events = make([]models.UserEvent, 0)
+	}
+
+	newUserEvent := models.UserEvent{
+		ID:          uuid.New(),
+		Type:        e.Type,
+		Status:      e.Status,
+		Data:        e.Data,
+		CreatedDate: time.Now().UTC(),
+		UpdatedDate: time.Now().UTC(),
+	}
+
+	user.Events = append(user.Events, newUserEvent)
+
+	if _, err := s.userCollection.Doc(id).Update(ctx, []firestore.Update{
+		{
+			Path:  "events",
+			Value: user.Events,
+		},
+	}); err != nil {
+		return nil, err
+	}
+
+	return &newUserEvent, nil
+}
+
+// UpdateUserEventByUserIDEventID creates a user event for the given user id
+func (s userService) UpdateUserEventByUserIDEventID(ctx context.Context, id string, e *dtos.UpdateUserEvent) (*models.UserEvent, error) {
+	if zero, _ := uuid.Parse("00000000-0000-0000-0000-000000000000"); e.ID == uuid.Nil || e.ID == zero {
+		return nil, ErrUserEventNotFound
+	}
+
+	result, err := s.userCollection.Doc(id).Get(ctx)
+	if err != nil {
+		return nil, ErrUserNotFound
+	}
+
+	user := new(models.User)
+	if err = result.DataTo(user); err != nil {
+		return nil, err
+	}
+
+	if user.Events == nil {
+		return nil, ErrUserEventNotFound
+	}
+
+	ie := -1
+	for i, ue := range user.Events {
+		if ue.ID == e.ID {
+			ie = i
+			user.Events[i].Status = e.Status
+			user.Events[i].Error = e.Error
+			user.Events[i].Data = e.Data
+			user.Events[i].UpdatedDate = time.Now().UTC()
+		}
+	}
+	if ie == -1 {
+		return nil, ErrUserEventNotFound
+	}
+
+	// todo: improve performance
+	// https://stackoverflow.com/questions/46757614/how-to-update-an-array-of-objects-with-firestore/51794212#51794212
+
+	if _, err := s.userCollection.Doc(id).Update(ctx, []firestore.Update{
+		{
+			Path:  "events",
+			Value: user.Events,
+		},
+	}); err != nil {
+		return nil, err
+	}
+
+	return &user.Events[ie], nil
+}
+
+// RemoveUserEventByUserIDEventID deletes the specified user event for a given user id
+func (s userService) RemoveUserEventByUserIDEventID(ctx context.Context, id string, eventID uuid.UUID) error {
+	result, err := s.userCollection.Doc(id).Get(ctx)
+	if err != nil {
+		return ErrUserNotFound
+	}
+
+	user := new(models.User)
+	if err = result.DataTo(user); err != nil {
+		return err
+	}
+
+	if user.Events == nil {
+		return ErrUserEventNotFound
+	}
+
+	var ok bool
+	var newEvents []models.UserEvent
+	for _, ue := range user.Events {
+		if ue.ID == eventID {
+			ok = true
+			continue
+		}
+		newEvents = append(newEvents, ue)
+	}
+
+	// return if not found
+	if !ok {
+		return ErrUserEventNotFound
+	}
+
+	if _, err := s.userCollection.Doc(id).Update(ctx, []firestore.Update{
+		{
+			Path:  "events",
+			Value: newEvents,
+		},
+	}); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // todo: add with disableUser/enableUser as we never want to delete a recipe

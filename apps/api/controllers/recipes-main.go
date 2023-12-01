@@ -34,7 +34,7 @@ func (c *recipeController) CreateRecipe(ctx *gin.Context) {
 	userID := ctx.GetString("id")
 	author, err := c.userService.GetUserByID(ctx, userID)
 	if err != nil {
-		ctx.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusForbidden, err)
 		return
 	}
 
@@ -49,7 +49,7 @@ func (c *recipeController) CreateRecipe(ctx *gin.Context) {
 		log.Error().Err(err).Msg("failed to get random fallback image")
 	}
 	u := c.staticService.GetRandomFallbackImageURL(f)
-	payload.Banner = createMockBanner(f, u)
+	payload.Banner = c.recipeService.CreateMockBanner(f, u)
 
 	createdRecipe, err := c.recipeService.CreateRecipe(ctx, &payload)
 	if err == recipesvc.ErrUnableToCreateRecipe {
@@ -243,7 +243,7 @@ func (c *recipeController) UpdateRecipe(ctx *gin.Context) {
 	userID := ctx.GetString("id")
 	author, err := c.userService.GetUserByID(ctx, userID)
 	if err != nil {
-		ctx.AbortWithError(http.StatusInternalServerError, err)
+		ctx.AbortWithError(http.StatusForbidden, err)
 		return
 	}
 
@@ -273,4 +273,53 @@ func (c *recipeController) UpdateRecipe(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, createdRecipe)
+}
+
+// FetchRecipe godoc
+// @Schemes
+// @Summary 		Request Recipe Fetch
+// @Description Request Recipe Fetch
+// @Tags 				Recipes
+// @Accept 			json
+// @Produce 		json
+// @Param       recipe   body  	   	dtos.FetchRecipeRequest  true  "Recipe Data"
+// @Success 		200 		 {object}		dtos.CreateUserEvent
+// @Router		 	/api/recipes/fetch [post]
+// @Security 		ApiKeyAuth
+func (c *recipeController) FetchRecipe(ctx *gin.Context) {
+	// payload binding
+	payload := dtos.FetchRecipeRequest{}
+	if err := ctx.BindJSON(&payload); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	// userID from context
+	userID := ctx.GetString("id")
+	_, err := c.userService.GetUserByID(ctx, userID)
+	if err != nil {
+		ctx.AbortWithError(http.StatusForbidden, err)
+		return
+	}
+
+	e, err := c.userService.CreateUserEventByUserID(ctx, userID, &dtos.CreateUserEvent{
+		Type:   models.UserEventTypeFetchRecipe,
+		Status: models.UserEventProcessing,
+		Data:   models.FetcherEventData{URL: payload.URL},
+	})
+
+	data := models.FetcherRequest{
+		UserID:      userID,
+		UserEventID: e.ID,
+		URL:         payload.URL,
+	}
+
+	// send to pubsub
+	_, err = c.fetcherService.Send(ctx, &data)
+	if err != nil {
+		ctx.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, e)
 }

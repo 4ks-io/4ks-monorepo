@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ExploreIcon from '@mui/icons-material/Explore';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
@@ -18,6 +19,8 @@ import SearchDialog from '@/components/SearchDialog/SearchDialog';
 import { InstantSearch } from 'react-instantsearch';
 import { InstantSearchNext } from 'react-instantsearch-nextjs';
 import SearchBox from '@/components/SearchBox';
+import Badge from '@mui/material/Badge';
+
 interface AppHeaderProps {
   user: models_User | undefined;
 }
@@ -31,6 +34,8 @@ export default function AppHeader({ user }: AppHeaderProps) {
   function hideExplore(pathname: string) {
     return ['/explore'].includes(pathname);
   }
+
+  const hasNewEvent = user?.events?.some((e) => e?.status == 2);
 
   const [showSearchInput, setShowSearchInput] = useState(true);
   const [showExploreLink, setShowExploreLink] = useState(true);
@@ -93,6 +98,17 @@ export default function AppHeader({ user }: AppHeaderProps) {
             </Link>
           </Tooltip>
         )}
+
+        {hasNewEvent && (
+          <Tooltip title="New Event!">
+            <Link prefetch={false} href={'/' + user?.username}>
+              <IconButton aria-label="notifications">
+                <NotificationsActiveIcon fontSize="inherit" color="secondary" />
+              </IconButton>
+            </Link>
+          </Tooltip>
+        )}
+
         {isAuthenticated ? (
           <AppHeaderAvatarAuthenticated username={`${user.username}`} />
         ) : (

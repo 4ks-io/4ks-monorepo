@@ -4,6 +4,7 @@
 dist
 /tmp
 /out-tsc
+fetcher
 
 # dependencies
 node_modules

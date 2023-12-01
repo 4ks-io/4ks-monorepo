@@ -12,6 +12,8 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 export type { dtos_CreateRecipe } from './models/dtos_CreateRecipe';
 export type { dtos_CreateRecipeMedia } from './models/dtos_CreateRecipeMedia';
 export type { dtos_CreateUser } from './models/dtos_CreateUser';
+export type { dtos_CreateUserEvent } from './models/dtos_CreateUserEvent';
+export type { dtos_FetchRecipeRequest } from './models/dtos_FetchRecipeRequest';
 export type { dtos_GetRecipeMediaResponse } from './models/dtos_GetRecipeMediaResponse';
 export type { dtos_GetRecipeResponse } from './models/dtos_GetRecipeResponse';
 export type { dtos_GetRecipesByUsernameResponse } from './models/dtos_GetRecipesByUsernameResponse';
@@ -30,6 +32,10 @@ export type { models_RecipeMediaVariant } from './models/models_RecipeMediaVaria
 export type { models_RecipeMetadata } from './models/models_RecipeMetadata';
 export type { models_RecipeRevision } from './models/models_RecipeRevision';
 export type { models_User } from './models/models_User';
+export type { models_UserEvent } from './models/models_UserEvent';
+export type { models_UserEventError } from './models/models_UserEventError';
+export { models_UserEventStatus } from './models/models_UserEventStatus';
+export { models_UserEventType } from './models/models_UserEventType';
 export type { models_UserSummary } from './models/models_UserSummary';
 
 export { AdminService } from './services/AdminService';

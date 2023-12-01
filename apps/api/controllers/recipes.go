@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	fetcherService "4ks/apps/api/services/fetcher"
 	recipeService "4ks/apps/api/services/recipe"
 	searchService "4ks/apps/api/services/search"
 	staticService "4ks/apps/api/services/static"
@@ -25,21 +26,24 @@ type RecipeController interface {
 	CreateRecipeMedia(*gin.Context)
 	GetRecipeMedia(*gin.Context)
 	GetAdminRecipeMedias(*gin.Context)
+	FetchRecipe(*gin.Context)
 }
 
 type recipeController struct {
-	recipeService recipeService.Service
-	searchService searchService.Service
-	staticService staticService.Service
-	userService   userService.Service
+	recipeService  recipeService.Service
+	searchService  searchService.Service
+	staticService  staticService.Service
+	userService    userService.Service
+	fetcherService fetcherService.Service
 }
 
 // NewRecipeController creates a new recipe controller
-func NewRecipeController(u userService.Service, r recipeService.Service) RecipeController {
+func NewRecipeController(u userService.Service, r recipeService.Service, search searchService.Service, static staticService.Service, fetcher fetcherService.Service) RecipeController {
 	return &recipeController{
-		recipeService: r,
-		searchService: searchService.New(),
-		userService:   u,
-		staticService: staticService.New(),
+		userService:    u,
+		recipeService:  r,
+		searchService:  search,
+		staticService:  static,
+		fetcherService: fetcher,
 	}
 }

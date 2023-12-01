@@ -3,6 +3,8 @@
 /* eslint-disable */
 import type { dtos_CreateRecipe } from '../models/dtos_CreateRecipe';
 import type { dtos_CreateRecipeMedia } from '../models/dtos_CreateRecipeMedia';
+import type { dtos_CreateUserEvent } from '../models/dtos_CreateUserEvent';
+import type { dtos_FetchRecipeRequest } from '../models/dtos_FetchRecipeRequest';
 import type { dtos_GetRecipeMediaResponse } from '../models/dtos_GetRecipeMediaResponse';
 import type { dtos_GetRecipeResponse } from '../models/dtos_GetRecipeResponse';
 import type { dtos_GetRecipesByUsernameResponse } from '../models/dtos_GetRecipesByUsernameResponse';
@@ -64,6 +66,23 @@ export class RecipesService {
             path: {
                 'username': username,
             },
+        });
+    }
+
+    /**
+     * Request Recipe Fetch
+     * Request Recipe Fetch
+     * @param recipe Recipe Data
+     * @returns dtos_CreateUserEvent OK
+     * @throws ApiError
+     */
+    public postApiRecipesFetch(
+        recipe: dtos_FetchRecipeRequest,
+    ): CancelablePromise<dtos_CreateUserEvent> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/recipes/fetch',
+            body: recipe,
         });
     }
 
