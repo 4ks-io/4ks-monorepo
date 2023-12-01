@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       app_name:
-        description: 'api | web'
+        description: 'api | web | recipe-fetcher'
         required: true
         type: string
       # environment:

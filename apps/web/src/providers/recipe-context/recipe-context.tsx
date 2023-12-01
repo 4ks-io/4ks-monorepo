@@ -77,7 +77,7 @@ export function RecipeContextProvider({
       setEditInProgress(false);
       dispatch({ type: RecipeContextAction.SET_RECIPE, payload: data.data });
     }
-  }, [recipeData, state.recipe]);
+  }, [recipeData, state.recipe, recipeMutex]);
 
   function setEditInProgress(value: boolean) {
     dispatch({
