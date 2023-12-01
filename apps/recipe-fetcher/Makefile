@@ -1,5 +1,5 @@
 build:
-	go build -o ./fetcher *.go
+	go build -o ./bin/fetcher *.go
 
 run:
 	go run .

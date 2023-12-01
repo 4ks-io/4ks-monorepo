@@ -11,11 +11,11 @@ import (
 
 	controllers "4ks/apps/api/controllers"
 	middleware "4ks/apps/api/middleware"
-	fetchervc "4ks/apps/api/services/fetcher"
-	recipesvc "4ks/apps/api/services/recipe"
-	searchsvc "4ks/apps/api/services/search"
-	staticsvc "4ks/apps/api/services/static"
-	usersvc "4ks/apps/api/services/user"
+	fetcherService "4ks/apps/api/services/fetcher"
+	recipeService "4ks/apps/api/services/recipe"
+	searchService "4ks/apps/api/services/search"
+	staticService "4ks/apps/api/services/static"
+	userService "4ks/apps/api/services/user"
 	utils "4ks/apps/api/utils"
 	pb "4ks/libs/go/pubsub"
 	tracing "4ks/libs/go/tracer"
@@ -239,11 +239,11 @@ func main() {
 
 	// services
 	v := validator.New()
-	search := searchsvc.New()
-	static := staticsvc.New()
-	user := usersvc.New(&sysFlags, store, v, &reservedWords)
-	recipe := recipesvc.New(&sysFlags, store, v)
-	fetcher := fetchervc.New(ctx, &sysFlags, client, reqo, reso, user, recipe, search, static)
+	search := searchService.New()
+	static := staticService.New()
+	user := userService.New(&sysFlags, store, v, &reservedWords)
+	recipe := recipeService.New(&sysFlags, store, v)
+	fetcher := fetcherService.New(ctx, &sysFlags, client, reqo, reso, user, recipe, search, static)
 
 	go (func() {
 		if err := fetcher.Start(); err != nil {
