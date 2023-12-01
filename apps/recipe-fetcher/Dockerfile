@@ -12,6 +12,7 @@ RUN CGO_ENABLED=0 go build -o fetcher ./apps/recipe-fetcher
 
 FROM scratch
 COPY --from=build /etc/passwd /etc/passwd
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /code/fetcher /fetcher
 USER appuser
 CMD ["/fetcher"]

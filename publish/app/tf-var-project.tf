@@ -8,6 +8,11 @@ variable "zone" {
   default = "us-east4-b"
 }
 
+variable "fetcher_build_number" {
+  type = string
+}
+
+
 variable "api_build_number" {
   type = string
 }

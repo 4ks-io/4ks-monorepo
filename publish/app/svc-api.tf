@@ -3,7 +3,7 @@ resource "google_cloud_run_service" "api" {
   location = var.region
 
   template {
-    metadata{
+    metadata {
       annotations = {
         "autoscaling.knative.dev/minScale" = "1"
         "autoscaling.knative.dev/maxScale" = "10"
