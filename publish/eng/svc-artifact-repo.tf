@@ -11,3 +11,10 @@ resource "google_artifact_registry_repository" "web" {
   description   = "docker/helm repo for web images"
   format        = "docker"
 }
+
+resource "google_artifact_registry_repository" "fetcher" {
+  repository_id = "recipe-fetcher"
+  location      = var.region
+  description   = "docker/helm repo for web images"
+  format        = "docker"
+}
