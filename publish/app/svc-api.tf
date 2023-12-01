@@ -85,6 +85,11 @@ resource "google_cloud_run_service" "api" {
           value = "${local.web_url}/static"
         }
 
+        env {
+          name  = "PUBSUB_PROJECT_ID"
+          value = "${local.stage}-${local.org}"
+        }
+
       }
 
     }
@@ -117,6 +122,12 @@ resource "google_project_iam_member" "datastore_user" {
 resource "google_project_iam_member" "firestore_service_agent" {
   project = local.project
   role    = "roles/firestore.serviceAgent"
+  member  = "serviceAccount:${google_service_account.api.email}"
+}
+
+resource "google_project_iam_member" "pubsub_service_agent" {
+  project = local.project
+  role    = "roles/pubsub.serviceAgent"
   member  = "serviceAccount:${google_service_account.api.email}"
 }
 
