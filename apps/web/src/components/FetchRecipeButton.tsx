@@ -47,7 +47,7 @@ export default function FetchRecipeButton() {
     setSaveSucess(true);
     setProcessing(false);
     return;
-  }, [formData]);
+  }, [formData, processing]);
 
   function handleClickOpen() {
     setOpen(true);
@@ -132,7 +132,7 @@ export default function FetchRecipeButton() {
         </IconButton>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Provide recipe URL and we'll do our best to fetch a copy.
+            Provide recipe URL and we&#39;ll do our best to fetch a copy.
           </Typography>
           <TextField
             autoFocus
