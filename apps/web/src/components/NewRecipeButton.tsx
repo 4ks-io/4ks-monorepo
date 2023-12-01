@@ -9,7 +9,7 @@ export default function NewRecipeButton() {
   const router = useRouter();
 
   return (
-    <Tooltip title="Create" placement="top-start">
+    <Tooltip title="Create" placement="left">
       <Fab
         color="primary"
         aria-label="add"

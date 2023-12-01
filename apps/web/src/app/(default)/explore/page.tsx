@@ -6,6 +6,7 @@ import SearchResults from '@/components/SearchResults';
 import type { Metadata } from 'next';
 import Box from '@mui/material/Box';
 import NewRecipeButton from '@/components/NewRecipeButton';
+import FetchRecipeButton from '@/components/FetchRecipeButton';
 
 export const metadata: Metadata = {
   title: '4ks Explore',
@@ -34,6 +35,7 @@ export default async function ExplorePage() {
         p: 3,
       }}
     >
+      <FetchRecipeButton />
       <NewRecipeButton />
       <SearchResults results={data} />
     </Box>

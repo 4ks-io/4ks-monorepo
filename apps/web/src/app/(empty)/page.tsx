@@ -9,6 +9,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { handleUserNavigation } from '@/libs/server/navigation';
 import { Page, PageProps } from '@/libs/navigation';
 import NewRecipeButton from '@/components/NewRecipeButton';
+import FetchRecipeButton from '@/components/FetchRecipeButton';
 import Link from 'next/link';
 
 export default async function DefaultPage({ params, searchParams }: PageProps) {
@@ -16,6 +17,7 @@ export default async function DefaultPage({ params, searchParams }: PageProps) {
 
   return (
     <Box height="92vh" display="flex" flexDirection="column">
+      <FetchRecipeButton />
       <NewRecipeButton />
       <Toolbar variant="dense">
         <Box sx={{ flexGrow: 1 }} />

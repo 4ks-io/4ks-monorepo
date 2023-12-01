@@ -92,6 +92,18 @@ export const recipesRouter = router({
         logTrpc(new Error(), opts.input, s, 'recipes.getMediaByIDMutation');
       }
     }),
+  fetch: publicProcedure.input(z.string().url()).mutation(async (opts) => {
+    const api = await getAPIClient();
+    const s = performance.now();
+
+    try {
+      return await api.recipes.postApiRecipesFetch({ url: opts.input });
+    } catch (e) {
+      handleAPIError(e);
+    } finally {
+      logTrpc(new Error(), opts.input, s, 'recipes.fetch');
+    }
+  }),
   fork: publicProcedure.input(z.string()).mutation(async (opts) => {
     const api = await getAPIClient();
     const s = performance.now();
