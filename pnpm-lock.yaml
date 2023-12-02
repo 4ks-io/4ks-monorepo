@@ -31,11 +31,8 @@ importers:
   apps/auth0/custom-claim-action:
     dependencies:
       sha.js:
-        specifier: ^2.4.11
+        specifier: 2.4.11
         version: 2.4.11
-      sha256:
-        specifier: 0.2.0
-        version: 0.2.0
 
   apps/recipe-fetcher: {}
 
@@ -1467,18 +1464,10 @@ packages:
     resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
     dev: true
 
-  /convert-hex@0.1.0:
-    resolution: {integrity: sha512-w20BOb1PiR/sEJdS6wNrUjF5CSfscZFUp7R9NSlXH8h2wynzXVEPFPJECAnkNylZ+cvf3p7TyRUHggDmrwXT9A==}
-    dev: false
-
   /convert-source-map@1.8.0:
     resolution: {integrity: sha512-+OQdjP49zViI/6i7nIJpA8rAl4sV/JdPfU9nZs3VqOwGIgizICvuN2ru6fMd+4llL0tar18UYJXfZ/TWtmhUjA==}
     dependencies:
       safe-buffer: 5.1.2
-    dev: false
-
-  /convert-string@0.1.0:
-    resolution: {integrity: sha512-1KX9ESmtl8xpT2LN2tFnKSbV4NiarbVi8DVb39ZriijvtTklyrT+4dT1wsGMHKD3CJUjXgvJzstm9qL9ICojGA==}
     dev: false
 
   /cookie@0.6.0:
@@ -3537,13 +3526,6 @@ packages:
     dependencies:
       inherits: 2.0.4
       safe-buffer: 5.1.2
-    dev: false
-
-  /sha256@0.2.0:
-    resolution: {integrity: sha512-kTWMJUaez5iiT9CcMv8jSq6kMhw3ST0uRdcIWl3D77s6AsLXNXRp3heeqqfu5+Dyfu4hwpQnMzhqHh8iNQxw0w==}
-    dependencies:
-      convert-hex: 0.1.0
-      convert-string: 0.1.0
     dev: false
 
   /shebang-command@1.2.0:
