@@ -11,6 +11,7 @@ import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import UsernameSpecification from '@/components/UsernameSpecifications';
+import DeveloperTools from '@/components/DeveloperTools';
 
 export const metadata: Metadata = {
   title: '4ks Settings',
@@ -23,6 +24,7 @@ export default async function SettingsPage({
 }: PageProps) {
   const { user } = await handleUserNavigation(Page.AUTHENTICATED);
   const session = await getSession();
+  const t = session?.accessToken;
 
   if (!user || !user.username) {
     return (
@@ -42,34 +44,37 @@ export default async function SettingsPage({
   }
 
   return (
-    <Box
-      component="main"
-      sx={{
-        flexGrow: 1,
-        bgcolor: 'background.default',
-        mt: ['12px', '18px', '24px'],
-        p: 3,
-      }}
-    >
-      <Container maxWidth="sm" style={{ paddingTop: 40 }}>
-        {/* <div>EVENTS: {JSON.stringify(user.events)}</div>
+    <>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          bgcolor: 'background.default',
+          mt: ['12px', '18px', '24px'],
+          p: 3,
+        }}
+      >
+        <Container maxWidth="sm" style={{ paddingTop: 40 }}>
+          {/* <div>EVENTS: {JSON.stringify(user.events)}</div>
         <br />
         <div>TOKEN: Bearer {session?.accessToken}</div> */}
-        <Typography variant="h4" component="h2">
-          Settings
-        </Typography>
-        <Stack spacing={2} style={{ paddingTop: 40 }}>
-          <Typography variant="subtitle1" component="h2">
-            Email: {user?.emailAddress}
+          <Typography variant="h4" component="h2">
+            Settings
           </Typography>
-          <Typography variant="subtitle1" component="h2">
-            Current Username: {user?.username}
-          </Typography>
+          <Stack spacing={2} style={{ paddingTop: 40 }}>
+            <Typography variant="subtitle1" component="h2">
+              Email: {user?.emailAddress}
+            </Typography>
+            <Typography variant="subtitle1" component="h2">
+              Current Username: {user?.username}
+            </Typography>
 
-          <UpdateUsername username={user.username} />
-          {UsernameSpecification()}
-        </Stack>
-      </Container>
-    </Box>
+            <UpdateUsername username={user.username} />
+            <UsernameSpecification />
+          </Stack>
+        </Container>
+      </Box>
+      {session?.accessToken && <DeveloperTools t={session.accessToken} />}
+    </>
   );
 }

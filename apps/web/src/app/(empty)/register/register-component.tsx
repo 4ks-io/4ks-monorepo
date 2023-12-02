@@ -394,7 +394,7 @@ export default function RegisterComponent() {
                   helperText={input.username.ErrMsg}
                   value={username}
                 />
-                {UsernameSpecification()}
+                <UsernameSpecification />
               </Grid>
             </Grid>
             <Button

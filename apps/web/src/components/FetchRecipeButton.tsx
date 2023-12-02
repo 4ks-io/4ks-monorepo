@@ -4,10 +4,8 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import Fab from '@mui/material/Fab';
 import Tooltip from '@mui/material/Tooltip';
 import { trpc } from '@/trpc/client';
-
-import { useRouter } from 'next/navigation';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -21,6 +19,8 @@ import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function FetchRecipeButton() {
+  const { user } = useUser();
+
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState('');
   const [err, setErr] = useState(false);
@@ -132,26 +132,30 @@ export default function FetchRecipeButton() {
         </IconButton>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Provide recipe URL and we&#39;ll do our best to fetch a copy.
+            {!user
+              ? 'Please login to copy recipes.'
+              : "Provide recipe URL and we'll do our best to fetch a copy."}
           </Typography>
-          <TextField
-            autoFocus
-            disabled={processing}
-            value={url}
-            onChange={handleValueChange}
-            id="outlined-basic"
-            label="Recipe URL"
-            variant="outlined"
-            sx={{ width: '100%' }}
-            error={err}
-            helperText={errMsg}
-          />
+          {user && (
+            <TextField
+              autoFocus
+              disabled={processing}
+              value={url}
+              onChange={handleValueChange}
+              id="outlined-basic"
+              label="Recipe URL"
+              variant="outlined"
+              sx={{ width: '100%' }}
+              error={err}
+              helperText={errMsg}
+            />
+          )}
         </DialogContent>
         <DialogActions>
           {processing ? (
             <CircularProgress />
           ) : (
-            <Button autoFocus onClick={handleFetch}>
+            <Button autoFocus onClick={handleFetch} disabled={!user}>
               OK
             </Button>
           )}
