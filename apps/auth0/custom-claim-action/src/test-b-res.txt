@@ -1,0 +1,39 @@
+Commands:
+[
+  {
+    "name": "https://4ks.io/email",
+    "target": "accessToken",
+    "type": "SetCustomClaim",
+    "value": "delorme.nic@example.com"
+  },
+  {
+    "name": "https://4ks.io/id",
+    "target": "accessToken",
+    "type": "SetCustomClaim",
+    "value": "98b629c4f0bcaed27b3e6dfe4a535cac0e31c8e3e33abf90a4f2a7d5e799d705"
+  },
+  {
+    "name": "https://4ks.io/timeZone",
+    "target": "accessToken",
+    "type": "SetCustomClaim",
+    "value": "America/Los_Angeles"
+  },
+  {
+    "name": "https://4ks.io/countryCode",
+    "target": "accessToken",
+    "type": "SetCustomClaim",
+    "value": "USA"
+  }
+]
+Error:
+{}
+Stats:
+{
+  "total_request_duration_ms": 766,
+  "total_runtime_execution_duration_ms": 762,
+  "runtime_processing_duration_ms": 7,
+  "action_duration_ms": 341,
+  "runtime_external_call_duration_ms": 414,
+  "boot_duration_ms": 421,
+  "network_duration_ms": 4
+}

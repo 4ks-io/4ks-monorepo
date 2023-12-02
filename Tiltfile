@@ -71,21 +71,16 @@ docker_build(
     'web',
     context='.',
     dockerfile='apps/web/Dockerfile.dev',
-    # todo: make only
-    ignore=[
-        'ignore',
-        'apps/media-upload',
-        'apps/recipe-fetcher',
-        'apps/api',
-        'apps-dev',
-        'libs/go',
-        'data',
-        'deploy',
-        'dist',
-        'node_modules',
-        'publish',
+    only=[
+        'apps/web',
+        'libs/ts',
+        'libs/reserved-words',
         'tools',
-        'go*'
+        'PACKAGE_JSON',
+        'package.json',
+        'pnpm-lock.yaml',
+        'pnpm-workspace.yaml',
+        'tsconfig.base.json',
     ],
     live_update=[
         sync('libs/ts/api-fetch/dist', '/code/libs/ts/api-fetch/dist'),
