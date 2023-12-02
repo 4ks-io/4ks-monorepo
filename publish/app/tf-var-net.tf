@@ -1,15 +1,7 @@
 variable "development_ip_addresses" {
   type = list(string)
   default = [
-    "71.191.48.46",   # nic home
-    "71.121.252.105", # hammad home
-    "142.127.4.130",  # renee trotter  (nic's cousin) - UX
-    "14.100.38.23",   # marie-claire delorme (sister) - singapore
-    "71.191.49.198",  # cody home
-    "71.191.135.199", # donald home
-    "24.201.254.203", # nic bob
-    "108.44.159.57",  # shafqat
-    "173.64.120.174"  # Hammad
+    "71.191.48.46",   # nic
   ]
 }
 
