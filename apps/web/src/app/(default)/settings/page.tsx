@@ -12,6 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import UsernameSpecification from '@/components/UsernameSpecifications';
 import DeveloperTools from '@/components/DeveloperTools';
+import AppHeader from '@/components/AppHeader';
 
 export const metadata: Metadata = {
   title: '4ks Settings',
@@ -45,12 +46,13 @@ export default async function SettingsPage({
 
   return (
     <>
+      <AppHeader user={user} />
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           bgcolor: 'background.default',
-          mt: ['12px', '18px', '24px'],
+          // mt: ['12px', '18px', '24px'],
           p: 3,
         }}
       >

@@ -8,6 +8,7 @@ import { getHTTPStatusCodeFromError } from '@trpc/server/http';
 import { TRPCError } from '@trpc/server';
 import { notFound } from 'next/navigation';
 import log from '@/libs/logger';
+import AppHeader from '@/components/AppHeader';
 import SearchResults from '@/components/SearchResults';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -43,57 +44,62 @@ export default async function ProfilePage({ params, searchParams }: PageProps) {
   }
 
   return (
-    <Box
-      component="main"
-      sx={{
-        flexGrow: 1,
-        bgcolor: 'background.default',
-        mt: ['12px', '18px', '24px'],
-        p: 3,
-      }}
-    >
-      <Container>
-        <h2>@{username}</h2>
-        <h3>Events</h3>
-        {isCurrent && (
-          <ul style={{ listStyleType: 'none', paddingInlineStart: '0px' }}>
-            {user.events?.map((e) => {
-              if (!e || !e.data) {
-                return null;
-              }
-              // todo: handle name change
-              let recipeURL = `/recipe/${e.data.RecipeID}`;
-              if (e.data?.RecipeTitle) {
-                recipeURL = `${recipeURL}-${normalizeForURL(
-                  e.data.RecipeTitle
-                )}`;
-              }
-              return (
-                <li key={e.id}>
-                  <Link
-                    prefetch={false}
-                    style={{ textDecoration: 'none', color: '#000' }}
-                    href={recipeURL}
-                  >
-                    <Typography variant="h6" noWrap>
-                      {e.status == 2 && (
-                        <NotificationsActiveIcon
-                          fontSize="inherit"
-                          color="secondary"
-                          sx={{ paddingRight: 1 }}
-                        />
-                      )}
-                      {e?.data?.RecipeTitle}
-                    </Typography>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-        <h3>Recipes</h3>
-        {<SearchResults results={data} />}
-      </Container>
-    </Box>
+    <>
+      <AppHeader user={user} />
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          bgcolor: 'background.default',
+          // mt: ['12px', '18px', '24px'],
+          p: 3,
+        }}
+      >
+        <Container>
+          <h2>@{username}</h2>
+          {isCurrent && (
+            <>
+              <h3>Events</h3>
+              <ul style={{ listStyleType: 'none', paddingInlineStart: '0px' }}>
+                {user.events?.map((e) => {
+                  if (!e || !e.data) {
+                    return null;
+                  }
+                  // todo: handle name change
+                  let recipeURL = `/recipe/${e.data.RecipeID}`;
+                  if (e.data?.RecipeTitle) {
+                    recipeURL = `${recipeURL}-${normalizeForURL(
+                      e.data.RecipeTitle
+                    )}`;
+                  }
+                  return (
+                    <li key={e.id}>
+                      <Link
+                        prefetch={false}
+                        style={{ textDecoration: 'none', color: '#000' }}
+                        href={recipeURL}
+                      >
+                        <Typography variant="h6" noWrap>
+                          {e.status == 2 && (
+                            <NotificationsActiveIcon
+                              fontSize="inherit"
+                              color="secondary"
+                              sx={{ paddingRight: 1 }}
+                            />
+                          )}
+                          {e?.data?.RecipeTitle}
+                        </Typography>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          )}
+          <h3>Recipes</h3>
+          {<SearchResults results={data} />}
+        </Container>
+      </Box>
+    </>
   );
 }

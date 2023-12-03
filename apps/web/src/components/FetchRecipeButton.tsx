@@ -36,9 +36,9 @@ export default function FetchRecipeButton() {
     if (!processing || !formData.isLoading) {
       return;
     }
-    const { data, isError } = formData;
+    const { isError } = formData;
 
-    if (isError || !data) {
+    if (isError) {
       setSaveError(true);
       setProcessing(false);
       return;
@@ -87,6 +87,7 @@ export default function FetchRecipeButton() {
   }
 
   function handleValueChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setSaveSucess(false);
     setUrl(e.target.value);
   }
 
@@ -139,7 +140,7 @@ export default function FetchRecipeButton() {
           {user && (
             <TextField
               autoFocus
-              disabled={processing}
+              disabled={processing || saveSucess}
               value={url}
               onChange={handleValueChange}
               id="outlined-basic"
@@ -152,7 +153,7 @@ export default function FetchRecipeButton() {
           )}
         </DialogContent>
         <DialogActions>
-          {processing ? (
+          {processing || saveSucess ? (
             <CircularProgress />
           ) : (
             <Button autoFocus onClick={handleFetch} disabled={!user}>

@@ -342,13 +342,13 @@ export default function RegisterComponent() {
           <Typography component="h1" variant="h5">
             New User Registration
           </Typography>
-          <Image
+          {/* <Image
             alt="Avatar"
             src={`${user?.picture}`}
             width={96}
             height={96}
             priority={false}
-          />
+          /> */}
           <Box sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
