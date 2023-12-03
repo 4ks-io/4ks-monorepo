@@ -1,4 +1,4 @@
-import { getSession } from '@auth0/nextjs-auth0';
+import { getSession, Session } from '@auth0/nextjs-auth0';
 import { notFound, redirect } from 'next/navigation';
 import { serverClient } from '@/trpc/serverClient';
 import log from '@/libs/logger';
@@ -8,6 +8,7 @@ import { authLoginPath } from '@/libs/navigation';
 
 export type UserSession = {
   user: models_User | undefined;
+  session: Session | undefined;
   isAuthenticated: boolean;
   isRegistered: boolean;
 };
@@ -28,6 +29,7 @@ export async function handleUserNavigation(page: Page): Promise<UserSession> {
     // anonymous
     return {
       user: undefined,
+      session: undefined,
       isAuthenticated: false,
       isRegistered: false,
     };
@@ -47,6 +49,7 @@ export async function handleUserNavigation(page: Page): Promise<UserSession> {
     if (page == Page.REGISTER) {
       return {
         user: undefined,
+        session: session,
         isAuthenticated: true,
         isRegistered: false,
       };
@@ -62,6 +65,7 @@ export async function handleUserNavigation(page: Page): Promise<UserSession> {
   // authenticated and registered
   return {
     user: await serverClient.users.getAuthenticated(),
+    session: session,
     isAuthenticated: true,
     isRegistered: true,
   };

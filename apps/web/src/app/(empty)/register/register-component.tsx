@@ -1,6 +1,5 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
 import { trpc } from '@/trpc/client';
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
@@ -9,13 +8,13 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import UsernameSpecification from '@/components/UsernameSpecifications';
+import { Claims } from '@auth0/nextjs-auth0';
 
 type formValidationError = {
   validation: string;
@@ -43,8 +42,12 @@ function NewInputMap() {
   } as Input;
 }
 
-export default function RegisterComponent() {
-  const { user, error, isLoading } = useUser();
+type RegisterComponentProps = {
+  user: Claims;
+};
+
+export default function RegisterComponent({ user }: RegisterComponentProps) {
+  // const { user, error, isLoading } = useUser();
 
   // validation hooks
   const [hasError, setHasError] = useState(false);
@@ -62,16 +65,13 @@ export default function RegisterComponent() {
 
   // initial user details
   useEffect(() => {
-    if (isLoading) {
-      return;
-    }
     const names = user?.name?.split(' ');
     if (names) {
       setDisplayName(`${names[0]}` || '');
     }
     setEmail(`${user?.email}` || '');
     setUsername(formatUsername(user?.nickname));
-  }, [user, isLoading]);
+  }, [user]);
 
   // check for input error. allow/prevent form submit
   useEffect(() => {
@@ -298,30 +298,6 @@ export default function RegisterComponent() {
       email: email,
       displayName: displayName,
     });
-  }
-
-  if (error) {
-    return 'error';
-  }
-
-  if (isLoading || !user) {
-    return (
-      <>
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Box
-            sx={{
-              marginTop: 8,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <CircularProgress />
-          </Box>
-        </Container>
-      </>
-    );
   }
 
   return (
