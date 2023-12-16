@@ -42,6 +42,15 @@ resource "google_cloud_run_v2_service" "fetcher" {
     service_account = google_service_account.fetcher.email
     containers {
       image = "${local.container_registry}/recipe-fetcher/app:${var.fetcher_build_number}"
+
+      resources {
+        cpu_idle = true
+        limits = {
+          cpu    = "1000m"
+          memory = "128Mi"
+        }
+      }
+
       ports {
         container_port = 5000
       }

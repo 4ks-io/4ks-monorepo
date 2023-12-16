@@ -1,7 +1,7 @@
 variable "development_ip_addresses" {
   type = list(string)
   default = [
-    "71.191.48.46",   # nic
+    "71.191.48.46", # nic
   ]
 }
 

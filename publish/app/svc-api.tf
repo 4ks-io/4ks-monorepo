@@ -1,103 +1,107 @@
-resource "google_cloud_run_service" "api" {
+resource "google_cloud_run_v2_service" "api" {
   name     = "api"
   location = var.region
-
-  template {
-    metadata {
-      annotations = {
-        "autoscaling.knative.dev/minScale" = "1"
-        "autoscaling.knative.dev/maxScale" = "10"
-      }
-    }
-    spec {
-      service_account_name = google_service_account.api.email
-      containers {
-        image = "${local.container_registry}/api/app:${var.api_build_number}"
-        ports {
-          container_port = 5000
-        }
-
-        env {
-          name  = "SERVICE_ACCOUNT_EMAIL"
-          value = google_service_account.api.email
-        }
-        env {
-          name  = "UPLOADABLE_BUCKET"
-          value = data.google_storage_bucket.media_write.name
-        }
-        env {
-          name  = "DISTRIBUTION_BUCKET"
-          value = data.google_storage_bucket.media_read.name
-        }
-        env {
-          name  = "STATIC_MEDIA_BUCKET"
-          value = data.google_storage_bucket.media_static.name
-        }
-        env {
-          name  = "GOOGLE_CLOUD_PROJECT"
-          value = data.google_project.project.number
-        }
-
-        env {
-          name  = "FIRESTORE_PROJECT_ID"
-          value = "${local.stage}-${local.org}"
-        }
-        env {
-          name  = "AUTH0_DOMAIN"
-          value = var.auth0_domain[terraform.workspace]
-        }
-        env {
-          name  = "AUTH0_AUDIENCE"
-          value = local.api_url
-        }
-        env {
-          name  = "EXPORTER_TYPE"
-          value = "JAEGER"
-        }
-        env {
-          name  = "GIN_MODE"
-          value = "release"
-        }
-        env {
-          name  = "JAEGER_ENABLED"
-          value = var.feat_api_jaeger_enabled_map[terraform.workspace]
-        }
-        env {
-          name  = "SWAGGER_ENABLED"
-          value = var.feat_api_swagger_enabled_map[terraform.workspace]
-        }
-        env {
-          name  = "SWAGGER_URL_PREFIX"
-          value = "/api"
-        }
-
-        env {
-          name  = "TYPESENSE_URL"
-          value = "https://${var.typesense_url_env_map[terraform.workspace]}"
-        }
-
-        env {
-          name  = "TYPESENSE_API_KEY"
-          value = var.typesense_api_key
-        }
-        env {
-          name  = "MEDIA_FALLBACK_URL"
-          value = "${local.web_url}/static"
-        }
-
-        env {
-          name  = "PUBSUB_PROJECT_ID"
-          value = "${local.stage}-${local.org}"
-        }
-
-      }
-
-    }
+  traffic {
+    percent = 100
+    type    = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
   }
 
-  traffic {
-    percent         = 100
-    latest_revision = true
+  template {
+    scaling {
+      min_instance_count = 1
+      max_instance_count = 10
+    }
+
+    service_account = google_service_account.api.email
+    containers {
+      image = "${local.container_registry}/api/app:${var.api_build_number}"
+
+      resources {
+        cpu_idle = true
+        limits = {
+          cpu    = "1000m"
+          memory = "128Mi"
+        }
+      }
+
+      ports {
+        container_port = 5000
+      }
+
+      env {
+        name  = "SERVICE_ACCOUNT_EMAIL"
+        value = google_service_account.api.email
+      }
+
+      env {
+        name  = "UPLOADABLE_BUCKET"
+        value = data.google_storage_bucket.media_write.name
+      }
+      env {
+        name  = "DISTRIBUTION_BUCKET"
+        value = data.google_storage_bucket.media_read.name
+      }
+      env {
+        name  = "STATIC_MEDIA_BUCKET"
+        value = data.google_storage_bucket.media_static.name
+      }
+      env {
+        name  = "GOOGLE_CLOUD_PROJECT"
+        value = data.google_project.project.number
+      }
+
+      env {
+        name  = "FIRESTORE_PROJECT_ID"
+        value = "${local.stage}-${local.org}"
+      }
+      env {
+        name  = "AUTH0_DOMAIN"
+        value = var.auth0_domain[terraform.workspace]
+      }
+      env {
+        name  = "AUTH0_AUDIENCE"
+        value = local.api_url
+      }
+      env {
+        name  = "EXPORTER_TYPE"
+        value = "JAEGER"
+      }
+      env {
+        name  = "GIN_MODE"
+        value = "release"
+      }
+      env {
+        name  = "JAEGER_ENABLED"
+        value = var.feat_api_jaeger_enabled_map[terraform.workspace]
+      }
+      env {
+        name  = "SWAGGER_ENABLED"
+        value = var.feat_api_swagger_enabled_map[terraform.workspace]
+      }
+      env {
+        name  = "SWAGGER_URL_PREFIX"
+        value = "/api"
+      }
+
+      env {
+        name  = "TYPESENSE_URL"
+        value = "https://${var.typesense_url_env_map[terraform.workspace]}"
+      }
+
+      env {
+        name  = "TYPESENSE_API_KEY"
+        value = var.typesense_api_key
+      }
+      env {
+        name  = "MEDIA_FALLBACK_URL"
+        value = "${local.web_url}/static"
+      }
+
+      env {
+        name  = "PUBSUB_PROJECT_ID"
+        value = "${local.stage}-${local.org}"
+      }
+    }
   }
 }
 
@@ -161,8 +165,8 @@ data "google_iam_policy" "api_token_creator" {
 }
 
 resource "google_cloud_run_service_iam_member" "api_anonymous_access" {
-  service  = google_cloud_run_service.api.name
-  location = google_cloud_run_service.api.location
+  service  = google_cloud_run_v2_service.api.name
+  location = google_cloud_run_v2_service.api.location
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
@@ -172,7 +176,7 @@ resource "google_compute_region_network_endpoint_group" "api_neg" {
   network_endpoint_type = "SERVERLESS"
   region                = var.region
   cloud_run {
-    service = google_cloud_run_service.api.name
+    service = google_cloud_run_v2_service.api.name
   }
 }
 
@@ -189,5 +193,5 @@ resource "google_compute_region_network_endpoint_group" "api_neg" {
 # }
 
 output "api_service_url" {
-  value = google_cloud_run_service.api.status[0].url
+  value = google_cloud_run_v2_service.api.uri
 }
