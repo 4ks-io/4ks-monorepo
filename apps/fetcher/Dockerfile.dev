@@ -1,0 +1,16 @@
+FROM golang:1.20-alpine as build
+RUN apk --no-cache add curl busybox-extras
+RUN go install github.com/mitranim/gow@latest
+
+WORKDIR /code
+COPY ./apps/fetcher/go.mod ./
+COPY ./apps/fetcher/go.sum ./
+RUN go mod download
+
+FROM build
+
+WORKDIR /code
+COPY ./apps/fetcher ./
+RUN go mod tidy
+
+CMD ["gow", "run",  "./cmd"]

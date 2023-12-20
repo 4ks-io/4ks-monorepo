@@ -47,5 +47,6 @@ PACKAGE_JSON/
 re.sh
 
 .env
+**/secrets/*
 
 ignore

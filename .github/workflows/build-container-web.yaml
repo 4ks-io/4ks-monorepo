@@ -41,7 +41,7 @@ jobs:
       # package.json hack
       - name: PACKAGE_JSON hack
         run: |
-          ./tools/package_json.sh
+          ./apps/web/package_json.sh
       # cloud auth
       - name: GCP Auth
         uses: google-github-actions/auth@v1

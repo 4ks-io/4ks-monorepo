@@ -1,4 +1,4 @@
-module 4ks.io/media-variants
+module 4ks.io/media-upload
 
 go 1.16
 

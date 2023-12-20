@@ -123,6 +123,48 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/_fetcher/recipes": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Fetcher Bot Create a new Recipe",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Fetcher Bot Create a new Recipe",
+                "parameters": [
+                    {
+                        "description": "Recipe Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.FetcherCreateRecipe"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Invalid Request"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
         "/api/healthcheck": {
             "get": {
                 "description": "healthcheck",
@@ -1057,6 +1099,20 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.FetcherCreateRecipe": {
+            "type": "object",
+            "properties": {
+                "recipe": {
+                    "$ref": "#/definitions/dtos.CreateRecipe"
+                },
+                "userEventId": {
+                    "type": "string"
+                },
+                "userId": {
                     "type": "string"
                 }
             }
