@@ -5,7 +5,7 @@ import (
 	"os"
 
 	// Blank-import the function package so the init() runs
-	_ "4ks.io/media-variants"
+	_ "4ks.io/media-upload"
 	"github.com/GoogleCloudPlatform/functions-framework-go/funcframework"
 )
 

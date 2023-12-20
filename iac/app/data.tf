@@ -25,5 +25,5 @@ data "google_compute_backend_bucket" "media_static" {
 # secrets
 
 data "google_secret_manager_secret_version" "api_fetcher_psk" {
-  secret_id = "api-fetcher-psk"
+  secret = "api-fetcher-psk"
 }

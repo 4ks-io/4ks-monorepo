@@ -41,10 +41,6 @@ variable "auth0_domain" {
   }
 }
 
-variable "api_fetcher_secret" {
-  type = string
-}
-
 locals {
   org                   = "4ks"
   domain                = "4ks.io"

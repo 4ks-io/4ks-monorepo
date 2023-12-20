@@ -1,7 +1,7 @@
 # fetcher pubsub
 
 resource "google_pubsub_topic" "fetcher" {
-  name = "fetch-requests"
+  name = "fetcher"
 }
 
 resource "google_pubsub_topic" "fetcher_dead_letter" {
@@ -62,7 +62,7 @@ resource "google_storage_bucket" "fetcher_deploy" {
 data "archive_file" "fetcher" {
   type        = "zip"
   output_path = "/tmp/func-fetcher-source.zip"
-  source_dir  = "../apps/fetcher"
+  source_dir  = "../../apps/fetcher"
   excludes    = ["local.env", "cmd", "cmd/"]
 }
 
@@ -74,15 +74,17 @@ resource "google_storage_bucket_object" "fetcher_deploy" {
 
 resource "google_cloudfunctions2_function" "fetcher" {
   name        = "fetcher"
-  location    = local.region
   description = "fetcher is triggered by a pubsub event and fetches a recipe from a url"
+  location    = var.region
+
   labels = {
     app = "fetcher"
   }
 
   build_config {
     runtime     = "go120"
-    entry_point = "fetcher"
+    entry_point = "projects/${local.project}/topics/${google_pubsub_topic.fetcher.name}"
+
     source {
       storage_source {
         bucket = google_storage_bucket.fetcher_deploy.name
@@ -95,11 +97,11 @@ resource "google_cloudfunctions2_function" "fetcher" {
     available_memory = "256M"
     timeout_seconds  = 120
     environment_variables = {
-      DEBUG             = var.fetcher_debug
+      DEBUG             = false
       PUBSUB_PROJECT_ID = local.project
-      PUBSUB_TOPIC_ID   = "fetcher"
-      API_ENDPOINT_URL  = "${output.api_service_url}/api/_fetcher/recipes"
-      API_SECRET        = google_secret_manager_secret_version.api_fetcher_psk.secret_data
+      PUBSUB_TOPIC_ID   = google_pubsub_topic.fetcher.name
+      API_ENDPOINT_URL  = "${google_cloud_run_v2_service.api.uri}/api/_fetcher/recipes"
+      API_SECRET        = data.google_secret_manager_secret_version.api_fetcher_psk.secret_data
     }
 
     # ingress_settings               = "ALLOW_ALL"
