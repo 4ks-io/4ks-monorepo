@@ -2,7 +2,7 @@ version: '3.9'
 services:
   nginx:
     container_name: 4ks-alb
-    build: ./apps-dev/nginx
+    build: ./dev/apps/nginx
     image: 4ks/alb
     ports:
       - '443:4433'
@@ -13,6 +13,6 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     volumes:
-      - ./apps-dev/nginx/local.4ks.io.pem:/etc/nginx/conf.d/local.4ks.io.pem
-      - ./apps-dev/nginx/local.4ks.io.key:/etc/nginx/conf.d/local.4ks.io.key
-      - ./apps-dev/nginx/local.conf:/etc/nginx/conf.d/local.conf
+      - ./dev/apps/nginx/local.4ks.io.pem:/etc/nginx/conf.d/local.4ks.io.pem
+      - ./dev/apps/nginx/local.4ks.io.key:/etc/nginx/conf.d/local.4ks.io.key
+      - ./dev/apps/nginx/local.conf:/etc/nginx/conf.d/local.conf

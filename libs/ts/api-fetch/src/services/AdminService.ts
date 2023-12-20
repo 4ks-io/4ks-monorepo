@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { dtos_CreateRecipe } from '../models/dtos_CreateRecipe';
+import type { dtos_FetcherCreateRecipe } from '../models/dtos_FetcherCreateRecipe';
 import type { models_Recipe } from '../models/models_Recipe';
 import type { models_RecipeMedia } from '../models/models_RecipeMedia';
 
@@ -57,6 +58,27 @@ export class AdminService {
             url: '/api/_admin/recipes/{recipeID}/media',
             path: {
                 'recipeID': recipeId,
+            },
+        });
+    }
+
+    /**
+     * Fetcher Bot Create a new Recipe
+     * Fetcher Bot Create a new Recipe
+     * @param data Recipe Data
+     * @returns any OK
+     * @throws ApiError
+     */
+    public postApiFetcherRecipes(
+        data: dtos_FetcherCreateRecipe,
+    ): CancelablePromise<any> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/api/_fetcher/recipes',
+            body: data,
+            errors: {
+                400: `Invalid Request`,
+                500: `Internal Error`,
             },
         });
     }

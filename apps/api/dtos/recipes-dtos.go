@@ -1,7 +1,18 @@
 // Package dtos is the interface for the api dtos
 package dtos
 
-import "4ks/libs/go/models"
+import (
+	"4ks/libs/go/models"
+
+	"github.com/google/uuid"
+)
+
+// FetcherCreateRecipe godoc
+type FetcherCreateRecipe struct {
+	Recipe CreateRecipe `json:"recipe"`
+	UserID string       `json:"userId"`
+	UserEventID uuid.UUID  `json:"userEventId"`
+}
 
 // CreateRecipe godoc
 type CreateRecipe struct {

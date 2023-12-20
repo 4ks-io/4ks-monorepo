@@ -107,7 +107,7 @@ docker run --rm \
 ## web build/publish steps
 
 ```
-./tools/package_json.sh
+./apps/web/package_json.sh
 LATEST="4ks/web:latest"
 export DEV="$LATEST-dev-deps"
 export PRD="$LATEST-prd-deps"

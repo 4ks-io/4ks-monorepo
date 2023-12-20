@@ -17,7 +17,6 @@ import (
 	staticService "4ks/apps/api/services/static"
 	userService "4ks/apps/api/services/user"
 	utils "4ks/apps/api/utils"
-	pb "4ks/libs/go/pubsub"
 	tracing "4ks/libs/go/tracer"
 
 	"cloud.google.com/go/firestore"
@@ -99,6 +98,13 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 			}
 		}
 
+		// fetcher
+		fetcher := api.Group("/_fetcher")
+		{
+			// uses custom encrypted timestamp validation auth shceme using X-4ks-Auth header and pre-shared secret
+			fetcher.POST("/recipes", middleware.AuthorizeFetcher(), c.Recipe.FetcherBotCreateRecipe)
+		}
+
 		// recipes
 		recipes := api.Group("/recipes")
 		{
@@ -125,6 +131,7 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 		// authenticated routes below this line
 		EnforceAuth(api)
 
+		// user
 		user := api.Group("/user")
 		{
 			user.HEAD("/", c.User.HeadAuthenticatedUser)
@@ -133,6 +140,8 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 			user.PATCH("/", c.User.UpdateUser)
 			user.DELETE("/events/:id", c.User.RemoveUserEvent)
 		}
+
+		// users
 		users := api.Group("/users")
 		{
 			users.DELETE("/:id", middleware.Authorize("/users/*", "delete"), c.User.DeleteUser)
@@ -224,17 +233,10 @@ func main() {
 	defer client.Close()
 	log.Info().Caller().Str("project", pubsubProjectID).Msg("pubsub client created")
 
-	// pubsub request/receiver options
-	reqo := pb.PubsubOpts{
-		ProjectID:      pubsubProjectID,
-		TopicID:        "fetch-responses",
-		SubscriptionID: "fetch-responses",
-	}
-
-	// pubsub response/sender options
-	reso := pb.PubsubOpts{
+	// pubsub options
+	reso := fetcherService.FetcherOpts{
 		ProjectID: pubsubProjectID,
-		TopicID:   "fetch-requests",
+		TopicID:   "fetcher",
 	}
 
 	// services
@@ -243,14 +245,7 @@ func main() {
 	static := staticService.New()
 	user := userService.New(&sysFlags, store, v, &reservedWords)
 	recipe := recipeService.New(&sysFlags, store, v)
-	fetcher := fetcherService.New(ctx, &sysFlags, client, reqo, reso, user, recipe, search, static)
-
-	go (func() {
-		if err := fetcher.Start(); err != nil {
-			log.Error().Caller().Err(err).Msg("Error starting fetcher service")
-			panic(err)
-		}
-	})()
+	fetcher := fetcherService.New(ctx, &sysFlags, client, reso, user, recipe, search, static)
 
 	// controllers
 	c := &Controllers{

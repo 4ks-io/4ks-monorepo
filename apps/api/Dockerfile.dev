@@ -10,7 +10,7 @@ RUN go mod download
 FROM build
 WORKDIR /code
 COPY ./libs/reserved-words/reserved-words ./reserved-words
-COPY ./deploy/sbx-4ks-google-app-creds.json ./google-app-creds.json
+COPY ./dev/secrets/sbx-4ks-google-app-creds.json ./google-app-creds.json
 
 COPY ./go.mod ./
 COPY ./go.sum ./

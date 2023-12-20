@@ -50,6 +50,15 @@ definitions:
       url:
         type: string
     type: object
+  dtos.FetcherCreateRecipe:
+    properties:
+      recipe:
+        $ref: '#/definitions/dtos.CreateRecipe'
+      userEventId:
+        type: string
+      userId:
+        type: string
+    type: object
   dtos.GetRecipeMediaResponse:
     properties:
       data:
@@ -440,6 +449,32 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get all medias for a Recipe
+      tags:
+      - Admin
+  /api/_fetcher/recipes:
+    post:
+      consumes:
+      - application/json
+      description: Fetcher Bot Create a new Recipe
+      parameters:
+      - description: Recipe Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.FetcherCreateRecipe'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid Request
+        "500":
+          description: Internal Error
+      security:
+      - ApiKeyAuth: []
+      summary: Fetcher Bot Create a new Recipe
       tags:
       - Admin
   /api/healthcheck:

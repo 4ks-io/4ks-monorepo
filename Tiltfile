@@ -1,25 +1,33 @@
 # https://docs.tilt.dev/api.html#api.version_settings
 version_settings(constraint='>=0.22.2')
 
-local_resource(
-    'package_json',
-    cmd='./tools/package_json.sh',
-    deps=['pnpm-lock.yaml']
-)
+# config.main_path is the absolute path to the Tiltfile being run
+# https://docs.tilt.dev/api.html#modules.config.main_path
+tiltfile_path = config.main_path
 
-# resources
+# https://github.com/bazelbuild/starlark/blob/master/spec.md#print
+print("""
+Starting 4ks Services
+""".format(tiltfile=tiltfile_path))
+
+# RESOURCES
 k8s_yaml([
-    'deploy/api.yaml',
-    'deploy/web.yaml',
-    'deploy/fetcher.yaml',
-    'deploy/firestore.yaml',
-    'deploy/typesense.yaml',
-    'deploy/pubsub.yaml',
-    # 'deploy/jaeger.yaml'
+    'dev/deploy/api.yaml',
+    'dev/deploy/web.yaml',
+    'dev/deploy/fetcher.yaml',
+    'dev/deploy/firestore.yaml',
+    'dev/deploy/typesense.yaml',
+    'dev/deploy/pubsub.yaml',
+    # 'dev/deploy/jaeger.yaml'
 ])
 
-# api
-k8s_resource('api', port_forwards='0.0.0.0:5734:5000',labels=['backend'])
+# API
+k8s_resource(
+    workload='api',
+    port_forwards='0.0.0.0:5734:5000',
+    labels=['backend'],
+    resource_deps=['pubsub']
+)
 docker_build(
     '4ks-api',
     context='.',
@@ -30,7 +38,7 @@ docker_build(
         'go.sum',
         'libs/go',
         'libs/reserved-words',
-        'deploy/sbx-4ks-google-app-creds.json'
+        'dev/secrets/sbx-4ks-google-app-creds.json'
     ],
     live_update=[
         sync('apps/api/', '/code/apps/api'),
@@ -42,31 +50,37 @@ docker_build(
     ]
 )
 
-
-# recipe-fetcher
-k8s_resource('fetcher', port_forwards='0.0.0.0:5888:5000',labels=['backend'])
+# fetcher
+k8s_resource(
+    workload='fetcher',
+    port_forwards='0.0.0.0:5889:5000',
+    labels=['backend']
+)
 docker_build(
     'fetcher',
     context='.',
-    dockerfile='apps/recipe-fetcher/Dockerfile.dev',
+    dockerfile='apps/fetcher/Dockerfile.dev',
     only=[
-        'apps/recipe-fetcher',
-        'libs/go',
-        'go.mod',
-        'go.sum',
+        'apps/fetcher',
+        'libs/go'
     ],
     live_update=[
-        sync('apps/recipe-fetcher/', '/code/apps/recipe-fetcher'),
-        sync('libs/go/', '/code/libs/go'),
+        sync('apps/fetcher/', '/code'),
         run(
             'go mod tidy',
-            trigger=['apps/recipe-fetcher/']
+            trigger=['apps/fetcher/']
         )
     ]
 )
 
-# web
-k8s_resource('web', port_forwards='0.0.0.0:5736:3000', labels=['web','next'])
+# WEB
+## package_json hack allows docker to cache npm install
+local_resource('package_json', cmd='./apps/web/package_json.sh', deps=['pnpm-lock.yaml'])
+k8s_resource(
+    workload='web',
+    port_forwards='0.0.0.0:5736:3000',
+    labels=['web','next']
+)
 docker_build(
     'web',
     context='.',
@@ -75,7 +89,7 @@ docker_build(
         'apps/web',
         'libs/ts',
         'libs/reserved-words',
-        'tools',
+        'scripts',
         'PACKAGE_JSON',
         'package.json',
         'pnpm-lock.yaml',
@@ -92,17 +106,22 @@ docker_build(
     ]
 )
 
-# more
-# k8s_resource('pubsub',    port_forwards='8085:8085', labels=['database','pubsub'])
+# PUBSUB
+k8s_resource('pubsub', port_forwards='8085:8085', labels=['database','pubsub'])
+local_resource(
+    name='init (pubsub)',
+    cmd='./dev/scripts/init-pubsub.sh',
+    resource_deps=['pubsub']
+)
+
+# DATA
 k8s_resource('typesense', port_forwards='0.0.0.0:8108:8108', labels=['database','typesense'])
-# k8s_resource('firestore', port_forwards='8200:8200', labels=['database','firestore'])
-# k8s_resource( 'jaeger', port_forwards=['9411:9411','5775:5775','6831:6831','6832:6832','5778:5778','16686:16686','14250:14250','14268:14268','14269:14269'], labels=['jaeger'])
+k8s_resource('firestore', port_forwards='8200:8200', labels=['database','firestore'])
+local_resource(
+    name='init (data)',
+    cmd='./dev/scripts/init-data.sh',
+    resource_deps=['firestore','typesense','api']
+)
 
-# config.main_path is the absolute path to the Tiltfile being run
-# https://docs.tilt.dev/api.html#modules.config.main_path
-tiltfile_path = config.main_path
-
-# https://github.com/bazelbuild/starlark/blob/master/spec.md#print
-print("""
-Starting 4ks Services
-""".format(tiltfile=tiltfile_path))
+# OBSERVABILITY
+# k8s_resource('jaeger', port_forwards=['9411:9411','5775:5775','6831:6831','6832:6832','5778:5778','16686:16686','14250:14250','14268:14268','14269:14269'], labels=['jaeger'])

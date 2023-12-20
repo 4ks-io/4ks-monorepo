@@ -21,7 +21,7 @@ jobs:
     secrets:
       gcp_api_token: ${{ secrets.gcp_api_token }}
     with:
-      app_name: recipe-fetcher
+      app_name: fetcher
       # environment: ${{ inputs.environment }}
       gcp_project_name: eng-4ks
       gcp_registry: us-east4-docker.pkg.dev

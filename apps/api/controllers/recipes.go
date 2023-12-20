@@ -13,6 +13,7 @@ import (
 // RecipeController is the interface for the recipe controller
 type RecipeController interface {
 	BotCreateRecipe(*gin.Context)
+	FetcherBotCreateRecipe(*gin.Context)
 	CreateRecipe(*gin.Context)
 	DeleteRecipe(*gin.Context)
 	GetRecipe(*gin.Context)

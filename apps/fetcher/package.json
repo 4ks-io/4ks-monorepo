@@ -1,0 +1,10 @@
+{
+  "name": "@4ks/fetcher",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "make",
+    "test": "go test",
+    "cover": "go test -coverprofile=coverage.out && go tool cover -html=coverage.out"
+  }
+}
