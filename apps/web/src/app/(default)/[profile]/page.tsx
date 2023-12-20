@@ -60,7 +60,6 @@ export default async function ProfilePage({ params, searchParams }: PageProps) {
           {isCurrent && (
             <>
               <h3>Events</h3>
-              <>{JSON.stringify(user.events[0])}</>
               <ul style={{ listStyleType: 'none', paddingInlineStart: '0px' }}>
                 {user.events?.map((e) => {
                   if (!e || !e.data) {

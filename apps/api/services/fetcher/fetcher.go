@@ -16,11 +16,13 @@ import (
 	"4ks/apps/api/utils"
 )
 
+// FetcherOpts is the options for the fetcher service
 type FetcherOpts struct {
 	ProjectID      string
 	TopicID        string
 }
 
+// FetcherPubSubConnection is the connection to the fetcher topic
 type FetcherPubSubConnection struct {
 	ProjectID      string
 	TopicID        string
