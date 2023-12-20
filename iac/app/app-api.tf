@@ -101,6 +101,11 @@ resource "google_cloud_run_v2_service" "api" {
         name  = "PUBSUB_PROJECT_ID"
         value = "${local.stage}-${local.org}"
       }
+      env {
+        name  = "API_FETCHER_PSK"
+        value = data.google_secret_manager_secret_version.api_fetcher_psk.secret_data
+
+      }
     }
   }
 }

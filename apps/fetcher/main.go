@@ -60,7 +60,7 @@ func encrypt(data, key []byte) (string, error) {
 func init() {
 	debug = os.Getenv("DEBUG") == "false"
 
-	apiSecret = getMandatoryEnvVar("API_SECRET")
+	apiSecret = getMandatoryEnvVar("API_FETCHER_PSK")
 	apiEndpoint = getMandatoryEnvVar("API_ENDPOINT_URL")
 
 	n := getMandatoryEnvVar("PUBSUB_PROJECT_ID")

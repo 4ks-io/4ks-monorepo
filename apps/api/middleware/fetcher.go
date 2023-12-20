@@ -39,9 +39,9 @@ func decrypt(encrypted string, key []byte) (string, error) {
 
 // AuthorizeFetcher validates the request has been authorized to fetch
 func AuthorizeFetcher() gin.HandlerFunc {
-	secret, ok := os.LookupEnv("FETCHER_SECRET")
+	secret, ok := os.LookupEnv("API_FETCHER_PSK")
 	if !ok {
-		log.Fatal().Msg("FETCHER_SECRET required")
+		log.Fatal().Msg("API_FETCHER_PSK required")
 	}
 	key := []byte(secret)
 
