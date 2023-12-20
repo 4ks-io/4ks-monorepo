@@ -85,7 +85,7 @@ func FetchFallbackImagesFromBucket(c context.Context) ([]string, error) {
 	defer client.Close()
 
 	bkt := client.Bucket(staticMediaBucket)
-	query := &storage.Query{Prefix: "fallback/f"}
+	query := &storage.Query{Prefix: "static/fallback/f"}
 
 	var files []string
 	it := bkt.Objects(c, query)

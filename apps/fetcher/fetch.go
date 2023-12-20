@@ -26,7 +26,7 @@ const (
 
 func collyOnRequest() func(r *colly.Request) {
 	return func(r *colly.Request) {
-		log.Info().Str("target", r.URL.String()).Msg("visiting")
+		log.Info().Str("target", r.URL.String()).Msgf("visiting %s", r.URL.String())
 	}
 }
 
