@@ -99,7 +99,7 @@ resource "google_cloudfunctions2_function" "fetcher" {
       PUBSUB_PROJECT_ID = local.project
       PUBSUB_TOPIC_ID   = "fetcher"
       API_ENDPOINT_URL  = "${output.api_service_url}/api/_fetcher/recipes"
-      API_SECRET        = var.api_fetcher_secret
+      API_SECRET        = google_secret_manager_secret_version.api_fetcher_psk.secret_data
     }
 
     # ingress_settings               = "ALLOW_ALL"

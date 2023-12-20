@@ -23,26 +23,26 @@ resource "google_storage_bucket_iam_member" "media_static_viewer" {
 resource "google_compute_backend_bucket" "media_static" {
   name        = "${local.project}-static-backend"
   bucket_name = google_storage_bucket.media_static.name
-  enable_cdn  = true // global: true if network_tier is PREMIUM
+  enable_cdn  = false // global: true if network_tier is PREMIUM
 }
 
 ## logo
 
 resource "google_storage_bucket_object" "logo_svg" {
-  name   = "logo.svg"
+  name   = "static/logo.svg"
   source = "./static/logo.svg"
   bucket = google_storage_bucket.media_static.name
 }
 
 resource "google_storage_bucket_object" "logo_png" {
-  name   = "logo.png"
+  name   = "static/logo.png"
   source = "./static/logo.png"
   bucket = google_storage_bucket.media_static.name
 }
 
 resource "google_storage_bucket_object" "fallback_image" {
   count = 28
-  name   = "fallback/f${count.index}.jpg"
+  name   = "static/fallback/f${count.index}.jpg"
   source = "./static/fallback/f${count.index}.jpg"
   bucket = google_storage_bucket.media_static.name
 }

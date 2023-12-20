@@ -25,7 +25,8 @@ variable "gcp_service_list" {
     "certificatemanager.googleapis.com",
     "cloudbuild.googleapis.com",
     "eventarc.googleapis.com",
-    "pubsub.googleapis.com"
+    "pubsub.googleapis.com",
+    "secretmanager.googleapis.com"
   ]
 }
 
