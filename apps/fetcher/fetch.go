@@ -42,11 +42,9 @@ func visit(debug bool, target string) (Recipe, error) {
 		log.Error().Err(err).Caller().Str("target", target).Msg("failed to parse target host")
 		return Recipe{}, err
 	}
-	hostname := u.Hostname()
-	log.Debug().Msgf("hostname: %s", hostname)
 
 	// init colly
-	c := initCollector(hostname, debug)
+	c := initCollector(u.Hostname(), debug)
 	var recipe Recipe
 
 	// colly onRequest

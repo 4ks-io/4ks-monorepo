@@ -184,20 +184,18 @@ func main() {
 		JaegerEnabled: utils.GetBoolEnv("JAEGER_ENABLED", false),
 	}
 
+	// static service configs
+	var mediaFallbackURL = utils.GetEnvVarOrPanic("MEDIA_FALLBACK_URL")
+	var staticMediaBucket = utils.GetEnvVarOrPanic("STATIC_MEDIA_BUCKET")
+
 	// firestore
-	firstoreProjectID := os.Getenv("FIRESTORE_PROJECT_ID")
-	if firstoreProjectID == "" {
-		panic("FIRESTORE_PROJECT_ID required")
-	}
+	firstoreProjectID := utils.GetEnvVarOrPanic("FIRESTORE_PROJECT_ID")
 	if value, ok := os.LookupEnv("FIRESTORE_EMULATOR_HOST"); ok {
 		log.Printf("Using Firestore Emulator: '%s'", value)
 	}
 
 	// pubsub
-	pubsubProjectID := os.Getenv("PUBSUB_PROJECT_ID")
-	if pubsubProjectID == "" {
-		panic("PUBSUB_PROJECT_ID required")
-	}
+	pubsubProjectID := utils.GetEnvVarOrPanic("PUBSUB_PROJECT_ID")
 	if value, ok := os.LookupEnv("PUBSUB_EMULATOR_HOST"); ok {
 		log.Printf("Using PubSub Emulator: '%s'", value)
 	}
@@ -242,7 +240,7 @@ func main() {
 	// services
 	v := validator.New()
 	search := searchService.New()
-	static := staticService.New()
+	static := staticService.New(mediaFallbackURL, staticMediaBucket)
 	user := userService.New(&sysFlags, store, v, &reservedWords)
 	recipe := recipeService.New(&sysFlags, store, v)
 	fetcher := fetcherService.New(ctx, &sysFlags, client, reso, user, recipe, search, static)

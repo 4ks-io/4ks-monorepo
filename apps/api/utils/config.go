@@ -2,6 +2,7 @@
 package utils
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -30,3 +31,13 @@ func GetBoolEnv(key string, fallback bool) bool {
 	}
 	return ret
 }
+
+// GetEnvVarOrPanic returns an environment variable value or exits
+func GetEnvVarOrPanic(n string) string {
+	v, ok := os.LookupEnv(n)
+	if !ok || v == "" {
+		panic(fmt.Sprintf("env var %s required", n))
+	}
+	return v
+}
+
