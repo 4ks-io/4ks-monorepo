@@ -22,11 +22,10 @@ func createVariant(ctx context.Context, bkt *storage.BucketHandle, i image.Image
 	// defer wg.Done()
 
 	// resize
-	var v *image.NRGBA
-	v = imaging.Resize(i, size, 0, imaging.Lanczos)
+	v := imaging.Resize(i, size, 0, imaging.Lanczos)
 
 	// destination
-	out := f.Basename + "_" + strconv.Itoa(size) + f.Extension
+	out := "image/" + f.Basename + "_" + strconv.Itoa(size) + f.Extension
 	ctx, cancel := context.WithTimeout(ctx, time.Second*15)
 	defer cancel()
 	wc := bkt.Object(out).NewWriter(ctx)
