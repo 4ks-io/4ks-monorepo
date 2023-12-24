@@ -18,15 +18,15 @@ import (
 
 // FetcherOpts is the options for the fetcher service
 type FetcherOpts struct {
-	ProjectID      string
-	TopicID        string
+	ProjectID string
+	TopicID   string
 }
 
 // FetcherPubSubConnection is the connection to the fetcher topic
 type FetcherPubSubConnection struct {
-	ProjectID      string
-	TopicID        string
-	Topic          *pubsub.Topic
+	ProjectID string
+	TopicID   string
+	Topic     *pubsub.Topic
 }
 
 // Service is the interface for the user service

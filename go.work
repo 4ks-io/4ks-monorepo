@@ -4,4 +4,7 @@ use (
 	.
 	./apps/media-upload
 	./apps/fetcher
+	./utils/media-update
+	./utils/recipe-update
+	./utils/recipe-search-refresh
 )

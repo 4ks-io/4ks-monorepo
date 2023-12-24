@@ -17,9 +17,9 @@ type searchController struct {
 }
 
 // NewSearchController creates a new search controller
-func NewSearchController() SearchController {
+func NewSearchController(search searchService.Service) SearchController {
 	return &searchController{
-		searchService: searchService.New(),
+		searchService: search,
 	}
 }
 

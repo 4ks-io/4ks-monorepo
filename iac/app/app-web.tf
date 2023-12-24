@@ -108,7 +108,7 @@ resource "google_cloud_run_v2_service" "web" {
       }
       env {
         name  = "MEDIA_FALLBACK_URL"
-        value = "${local.web_url}/fallback"
+        value = "${local.web_url}/static/fallback"
       }
 
     }

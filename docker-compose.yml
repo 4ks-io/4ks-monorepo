@@ -15,4 +15,5 @@ services:
     volumes:
       - ./dev/apps/nginx/local.4ks.io.pem:/etc/nginx/conf.d/local.4ks.io.pem
       - ./dev/apps/nginx/local.4ks.io.key:/etc/nginx/conf.d/local.4ks.io.key
+      - ./dev/apps/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./dev/apps/nginx/local.conf:/etc/nginx/conf.d/local.conf

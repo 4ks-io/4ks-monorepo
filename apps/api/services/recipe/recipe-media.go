@@ -39,13 +39,13 @@ func (s recipeService) CreateRecipeMedia(ctx context.Context, mp *utils.MediaPro
 	a := []models.RecipeMediaVariant{}
 	a = append(a, models.RecipeMediaVariant{
 		MaxWidth: 256,
-		URL:      fmt.Sprintf("%s/%s", baseReadURL, mp.Basename+"_256"+mp.Extension),
+		URL:      fmt.Sprintf("%s/%s", s.imageURL, mp.Basename+"_256"+mp.Extension),
 		Filename: mp.Basename + "_256" + mp.Extension,
 		Alias:    "sm",
 	})
 	a = append(a, models.RecipeMediaVariant{
 		MaxWidth: 1024,
-		URL:      fmt.Sprintf("%s/%s", baseReadURL, mp.Basename+"_1024"+mp.Extension),
+		URL:      fmt.Sprintf("%s/%s", s.imageURL, mp.Basename+"_1024"+mp.Extension),
 		Filename: mp.Basename + "_1024" + mp.Extension,
 		Alias:    "md",
 	})
@@ -72,29 +72,22 @@ func (s recipeService) CreateRecipeMedia(ctx context.Context, mp *utils.MediaPro
 	return recipeMedia, nil
 }
 
-func (s recipeService) CreateRecipeMediaSignedURL(mp *utils.MediaProps, wg *sync.WaitGroup) (string, error) {
+func (s recipeService) CreateRecipeMediaSignedURL(ctx context.Context, mp *utils.MediaProps, wg *sync.WaitGroup) (string, error) {
 	defer wg.Done()
-
-	ctx := context.Background()
-	client, err := storage.NewClient(ctx)
-	if err != nil {
-		return "", fmt.Errorf("storage.NewClient: %v", err)
-	}
-	defer client.Close()
 
 	// https://pkg.go.dev/cloud.google.com/go/storage#SignedURLOptions
 	opts := &storage.SignedURLOptions{
 		Scheme:         storage.SigningSchemeV4,
-		GoogleAccessID: serviceAccountName,
+		GoogleAccessID: s.serviceAccountName,
 		Method:         "PUT",
 		Expires:        time.Now().Add(expirationMinutes * time.Minute),
 		// ContentType:    mp.ct,
 	}
 
-	filename := mp.Basename + mp.Extension
-	url, err := client.Bucket(uploadableBucket).SignedURL(filename, opts)
+	filename := "image/" + mp.Basename + mp.Extension
+	url, err := s.store.Bucket(s.uploadableBucket).SignedURL(filename, opts)
 	if err != nil {
-		return "", fmt.Errorf("Bucket(%q). SignedURL: %v", uploadableBucket, err)
+		return "", fmt.Errorf("Bucket(%q). SignedURL: %v", s.uploadableBucket, err)
 	}
 
 	return url, nil

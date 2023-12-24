@@ -72,7 +72,7 @@ func (s recipeService) CreateRecipe(ctx context.Context, recipe *dtos.CreateReci
 	}
 
 	// todo
-	_, err := s.store.Batch().Create(newRevisionDoc, recipeRevision).Create(newRecipeDoc, newRecipe).Commit(ctx)
+	_, err := s.fire.Batch().Create(newRevisionDoc, recipeRevision).Create(newRecipeDoc, newRecipe).Commit(ctx)
 
 	if err != nil {
 		return nil, ErrUnableToCreateRecipe
@@ -117,7 +117,7 @@ func (s recipeService) UpdateRecipeByID(ctx context.Context, recipeID string, re
 	recipe.CurrentRevision = *newRevision
 	recipe.UpdatedDate = recipeUpdatedDate
 
-	_, err = s.store.Batch().Create(newRevisionDocRef, newRevision).Set(recipeDoc.Ref, recipe).Commit(ctx)
+	_, err = s.fire.Batch().Create(newRevisionDocRef, newRevision).Set(recipeDoc.Ref, recipe).Commit(ctx)
 
 	if err != nil {
 		return nil, ErrUnableToUpdateRecipe
@@ -150,7 +150,7 @@ func (s recipeService) ForkRecipeByID(ctx context.Context, recipeID string, fork
 	recipe.Metadata.Forks = 0
 	recipe.Metadata.Stars = 0
 
-	_, err = s.store.Batch().Create(newRevisionDocRef, recipe.CurrentRevision).Create(newRecipeDocRef, recipe).Update(recipeDoc.Ref, []firestore.Update{
+	_, err = s.fire.Batch().Create(newRevisionDocRef, recipe.CurrentRevision).Create(newRecipeDocRef, recipe).Update(recipeDoc.Ref, []firestore.Update{
 		{Path: "metadata.forks", Value: firestore.Increment(1)},
 	}).Commit(ctx)
 
@@ -192,7 +192,7 @@ func (s recipeService) StarRecipeByID(ctx context.Context, recipeID string, auth
 		UpdatedDate: starredDate,
 	}
 
-	_, err = s.store.Batch().Create(s.recipeStarsCollection.NewDoc(), recipeStarDoc).Update(recipeDoc.Ref, []firestore.Update{
+	_, err = s.fire.Batch().Create(s.recipeStarsCollection.NewDoc(), recipeStarDoc).Update(recipeDoc.Ref, []firestore.Update{
 		{Path: "metadata.stars", Value: firestore.Increment(1)},
 	}).Commit(ctx)
 

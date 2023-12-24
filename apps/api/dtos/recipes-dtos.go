@@ -9,9 +9,9 @@ import (
 
 // FetcherCreateRecipe godoc
 type FetcherCreateRecipe struct {
-	Recipe CreateRecipe `json:"recipe"`
-	UserID string       `json:"userId"`
-	UserEventID uuid.UUID  `json:"userEventId"`
+	Recipe      CreateRecipe `json:"recipe"`
+	UserID      string       `json:"userId"`
+	UserEventID uuid.UUID    `json:"userEventId"`
 }
 
 // CreateRecipe godoc

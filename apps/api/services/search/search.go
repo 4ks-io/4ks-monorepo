@@ -4,7 +4,6 @@ package search
 import (
 	"4ks/apps/api/dtos"
 	"4ks/libs/go/models"
-	"os"
 
 	"github.com/rs/zerolog/log"
 	"github.com/typesense/typesense-go/typesense"
@@ -19,28 +18,31 @@ type Service interface {
 }
 
 type searchService struct {
+	client  *typesense.Client
+}
+
+type SearchServiceConfig struct {
+	URL string
+	Key string 
 }
 
 // New creates a new search service
-func New() Service {
-	return &searchService{}
+func New(client *typesense.Client) Service {
+	return &searchService{
+		client,
+	}
 }
 
-// todo: move into New()?
-var tsURL = os.Getenv("TYPESENSE_URL")
-var tsKey = os.Getenv("TYPESENSE_API_KEY")
-var tsc = typesense.NewClient(typesense.WithServer(tsURL), typesense.WithAPIKey(tsKey))
-
-func (us searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
+func (s searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
 	ing := []string{}
 	for _, v := range r.CurrentRevision.Ingredients {
 		ing = append(ing, v.Name)
 	}
 
-	ins := []string{}
-	for _, v := range r.CurrentRevision.Instructions {
-		ins = append(ins, v.Text)
-	}
+	// ins := []string{}
+	// for _, v := range r.CurrentRevision.Instructions {
+	// 	ins = append(ins, v.Text)
+	// }
 
 	var banner string
 	for _, b := range r.CurrentRevision.Banner {
@@ -57,7 +59,7 @@ func (us searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
 		ImageURL:    banner,
 	}
 
-	_, err := tsc.Collection("recipes").Documents().Upsert(document)
+	_, err := s.client.Collection("recipes").Documents().Upsert(document)
 	if err != nil {
 		return err
 	}
@@ -65,8 +67,8 @@ func (us searchService) UpsertSearchRecipeDocument(r *models.Recipe) error {
 	return nil
 }
 
-func (us searchService) RemoveSearchRecipeDocument(id string) error {
-	_, err := tsc.Collection("recipes").Document(id).Delete()
+func (s searchService) RemoveSearchRecipeDocument(id string) error {
+	_, err := s.client.Collection("recipes").Document(id).Delete()
 	if err != nil {
 		return err
 	}
@@ -75,7 +77,7 @@ func (us searchService) RemoveSearchRecipeDocument(id string) error {
 }
 
 // note: schema must overlap with additionalSearchParameters in search-context.tsx
-func (us searchService) CreateSearchRecipeCollection() error {
+func (s searchService) CreateSearchRecipeCollection() error {
 	False := false
 	True := true
 	schema := &api.CollectionSchema{
@@ -102,7 +104,7 @@ func (us searchService) CreateSearchRecipeCollection() error {
 		},
 	}
 
-	_, err := tsc.Collections().Create(schema)
+	_, err := s.client.Collections().Create(schema)
 	log.Error().Err(err).Caller().Msg("failed to create search collection")
 	if err != nil {
 		return err

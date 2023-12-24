@@ -1,8 +1,8 @@
 package middleware
 
 import (
+	"4ks/apps/api/utils"
 	"context"
-	"os"
 
 	"net/http"
 	"net/url"
@@ -16,8 +16,8 @@ import (
 )
 
 var (
-	domain   = os.Getenv("AUTH0_DOMAIN")
-	audience = os.Getenv("AUTH0_AUDIENCE")
+	domain   = utils.GetEnvVarOrPanic("AUTH0_DOMAIN")
+	audience = utils.GetEnvVarOrPanic("AUTH0_AUDIENCE")
 )
 
 // CustomClaims contains custom data we want from the token.

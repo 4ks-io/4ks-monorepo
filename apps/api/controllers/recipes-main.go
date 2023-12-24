@@ -253,7 +253,7 @@ func (c *recipeController) UpdateRecipe(ctx *gin.Context) {
 		DisplayName: author.DisplayName,
 	}
 
-	createdRecipe, err := c.recipeService.UpdateRecipeByID(ctx, recipeID, &payload)
+	r, err := c.recipeService.UpdateRecipeByID(ctx, recipeID, &payload)
 
 	if err == recipesvc.ErrUnableToCreateRecipe {
 		ctx.AbortWithError(http.StatusBadRequest, err)
@@ -266,13 +266,13 @@ func (c *recipeController) UpdateRecipe(ctx *gin.Context) {
 		return
 	}
 
-	err = c.searchService.UpsertSearchRecipeDocument(createdRecipe)
+	err = c.searchService.UpsertSearchRecipeDocument(r)
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, createdRecipe)
+	ctx.JSON(http.StatusOK, r)
 }
 
 // FetchRecipe godoc

@@ -63,7 +63,7 @@ spec:
             - name: TYPESENSE_API_KEY
               value: local-4ks-api-key
             - name: MEDIA_FALLBACK_URL
-              value: https://storage.googleapis.com/static.dev.4ks.io/fallback
+              value: https://local.4ks.io/static/fallback
             - name: TYPESENSE_URL
               value: typesense.default.svc.cluster.local
             - name: TYPESENSE_PROTOCOL

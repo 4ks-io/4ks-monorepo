@@ -7,21 +7,12 @@ import (
 	models "4ks/libs/go/models"
 	"context"
 	"errors"
-	"fmt"
-	"os"
 	"sync"
 
 	firestore "cloud.google.com/go/firestore"
+	"cloud.google.com/go/storage"
 	"github.com/go-playground/validator/v10"
 )
-
-// todo: move to main
-var distributionBucket = os.Getenv("DISTRIBUTION_BUCKET")
-var uploadableBucket = os.Getenv("UPLOADABLE_BUCKET")
-var serviceAccountName = os.Getenv("SERVICE_ACCOUNT_EMAIL")
-
-var cgpStorageURL = "https://storage.googleapis.com"
-var baseReadURL = fmt.Sprintf("%s/%s", cgpStorageURL, distributionBucket)
 
 const expirationMinutes = 2
 
@@ -50,7 +41,7 @@ type Service interface {
 	// create
 	CreateRecipe(context.Context, *dtos.CreateRecipe) (*models.Recipe, error)
 	CreateRecipeMedia(context.Context, *utils.MediaProps, string, string, *sync.WaitGroup) (*models.RecipeMedia, error)
-	CreateRecipeMediaSignedURL(*utils.MediaProps, *sync.WaitGroup) (string, error)
+	CreateRecipeMediaSignedURL(context.Context, *utils.MediaProps, *sync.WaitGroup) (string, error)
 	// delete
 	DeleteRecipe(context.Context, string, string) error
 	// get
@@ -73,7 +64,12 @@ type Service interface {
 }
 
 type recipeService struct {
-	store                     *firestore.Client
+	distributionBucket        string
+	uploadableBucket          string
+	serviceAccountName        string
+	imageURL                  string
+	store	 										*storage.Client
+	fire                     *firestore.Client
 	recipeCollection          *firestore.CollectionRef
 	recipeMediasCollection    *firestore.CollectionRef
 	recipeRevisionsCollection *firestore.CollectionRef
@@ -82,15 +78,26 @@ type recipeService struct {
 	sysFlags                  *utils.SystemFlags
 }
 
+type RecipeServiceConfig struct {
+	DistributionBucket string
+	UploadableBucket   string
+	ServiceAccountName string
+	ImageURL           string
+}
+
 // New returns a new RecipeService
-func New(sysFlags *utils.SystemFlags, store *firestore.Client, validator *validator.Validate) Service {
+func New(sysFlags *utils.SystemFlags, store *storage.Client, fire *firestore.Client, validator *validator.Validate, cfg *RecipeServiceConfig) Service {
 	return &recipeService{
-		store:                     store,
+		distributionBucket:        cfg.DistributionBucket,
+		uploadableBucket:          cfg.UploadableBucket,
+		serviceAccountName:        cfg.ServiceAccountName,
+		imageURL:                  cfg.ImageURL,
+		fire:                     fire,
 		validator:                 validator,
-		recipeCollection:          store.Collection("recipes"),
-		recipeMediasCollection:    store.Collection("recipe-medias"),
-		recipeRevisionsCollection: store.Collection("recipe-revisions"),
-		recipeStarsCollection:     store.Collection("recipe-stars"),
+		recipeCollection:          fire.Collection("recipes"),
+		recipeMediasCollection:    fire.Collection("recipe-medias"),
+		recipeRevisionsCollection: fire.Collection("recipe-revisions"),
+		recipeStarsCollection:     fire.Collection("recipe-stars"),
 		sysFlags:                  sysFlags,
 	}
 }

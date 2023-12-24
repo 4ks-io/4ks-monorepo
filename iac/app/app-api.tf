@@ -1,3 +1,64 @@
+# iam
+resource "google_service_account" "api" {
+  account_id   = "cloud-run-api-sa"
+  display_name = "Cloud Run API"
+  description  = "Identity used by the Cloud Run API service"
+}
+
+resource "google_project_iam_member" "service_agent" {
+  project = local.project
+  role    = "roles/appengine.serviceAgent"
+  member  = "serviceAccount:${google_service_account.api.email}"
+}
+
+resource "google_project_iam_member" "datastore_user" {
+  project = local.project
+  role    = "roles/datastore.user"
+  member  = "serviceAccount:${google_service_account.api.email}"
+}
+
+resource "google_project_iam_member" "firestore_service_agent" {
+  project = local.project
+  role    = "roles/firestore.serviceAgent"
+  member  = "serviceAccount:${google_service_account.api.email}"
+}
+
+resource "google_project_iam_member" "pubsub_service_agent" {
+  project = local.project
+  role    = "roles/pubsub.editor"
+  member  = "serviceAccount:${google_service_account.api.email}"
+}
+
+resource "google_project_iam_custom_role" "api" {
+  role_id     = "cloudRunAPI"
+  title       = "Cloud Run API"
+  description = "Cloud Run API"
+  permissions = [
+    "storage.buckets.get",
+    "storage.objects.create",
+    "storage.objects.delete"
+  ]
+}
+
+data "google_iam_policy" "api_custom" {
+  binding {
+    role = google_project_iam_custom_role.api.id
+    members = [
+      "serviceAccount:${google_service_account.api.email}",
+    ]
+  }
+}
+
+data "google_iam_policy" "api_token_creator" {
+  binding {
+    role = "roles/iam.serviceAccountTokenCreator"
+    members = [
+      "serviceAccount:${google_service_account.api.email}",
+    ]
+  }
+}
+
+# service
 resource "google_cloud_run_v2_service" "api" {
   name     = "api"
   location = var.region
@@ -94,7 +155,11 @@ resource "google_cloud_run_v2_service" "api" {
       }
       env {
         name  = "MEDIA_FALLBACK_URL"
-        value = "${local.web_url}"
+        value = "${local.web_url}/static/fallback"
+      }
+      env {
+        name  = "MEDIA_IMAGE_URL"
+        value = "${local.web_url}/image"
       }
 
       env {
@@ -110,64 +175,7 @@ resource "google_cloud_run_v2_service" "api" {
   }
 }
 
-resource "google_service_account" "api" {
-  account_id   = "cloud-run-api-sa"
-  display_name = "Cloud Run API"
-  description  = "Identity used by the Cloud Run API service"
-}
 
-resource "google_project_iam_member" "service_agent" {
-  project = local.project
-  role    = "roles/appengine.serviceAgent"
-  member  = "serviceAccount:${google_service_account.api.email}"
-}
-
-resource "google_project_iam_member" "datastore_user" {
-  project = local.project
-  role    = "roles/datastore.user"
-  member  = "serviceAccount:${google_service_account.api.email}"
-}
-
-resource "google_project_iam_member" "firestore_service_agent" {
-  project = local.project
-  role    = "roles/firestore.serviceAgent"
-  member  = "serviceAccount:${google_service_account.api.email}"
-}
-
-resource "google_project_iam_member" "pubsub_service_agent" {
-  project = local.project
-  role    = "roles/pubsub.editor"
-  member  = "serviceAccount:${google_service_account.api.email}"
-}
-
-resource "google_project_iam_custom_role" "api" {
-  role_id     = "cloudRunAPI"
-  title       = "Cloud Run API"
-  description = "Cloud Run API"
-  permissions = [
-    "storage.buckets.get",
-    "storage.objects.create",
-    "storage.objects.delete"
-  ]
-}
-
-data "google_iam_policy" "api_custom" {
-  binding {
-    role = google_project_iam_custom_role.api.id
-    members = [
-      "serviceAccount:${google_service_account.api.email}",
-    ]
-  }
-}
-
-data "google_iam_policy" "api_token_creator" {
-  binding {
-    role = "roles/iam.serviceAccountTokenCreator"
-    members = [
-      "serviceAccount:${google_service_account.api.email}",
-    ]
-  }
-}
 
 resource "google_cloud_run_service_iam_member" "api_anonymous_access" {
   service  = google_cloud_run_v2_service.api.name

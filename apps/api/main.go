@@ -21,12 +21,14 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/pubsub"
+	"cloud.google.com/go/storage"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	adapter "github.com/gwatts/gin-adapter"
 	"github.com/rs/zerolog/log"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/typesense/typesense-go/typesense"
 	ginprometheus "github.com/zsais/go-gin-prometheus"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 )
@@ -177,6 +179,9 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 // @in header
 // @name Authorization
 func main() {
+	// context
+	var ctx = context.Background()
+
 	// args
 	sysFlags := utils.SystemFlags{
 		Debug:         utils.GetStrEnvVar("GIN_MODE", "release") == "debug",
@@ -184,23 +189,21 @@ func main() {
 		JaegerEnabled: utils.GetBoolEnv("JAEGER_ENABLED", false),
 	}
 
+	// search service configs
+	var tsURL = utils.GetEnvVarOrPanic("TYPESENSE_URL")
+	var tsKey = utils.GetEnvVarOrPanic("TYPESENSE_API_KEY")
+
 	// static service configs
 	var mediaFallbackURL = utils.GetEnvVarOrPanic("MEDIA_FALLBACK_URL")
 	var staticMediaBucket = utils.GetEnvVarOrPanic("STATIC_MEDIA_BUCKET")
 
-	// firestore
-	firstoreProjectID := utils.GetEnvVarOrPanic("FIRESTORE_PROJECT_ID")
-	if value, ok := os.LookupEnv("FIRESTORE_EMULATOR_HOST"); ok {
-		log.Printf("Using Firestore Emulator: '%s'", value)
-	}
+	// recipe service configs
+	var distributionBucket = utils.GetEnvVarOrPanic("DISTRIBUTION_BUCKET")
+	var uploadableBucket = utils.GetEnvVarOrPanic("UPLOADABLE_BUCKET")
+	var serviceAccountName = utils.GetEnvVarOrPanic("SERVICE_ACCOUNT_EMAIL")
+	var imageURL = utils.GetEnvVarOrPanic("MEDIA_IMAGE_URL")
 
-	// pubsub
-	pubsubProjectID := utils.GetEnvVarOrPanic("PUBSUB_PROJECT_ID")
-	if value, ok := os.LookupEnv("PUBSUB_EMULATOR_HOST"); ok {
-		log.Printf("Using PubSub Emulator: '%s'", value)
-	}
-
-	// load reserved words
+	// reserved words
 	reservedWordsFile := utils.GetStrEnvVar("AUDITLAB_RESERVED_WORDS_FILE", "./reserved-words")
 	reservedWords, err := ReadWordsFromFile(reservedWordsFile)
 	if err != nil {
@@ -218,17 +221,32 @@ func main() {
 		}()
 	}
 
-	// database
-	var ctx = context.Background()
-	var store, _ = firestore.NewClient(ctx, firstoreProjectID)
-
-	// Create a Pub/Sub client.
-	client, err := pubsub.NewClient(ctx, pubsubProjectID)
+	// storage
+	store, err := storage.NewClient(ctx)
 	if err != nil {
-		log.Error().Caller().Err(err).Str("project", pubsubProjectID).Msg("failed to create pubsub client")
-		panic(err)
+		log.Fatal().Caller().Err(err).Msg("failed to create storage client")
 	}
-	defer client.Close()
+	defer store.Close()
+
+	// firestore
+	firstoreProjectID := utils.GetEnvVarOrPanic("FIRESTORE_PROJECT_ID")
+	if value, ok := os.LookupEnv("FIRESTORE_EMULATOR_HOST"); ok {
+		log.Info().Caller().Msgf("Using Firestore Emulator: '%s'", value)
+	}
+	var fire, _ = firestore.NewClient(ctx, firstoreProjectID)
+	defer fire.Close()
+
+	// pubsub
+	pubsubProjectID := utils.GetEnvVarOrPanic("PUBSUB_PROJECT_ID")
+	if value, ok := os.LookupEnv("PUBSUB_EMULATOR_HOST"); ok {
+		log.Info().Caller().Msgf("Using PubSub Emulator: '%s'", value)
+	}
+	// create pubsub client
+	psub, err := pubsub.NewClient(ctx, pubsubProjectID)
+	if err != nil {
+		log.Fatal().Caller().Err(err).Str("project", pubsubProjectID).Msg("failed to create pubsub client")
+	}
+	defer psub.Close()
 	log.Info().Caller().Str("project", pubsubProjectID).Msg("pubsub client created")
 
 	// pubsub options
@@ -237,20 +255,29 @@ func main() {
 		TopicID:   "fetcher",
 	}
 
+	// typesense
+	ts := typesense.NewClient(typesense.WithServer(tsURL), typesense.WithAPIKey(tsKey))
+
 	// services
-	v := validator.New()
-	search := searchService.New()
 	static := staticService.New(mediaFallbackURL, staticMediaBucket)
-	user := userService.New(&sysFlags, store, v, &reservedWords)
-	recipe := recipeService.New(&sysFlags, store, v)
-	fetcher := fetcherService.New(ctx, &sysFlags, client, reso, user, recipe, search, static)
+	search := searchService.New(ts)
+
+	v := validator.New()
+	user := userService.New(&sysFlags, fire, v, &reservedWords)
+	recipe := recipeService.New(&sysFlags, store, fire, v, &recipeService.RecipeServiceConfig{
+		DistributionBucket: distributionBucket,
+		UploadableBucket:   uploadableBucket,
+		ServiceAccountName: serviceAccountName,
+		ImageURL:           imageURL,
+	})
+	fetcher := fetcherService.New(ctx, &sysFlags, psub, reso, user, recipe, search, static)
 
 	// controllers
 	c := &Controllers{
 		System: controllers.NewSystemController(),
 		Recipe: controllers.NewRecipeController(user, recipe, search, static, fetcher),
 		User:   controllers.NewUserController(user),
-		Search: controllers.NewSearchController(),
+		Search: controllers.NewSearchController(search),
 	}
 
 	// gin and middleware
@@ -277,8 +304,7 @@ func main() {
 
 	addr := "0.0.0.0:" + utils.GetStrEnvVar("PORT", "5000")
 	if err := router.Run(addr); err != nil {
-		log.Error().Caller().Err(err).Msg("Error starting http server")
-		panic(err)
+		log.Fatal().Caller().Err(err).Msg("Error starting http server")
 	}
 }
 

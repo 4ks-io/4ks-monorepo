@@ -69,7 +69,7 @@ func (c *recipeController) CreateRecipeMedia(ctx *gin.Context) {
 	wg.Add(2)
 
 	// &mediaId, &mediaEmail, &payload
-	signedURL, err1 := c.recipeService.CreateRecipeMediaSignedURL(&mp, &wg)
+	signedURL, err1 := c.recipeService.CreateRecipeMediaSignedURL(ctx, &mp, &wg)
 	recipeMedia, err2 := c.recipeService.CreateRecipeMedia(ctx, &mp, recipeID, userID, &wg)
 
 	if err1 != nil {

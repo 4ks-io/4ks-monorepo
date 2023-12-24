@@ -1,7 +1,3 @@
 {
-  "recommendations": [
-    "nrwl.angular-console",
-    "esbenp.prettier-vscode",
-    "humao.rest-client"
-  ]
+  "recommendations": ["esbenp.prettier-vscode", "humao.rest-client"]
 }

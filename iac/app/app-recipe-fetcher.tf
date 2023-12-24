@@ -95,7 +95,7 @@ resource "google_cloudfunctions2_function" "fetcher" {
 
   service_config {
     available_memory = "256M"
-    timeout_seconds  = 120
+    timeout_seconds  = 15
     environment_variables = {
       DEBUG             = false
       PUBSUB_PROJECT_ID = local.project

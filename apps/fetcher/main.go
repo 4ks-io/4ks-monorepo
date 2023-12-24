@@ -25,9 +25,9 @@ import (
 )
 
 var (
-	debug        bool
-	apiSecret    string
-	apiEndpoint  string
+	debug       bool
+	apiSecret   string
+	apiEndpoint string
 )
 
 func getMandatoryEnvVar(n string) string {
@@ -124,10 +124,13 @@ func fetcher(ctx context.Context, e event.Event) error {
 
 	// format reponse data
 	dto := FetcherCreateRecipe{
-		UserID: f.UserID,
+		UserID:      f.UserID,
 		UserEventID: f.UserEventID,
-		Recipe: createRecipeDtoFromRecipe(recipe),
+		Recipe:      createRecipeDtoFromRecipe(recipe),
 	}
+
+	// PrintStruct(dto)
+	// todo: validate dto and post errors to api
 
 	// marshall data to json
 	data, err := json.Marshal(dto)
@@ -183,9 +186,9 @@ func PrintStruct(t interface{}) {
 
 // FetcherCreateRecipe godoc
 type FetcherCreateRecipe struct {
-	Recipe CreateRecipe `json:"recipe"`
-	UserID string       `json:"userId"`
-	UserEventID uuid.UUID  `json:"userEventId"`
+	Recipe      CreateRecipe `json:"recipe"`
+	UserID      string       `json:"userId"`
+	UserEventID uuid.UUID    `json:"userEventId"`
 }
 
 // CreateRecipe godoc
@@ -225,7 +228,6 @@ type UserSummary struct {
 	DisplayName string `firestore:"displayName,omitempty" json:"displayName"`
 }
 
-
 func createRecipeDtoFromRecipe(r Recipe) CreateRecipe {
 	instructions := []Instruction{}
 	for _, v := range r.Instructions {
@@ -237,7 +239,7 @@ func createRecipeDtoFromRecipe(r Recipe) CreateRecipe {
 	ingredients := []Ingredient{}
 	for _, v := range r.Ingredients {
 		ingredients = append(ingredients, Ingredient{
-			Name:     v,
+			Name: v,
 		})
 	}
 

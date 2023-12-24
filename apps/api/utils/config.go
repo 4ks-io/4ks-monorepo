@@ -40,4 +40,3 @@ func GetEnvVarOrPanic(n string) string {
 	}
 	return v
 }
-

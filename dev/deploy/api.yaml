@@ -32,6 +32,10 @@ spec:
           env:
             - name: PORT
               value: '5000'
+            - name: MEDIA_IMAGE_URL
+              value: https://local.4ks.io/image
+            - name: MEDIA_FALLBACK_URL
+              value: https://local.4ks.io
             - name: GIN_MODE
               value: debug
             - name: JAEGER_ENABLED
@@ -70,14 +74,14 @@ spec:
               value: local-4ks-api-key
             - name: IO_4KS_DEVELOPMENT
               value: 'true'
-            - name: MEDIA_FALLBACK_URL
-              value: https://storage.googleapis.com/static.dev.4ks.io
             - name: API_FETCHER_PSK
               # must match fetcher.API_FETCHER_PSK
               value: 2c44a496343cfc994d325cd135cba995
             - name: FETCHER_HEADER_KEY
               # must match fetcher.API_HEADER_KEY
               value: X-4ks-Auth
+            - name: SERVICE_ACCOUNT_EMAIL
+              value: local-dev-sa@sbx-4ks.iam.gserviceaccount.com
           ports:
             - containerPort: 5000
           readinessProbe:

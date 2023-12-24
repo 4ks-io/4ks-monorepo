@@ -20,16 +20,16 @@ type Service interface {
 }
 
 type staticService struct {
-	cache gcache.Cache
-	mediaFallbackURL string
+	cache             gcache.Cache
+	mediaFallbackURL  string
 	staticMediaBucket string
 }
 
 // New creates a new static service
 func New(mediaFallbackURL, staticMediaBucket string) Service {
 	return &staticService{
-		cache: gcache.New(20).LRU().Build(),
-		mediaFallbackURL: mediaFallbackURL,
+		cache:             gcache.New(20).LRU().Build(),
+		mediaFallbackURL:  mediaFallbackURL,
 		staticMediaBucket: staticMediaBucket,
 	}
 }
