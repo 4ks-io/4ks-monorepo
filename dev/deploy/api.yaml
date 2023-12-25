@@ -55,7 +55,7 @@ spec:
             - name: AUTH0_DOMAIN
               value: 4ks-dev.us.auth0.com
             - name: AUTH0_AUDIENCE
-              value: 'https://local.4ks.io/api'
+              value: https://local.4ks.io/api
             - name: EXPORTER_TYPE
               value: JAEGER
             - name: VERSION_FILE_PATH
@@ -66,6 +66,8 @@ spec:
               value: media-read.sbx.4ks.io
             - name: STATIC_MEDIA_BUCKET
               value: static.dev.4ks.io
+            - name: STATIC_MEDIA_FALLBACK_PREFIX
+              value: static/fallback/f
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /code/google-app-creds.json
             - name: TYPESENSE_URL

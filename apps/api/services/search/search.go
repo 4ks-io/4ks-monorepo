@@ -18,12 +18,12 @@ type Service interface {
 }
 
 type searchService struct {
-	client  *typesense.Client
+	client *typesense.Client
 }
 
 type SearchServiceConfig struct {
 	URL string
-	Key string 
+	Key string
 }
 
 // New creates a new search service

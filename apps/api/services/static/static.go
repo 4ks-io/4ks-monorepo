@@ -20,17 +20,21 @@ type Service interface {
 }
 
 type staticService struct {
-	cache             gcache.Cache
-	mediaFallbackURL  string
-	staticMediaBucket string
+	store                     *storage.Client
+	cache                     gcache.Cache
+	mediaFallbackURL          string
+	staticMediaBucket         string
+	staticMediaFallbackPrefix string
 }
 
 // New creates a new static service
-func New(mediaFallbackURL, staticMediaBucket string) Service {
+func New(store *storage.Client, mediaFallbackURL, staticMediaBucket string, staticMediaFallbackPrefix string) Service {
 	return &staticService{
-		cache:             gcache.New(20).LRU().Build(),
-		mediaFallbackURL:  mediaFallbackURL,
-		staticMediaBucket: staticMediaBucket,
+		store:                     store,
+		cache:                     gcache.New(20).LRU().Build(),
+		mediaFallbackURL:          mediaFallbackURL,
+		staticMediaBucket:         staticMediaBucket,
+		staticMediaFallbackPrefix: staticMediaFallbackPrefix,
 	}
 }
 
@@ -40,7 +44,7 @@ func (ss staticService) GetRandomFallbackImageURL(filename string) string {
 
 // GetRandomFallbackImage returns a random fallback image
 func (ss staticService) GetRandomFallbackImage(c context.Context) (string, error) {
-	images, err := FetchFallbackImages(c, ss.cache, ss.staticMediaBucket)
+	images, err := FetchFallbackImages(c, ss.store, ss.cache, ss.staticMediaBucket, ss.staticMediaFallbackPrefix)
 	if err != nil {
 		return "", err
 	}
@@ -54,11 +58,11 @@ func (ss staticService) GetRandomFallbackImage(c context.Context) (string, error
 }
 
 // FetchFallbackImages fetches fallback images from cache or bucket
-func FetchFallbackImages(c context.Context, cache gcache.Cache, staticMediaBucket string) ([]string, error) {
+func FetchFallbackImages(c context.Context, store *storage.Client, cache gcache.Cache, staticMediaBucket string, staticMediaFallbackPrefix string) ([]string, error) {
 	key := "fallback"
 	images, err := cache.Get(key)
 	if err != nil {
-		img, err := FetchFallbackImagesFromBucket(c, staticMediaBucket)
+		img, err := FetchFallbackImagesFromBucket(c, store, staticMediaBucket, staticMediaFallbackPrefix)
 		if err != nil {
 			return nil, err
 		}
@@ -76,15 +80,10 @@ func FetchFallbackImages(c context.Context, cache gcache.Cache, staticMediaBucke
 }
 
 // FetchFallbackImagesFromBucket fetches fallback images from bucket
-func FetchFallbackImagesFromBucket(c context.Context, staticMediaBucket string) ([]string, error) {
-	client, err := storage.NewClient(c)
-	if err != nil {
-		return nil, fmt.Errorf("storage.NewClient: %v", err)
-	}
-	defer client.Close()
-
-	bkt := client.Bucket(staticMediaBucket)
-	query := &storage.Query{Prefix: "static/fallback/f"}
+func FetchFallbackImagesFromBucket(c context.Context, store *storage.Client, staticMediaBucket string, prefix string) ([]string, error) {
+	bkt := store.Bucket(staticMediaBucket)
+	query := &storage.Query{Prefix: prefix}
+	log.Debug().Msgf("prefix: %s", prefix)
 
 	var files []string
 	it := bkt.Objects(c, query)
@@ -96,6 +95,7 @@ func FetchFallbackImagesFromBucket(c context.Context, staticMediaBucket string) 
 		if err != nil {
 			return nil, err
 		}
+		log.Debug().Msg(attrs.Name)
 		files = append(files, attrs.Name)
 	}
 

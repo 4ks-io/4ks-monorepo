@@ -155,7 +155,11 @@ resource "google_cloud_run_v2_service" "api" {
       }
       env {
         name  = "MEDIA_FALLBACK_URL"
-        value = "${local.web_url}/static/fallback"
+        value = "${local.web_url}"
+      }
+      env {
+        name  = "STATIC_MEDIA_FALLBACK_PREFIX"
+        value = "static/fallback/f"
       }
       env {
         name  = "MEDIA_IMAGE_URL"

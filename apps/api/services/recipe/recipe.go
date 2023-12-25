@@ -68,8 +68,8 @@ type recipeService struct {
 	uploadableBucket          string
 	serviceAccountName        string
 	imageURL                  string
-	store	 										*storage.Client
-	fire                     *firestore.Client
+	store                     *storage.Client
+	fire                      *firestore.Client
 	recipeCollection          *firestore.CollectionRef
 	recipeMediasCollection    *firestore.CollectionRef
 	recipeRevisionsCollection *firestore.CollectionRef
@@ -92,7 +92,7 @@ func New(sysFlags *utils.SystemFlags, store *storage.Client, fire *firestore.Cli
 		uploadableBucket:          cfg.UploadableBucket,
 		serviceAccountName:        cfg.ServiceAccountName,
 		imageURL:                  cfg.ImageURL,
-		fire:                     fire,
+		fire:                      fire,
 		validator:                 validator,
 		recipeCollection:          fire.Collection("recipes"),
 		recipeMediasCollection:    fire.Collection("recipe-medias"),

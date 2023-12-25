@@ -123,16 +123,15 @@ Batch:
 	log.Info().Msg("done")
 }
 
-
 // AppConfig is the configuration for the app
 type AppConfig struct {
 	Debug              bool
-	DryRun						 bool   `yaml:"dry_run"`
+	DryRun             bool   `yaml:"dry_run"`
 	ProjectID          string `yaml:"project_id"`
 	FireDatabaseID     string `yaml:"fire_database_id"`
 	FireCollectionName string `yaml:"fire_collection_name"`
-	TypesenseURL 		 string `yaml:"typesense_url"`
-	TypesenseKey 		 string `yaml:"typesense_key"`
+	TypesenseURL       string `yaml:"typesense_url"`
+	TypesenseKey       string `yaml:"typesense_key"`
 	BatchSize          int    `yaml:"batch_size"`
 	MaxFiles           int    `yaml:"max_files"`
 }

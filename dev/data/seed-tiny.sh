@@ -6,9 +6,4 @@ curl -k -X 'POST' "$url/init-search-collections" \
   -H 'accept: application/json' \
   -d ''
 
-echo ""
-echo ""
-
-go run data/upload.go -u $url/recipes -t foo -f data/tiny_dataset.csv
-
-echo "done 20/20
+go run ./dev/data/upload.go -u $url/recipes -t foo -f data/tiny_dataset.csv

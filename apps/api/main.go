@@ -196,6 +196,7 @@ func main() {
 	// static service configs
 	var mediaFallbackURL = utils.GetEnvVarOrPanic("MEDIA_FALLBACK_URL")
 	var staticMediaBucket = utils.GetEnvVarOrPanic("STATIC_MEDIA_BUCKET")
+	var staticMediaFallbackPrefix = utils.GetEnvVarOrPanic("STATIC_MEDIA_FALLBACK_PREFIX")
 
 	// recipe service configs
 	var distributionBucket = utils.GetEnvVarOrPanic("DISTRIBUTION_BUCKET")
@@ -259,7 +260,7 @@ func main() {
 	ts := typesense.NewClient(typesense.WithServer(tsURL), typesense.WithAPIKey(tsKey))
 
 	// services
-	static := staticService.New(mediaFallbackURL, staticMediaBucket)
+	static := staticService.New(store, mediaFallbackURL, staticMediaBucket, staticMediaFallbackPrefix)
 	search := searchService.New(ts)
 
 	v := validator.New()

@@ -70,7 +70,6 @@ Batch:
 				log.Fatal().Err(err).Caller().Msg("failed to unmarshal firestore document")
 			}
 
-
 			// update url
 			newVar := make([]models.RecipeMediaVariant, len(img.CurrentRevision.Banner))
 			for i, v := range img.CurrentRevision.Banner {
@@ -118,7 +117,7 @@ Batch:
 // AppConfig is the configuration for the app
 type AppConfig struct {
 	Debug              bool
-	DryRun						 bool   `yaml:"dry_run"`
+	DryRun             bool   `yaml:"dry_run"`
 	ProjectID          string `yaml:"project_id"`
 	FireDatabaseID     string `yaml:"fire_database_id"`
 	FireCollectionName string `yaml:"fire_collection_name"`
