@@ -13,7 +13,7 @@ debug:
 #   http://localhost:5858/test
 
 test:
-	go test -v ./...
+	API_FETCHER_PSK=foo API_ENDPOINT_URL=bar PUBSUB_PROJECT_ID=foo PUBSUB_TOPIC_ID=bar go test -v ./...
 
 cover:
 	go test -coverprofile=coverage.out && go tool cover -html=coverage.out

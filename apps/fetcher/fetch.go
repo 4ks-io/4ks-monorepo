@@ -18,8 +18,6 @@ var (
 )
 
 const (
-	// ApplicationJSONLDType is the content type for json-ld
-	ApplicationJSONLDType = "application/ld+json"
 	// ApplicationJSONLDScriptTag is the selector for json-ld script tags
 	ApplicationJSONLDScriptTag = `script[type="application/ld+json"]`
 )
@@ -52,7 +50,6 @@ func visit(debug bool, target string) (Recipe, error) {
 
 	// process 'application/ld+json' scripts
 	c.OnHTML(ApplicationJSONLDScriptTag, func(e *colly.HTMLElement) {
-		// level.Debug(l).Log("msg", ApplicationJSONLDType+"script detected")
 		recipe, err = getRecipeFromJSONLD(e, target)
 	})
 
@@ -243,6 +240,7 @@ type searchStack struct {
 	parent map[string]interface{}
 }
 
+// searchJSON iteratively searches a map[string]interface{} with a @type key with a value of "Recipe"
 func searchJSON(data interface{}) map[string]interface{} {
 	stack := []searchStack{{value: data}}
 
@@ -253,6 +251,22 @@ func searchJSON(data interface{}) map[string]interface{} {
 		switch t := current.value.(type) {
 		case map[string]interface{}:
 			for key, value := range t {
+				if key == "@type" {
+					switch tt := value.(type) {
+					case string:
+						if tt == "Recipe" {
+							return t
+						}
+					case []interface{}:
+						for _, item := range tt {
+							if item == "Recipe" {
+								return t
+							}
+						}
+					default:
+						// fmt.Printf("Unsupported type: %T\n", data)
+					}
+				}
 				if key == "@type" && value == "Recipe" {
 					return t
 				}
