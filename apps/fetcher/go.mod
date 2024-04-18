@@ -6,6 +6,7 @@ require (
 	github.com/GoogleCloudPlatform/functions-framework-go v1.8.0
 	github.com/cloudevents/sdk-go/v2 v2.14.0
 	github.com/gocolly/colly/v2 v2.1.0
+	github.com/google/go-cmp v0.6.0
 	github.com/google/uuid v1.3.0
 	github.com/rs/zerolog v1.31.0
 )
@@ -20,7 +21,6 @@ require (
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect

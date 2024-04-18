@@ -82,7 +82,7 @@ resource "google_cloudfunctions2_function" "fetcher" {
   }
 
   build_config {
-    runtime     = "go120"
+    runtime     = "go122"
     entry_point = "projects/${local.project}/topics/${google_pubsub_topic.fetcher.name}"
 
     source {
