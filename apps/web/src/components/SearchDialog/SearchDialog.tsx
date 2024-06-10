@@ -14,7 +14,7 @@ export default function SearchDialog() {
   const { open, handleClose } = useSearchContext();
   const { hits } = useHits();
 
-  // todo: true for mobile
+  // tr@ck: true for mobile
   const [fullScreen, setFullScreen] = useState(true);
   // else
   const [fullWidth, setFullWidth] = useState(true);

@@ -48,7 +48,7 @@ spec:
               value: /app/auth/callback
             - name: AUTH0_SECRET
               value: ba0061b7a3a8697b707006005b678f775773a8b94561634308c9c5e1a2030fa4
-            # todo: validate and fix auto session refresh
+            # tr@ck: validate and fix auto session refresh
             # https://stackoverflow.com/questions/76813923/how-to-avoid-warning-message-when-getting-user-information-on-next-js-13-server
             - name: AUTH0_SESSION_AUTO_SAVE
               value: 'false'

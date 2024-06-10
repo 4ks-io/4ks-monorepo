@@ -40,7 +40,7 @@ export const recipesRouter = router({
       logTrpc(new Error(), opts.input, s, 'recipes.getAllByAuthor');
     }
   }),
-  // todo: only mutation?
+  // tr@ck: only mutation?
   getByID: publicProcedure.input(z.string()).query(async (opts) => {
     const api = await getAPIClient();
     const s = performance.now();

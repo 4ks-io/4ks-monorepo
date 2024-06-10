@@ -41,7 +41,7 @@ export async function handleUserNavigation(page: Page): Promise<UserSession> {
   // handle error / trpc should have crash before this
   if (!data?.Status || ![200, 204].includes(data?.Status)) {
     return notFound();
-    // todo: retry or return unexpected error page
+    // tr@ck: retry or return unexpected error page
   }
 
   // authenticatd but not registered

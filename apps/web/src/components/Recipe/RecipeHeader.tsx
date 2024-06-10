@@ -28,7 +28,7 @@ type RecipeHeaderProps = {
   recipe: models_Recipe;
 };
 
-// todo: better SSR with recipe
+// tr@ck: better SSR with recipe
 export function RecipeHeader({ user, recipe }: RecipeHeaderProps) {
   const rtx = useRecipeContext();
   const router = useRouter();
@@ -38,7 +38,7 @@ export function RecipeHeader({ user, recipe }: RecipeHeaderProps) {
   const isAuthenticated = !!user?.id;
   const isNew = recipe?.id == '0';
 
-  // todo: i18n
+  // tr@ck: i18n
   const GENERIC_TITLE = `Fancy Recipe Name`;
 
   // const [isLoading, setIsLoading] = useState(true);
@@ -95,7 +95,7 @@ export function RecipeHeader({ user, recipe }: RecipeHeaderProps) {
     rtx.setActionInProgress(false);
 
     if (starData.isSuccess) {
-      // todo: simply increment/decrease the stars
+      // tr@ck: simply increment/decrease the stars
       rtx.resetRecipe();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

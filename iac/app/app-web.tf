@@ -67,7 +67,7 @@ resource "google_cloud_run_v2_service" "web" {
         name  = "AUTH0_AUDIENCE"
         value = local.api_url
       }
-      # todo: validate and fix auto session refresh
+      # tr@ck: validate and fix auto session refresh
       # https://stackoverflow.com/questions/76813923/how-to-avoid-warning-message-when-getting-user-information-on-next-js-13-server
       #env {
       #  name  = "AUTH0_SESSION_AUTO_SAVE"

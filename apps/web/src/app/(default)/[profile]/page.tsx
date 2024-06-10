@@ -28,7 +28,7 @@ export default async function ProfilePage({ params, searchParams }: PageProps) {
     (await serverClient.search.recipesByAuthor(username)) ?? undefined;
 
   // fetch
-  // todo: should below and above calls be concurrent? the profile page needs more content. redesign
+  // tr@ck: should below and above calls be concurrent? the profile page needs more content. redesign
   if (!data) {
     let r = {} as dtos_GetRecipesByUsernameResponse;
     try {
@@ -65,7 +65,7 @@ export default async function ProfilePage({ params, searchParams }: PageProps) {
                   if (!e || !e.data) {
                     return null;
                   }
-                  // todo: handle name change
+                  // tr@ck: handle name change
                   let recipeURL = `/recipe/${e.data.RecipeID}`;
                   if (e.data?.RecipeTitle) {
                     recipeURL = `${recipeURL}-${normalizeForURL(

@@ -48,7 +48,7 @@ export default function RecipeSettings({ recipe }: RecipeSettingsProps) {
       router.push('/');
     }
     // error
-    // todo: handle error
+    // tr@ck: handle error
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deleteMutex, deleteMutation]);

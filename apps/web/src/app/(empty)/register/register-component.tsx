@@ -240,7 +240,7 @@ export default function RegisterComponent({ user }: RegisterComponentProps) {
       return;
     }
     if (!data?.valid) {
-      // todo: load reserved list from server and perform check client-side
+      // tr@ck: load reserved list from server and perform check client-side
       if (data.msg == 'reserved') {
         setInputError(
           'username',

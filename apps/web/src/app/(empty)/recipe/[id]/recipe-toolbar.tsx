@@ -26,7 +26,7 @@ export default function RecipeToolbar({ user, recipe }: RecipeToolbarProps) {
     recipe?.contributors &&
     recipe?.contributors.map((c) => c.id).includes(user?.id);
 
-  // todo: handle name change
+  // tr@ck: handle name change
   let recipeURL = `/recipe/${recipe.id}`;
   if (recipe?.currentRevision?.name) {
     recipeURL = `/recipe/${recipe.id}-${normalizeForURL(

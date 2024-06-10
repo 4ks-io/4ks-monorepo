@@ -69,10 +69,10 @@ export default function RecipeMedia({ user, recipe, media }: RecipeMediaProps) {
           headers: new Headers({ 'Content-Type': ct }),
           body: buf,
         });
-        // todo: UX user feedback
+        // tr@ck: UX user feedback
         log().Debug(new Error(), [{ k: 'msg', v: 'upload successful' }]);
         clear();
-        // todo: better way to refresh media after allowing time for cloud image proessing?
+        // tr@ck: better way to refresh media after allowing time for cloud image proessing?
         await new Promise((r) => setTimeout(r, 2000));
         rtx.resetMedia();
       } catch (e) {
@@ -153,7 +153,7 @@ export default function RecipeMedia({ user, recipe, media }: RecipeMediaProps) {
   }
 
   async function handleUploadMedia() {
-    // todo: handle errors ux
+    // tr@ck: handle errors ux
     if (!filesContent || filesContent.length != 1) {
       return;
     }

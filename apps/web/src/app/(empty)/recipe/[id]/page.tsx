@@ -39,7 +39,7 @@ export async function generateMetadata({
   //   ? (await getRecipeMedia(recipeData?.data?.root)) ?? { data: [] }
   //   : { data: [] };
 
-  // todo: add recipe as jsondl
+  // tr@ck: add recipe as jsondl
 
   // const m = media?.data?.map((m) => {
   //   return m.variants?.map((v) => {
@@ -47,7 +47,7 @@ export async function generateMetadata({
   //   });
   // });
   // console.log(m);
-  // todo: add media to metatada
+  // tr@ck: add media to metatada
 
   return {
     title: recipeData?.data?.currentRevision?.name,
