@@ -95,7 +95,7 @@ export default function RecipeCard({
             </>
           )
         }
-        // todo: {overflow: 'hidden', textOverflow: 'ellipsis'}
+        // tr@ck: {overflow: 'hidden', textOverflow: 'ellipsis'}
         title={
           loading ? (
             <Skeleton

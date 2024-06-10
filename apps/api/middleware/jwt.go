@@ -70,7 +70,7 @@ func AppendCustomClaims() gin.HandlerFunc {
 }
 
 // EnforceJWT is a middleware that will check the validity of our JWT.
-// todo: could this (already curriend) function be curried to pass in audience and domain?
+// tr@ck: could this (already curriend) function be curried to pass in audience and domain?
 // see https://github.com/cool8sniper/gin-rest-gorm-rbac-sample/blob/master/middleware/jwt.go
 func EnforceJWT() func(next http.Handler) http.Handler {
 	// log.Debug().Caller().Str("domain", domain).Str("audience", audience).Msg("EnforceJWT")

@@ -71,7 +71,7 @@ func (s recipeService) CreateRecipe(ctx context.Context, recipe *dtos.CreateReci
 		UpdatedDate:     recipeCreatedDate,
 	}
 
-	// todo
+	// tr@ck
 	_, err := s.fire.Batch().Create(newRevisionDoc, recipeRevision).Create(newRecipeDoc, newRecipe).Commit(ctx)
 
 	if err != nil {

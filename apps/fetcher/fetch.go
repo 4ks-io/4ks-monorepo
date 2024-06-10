@@ -87,7 +87,7 @@ func getRecipeFromJSONLD(e *colly.HTMLElement, u string) (Recipe, error) {
 		instructions, err = getInstructions(node["recipeInstructions"])
 		if err != nil {
 			log.Error().Err(err).Caller().Msg("failed to read recipe instructions")
-			// todo: log this url/html
+			// tr@ck: log this url/html
 		}
 	}
 
@@ -117,7 +117,7 @@ func getInstructions(in interface{}) ([]string, error) {
 	// marshal
 	jsonData, err := json.Marshal(in)
 	if err != nil {
-		// todo: log this url/html
+		// tr@ck: log this url/html
 		return o, err
 	}
 
@@ -126,7 +126,7 @@ func getInstructions(in interface{}) ([]string, error) {
 	err = json.Unmarshal(jsonData, &data)
 	if err != nil {
 		// error unmarshaling -- expected array
-		// todo: log this url/html
+		// tr@ck: log this url/html
 		return o, err
 	}
 

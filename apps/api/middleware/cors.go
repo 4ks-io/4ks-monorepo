@@ -5,7 +5,7 @@ import "github.com/gin-gonic/gin"
 // CorsMiddleware adds CORS headers to the response
 func CorsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// todo: fix url
+		// tr@ck: fix url
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "https://www.4ks.io")
 		c.Writer.Header().Set("Access-Control-Max-Age", "86400")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE")

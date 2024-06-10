@@ -31,7 +31,7 @@ func NewSystemController() SystemController {
 //	@Success 		  200 		 {string} value
 //	@Router       /api/ready [get]
 func (sysCtlr *systemController) CheckReadiness(ctx *gin.Context) {
-	// todo: check database connection
+	// tr@ck: check database connection
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})

@@ -73,7 +73,7 @@ export default function RecipeMediaBanner({ isNew }: RecipeMediaBannerProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showBannerSelectModal, selectingMedia]);
 
-  // todo: save currently happens in RecipeControls. Fix flow.
+  // tr@ck: save currently happens in RecipeControls. Fix flow.
   function confirmImageSelection() {
     selectingMedia && rtx.setBanner(selectingMedia);
     setShowBannerSelectModal(false);

@@ -130,7 +130,7 @@ func fetcher(ctx context.Context, e event.Event) error {
 	}
 
 	// PrintStruct(dto)
-	// todo: validate dto and post errors to api
+	// tr@ck: validate dto and post errors to api
 
 	// marshall data to json
 	data, err := json.Marshal(dto)
@@ -182,7 +182,7 @@ func PrintStruct(t interface{}) {
 	fmt.Println(string(j))
 }
 
-// todo: import from a dtos package?
+// tr@ck: import from a dtos package?
 
 // FetcherCreateRecipe godoc
 type FetcherCreateRecipe struct {

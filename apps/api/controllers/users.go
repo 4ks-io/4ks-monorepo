@@ -306,7 +306,7 @@ func (c *userController) TestUsername(ctx *gin.Context) {
 
 	// handle empty
 	if payload.Username == "" {
-		resp.Message = "invalid" // todo: i18n
+		resp.Message = "invalid" // tr@ck: i18n
 		resp.Valid = false
 		ctx.JSON(http.StatusBadRequest, resp)
 		return

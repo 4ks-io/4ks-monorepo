@@ -173,7 +173,7 @@ func (c *recipeController) GetRecipesByUsername(ctx *gin.Context) {
 		id = u.ID
 	}
 
-	// todo: hardcode limit for now
+	// tr@ck: hardcode limit for now
 	limit := 40
 	var res dtos.GetRecipesByUsernameResponse
 

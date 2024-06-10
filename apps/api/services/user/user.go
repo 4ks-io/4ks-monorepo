@@ -274,7 +274,7 @@ func (s userService) UpdateUserEventByUserIDEventID(ctx context.Context, id stri
 		return nil, ErrUserEventNotFound
 	}
 
-	// todo: improve performance
+	// tr@ck: improve performance
 	// https://stackoverflow.com/questions/46757614/how-to-update-an-array-of-objects-with-firestore/51794212#51794212
 
 	if _, err := s.userCollection.Doc(id).Update(ctx, []firestore.Update{
@@ -332,7 +332,7 @@ func (s userService) RemoveUserEventByUserIDEventID(ctx context.Context, id stri
 	return nil
 }
 
-// todo: add with disableUser/enableUser as we never want to delete a recipe
+// tr@ck: add with disableUser/enableUser as we never want to delete a recipe
 func (s userService) DeleteUser(ctx context.Context, userID string) error {
 	existingUserID, _ := s.userCollection.Doc(userID).Get(ctx)
 	if !existingUserID.Exists() {
@@ -367,7 +367,7 @@ func (s userService) TestValidName(name string) bool {
 		5. cannot begin or end with a hyphen
 	*/
 
-	// todo: combine these 2 regex...
+	// tr@ck: combine these 2 regex...
 	if regexp.MustCompile("^[a-zA-Z0-9][a-zA-Z0-9-]{6,22}[a-zA-Z0-9]$").MatchString(name) {
 		return !regexp.MustCompile("--").MatchString(name)
 	}

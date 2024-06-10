@@ -11,7 +11,7 @@ import (
 )
 
 // VERBOSE is a bool that determines if casbin should be verbose
-// todo: replace with debug from main
+// tr@ck: replace with debug from main
 var VERBOSE = false
 
 var (

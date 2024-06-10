@@ -3,7 +3,7 @@ export const authLogoutPath = '/app/auth/logout';
 
 export const isSSR = typeof window === 'undefined';
 
-// todo: deprecated
+// tr@ck: deprecated
 // https://stackoverflow.com/questions/10527983/best-way-to-detect-mac-os-x-or-windows-computers-with-javascript-or-jquery
 export const isMac = () => {
   if (navigator) {
@@ -35,7 +35,7 @@ export type PagePropsSearchParams = {
 
 export function normalizeForURL(s: string | undefined) {
   if (!s) {
-    // todo: i18n
+    // tr@ck: i18n
     return 'recipe-title';
   }
   // Convert i18n characters like é, ü, etc. to their base
