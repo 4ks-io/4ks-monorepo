@@ -50,7 +50,7 @@ func AuthorizeFetcher() gin.HandlerFunc {
 		h := c.Request.Header["X-4ks-Auth"][0]
 		if h == "" {
 			msg := "missing auth header"
-			log.Error().Err(errors.New(msg)).Caller().Msgf("authorization error: %s", msg)
+			log.Error().Err(errors.New(msg)).Msgf("authorization error: %s", msg)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
 			return
 		}
@@ -59,7 +59,7 @@ func AuthorizeFetcher() gin.HandlerFunc {
 		decrypted, err := decrypt(h, key)
 		if err != nil {
 			msg := "failed to decrypt"
-			log.Error().Err(err).Caller().Msgf("authorization error: %s", msg)
+			log.Error().Err(err).Msgf("authorization error: %s", msg)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
 			return
 		}
@@ -68,14 +68,14 @@ func AuthorizeFetcher() gin.HandlerFunc {
 		decryptedTime, err := time.Parse(time.RFC3339, decrypted)
 		if err != nil {
 			msg := "failed to parse timestamp"
-			log.Error().Err(err).Caller().Msgf("authorization error: %s", msg)
+			log.Error().Err(err).Msgf("authorization error: %s", msg)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
 			return
 		}
 
 		if time.Since(decryptedTime).Seconds() >= 10 {
 			msg := "expired"
-			log.Error().Err(err).Caller().Msgf("authorization error: %s", msg)
+			log.Error().Err(err).Msgf("authorization error: %s", msg)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
 			return
 		}
@@ -85,7 +85,7 @@ func AuthorizeFetcher() gin.HandlerFunc {
 		// ok, err := Enforce(sub, obj, act)
 		// //ok, err := enforce(val.(string), obj, act, adapter)
 		// if err != nil {
-		// 	log.Error().Err(err).Caller().Msg("authorization error")
+		// 	log.Error().Err(err).Msg("authorization error")
 		// 	c.AbortWithStatusJSON(500, "authorization error")
 		// 	return
 		// }

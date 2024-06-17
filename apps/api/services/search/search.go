@@ -105,7 +105,7 @@ func (s searchService) CreateSearchRecipeCollection() error {
 	}
 
 	_, err := s.client.Collections().Create(schema)
-	log.Error().Err(err).Caller().Msg("failed to create search collection")
+	log.Error().Err(err).Msg("failed to create search collection")
 	if err != nil {
 		return err
 	}

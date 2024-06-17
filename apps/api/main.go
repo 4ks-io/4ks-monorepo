@@ -25,6 +25,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	adapter "github.com/gwatts/gin-adapter"
+	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -53,6 +54,17 @@ func getAPIVersion() string {
 		version = strings.TrimSuffix(string(v), "\n")
 	}
 	return version
+}
+
+// configureLogging configures global logging based on the config file and flags.
+func configureLogging() {
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	zerolog.SetGlobalLevel(zerolog.ErrorLevel)
+
+	// Set log level
+	zerolog.SetGlobalLevel(0)
+	log.Logger = log.With().Caller().Logger()
+	// log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 }
 
 // RouteOpts contains the paths for the router
@@ -86,7 +98,7 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 
 		// swagger
 		if value := o.SwaggerEnabled; value {
-			log.Info().Caller().Bool("enabled", value).Str("prefix", o.SwaggerPrefix).Msg("Swagger")
+			log.Info().Bool("enabled", value).Str("prefix", o.SwaggerPrefix).Msg("Swagger")
 			swaggerURL := ginSwagger.URL(o.SwaggerPrefix + "/swagger/doc.json") // The url pointing to API definition
 			api.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, swaggerURL))
 		}
@@ -181,6 +193,7 @@ func AppendRoutes(sysFlags *utils.SystemFlags, r *gin.Engine, c *Controllers, o 
 func main() {
 	// context
 	var ctx = context.Background()
+	configureLogging()
 
 	// args
 	sysFlags := utils.SystemFlags{
@@ -213,11 +226,11 @@ func main() {
 
 	// jaeger
 	if sysFlags.JaegerEnabled {
-		log.Info().Caller().Bool("enabled", sysFlags.JaegerEnabled).Msg("Jaeger")
+		log.Info().Bool("enabled", sysFlags.JaegerEnabled).Msg("Jaeger")
 		tp := tracing.InitTracerProvider()
 		defer func() {
 			if err := tp.Shutdown(context.Background()); err != nil {
-				log.Error().Caller().Err(err).Msg("Error shutting down tracer provider")
+				log.Error().Err(err).Msg("Error shutting down tracer provider")
 			}
 		}()
 	}
@@ -225,14 +238,14 @@ func main() {
 	// storage
 	store, err := storage.NewClient(ctx)
 	if err != nil {
-		log.Fatal().Caller().Err(err).Msg("failed to create storage client")
+		log.Fatal().Err(err).Msg("failed to create storage client")
 	}
 	defer store.Close()
 
 	// firestore
 	firstoreProjectID := utils.GetEnvVarOrPanic("FIRESTORE_PROJECT_ID")
 	if value, ok := os.LookupEnv("FIRESTORE_EMULATOR_HOST"); ok {
-		log.Info().Caller().Msgf("Using Firestore Emulator: '%s'", value)
+		log.Info().Msgf("Using Firestore Emulator: '%s'", value)
 	}
 	var fire, _ = firestore.NewClient(ctx, firstoreProjectID)
 	defer fire.Close()
@@ -240,15 +253,15 @@ func main() {
 	// pubsub
 	pubsubProjectID := utils.GetEnvVarOrPanic("PUBSUB_PROJECT_ID")
 	if value, ok := os.LookupEnv("PUBSUB_EMULATOR_HOST"); ok {
-		log.Info().Caller().Msgf("Using PubSub Emulator: '%s'", value)
+		log.Info().Msgf("Using PubSub Emulator: '%s'", value)
 	}
 	// create pubsub client
 	psub, err := pubsub.NewClient(ctx, pubsubProjectID)
 	if err != nil {
-		log.Fatal().Caller().Err(err).Str("project", pubsubProjectID).Msg("failed to create pubsub client")
+		log.Fatal().Err(err).Str("project", pubsubProjectID).Msg("failed to create pubsub client")
 	}
 	defer psub.Close()
-	log.Debug().Caller().Str("project", pubsubProjectID).Msg("pubsub client created")
+	log.Debug().Str("project", pubsubProjectID).Msg("pubsub client created")
 
 	// pubsub options
 	reso := fetcherService.FetcherOpts{
@@ -305,7 +318,7 @@ func main() {
 
 	addr := "0.0.0.0:" + utils.GetStrEnvVar("PORT", "5000")
 	if err := router.Run(addr); err != nil {
-		log.Fatal().Caller().Err(err).Msg("Error starting http server")
+		log.Fatal().Err(err).Msg("Error starting http server")
 	}
 }
 

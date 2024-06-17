@@ -14,7 +14,7 @@ import (
 // DefaultStructuredLogger logs a gin HTTP request in JSON format. Uses the
 // default logger from rs/zerolog.
 func DefaultStructuredLogger() gin.HandlerFunc {
-	l := log.Logger //.With().Caller().Logger()
+	l := log.Logger //.With().Logger()
 	return StructuredLogger(&l)
 }
 

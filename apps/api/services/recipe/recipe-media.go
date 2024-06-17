@@ -85,9 +85,6 @@ func (s recipeService) CreateRecipeMediaSignedURL(ctx context.Context, mp *utils
 	}
 
 	filename := "image/" + mp.Basename + mp.Extension
-
-	log.Info().Str("bucket", s.uploadableBucket).Str("filename", filename).Any("opts", opts).Msgf("signed url request")
-
 	url, err := s.store.Bucket(s.uploadableBucket).SignedURL(filename, opts)
 	if err != nil {
 		return "", fmt.Errorf("Bucket(%q). SignedURL: %v", s.uploadableBucket, err)
@@ -112,7 +109,7 @@ func (s recipeService) GetRecipeMedia(ctx context.Context, recipeID string) ([]*
 		OrderBy("createdDate", firestore.Desc).
 		Documents(ctx).GetAll()
 	if err != nil {
-		log.Error().Err(err).Caller().Msg("failed to get recipe media")
+		log.Error().Err(err).Msg("failed to get recipe media")
 		return nil, err
 	}
 

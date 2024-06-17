@@ -51,18 +51,24 @@ func (c *recipeController) CreateRecipe(ctx *gin.Context) {
 	u := c.staticService.GetRandomFallbackImageURL(f)
 	payload.Banner = c.recipeService.CreateMockBanner(f, u)
 
+	log.Debug().Any("payload", payload).Msg("payload")
+
 	createdRecipe, err := c.recipeService.CreateRecipe(ctx, &payload)
 	if err == recipesvc.ErrUnableToCreateRecipe {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	} else if err != nil {
+		log.Err(err).Msg("failed to create recipe")
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
+	log.Debug().Any("recipe", createdRecipe).Msg("recipe")
+
 	err = c.searchService.UpsertSearchRecipeDocument(createdRecipe)
 	if err != nil {
-		ctx.AbortWithError(http.StatusInternalServerError, err)
+		log.Err(err).Msg("failed to upsert search recipe")
+		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
@@ -150,7 +156,7 @@ func (c *recipeController) GetRecipe(ctx *gin.Context) {
 // @Security 		ApiKeyAuth
 func (c *recipeController) GetRecipesByUsername(ctx *gin.Context) {
 	username := ctx.Param("username")
-	log.Debug().Caller().Str("username", username).Msg("GetRecipesByUsername")
+	log.Debug().Str("username", username).Msg("GetRecipesByUsername")
 
 	var id string
 	// get user id

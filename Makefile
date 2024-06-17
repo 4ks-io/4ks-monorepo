@@ -12,7 +12,7 @@ stop:
 	docker stop kind-registry
 
 logs:
-	tilt -s
+	tilt logs -f
 
 swagger:
 	python3 -m webbrowser http://localhost:5174/swagger/index.html#/

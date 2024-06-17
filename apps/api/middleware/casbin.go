@@ -22,7 +22,7 @@ func init() {
 	var err error
 	en, err = casbin.NewEnforcer(model, policy, VERBOSE)
 	if err != nil {
-		log.Fatal().Err(err).Caller().Msg("failed to create enforcer")
+		log.Fatal().Err(err).Msg("failed to create enforcer")
 		os.Exit(1)
 	}
 }
@@ -118,7 +118,7 @@ func Authorize(obj string, act string) gin.HandlerFunc {
 		ok, err := Enforce(sub, obj, act)
 		//ok, err := enforce(val.(string), obj, act, adapter)
 		if err != nil {
-			log.Error().Err(err).Caller().Msg("authorization error")
+			log.Error().Err(err).Msg("authorization error")
 			c.AbortWithStatusJSON(500, "authorization error")
 			return
 		}

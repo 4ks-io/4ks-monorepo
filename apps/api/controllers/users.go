@@ -50,7 +50,7 @@ func (c *userController) RemoveUserEvent(ctx *gin.Context) {
 	eventID := ctx.Param("id")
 
 	// validate eventID
-	log.Debug().Caller().Str("eventID", eventID).Msg("validating eventID")
+	log.Debug().Str("eventID", eventID).Msg("validating eventID")
 	eid, err := uuid.Parse(eventID)
 	if err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
@@ -201,7 +201,7 @@ func (c *userController) HeadAuthenticatedUser(ctx *gin.Context) {
 			return
 		}
 		// handle other errors
-		log.Error().Err(err).Caller().Msg("GetUserByID")
+		log.Error().Err(err).Msg("GetUserByID")
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}

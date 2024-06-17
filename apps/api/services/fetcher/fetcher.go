@@ -54,7 +54,7 @@ func New(ctx context.Context, sysFlags *utils.SystemFlags, client *pubsub.Client
 	// check if topic exists
 	ok, err := t.Exists(ctx)
 	if err != nil || !ok {
-		log.Error().Caller().Err(err).Str("project", reso.ProjectID).Str("topic", reso.TopicID).Msg("failed to connect to topic")
+		log.Error().Err(err).Str("project", reso.ProjectID).Str("topic", reso.TopicID).Msg("failed to connect to topic")
 		panic(err)
 	}
 
@@ -82,7 +82,7 @@ func (s *fetcherService) Send(ctx context.Context, data *models.FetcherRequest) 
 
 	d, err := json.Marshal(data)
 	if err != nil {
-		log.Error().Caller().Err(err).Msg("Failed to encode message")
+		log.Error().Err(err).Msg("Failed to encode message")
 		return id, err
 	}
 
@@ -99,7 +99,7 @@ func (s *fetcherService) Send(ctx context.Context, data *models.FetcherRequest) 
 	// ID is returned for the published message.
 	id, err = result.Get(ctx)
 	if err != nil {
-		log.Error().Caller().Err(err).Msg("failed to publish message")
+		log.Error().Err(err).Msg("failed to publish message")
 	}
 
 	return id, nil

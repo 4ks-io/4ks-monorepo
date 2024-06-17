@@ -99,6 +99,7 @@ func New(sysFlags *utils.SystemFlags, store *storage.Client, fire *firestore.Cli
 		recipeRevisionsCollection: fire.Collection("recipe-revisions"),
 		recipeStarsCollection:     fire.Collection("recipe-stars"),
 		sysFlags:                  sysFlags,
+		store:                     store,
 	}
 }
 

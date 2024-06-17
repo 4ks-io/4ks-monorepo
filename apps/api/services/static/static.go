@@ -83,7 +83,7 @@ func FetchFallbackImages(c context.Context, store *storage.Client, cache gcache.
 func FetchFallbackImagesFromBucket(c context.Context, store *storage.Client, staticMediaBucket string, prefix string) ([]string, error) {
 	bkt := store.Bucket(staticMediaBucket)
 	query := &storage.Query{Prefix: prefix}
-	log.Debug().Msgf("prefix: %s", prefix)
+	// log.Debug().Msgf("prefix: %s", prefix)
 
 	var files []string
 	it := bkt.Objects(c, query)
@@ -95,7 +95,7 @@ func FetchFallbackImagesFromBucket(c context.Context, store *storage.Client, sta
 		if err != nil {
 			return nil, err
 		}
-		log.Debug().Msg(attrs.Name)
+		// log.Debug().Msg(attrs.Name)
 		files = append(files, attrs.Name)
 	}
 

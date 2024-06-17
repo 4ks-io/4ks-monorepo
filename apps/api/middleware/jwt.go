@@ -48,7 +48,7 @@ func ExtractCustomClaimsFromClaims(claims *validator.ValidatedClaims) CustomClai
 // AppendCustomClaims is a middleware that will append custom claims to the context.
 func AppendCustomClaims() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		// log.Debug().Caller().Msgf("access_token: %s", ctx.Request.Header["Authorization"])
+		// log.Debug().Msgf("access_token: %s", ctx.Request.Header["Authorization"])
 
 		// add auth ID to context
 		claims := ExtractClaimsFromRequest(ctx.Request)
@@ -59,7 +59,7 @@ func AppendCustomClaims() gin.HandlerFunc {
 		ctx.Set("id", customClaims.ID)
 		ctx.Set("email", customClaims.Email)
 
-		// log.Debug().Caller().
+		// log.Debug().
 		// 	Str("authID", claims.RegisteredClaims.Subject).
 		// 	Str("id", customClaims.ID).
 		// 	Str("email", customClaims.Email).
@@ -73,10 +73,10 @@ func AppendCustomClaims() gin.HandlerFunc {
 // tr@ck: could this (already curriend) function be curried to pass in audience and domain?
 // see https://github.com/cool8sniper/gin-rest-gorm-rbac-sample/blob/master/middleware/jwt.go
 func EnforceJWT() func(next http.Handler) http.Handler {
-	// log.Debug().Caller().Str("domain", domain).Str("audience", audience).Msg("EnforceJWT")
+	// log.Debug().Str("domain", domain).Str("audience", audience).Msg("EnforceJWT")
 	issuerURL, err := url.Parse("https://" + domain + "/")
 	if err != nil {
-		log.Error().Err(err).Caller().Msg("Failed to parse the issuer url")
+		log.Error().Err(err).Msg("Failed to parse the issuer url")
 		panic(err)
 	}
 
@@ -95,11 +95,11 @@ func EnforceJWT() func(next http.Handler) http.Handler {
 		validator.WithAllowedClockSkew(time.Minute),
 	)
 	if err != nil {
-		log.Error().Err(err).Caller().Msg("Failed to set up the jwt validator")
+		log.Error().Err(err).Msg("Failed to set up the jwt validator")
 	}
 
 	errorHandler := func(w http.ResponseWriter, r *http.Request, err error) {
-		log.Error().Caller().Err(err).Msg("failed to validate JWT")
+		log.Error().Err(err).Msg("failed to validate JWT")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte(`{"message":"Failed to validate JWT."}`))

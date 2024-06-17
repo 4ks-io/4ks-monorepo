@@ -100,7 +100,7 @@ func (c *recipeController) FetcherBotCreateRecipe(ctx *gin.Context) {
 		e.Status = models.UserEventErrorState
 		e.Error = models.UserEventError{Message: err.Error()}
 		c.userService.UpdateUserEventByUserIDEventID(ctx, payload.UserID, &e)
-		log.Error().Caller().Err(err).Msg("failed to create recipe")
+		log.Error().Err(err).Msg("failed to create recipe")
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
@@ -126,14 +126,14 @@ func (c *recipeController) FetcherBotCreateRecipe(ctx *gin.Context) {
 		e.Status = models.UserEventErrorState
 		e.Error = models.UserEventError{Message: err.Error()}
 		c.userService.UpdateUserEventByUserIDEventID(ctx, payload.UserID, &e)
-		log.Error().Caller().Err(err).Msg("failed to create recipe")
+		log.Error().Err(err).Msg("failed to create recipe")
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	} else if err != nil {
 		e.Status = models.UserEventErrorState
 		e.Error = models.UserEventError{Message: err.Error()}
 		c.userService.UpdateUserEventByUserIDEventID(ctx, payload.UserID, &e)
-		log.Error().Caller().Err(err).Msg("failed to create recipe")
+		log.Error().Err(err).Msg("failed to create recipe")
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
@@ -147,7 +147,7 @@ func (c *recipeController) FetcherBotCreateRecipe(ctx *gin.Context) {
 
 	// update search
 	if err = c.searchService.UpsertSearchRecipeDocument(createdRecipe); err != nil {
-		log.Error().Caller().Err(err).Msg("failed to update search document")
+		log.Error().Err(err).Msg("failed to update search document")
 	}
 
 	// update user event
@@ -156,7 +156,7 @@ func (c *recipeController) FetcherBotCreateRecipe(ctx *gin.Context) {
 		e.Status = models.UserEventErrorState
 		e.Error = models.UserEventError{Message: err.Error()}
 		c.userService.UpdateUserEventByUserIDEventID(ctx, payload.UserID, &e)
-		log.Error().Caller().Err(err).Msg("failed to create recipe")
+		log.Error().Err(err).Msg("failed to create recipe")
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
