@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "3.3.0",
+    "@auth0/nextjs-auth0": "3.5.0",
     "@emotion/cache": "latest",
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
@@ -21,7 +21,7 @@
     "@trpc/react-query": "^10.43.2",
     "@trpc/server": "^10.43.2",
     "deep-diff": "^1.0.2",
-    "next": "14.0.0",
+    "next": "14.2.4",
     "react": "^18",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18",

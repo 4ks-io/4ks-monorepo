@@ -40,3 +40,4 @@ tidy:
 	@$(call go_mod_tidy,"apps/api")
 	@$(call go_mod_tidy,"apps/fetcher")
 	@$(call go_mod_tidy,"libs/go/utils")
+	go work sync
