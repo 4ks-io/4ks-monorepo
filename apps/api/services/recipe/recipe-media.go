@@ -85,6 +85,9 @@ func (s recipeService) CreateRecipeMediaSignedURL(ctx context.Context, mp *utils
 	}
 
 	filename := "image/" + mp.Basename + mp.Extension
+
+	log.Info().Str("bucket", s.uploadableBucket).Str("filename", filename).Any("opts", opts).Msgf("signed url request")
+
 	url, err := s.store.Bucket(s.uploadableBucket).SignedURL(filename, opts)
 	if err != nil {
 		return "", fmt.Errorf("Bucket(%q). SignedURL: %v", s.uploadableBucket, err)

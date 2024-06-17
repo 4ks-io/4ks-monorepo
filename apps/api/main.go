@@ -248,7 +248,7 @@ func main() {
 		log.Fatal().Caller().Err(err).Str("project", pubsubProjectID).Msg("failed to create pubsub client")
 	}
 	defer psub.Close()
-	log.Info().Caller().Str("project", pubsubProjectID).Msg("pubsub client created")
+	log.Debug().Caller().Str("project", pubsubProjectID).Msg("pubsub client created")
 
 	// pubsub options
 	reso := fetcherService.FetcherOpts{
