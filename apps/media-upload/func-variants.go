@@ -11,14 +11,13 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"cloud.google.com/go/storage"
 	"github.com/disintegration/imaging"
 )
 
-func createVariant(ctx context.Context, bkt *storage.BucketHandle, i image.Image, ifmt string, f FileProps, size int, wg *sync.WaitGroup) (string, error) {
+func createVariant(ctx context.Context, bkt *storage.BucketHandle, i image.Image, ifmt string, f FileProps, size int) (string, error) {
 	// defer wg.Done()
 
 	// resize

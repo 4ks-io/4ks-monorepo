@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -61,11 +62,17 @@ func uploadImage(ctx context.Context, e event.Event) error {
 	if err := e.DataAs(&data); err != nil {
 		return fmt.Errorf("event.DataAs: %v", err)
 	}
-	log.Printf("Processing gs://%s/%s", data.Bucket, data.Name)
+
+	// get filename details
 	f := getFilenameDetails(data.Name)
 
+	// get firestore id from basename
+	id := strings.Split(f.Basename, "/")[1]
+
+	log.Printf("Processing (%s) gs://%s/%s", id, data.Bucket, data.Name)
+
 	// update status
-	var up = updateRecipeMedia(isDevelopment, c, ctx, f.Basename)
+	var up = updateRecipeMedia(isDevelopment, c, ctx, id)
 	up(MediaStatusProcessing)
 
 	// storage client
@@ -129,9 +136,10 @@ func uploadImage(ctx context.Context, e event.Event) error {
 	// create variants
 	variants := []int{256, 1024}
 	var wg sync.WaitGroup
-	wg.Add(len(variants))
 	for _, s := range variants {
-		o, err := createVariant(ctx, dstbkt, i, ifmt, f, s, &wg)
+		wg.Add(1)
+		o, err := createVariant(ctx, dstbkt, i, ifmt, f, s)
+		wg.Done()
 		if err != nil {
 			up(MediaStatusErrorFailedVariant)
 			return fmt.Errorf("failed to create %s variant %d: %v", o, s, err)
